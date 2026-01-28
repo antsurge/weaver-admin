@@ -57,6 +57,10 @@ func (m *LoginRequest) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for Username
+
+	// no validation rules for Password
+
 	if len(errors) > 0 {
 		return LoginRequestMultiError(errors)
 	}
@@ -155,6 +159,12 @@ func (m *LoginResponse) validate(all bool) error {
 	}
 
 	var errors []error
+
+	// no validation rules for AccessToken
+
+	// no validation rules for RefreshToken
+
+	// no validation rules for ExpiresIn
 
 	if len(errors) > 0 {
 		return LoginResponseMultiError(errors)

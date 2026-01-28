@@ -9,9 +9,12 @@ service AuthenticationService {
 }
 
 message LoginRequest {
-
+    string username = 1;
+    string password = 2;
 }
 
 message LoginResponse {
-
+    string accessToken = 1;
+    string refreshToken = 2;
+    int64 expiresIn = 3; // 以秒为单位
 }

@@ -11,6 +11,7 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/biz"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/conf"
+	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/server"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/service"
 )
@@ -22,12 +23,20 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(confServer *conf.Server, data *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
-	authenticationUsecase := biz.NewAuthenticationUsecase()
+func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
+	client := data.NewEntClient(confData, logger)
+	redisClient := data.NewRedisClient(confData, logger)
+	dataData, cleanup, err := data.NewData(confData, logger, client, redisClient)
+	if err != nil {
+		return nil, nil, err
+	}
+	adminRepo := data.NewAdminRepo(dataData, logger)
+	authenticationUsecase := biz.NewAuthenticationUsecase(logger, adminRepo)
 	authenticationService := service.NewAuthenticationService(authenticationUsecase)
 	grpcServer := server.NewGRPCServer(confServer, authenticationService, logger)
 	httpServer := server.NewHTTPServer(confServer, authenticationService, logger)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
+		cleanup()
 	}, nil
 }
