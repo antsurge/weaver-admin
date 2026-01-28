@@ -1,0 +1,57 @@
+version: v2
+managed:
+  enabled: true
+  override:
+    - file_option: go_package_prefix
+      value: hyper-admin/api/gen/go
+    - file_option: go_package
+      path: admin/service/v1
+      value: github.com/hypercoze/kratos-admin/api/gen/go/admin/services/v1;adminpb
+    - file_option: go_package
+      path: authentication/service/v1
+      value: github.com/hypercoze/kratos-admin/api/gen/go/authentication/service/v1;authenticationpb
+  disable:
+    - module: 'buf.build/bufbuild/protovalidate'
+    - module: 'buf.build/googleapis/googleapis'
+    - module: 'buf.build/kratos/apis'
+    - module: 'buf.build/gnostic/gnostic'
+plugins:
+  # 使用go插件生成go代码
+  - remote: buf.build/protocolbuffers/go
+    #- local: protoc-gen-go
+    out: gen/go
+    opt:
+      - paths=source_relative # 使用相对路径
+
+  # 使用go-grpc插件生成gRPC服务代码
+  # - local: protoc-gen-go-grpc
+  - remote: buf.build/grpc/go:v1.5.1
+    out: gen/go
+    opt:
+      - paths=source_relative # 使用相对路径
+
+  # generate kratos http serve
+  - local: protoc-gen-go-http
+    out: gen/go
+    opt:
+      - paths=source_relative # 使用相对路径
+
+  # generate kratos errors code
+  - local: protoc-gen-go-errors
+    out: gen/go
+    opt:
+      - paths=source_relative # 使用相对路径
+
+  # generate protovalidate
+  - remote: buf.build/bufbuild/validate-go:v1.2.1
+    out: gen/go
+    opt:
+      - paths=source_relative # 使用相对路径
+
+  - local: protoc-gen-openapi
+    out: gen/openapi
+    opt:
+      - paths=source_relative
+
+inputs:
+  - directory: proto

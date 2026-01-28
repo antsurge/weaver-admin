@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package authentication.service.v1;
+
+// 用户登录认证服务
+service AuthenticationService {
+    // 用户登录
+    rpc Login (LoginRequest) returns (LoginResponse) {}
+}
+
+message LoginRequest {
+
+}
+
+message LoginResponse {
+
+}

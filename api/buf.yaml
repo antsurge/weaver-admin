@@ -1,0 +1,22 @@
+# For details on buf.yaml configuration, visit https://buf.build/docs/configuration/v2/buf-yaml
+version: v2
+modules:
+  - path: proto
+    lint:
+      use:
+        - STANDARD
+    breaking:
+      use:
+        - FILE
+deps:
+  - 'buf.build/googleapis/googleapis'
+  - 'buf.build/bufbuild/protovalidate:v0.14.1'
+  - 'buf.build/kratos/apis'
+  - 'buf.build/gnostic/gnostic'
+#  - 'buf.build/community/google-gnostic-openapi:v0.7.1'
+lint:
+  use:
+    - DEFAULT
+breaking:
+  use:
+    - FILE
