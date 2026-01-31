@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/go-kratos/kratos/v2/log"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/wire"
 	"github.com/redis/go-redis/v9"
 )
@@ -20,6 +21,8 @@ var ProviderSet = wire.NewSet(
 	NewRedisClient,
 
 	NewAdminRepo,
+	NewCaptchaRepo,
+	NewTokenRepo,
 )
 
 // NewEntClient 初始化 Ent 客户端
@@ -64,10 +67,10 @@ func NewRedisClient(c *conf.Data, logger log.Logger) *redis.Client {
 
 	// 设置默认值
 	if readTimeout == 0 {
-		readTimeout = 200 * time.Millisecond
+		readTimeout = 2 * time.Second
 	}
 	if writeTimeout == 0 {
-		writeTimeout = 200 * time.Millisecond
+		writeTimeout = 2 * time.Second
 	}
 
 	// 解析网络类型和地址
@@ -87,6 +90,7 @@ func NewRedisClient(c *conf.Data, logger log.Logger) *redis.Client {
 		Addr:         addr,
 		ReadTimeout:  readTimeout,
 		WriteTimeout: writeTimeout,
+		DialTimeout:  2 * time.Second, // 新增
 	})
 
 	// 测试连接

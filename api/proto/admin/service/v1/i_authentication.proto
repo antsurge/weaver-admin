@@ -4,9 +4,17 @@ package admin.service.v1;
 
 import "authentication/service/v1/authentication.proto";
 import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
 
 // 用户后台登录认证服务
 service AuthenticationService {
+    // 获取验证码
+    rpc GetCaptcha(google.protobuf.Empty) returns (authentication.service.v1.GetCaptchaResponse) {
+        option (google.api.http) = {
+            get: "admin/v1/get-captcha"
+        };
+    };
+
     // 登录
     rpc Login (authentication.service.v1.LoginRequest) returns (authentication.service.v1.LoginResponse) {
         option (google.api.http) = {
@@ -14,4 +22,20 @@ service AuthenticationService {
             body: "*"
         };
     }
+
+    // 用户退出
+    rpc Logout(google.protobuf.Empty) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post:"/admin/v1/logout"
+            body: "*"
+        };
+    };
+
+    // 刷新认证令牌
+    rpc RefreshToken(google.protobuf.Empty) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post:"/admin/v1/refresh-token"
+            body: "*"
+        };
+    };
 }

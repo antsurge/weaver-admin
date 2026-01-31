@@ -1,15 +1,20 @@
 server:
   http:
     addr: 0.0.0.0:8888
-    timeout: 1s
+    timeout: 3s
   grpc:
     addr: 0.0.0.0:9999
-    timeout: 1s
+    timeout: 3s
 data:
   database:
     driver: mysql
-    source: root:root@tcp(127.0.0.1:3306)/test?parseTime=True&loc=Local
+    source: root:@tcp(127.0.0.1:3306)/hyper_admin?parseTime=True&loc=Local
   redis:
     addr: 127.0.0.1:6379
-    read_timeout: 0.2s
-    write_timeout: 0.2s
+    read_timeout: 3s
+    write_timeout: 3s
+jwt:
+  secret: "kratos-admin-secret-please-change"
+  issuer: "kratos-admin"
+  access_ttl: 7200s
+  refresh_ttl: 604800s # 7 天

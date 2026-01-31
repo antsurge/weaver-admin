@@ -9,6 +9,7 @@ package authenticationpb
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -23,8 +24,10 @@ const (
 
 type LoginRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
-	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
+	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`   // 用户名
+	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`   // 密码
+	Captcha       string                 `protobuf:"bytes,3,opt,name=captcha,proto3" json:"captcha,omitempty"`     // 验证码
+	CaptchaId     string                 `protobuf:"bytes,4,opt,name=captchaId,proto3" json:"captchaId,omitempty"` // 验证码ID
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -73,13 +76,30 @@ func (x *LoginRequest) GetPassword() string {
 	return ""
 }
 
+func (x *LoginRequest) GetCaptcha() string {
+	if x != nil {
+		return x.Captcha
+	}
+	return ""
+}
+
+func (x *LoginRequest) GetCaptchaId() string {
+	if x != nil {
+		return x.CaptchaId
+	}
+	return ""
+}
+
 type LoginResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	AccessToken   string                 `protobuf:"bytes,1,opt,name=accessToken,proto3" json:"accessToken,omitempty"`
-	RefreshToken  string                 `protobuf:"bytes,2,opt,name=refreshToken,proto3" json:"refreshToken,omitempty"`
-	ExpiresIn     int64                  `protobuf:"varint,3,opt,name=expiresIn,proto3" json:"expiresIn,omitempty"` // 以秒为单位
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state                 protoimpl.MessageState `protogen:"open.v1"`
+	AccessToken           string                 `protobuf:"bytes,1,opt,name=accessToken,proto3" json:"accessToken,omitempty"`
+	RefreshToken          string                 `protobuf:"bytes,2,opt,name=refreshToken,proto3" json:"refreshToken,omitempty"`
+	AccessTokenExpiresIn  int64                  `protobuf:"varint,3,opt,name=accessTokenExpiresIn,proto3" json:"accessTokenExpiresIn,omitempty"`
+	RefreshTokenExpiresIn int64                  `protobuf:"varint,4,opt,name=refreshTokenExpiresIn,proto3" json:"refreshTokenExpiresIn,omitempty"`
+	TokenType             string                 `protobuf:"bytes,5,opt,name=tokenType,proto3" json:"tokenType,omitempty"`
+	UserId                string                 `protobuf:"bytes,6,opt,name=userId,proto3" json:"userId,omitempty"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
 }
 
 func (x *LoginResponse) Reset() {
@@ -126,27 +146,112 @@ func (x *LoginResponse) GetRefreshToken() string {
 	return ""
 }
 
-func (x *LoginResponse) GetExpiresIn() int64 {
+func (x *LoginResponse) GetAccessTokenExpiresIn() int64 {
 	if x != nil {
-		return x.ExpiresIn
+		return x.AccessTokenExpiresIn
 	}
 	return 0
+}
+
+func (x *LoginResponse) GetRefreshTokenExpiresIn() int64 {
+	if x != nil {
+		return x.RefreshTokenExpiresIn
+	}
+	return 0
+}
+
+func (x *LoginResponse) GetTokenType() string {
+	if x != nil {
+		return x.TokenType
+	}
+	return ""
+}
+
+func (x *LoginResponse) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+type GetCaptchaResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	CaptchaId     string                 `protobuf:"bytes,1,opt,name=captchaId,proto3" json:"captchaId,omitempty"`
+	ImageBase64   string                 `protobuf:"bytes,2,opt,name=imageBase64,proto3" json:"imageBase64,omitempty"` // data:image/png;base64,...
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetCaptchaResponse) Reset() {
+	*x = GetCaptchaResponse{}
+	mi := &file_authentication_service_v1_authentication_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetCaptchaResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetCaptchaResponse) ProtoMessage() {}
+
+func (x *GetCaptchaResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_authentication_service_v1_authentication_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetCaptchaResponse.ProtoReflect.Descriptor instead.
+func (*GetCaptchaResponse) Descriptor() ([]byte, []int) {
+	return file_authentication_service_v1_authentication_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *GetCaptchaResponse) GetCaptchaId() string {
+	if x != nil {
+		return x.CaptchaId
+	}
+	return ""
+}
+
+func (x *GetCaptchaResponse) GetImageBase64() string {
+	if x != nil {
+		return x.ImageBase64
+	}
+	return ""
 }
 
 var File_authentication_service_v1_authentication_proto protoreflect.FileDescriptor
 
 const file_authentication_service_v1_authentication_proto_rawDesc = "" +
 	"\n" +
-	".authentication/service/v1/authentication.proto\x12\x19authentication.service.v1\"F\n" +
+	".authentication/service/v1/authentication.proto\x12\x19authentication.service.v1\x1a\x1bgoogle/protobuf/empty.proto\"~\n" +
 	"\fLoginRequest\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpassword\"s\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\x12\x18\n" +
+	"\acaptcha\x18\x03 \x01(\tR\acaptcha\x12\x1c\n" +
+	"\tcaptchaId\x18\x04 \x01(\tR\tcaptchaId\"\xf5\x01\n" +
 	"\rLoginResponse\x12 \n" +
 	"\vaccessToken\x18\x01 \x01(\tR\vaccessToken\x12\"\n" +
-	"\frefreshToken\x18\x02 \x01(\tR\frefreshToken\x12\x1c\n" +
-	"\texpiresIn\x18\x03 \x01(\x03R\texpiresIn2u\n" +
+	"\frefreshToken\x18\x02 \x01(\tR\frefreshToken\x122\n" +
+	"\x14accessTokenExpiresIn\x18\x03 \x01(\x03R\x14accessTokenExpiresIn\x124\n" +
+	"\x15refreshTokenExpiresIn\x18\x04 \x01(\x03R\x15refreshTokenExpiresIn\x12\x1c\n" +
+	"\ttokenType\x18\x05 \x01(\tR\ttokenType\x12\x16\n" +
+	"\x06userId\x18\x06 \x01(\tR\x06userId\"T\n" +
+	"\x12GetCaptchaResponse\x12\x1c\n" +
+	"\tcaptchaId\x18\x01 \x01(\tR\tcaptchaId\x12 \n" +
+	"\vimageBase64\x18\x02 \x01(\tR\vimageBase642\xd8\x02\n" +
 	"\x15AuthenticationService\x12\\\n" +
-	"\x05Login\x12'.authentication.service.v1.LoginRequest\x1a(.authentication.service.v1.LoginResponse\"\x00B\x93\x02\n" +
+	"\x05Login\x12'.authentication.service.v1.LoginRequest\x1a(.authentication.service.v1.LoginResponse\"\x00\x128\n" +
+	"\x06Logout\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\x12R\n" +
+	"\fRefreshToken\x12\x16.google.protobuf.Empty\x1a(.authentication.service.v1.LoginResponse\"\x00\x12S\n" +
+	"\n" +
+	"GetCaptcha\x12\x16.google.protobuf.Empty\x1a-.authentication.service.v1.GetCaptchaResponseB\x93\x02\n" +
 	"\x1dcom.authentication.service.v1B\x13AuthenticationProtoP\x01ZWgithub.com/hypercoze/kratos-admin/api/gen/go/authentication/service/v1;authenticationpb\xa2\x02\x03ASX\xaa\x02\x19Authentication.Service.V1\xca\x02\x19Authentication\\Service\\V1\xe2\x02%Authentication\\Service\\V1\\GPBMetadata\xea\x02\x1bAuthentication::Service::V1b\x06proto3"
 
 var (
@@ -161,16 +266,24 @@ func file_authentication_service_v1_authentication_proto_rawDescGZIP() []byte {
 	return file_authentication_service_v1_authentication_proto_rawDescData
 }
 
-var file_authentication_service_v1_authentication_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_authentication_service_v1_authentication_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_authentication_service_v1_authentication_proto_goTypes = []any{
-	(*LoginRequest)(nil),  // 0: authentication.service.v1.LoginRequest
-	(*LoginResponse)(nil), // 1: authentication.service.v1.LoginResponse
+	(*LoginRequest)(nil),       // 0: authentication.service.v1.LoginRequest
+	(*LoginResponse)(nil),      // 1: authentication.service.v1.LoginResponse
+	(*GetCaptchaResponse)(nil), // 2: authentication.service.v1.GetCaptchaResponse
+	(*emptypb.Empty)(nil),      // 3: google.protobuf.Empty
 }
 var file_authentication_service_v1_authentication_proto_depIdxs = []int32{
 	0, // 0: authentication.service.v1.AuthenticationService.Login:input_type -> authentication.service.v1.LoginRequest
-	1, // 1: authentication.service.v1.AuthenticationService.Login:output_type -> authentication.service.v1.LoginResponse
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	3, // 1: authentication.service.v1.AuthenticationService.Logout:input_type -> google.protobuf.Empty
+	3, // 2: authentication.service.v1.AuthenticationService.RefreshToken:input_type -> google.protobuf.Empty
+	3, // 3: authentication.service.v1.AuthenticationService.GetCaptcha:input_type -> google.protobuf.Empty
+	1, // 4: authentication.service.v1.AuthenticationService.Login:output_type -> authentication.service.v1.LoginResponse
+	3, // 5: authentication.service.v1.AuthenticationService.Logout:output_type -> google.protobuf.Empty
+	1, // 6: authentication.service.v1.AuthenticationService.RefreshToken:output_type -> authentication.service.v1.LoginResponse
+	2, // 7: authentication.service.v1.AuthenticationService.GetCaptcha:output_type -> authentication.service.v1.GetCaptchaResponse
+	4, // [4:8] is the sub-list for method output_type
+	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -187,7 +300,7 @@ func file_authentication_service_v1_authentication_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_authentication_service_v1_authentication_proto_rawDesc), len(file_authentication_service_v1_authentication_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

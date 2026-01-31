@@ -11,6 +11,7 @@ import (
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 	v1 "github.com/hypercoze/kratos-admin/api/gen/go/authentication/service/v1"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -20,16 +21,47 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
+const OperationAuthenticationServiceGetCaptcha = "/admin.service.v1.AuthenticationService/GetCaptcha"
 const OperationAuthenticationServiceLogin = "/admin.service.v1.AuthenticationService/Login"
+const OperationAuthenticationServiceLogout = "/admin.service.v1.AuthenticationService/Logout"
+const OperationAuthenticationServiceRefreshToken = "/admin.service.v1.AuthenticationService/RefreshToken"
 
 type AuthenticationServiceHTTPServer interface {
+	// GetCaptcha 获取验证码
+	GetCaptcha(context.Context, *emptypb.Empty) (*v1.GetCaptchaResponse, error)
 	// Login 登录
 	Login(context.Context, *v1.LoginRequest) (*v1.LoginResponse, error)
+	// Logout 用户退出
+	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	// RefreshToken 刷新认证令牌
+	RefreshToken(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 }
 
 func RegisterAuthenticationServiceHTTPServer(s *http.Server, srv AuthenticationServiceHTTPServer) {
 	r := s.Route("/")
+	r.GET("admin/v1/get-captcha", _AuthenticationService_GetCaptcha0_HTTP_Handler(srv))
 	r.POST("/admin/v1/login", _AuthenticationService_Login0_HTTP_Handler(srv))
+	r.POST("/admin/v1/logout", _AuthenticationService_Logout0_HTTP_Handler(srv))
+	r.POST("/admin/v1/refresh-token", _AuthenticationService_RefreshToken0_HTTP_Handler(srv))
+}
+
+func _AuthenticationService_GetCaptcha0_HTTP_Handler(srv AuthenticationServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthenticationServiceGetCaptcha)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetCaptcha(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.GetCaptchaResponse)
+		return ctx.Result(200, reply)
+	}
 }
 
 func _AuthenticationService_Login0_HTTP_Handler(srv AuthenticationServiceHTTPServer) func(ctx http.Context) error {
@@ -54,9 +86,59 @@ func _AuthenticationService_Login0_HTTP_Handler(srv AuthenticationServiceHTTPSer
 	}
 }
 
+func _AuthenticationService_Logout0_HTTP_Handler(srv AuthenticationServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthenticationServiceLogout)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.Logout(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AuthenticationService_RefreshToken0_HTTP_Handler(srv AuthenticationServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthenticationServiceRefreshToken)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.RefreshToken(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
 type AuthenticationServiceHTTPClient interface {
+	// GetCaptcha 获取验证码
+	GetCaptcha(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *v1.GetCaptchaResponse, err error)
 	// Login 登录
 	Login(ctx context.Context, req *v1.LoginRequest, opts ...http.CallOption) (rsp *v1.LoginResponse, err error)
+	// Logout 用户退出
+	Logout(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	// RefreshToken 刷新认证令牌
+	RefreshToken(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 }
 
 type AuthenticationServiceHTTPClientImpl struct {
@@ -67,12 +149,54 @@ func NewAuthenticationServiceHTTPClient(client *http.Client) AuthenticationServi
 	return &AuthenticationServiceHTTPClientImpl{client}
 }
 
+// GetCaptcha 获取验证码
+func (c *AuthenticationServiceHTTPClientImpl) GetCaptcha(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*v1.GetCaptchaResponse, error) {
+	var out v1.GetCaptchaResponse
+	pattern := "admin/v1/get-captcha"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAuthenticationServiceGetCaptcha))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // Login 登录
 func (c *AuthenticationServiceHTTPClientImpl) Login(ctx context.Context, in *v1.LoginRequest, opts ...http.CallOption) (*v1.LoginResponse, error) {
 	var out v1.LoginResponse
 	pattern := "/admin/v1/login"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAuthenticationServiceLogin))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// Logout 用户退出
+func (c *AuthenticationServiceHTTPClientImpl) Logout(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/admin/v1/logout"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAuthenticationServiceLogout))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// RefreshToken 刷新认证令牌
+func (c *AuthenticationServiceHTTPClientImpl) RefreshToken(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/admin/v1/refresh-token"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAuthenticationServiceRefreshToken))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {

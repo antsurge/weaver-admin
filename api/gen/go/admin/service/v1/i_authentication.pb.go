@@ -11,6 +11,7 @@ import (
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	unsafe "unsafe"
 )
@@ -26,20 +27,32 @@ var File_admin_service_v1_i_authentication_proto protoreflect.FileDescriptor
 
 const file_admin_service_v1_i_authentication_proto_rawDesc = "" +
 	"\n" +
-	"'admin/service/v1/i_authentication.proto\x12\x10admin.service.v1\x1a.authentication/service/v1/authentication.proto\x1a\x1cgoogle/api/annotations.proto2\x8f\x01\n" +
-	"\x15AuthenticationService\x12v\n" +
-	"\x05Login\x12'.authentication.service.v1.LoginRequest\x1a(.authentication.service.v1.LoginResponse\"\x1a\x82\xd3\xe4\x93\x02\x14:\x01*\"\x0f/admin/v1/loginB\xd6\x01\n" +
+	"'admin/service/v1/i_authentication.proto\x12\x10admin.service.v1\x1a.authentication/service/v1/authentication.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto2\xbd\x03\n" +
+	"\x15AuthenticationService\x12q\n" +
+	"\n" +
+	"GetCaptcha\x12\x16.google.protobuf.Empty\x1a-.authentication.service.v1.GetCaptchaResponse\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14admin/v1/get-captcha\x12v\n" +
+	"\x05Login\x12'.authentication.service.v1.LoginRequest\x1a(.authentication.service.v1.LoginResponse\"\x1a\x82\xd3\xe4\x93\x02\x14:\x01*\"\x0f/admin/v1/login\x12U\n" +
+	"\x06Logout\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x1b\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/admin/v1/logout\x12b\n" +
+	"\fRefreshToken\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\"\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/admin/v1/refresh-tokenB\xd6\x01\n" +
 	"\x14com.admin.service.v1B\x14IAuthenticationProtoP\x01ZFgithub.com/hypercoze/kratos-admin/api/gen/go/admin/services/v1;adminpb\xa2\x02\x03ASX\xaa\x02\x10Admin.Service.V1\xca\x02\x10Admin\\Service\\V1\xe2\x02\x1cAdmin\\Service\\V1\\GPBMetadata\xea\x02\x12Admin::Service::V1b\x06proto3"
 
 var file_admin_service_v1_i_authentication_proto_goTypes = []any{
-	(*v1.LoginRequest)(nil),  // 0: authentication.service.v1.LoginRequest
-	(*v1.LoginResponse)(nil), // 1: authentication.service.v1.LoginResponse
+	(*emptypb.Empty)(nil),         // 0: google.protobuf.Empty
+	(*v1.LoginRequest)(nil),       // 1: authentication.service.v1.LoginRequest
+	(*v1.GetCaptchaResponse)(nil), // 2: authentication.service.v1.GetCaptchaResponse
+	(*v1.LoginResponse)(nil),      // 3: authentication.service.v1.LoginResponse
 }
 var file_admin_service_v1_i_authentication_proto_depIdxs = []int32{
-	0, // 0: admin.service.v1.AuthenticationService.Login:input_type -> authentication.service.v1.LoginRequest
-	1, // 1: admin.service.v1.AuthenticationService.Login:output_type -> authentication.service.v1.LoginResponse
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	0, // 0: admin.service.v1.AuthenticationService.GetCaptcha:input_type -> google.protobuf.Empty
+	1, // 1: admin.service.v1.AuthenticationService.Login:input_type -> authentication.service.v1.LoginRequest
+	0, // 2: admin.service.v1.AuthenticationService.Logout:input_type -> google.protobuf.Empty
+	0, // 3: admin.service.v1.AuthenticationService.RefreshToken:input_type -> google.protobuf.Empty
+	2, // 4: admin.service.v1.AuthenticationService.GetCaptcha:output_type -> authentication.service.v1.GetCaptchaResponse
+	3, // 5: admin.service.v1.AuthenticationService.Login:output_type -> authentication.service.v1.LoginResponse
+	0, // 6: admin.service.v1.AuthenticationService.Logout:output_type -> google.protobuf.Empty
+	0, // 7: admin.service.v1.AuthenticationService.RefreshToken:output_type -> google.protobuf.Empty
+	4, // [4:8] is the sub-list for method output_type
+	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
