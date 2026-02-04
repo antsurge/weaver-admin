@@ -2,9 +2,9 @@ package auth
 
 import (
 	"context"
-	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/transport"
+	authenticationV1 "github.com/hypercoze/kratos-admin/api/gen/go/authentication/service/v1"
 	"github.com/hypercoze/kratos-admin/pkg/metadata"
 	"github.com/hypercoze/kratos-admin/pkg/utils/auth"
 	"strings"
@@ -26,8 +26,7 @@ const (
 )
 
 var (
-	ErrTokenInvalid = errors.Unauthorized(reason, "INVALID_TOKEN")
-	ErrWrongContext = errors.Unauthorized(reason, "WRONG_CONTEXT")
+	ErrTokenInvalid = authenticationV1.ErrorInvalidToken("INVALID_TOKEN")
 )
 
 func Server(opts ...auth.Option) middleware.Middleware {
@@ -35,14 +34,14 @@ func Server(opts ...auth.Option) middleware.Middleware {
 		return func(ctx context.Context, req any) (any, error) {
 			tr, ok := transport.FromServerContext(ctx)
 			if !ok {
-				return nil, ErrWrongContext
+				return nil, ErrTokenInvalid
 			}
 
 			authHeader := tr.RequestHeader().Get(authorizationKey)
 
 			jwtToken, err := extractBearerToken(authHeader)
 			if err != nil {
-				return nil, err
+				return nil, ErrTokenInvalid
 			}
 
 			claims := &auth.BaseClaims{}

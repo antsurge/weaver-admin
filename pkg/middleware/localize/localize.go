@@ -75,7 +75,7 @@ func I18N() middleware.Middleware {
 					})
 					fmt.Println(e.Message)
 					if eerr == nil {
-						err = errors.BadRequest(e.Reason, translated)
+						err = errors.New(int(e.Code), e.Reason, translated)
 					}
 				}
 			}
