@@ -1,0 +1,17 @@
+[BAD_REQUEST]
+other = "错误请求"
+
+[GENERATE_CAPTCHA_FAIL]
+other = "生成验证码失败"
+
+[SysUser_Not_Found]
+other = "用户名或密码错误"
+
+[Incorrect_Password]
+other = "用户名或密码错误"
+
+[Generate_Captcha_Failed]
+other = "生成验证码失败"
+
+[Captcha_Error]
+other = "验证码输入错误"

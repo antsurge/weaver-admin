@@ -52,6 +52,7 @@ plugins:
     out: gen/openapi
     opt:
       - paths=source_relative
+    strategy: all
 
 inputs:
   - directory: proto

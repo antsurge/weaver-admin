@@ -32,10 +32,16 @@ func (s *AuthenticationService) GetCaptcha(ctx context.Context, _ *emptypb.Empty
 
 // 用户登录
 func (s *AuthenticationService) Login(ctx context.Context, req *authenticationV1.LoginRequest) (*authenticationV1.LoginResponse, error) {
-	result, err := s.authenticationUc.Login(ctx, req)
-	if err != nil {
-		return nil, err
-	}
+	return s.authenticationUc.Login(ctx, req)
+}
 
-	return result, nil
+// 刷新认证数据
+func (s *AuthenticationService) RefreshToken(ctx context.Context, req *authenticationV1.RefreshTokenRequest) (*authenticationV1.LoginResponse, error) {
+	return s.authenticationUc.RefreshToken(ctx, req)
+}
+
+// 退出
+func (s *AuthenticationService) Logout(ctx context.Context, req *authenticationV1.RefreshTokenRequest) (*emptypb.Empty, error) {
+	err := s.authenticationUc.Logout(ctx, req)
+	return nil, err
 }

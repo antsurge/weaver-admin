@@ -15,7 +15,7 @@ func TestJWT(t *testing.T) {
 	// -------------------------
 	// 1. GenerateToken
 	// -------------------------
-	claims := NewBaseClaims(userID, 2*time.Hour, "test-service")
+	claims := NewAccessClaims(userID, 2*time.Hour, "test-service")
 
 	tokenStr, err := GenerateToken(claims, WithSecret(secret))
 	assert.NoError(t, err)
@@ -46,7 +46,7 @@ func TestJWT(t *testing.T) {
 	// -------------------------
 	// 5. Expired token scenario
 	// -------------------------
-	expiredClaims := NewBaseClaims(userID, -1*time.Hour, "test-service")
+	expiredClaims := NewAccessClaims(userID, -1*time.Hour, "test-service")
 	expiredTokenStr, err := GenerateToken(expiredClaims, WithSecret(secret))
 	assert.NoError(t, err)
 

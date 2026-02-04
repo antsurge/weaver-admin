@@ -47,14 +47,16 @@ func (u *CaptchaUsecase) GetCaptcha(ctx context.Context) (*authenticationV1.GetC
 	driver := base64Captcha.NewDriverString(80, 240, 6, 7, 4, "", nil, nil, nil)
 	b64s, err := driver.DrawCaptcha(code)
 	if err != nil {
+		// 记录日志
 		u.log.Errorf("generate captcha image error: %v", err)
-		return nil, err
+		return nil, authenticationV1.ErrorGenerateCaptchaFail("GENERATE_CAPTCHA_FAIL")
 	}
 
 	// 保存到 Redis，过期时间为 2 分钟
 	if err := u.repo.Save(ctx, captchaID, code, 2*time.Minute); err != nil {
+		// 记录日志
 		u.log.Errorf("save captcha error: %v", err)
-		return nil, err
+		return nil, authenticationV1.ErrorGenerateCaptchaFail("GENERATE_CAPTCHA_FAIL")
 	}
 
 	// 返回 Proto 响应

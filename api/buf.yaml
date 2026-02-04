@@ -13,7 +13,6 @@ deps:
   - 'buf.build/bufbuild/protovalidate:v0.14.1'
   - 'buf.build/kratos/apis'
   - 'buf.build/gnostic/gnostic'
-#  - 'buf.build/community/google-gnostic-openapi:v0.7.1'
 lint:
   use:
     - DEFAULT

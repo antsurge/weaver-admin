@@ -30,7 +30,7 @@ func (r *tokenRepo) Save(ctx context.Context, token string, userID string, ttl t
 	return err
 }
 
-func (r *tokenRepo) GetUserID(ctx context.Context, token string) (string, error) {
+func (r *tokenRepo) Get(ctx context.Context, token string) (string, error) {
 	key := r.key(token)
 	userID, err := r.data.redis.Get(ctx, key).Result()
 	if err == redis.Nil {
@@ -50,6 +50,16 @@ func (r *tokenRepo) Delete(ctx context.Context, token string) error {
 		r.log.Errorf("token delete error: %v", err)
 	}
 	return err
+}
+
+func (r *tokenRepo) Exists(ctx context.Context, token string) (bool, error) {
+	key := r.key(token)
+	count, err := r.data.redis.Exists(ctx, key).Result()
+	if err != nil {
+		r.log.Errorf("token exists check error: %v", err)
+		return false, err
+	}
+	return count > 0, nil
 }
 
 func (r *tokenRepo) key(token string) string {

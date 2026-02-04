@@ -14,7 +14,8 @@ data:
     read_timeout: 3s
     write_timeout: 3s
 jwt:
-  secret: "kratos-admin-secret-please-change"
+  access_secret: "kratos-admin-access-secret"
+  refresh_secret: "kratos-admin-access-refresh"
   issuer: "kratos-admin"
   access_ttl: 7200s
   refresh_ttl: 604800s # 7 天

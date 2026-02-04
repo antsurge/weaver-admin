@@ -38,9 +38,9 @@ type AuthenticationServiceClient interface {
 	// 登录
 	Login(ctx context.Context, in *v1.LoginRequest, opts ...grpc.CallOption) (*v1.LoginResponse, error)
 	// 用户退出
-	Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Logout(ctx context.Context, in *v1.RefreshTokenRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 刷新认证令牌
-	RefreshToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	RefreshToken(ctx context.Context, in *v1.RefreshTokenRequest, opts ...grpc.CallOption) (*v1.LoginResponse, error)
 }
 
 type authenticationServiceClient struct {
@@ -71,7 +71,7 @@ func (c *authenticationServiceClient) Login(ctx context.Context, in *v1.LoginReq
 	return out, nil
 }
 
-func (c *authenticationServiceClient) Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *authenticationServiceClient) Logout(ctx context.Context, in *v1.RefreshTokenRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, AuthenticationService_Logout_FullMethodName, in, out, cOpts...)
@@ -81,9 +81,9 @@ func (c *authenticationServiceClient) Logout(ctx context.Context, in *emptypb.Em
 	return out, nil
 }
 
-func (c *authenticationServiceClient) RefreshToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *authenticationServiceClient) RefreshToken(ctx context.Context, in *v1.RefreshTokenRequest, opts ...grpc.CallOption) (*v1.LoginResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
+	out := new(v1.LoginResponse)
 	err := c.cc.Invoke(ctx, AuthenticationService_RefreshToken_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -102,9 +102,9 @@ type AuthenticationServiceServer interface {
 	// 登录
 	Login(context.Context, *v1.LoginRequest) (*v1.LoginResponse, error)
 	// 用户退出
-	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	Logout(context.Context, *v1.RefreshTokenRequest) (*emptypb.Empty, error)
 	// 刷新认证令牌
-	RefreshToken(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	RefreshToken(context.Context, *v1.RefreshTokenRequest) (*v1.LoginResponse, error)
 	mustEmbedUnimplementedAuthenticationServiceServer()
 }
 
@@ -121,10 +121,10 @@ func (UnimplementedAuthenticationServiceServer) GetCaptcha(context.Context, *emp
 func (UnimplementedAuthenticationServiceServer) Login(context.Context, *v1.LoginRequest) (*v1.LoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
-func (UnimplementedAuthenticationServiceServer) Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+func (UnimplementedAuthenticationServiceServer) Logout(context.Context, *v1.RefreshTokenRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
 }
-func (UnimplementedAuthenticationServiceServer) RefreshToken(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+func (UnimplementedAuthenticationServiceServer) RefreshToken(context.Context, *v1.RefreshTokenRequest) (*v1.LoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
 }
 func (UnimplementedAuthenticationServiceServer) mustEmbedUnimplementedAuthenticationServiceServer() {}
@@ -185,7 +185,7 @@ func _AuthenticationService_Login_Handler(srv interface{}, ctx context.Context, 
 }
 
 func _AuthenticationService_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(v1.RefreshTokenRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -197,13 +197,13 @@ func _AuthenticationService_Logout_Handler(srv interface{}, ctx context.Context,
 		FullMethod: AuthenticationService_Logout_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthenticationServiceServer).Logout(ctx, req.(*emptypb.Empty))
+		return srv.(AuthenticationServiceServer).Logout(ctx, req.(*v1.RefreshTokenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AuthenticationService_RefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(v1.RefreshTokenRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -215,7 +215,7 @@ func _AuthenticationService_RefreshToken_Handler(srv interface{}, ctx context.Co
 		FullMethod: AuthenticationService_RefreshToken_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthenticationServiceServer).RefreshToken(ctx, req.(*emptypb.Empty))
+		return srv.(AuthenticationServiceServer).RefreshToken(ctx, req.(*v1.RefreshTokenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

@@ -7,6 +7,7 @@
 package adminpb
 
 import (
+	_ "github.com/google/gnostic/openapiv3"
 	v1 "github.com/hypercoze/kratos-admin/api/gen/go/authentication/service/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -27,30 +28,35 @@ var File_admin_service_v1_i_authentication_proto protoreflect.FileDescriptor
 
 const file_admin_service_v1_i_authentication_proto_rawDesc = "" +
 	"\n" +
-	"'admin/service/v1/i_authentication.proto\x12\x10admin.service.v1\x1a.authentication/service/v1/authentication.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto2\xbd\x03\n" +
-	"\x15AuthenticationService\x12q\n" +
+	"'admin/service/v1/i_authentication.proto\x12\x10admin.service.v1\x1a.authentication/service/v1/authentication.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a$gnostic/openapi/v3/annotations.proto2\xd1\x05\n" +
+	"\x15AuthenticationService\x12\xa6\x01\n" +
 	"\n" +
-	"GetCaptcha\x12\x16.google.protobuf.Empty\x1a-.authentication.service.v1.GetCaptchaResponse\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14admin/v1/get-captcha\x12v\n" +
-	"\x05Login\x12'.authentication.service.v1.LoginRequest\x1a(.authentication.service.v1.LoginResponse\"\x1a\x82\xd3\xe4\x93\x02\x14:\x01*\"\x0f/admin/v1/login\x12U\n" +
-	"\x06Logout\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x1b\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/admin/v1/logout\x12b\n" +
-	"\fRefreshToken\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\"\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/admin/v1/refresh-tokenB\xd6\x01\n" +
+	"GetCaptcha\x12\x16.google.protobuf.Empty\x1a-.authentication.service.v1.GetCaptchaResponse\"Q\xbaG2\n" +
+	"\x0eAuthentication\x12\x0f获取验证码\x1a\x0f获取验证码\x82\xd3\xe4\x93\x02\x16\x12\x14admin/v1/get-captcha\x12\xa5\x01\n" +
+	"\x05Login\x12'.authentication.service.v1.LoginRequest\x1a(.authentication.service.v1.LoginResponse\"I\xbaG,\n" +
+	"\x0eAuthentication\x12\f用户登录\x1a\f用户登录\x82\xd3\xe4\x93\x02\x14:\x01*\"\x0f/admin/v1/login\x12\x9c\x01\n" +
+	"\x06Logout\x12..authentication.service.v1.RefreshTokenRequest\x1a\x16.google.protobuf.Empty\"J\xbaG,\n" +
+	"\x0eAuthentication\x12\f用户登出\x1a\f用户登出\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/admin/v1/logout\x12\xc7\x01\n" +
+	"\fRefreshToken\x12..authentication.service.v1.RefreshTokenRequest\x1a(.authentication.service.v1.LoginResponse\"]\xbaG8\n" +
+	"\x0eAuthentication\x12\x12刷新认证令牌\x1a\x12刷新认证令牌\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/admin/v1/refresh-tokenB\xd6\x01\n" +
 	"\x14com.admin.service.v1B\x14IAuthenticationProtoP\x01ZFgithub.com/hypercoze/kratos-admin/api/gen/go/admin/services/v1;adminpb\xa2\x02\x03ASX\xaa\x02\x10Admin.Service.V1\xca\x02\x10Admin\\Service\\V1\xe2\x02\x1cAdmin\\Service\\V1\\GPBMetadata\xea\x02\x12Admin::Service::V1b\x06proto3"
 
 var file_admin_service_v1_i_authentication_proto_goTypes = []any{
-	(*emptypb.Empty)(nil),         // 0: google.protobuf.Empty
-	(*v1.LoginRequest)(nil),       // 1: authentication.service.v1.LoginRequest
-	(*v1.GetCaptchaResponse)(nil), // 2: authentication.service.v1.GetCaptchaResponse
-	(*v1.LoginResponse)(nil),      // 3: authentication.service.v1.LoginResponse
+	(*emptypb.Empty)(nil),          // 0: google.protobuf.Empty
+	(*v1.LoginRequest)(nil),        // 1: authentication.service.v1.LoginRequest
+	(*v1.RefreshTokenRequest)(nil), // 2: authentication.service.v1.RefreshTokenRequest
+	(*v1.GetCaptchaResponse)(nil),  // 3: authentication.service.v1.GetCaptchaResponse
+	(*v1.LoginResponse)(nil),       // 4: authentication.service.v1.LoginResponse
 }
 var file_admin_service_v1_i_authentication_proto_depIdxs = []int32{
 	0, // 0: admin.service.v1.AuthenticationService.GetCaptcha:input_type -> google.protobuf.Empty
 	1, // 1: admin.service.v1.AuthenticationService.Login:input_type -> authentication.service.v1.LoginRequest
-	0, // 2: admin.service.v1.AuthenticationService.Logout:input_type -> google.protobuf.Empty
-	0, // 3: admin.service.v1.AuthenticationService.RefreshToken:input_type -> google.protobuf.Empty
-	2, // 4: admin.service.v1.AuthenticationService.GetCaptcha:output_type -> authentication.service.v1.GetCaptchaResponse
-	3, // 5: admin.service.v1.AuthenticationService.Login:output_type -> authentication.service.v1.LoginResponse
+	2, // 2: admin.service.v1.AuthenticationService.Logout:input_type -> authentication.service.v1.RefreshTokenRequest
+	2, // 3: admin.service.v1.AuthenticationService.RefreshToken:input_type -> authentication.service.v1.RefreshTokenRequest
+	3, // 4: admin.service.v1.AuthenticationService.GetCaptcha:output_type -> authentication.service.v1.GetCaptchaResponse
+	4, // 5: admin.service.v1.AuthenticationService.Login:output_type -> authentication.service.v1.LoginResponse
 	0, // 6: admin.service.v1.AuthenticationService.Logout:output_type -> google.protobuf.Empty
-	0, // 7: admin.service.v1.AuthenticationService.RefreshToken:output_type -> google.protobuf.Empty
+	4, // 7: admin.service.v1.AuthenticationService.RefreshToken:output_type -> authentication.service.v1.LoginResponse
 	4, // [4:8] is the sub-list for method output_type
 	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name

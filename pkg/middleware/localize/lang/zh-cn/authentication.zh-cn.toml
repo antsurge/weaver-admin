@@ -1,0 +1,29 @@
+[BAD_REQUEST]
+other = "错误请求"
+
+[GENERATE_CAPTCHA_FAIL]
+other = "生成验证码失败"
+
+[CAPTCHA_EXPIRED]
+other = "验证码失效"
+
+[CAPTCHA_INVALID]
+other = "验证码错误"
+
+[INVALID_CREDENTIALS]
+other = "用户名或密码错误"
+
+[LOGINREQUEST_USERNAME_REQUIRED]
+other = "请填写用户名"
+
+[LOGINREQUEST_PASSWORD_REQUIRED]
+other = "请填写密码"
+
+[LOGINREQUEST_CAPTCHA_REQUIRED]
+other = "请填写验证码"
+
+[WRONG_CONTEXT]
+other = "错误请求"
+
+[INVALID_TOKEN]
+other = "授权失败"
