@@ -24,17 +24,96 @@ var (
 	// AdminTable holds the schema information for the "admin" table.
 	AdminTable = &schema.Table{
 		Name:       "admin",
+		Comment:    "管理员表",
 		Columns:    AdminColumns,
 		PrimaryKey: []*schema.Column{AdminColumns[0]},
+	}
+	// AdminRoleColumns holds the columns for the "admin_role" table.
+	AdminRoleColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36, Comment: "主键ID"},
+		{Name: "admin_id", Type: field.TypeString, Size: 36, Comment: "用户ID"},
+		{Name: "role_id", Type: field.TypeString, Size: 36, Comment: "角色ID"},
+		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间"},
+	}
+	// AdminRoleTable holds the schema information for the "admin_role" table.
+	AdminRoleTable = &schema.Table{
+		Name:       "admin_role",
+		Comment:    "用户和角色关联表",
+		Columns:    AdminRoleColumns,
+		PrimaryKey: []*schema.Column{AdminRoleColumns[0]},
+	}
+	// PermissionColumns holds the columns for the "permission" table.
+	PermissionColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
+		{Name: "name", Type: field.TypeString, Size: 64, Comment: "权限名称"},
+		{Name: "code", Type: field.TypeString, Unique: true, Size: 64, Comment: "权限唯一编码"},
+		{Name: "description", Type: field.TypeString, Nullable: true, Size: 256, Comment: "权限描述"},
+		{Name: "parent_id", Type: field.TypeInt, Nullable: true, Comment: "父权限ID, 0表示根节点", Default: 0},
+		{Name: "type", Type: field.TypeString, Size: 32, Comment: "类型: api/menu", Default: "api"},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
+	}
+	// PermissionTable holds the schema information for the "permission" table.
+	PermissionTable = &schema.Table{
+		Name:       "permission",
+		Comment:    "权限表",
+		Columns:    PermissionColumns,
+		PrimaryKey: []*schema.Column{PermissionColumns[0]},
+	}
+	// RoleColumns holds the columns for the "role" table.
+	RoleColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
+		{Name: "name", Type: field.TypeString, Size: 64, Comment: "角色名称"},
+		{Name: "code", Type: field.TypeString, Unique: true, Size: 64, Comment: "角色唯一编码"},
+		{Name: "description", Type: field.TypeString, Nullable: true, Size: 256, Comment: "角色描述"},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
+	}
+	// RoleTable holds the schema information for the "role" table.
+	RoleTable = &schema.Table{
+		Name:       "role",
+		Comment:    "系统角色表",
+		Columns:    RoleColumns,
+		PrimaryKey: []*schema.Column{RoleColumns[0]},
+	}
+	// RolePermissionColumns holds the columns for the "role_permission" table.
+	RolePermissionColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36, Comment: "主键ID"},
+		{Name: "role_id", Type: field.TypeString, Size: 36, Comment: "角色ID"},
+		{Name: "permission_id", Type: field.TypeString, Size: 36, Comment: "权限ID"},
+		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间"},
+	}
+	// RolePermissionTable holds the schema information for the "role_permission" table.
+	RolePermissionTable = &schema.Table{
+		Name:       "role_permission",
+		Comment:    "角色和权限关联表",
+		Columns:    RolePermissionColumns,
+		PrimaryKey: []*schema.Column{RolePermissionColumns[0]},
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		AdminTable,
+		AdminRoleTable,
+		PermissionTable,
+		RoleTable,
+		RolePermissionTable,
 	}
 )
 
 func init() {
 	AdminTable.Annotation = &entsql.Annotation{
 		Table: "admin",
+	}
+	AdminRoleTable.Annotation = &entsql.Annotation{
+		Table: "admin_role",
+	}
+	PermissionTable.Annotation = &entsql.Annotation{
+		Table: "permission",
+	}
+	RoleTable.Annotation = &entsql.Annotation{
+		Table: "role",
+	}
+	RolePermissionTable.Annotation = &entsql.Annotation{
+		Table: "role_permission",
 	}
 }

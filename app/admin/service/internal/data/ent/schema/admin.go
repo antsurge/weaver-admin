@@ -16,7 +16,9 @@ type Admin struct {
 // Annotations 指定表名
 func (Admin) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entsql.Annotation{Table: "admin"}, // 3. 显式指定表名为 admin
+		entsql.Annotation{Table: "admin"},
+		entsql.WithComments(true),
+		schema.Comment("管理员表"),
 	}
 }
 
@@ -39,5 +41,9 @@ func (Admin) Fields() []ent.Field {
 
 // Edges of the Admin.
 func (Admin) Edges() []ent.Edge {
-	return nil // 稍后可以增加 Role 的关联
+	return nil
+	//return []ent.Edge{
+	//	edge.To("roles", Role.Type).
+	//		Through("admin_roles", AdminRole.Type),
+	//}
 }

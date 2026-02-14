@@ -12,7 +12,7 @@ import (
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/admin"
 )
 
-// Admin is the model entity for the Admin schema.
+// 管理员表
 type Admin struct {
 	config `json:"-"`
 	// ID of the ent.

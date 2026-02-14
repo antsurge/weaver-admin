@@ -6,6 +6,10 @@ import (
 	"time"
 
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/admin"
+	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/adminrole"
+	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/permission"
+	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/role"
+	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/rolepermission"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/schema"
 )
 
@@ -29,4 +33,162 @@ func init() {
 	admin.DefaultUpdateTime = adminDescUpdateTime.Default.(func() time.Time)
 	// admin.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
 	admin.UpdateDefaultUpdateTime = adminDescUpdateTime.UpdateDefault.(func() time.Time)
+	adminroleFields := schema.AdminRole{}.Fields()
+	_ = adminroleFields
+	// adminroleDescAdminID is the schema descriptor for admin_id field.
+	adminroleDescAdminID := adminroleFields[1].Descriptor()
+	// adminrole.AdminIDValidator is a validator for the "admin_id" field. It is called by the builders before save.
+	adminrole.AdminIDValidator = adminroleDescAdminID.Validators[0].(func(string) error)
+	// adminroleDescRoleID is the schema descriptor for role_id field.
+	adminroleDescRoleID := adminroleFields[2].Descriptor()
+	// adminrole.RoleIDValidator is a validator for the "role_id" field. It is called by the builders before save.
+	adminrole.RoleIDValidator = adminroleDescRoleID.Validators[0].(func(string) error)
+	// adminroleDescCreatedAt is the schema descriptor for created_at field.
+	adminroleDescCreatedAt := adminroleFields[3].Descriptor()
+	// adminrole.DefaultCreatedAt holds the default value on creation for the created_at field.
+	adminrole.DefaultCreatedAt = adminroleDescCreatedAt.Default.(func() time.Time)
+	// adminroleDescID is the schema descriptor for id field.
+	adminroleDescID := adminroleFields[0].Descriptor()
+	// adminrole.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	adminrole.IDValidator = adminroleDescID.Validators[0].(func(string) error)
+	permissionFields := schema.Permission{}.Fields()
+	_ = permissionFields
+	// permissionDescName is the schema descriptor for name field.
+	permissionDescName := permissionFields[1].Descriptor()
+	// permission.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	permission.NameValidator = func() func(string) error {
+		validators := permissionDescName.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(name string) error {
+			for _, fn := range fns {
+				if err := fn(name); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// permissionDescCode is the schema descriptor for code field.
+	permissionDescCode := permissionFields[2].Descriptor()
+	// permission.CodeValidator is a validator for the "code" field. It is called by the builders before save.
+	permission.CodeValidator = func() func(string) error {
+		validators := permissionDescCode.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(code string) error {
+			for _, fn := range fns {
+				if err := fn(code); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// permissionDescDescription is the schema descriptor for description field.
+	permissionDescDescription := permissionFields[3].Descriptor()
+	// permission.DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
+	permission.DescriptionValidator = permissionDescDescription.Validators[0].(func(string) error)
+	// permissionDescParentID is the schema descriptor for parent_id field.
+	permissionDescParentID := permissionFields[4].Descriptor()
+	// permission.DefaultParentID holds the default value on creation for the parent_id field.
+	permission.DefaultParentID = permissionDescParentID.Default.(int)
+	// permissionDescType is the schema descriptor for type field.
+	permissionDescType := permissionFields[5].Descriptor()
+	// permission.DefaultType holds the default value on creation for the type field.
+	permission.DefaultType = permissionDescType.Default.(string)
+	// permission.TypeValidator is a validator for the "type" field. It is called by the builders before save.
+	permission.TypeValidator = permissionDescType.Validators[0].(func(string) error)
+	// permissionDescCreatedAt is the schema descriptor for created_at field.
+	permissionDescCreatedAt := permissionFields[6].Descriptor()
+	// permission.DefaultCreatedAt holds the default value on creation for the created_at field.
+	permission.DefaultCreatedAt = permissionDescCreatedAt.Default.(func() time.Time)
+	// permissionDescUpdatedAt is the schema descriptor for updated_at field.
+	permissionDescUpdatedAt := permissionFields[7].Descriptor()
+	// permission.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	permission.DefaultUpdatedAt = permissionDescUpdatedAt.Default.(func() time.Time)
+	// permission.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	permission.UpdateDefaultUpdatedAt = permissionDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// permissionDescID is the schema descriptor for id field.
+	permissionDescID := permissionFields[0].Descriptor()
+	// permission.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	permission.IDValidator = permissionDescID.Validators[0].(func(string) error)
+	roleFields := schema.Role{}.Fields()
+	_ = roleFields
+	// roleDescName is the schema descriptor for name field.
+	roleDescName := roleFields[1].Descriptor()
+	// role.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	role.NameValidator = func() func(string) error {
+		validators := roleDescName.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(name string) error {
+			for _, fn := range fns {
+				if err := fn(name); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// roleDescCode is the schema descriptor for code field.
+	roleDescCode := roleFields[2].Descriptor()
+	// role.CodeValidator is a validator for the "code" field. It is called by the builders before save.
+	role.CodeValidator = func() func(string) error {
+		validators := roleDescCode.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(code string) error {
+			for _, fn := range fns {
+				if err := fn(code); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// roleDescDescription is the schema descriptor for description field.
+	roleDescDescription := roleFields[3].Descriptor()
+	// role.DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
+	role.DescriptionValidator = roleDescDescription.Validators[0].(func(string) error)
+	// roleDescCreatedAt is the schema descriptor for created_at field.
+	roleDescCreatedAt := roleFields[4].Descriptor()
+	// role.DefaultCreatedAt holds the default value on creation for the created_at field.
+	role.DefaultCreatedAt = roleDescCreatedAt.Default.(func() time.Time)
+	// roleDescUpdatedAt is the schema descriptor for updated_at field.
+	roleDescUpdatedAt := roleFields[5].Descriptor()
+	// role.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	role.DefaultUpdatedAt = roleDescUpdatedAt.Default.(func() time.Time)
+	// role.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	role.UpdateDefaultUpdatedAt = roleDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// roleDescID is the schema descriptor for id field.
+	roleDescID := roleFields[0].Descriptor()
+	// role.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	role.IDValidator = roleDescID.Validators[0].(func(string) error)
+	rolepermissionFields := schema.RolePermission{}.Fields()
+	_ = rolepermissionFields
+	// rolepermissionDescRoleID is the schema descriptor for role_id field.
+	rolepermissionDescRoleID := rolepermissionFields[1].Descriptor()
+	// rolepermission.RoleIDValidator is a validator for the "role_id" field. It is called by the builders before save.
+	rolepermission.RoleIDValidator = rolepermissionDescRoleID.Validators[0].(func(string) error)
+	// rolepermissionDescPermissionID is the schema descriptor for permission_id field.
+	rolepermissionDescPermissionID := rolepermissionFields[2].Descriptor()
+	// rolepermission.PermissionIDValidator is a validator for the "permission_id" field. It is called by the builders before save.
+	rolepermission.PermissionIDValidator = rolepermissionDescPermissionID.Validators[0].(func(string) error)
+	// rolepermissionDescCreatedAt is the schema descriptor for created_at field.
+	rolepermissionDescCreatedAt := rolepermissionFields[3].Descriptor()
+	// rolepermission.DefaultCreatedAt holds the default value on creation for the created_at field.
+	rolepermission.DefaultCreatedAt = rolepermissionDescCreatedAt.Default.(func() time.Time)
+	// rolepermissionDescID is the schema descriptor for id field.
+	rolepermissionDescID := rolepermissionFields[0].Descriptor()
+	// rolepermission.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	rolepermission.IDValidator = rolepermissionDescID.Validators[0].(func(string) error)
 }
