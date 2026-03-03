@@ -1,0 +1,288 @@
+syntax = "proto3";
+
+package permission.service.v1;
+
+import "google/protobuf/timestamp.proto";
+import "buf/validate/validate.proto";
+import "gnostic/openapi/v3/annotations.proto";
+
+// 权限类型
+enum PermissionType {
+    PERMISSION_TYPE_UNSPECIFIED = 0;   // 未指定
+    PERMISSION_TYPE_MENU_DIRECTORY = 1; // 菜单目录
+    PERMISSION_TYPE_MENU_ITEM = 2;      // 菜单项
+    PERMISSION_TYPE_BUTTON = 3;         // 页面按钮
+}
+
+// 权限状态
+enum PermissionStatus {
+    PERMISSION_STATUS_UNSPECIFIED = 0;
+    PERMISSION_STATUS_ENABLED = 1;
+    PERMISSION_STATUS_DISABLED = 2;
+}
+
+// 权限实体
+message Permission {
+    string id = 1;
+    string parentId = 2; // null 表示根
+    string name = 3;
+    string code = 4;
+    string description = 5;
+    PermissionType type = 6;
+    string path = 7;
+    string icon = 8;
+    string url = 9;
+    string component = 10;
+    int32 weigh = 11;
+    PermissionStatus status = 12;
+    google.protobuf.Timestamp createdAt = 13;
+    google.protobuf.Timestamp updatedAt = 14;
+}
+
+// 树形权限节点（用于菜单树）
+message PermissionTreeNode {
+    Permission permission = 1;
+    repeated PermissionTreeNode children = 2;
+}
+
+// 创建权限请求
+message CreatePermissionRequest {
+    string name = 1 [
+        (buf.validate.field).cel = {
+            id: "CREATE_PERMISSION_NAME_REQUIRED"
+            message: "权限名称不能为空"
+            expression: "this.size() > 0 && this.size() <= 64"
+        },
+        (gnostic.openapi.v3.property) = { description: "权限名称" }
+    ];
+
+    string code = 2 [
+        (buf.validate.field).cel = {
+            id: "CREATE_PERMISSION_CODE_REQUIRED"
+            message: "权限编码不能为空"
+            expression: "this.size() > 0 && this.size() <= 64"
+        },
+        (gnostic.openapi.v3.property) = { description: "权限唯一编码" }
+    ];
+
+    string description = 3 [
+        (buf.validate.field).cel = {
+            id: "CREATE_PERMISSION_DESCRIPTION_MAX"
+            expression: "this.size() <= 256"
+        },
+        (gnostic.openapi.v3.property) = { description: "权限描述" }
+    ];
+
+    string parentId = 4 [
+        (buf.validate.field).cel = {
+            id: "CREATE_PERMISSION_PARENTID_MAX"
+            expression: "this.size() <= 36"
+        },
+        (gnostic.openapi.v3.property) = { description: "父权限ID，空表示根节点" }
+    ];
+
+    PermissionType type = 5 [
+        (gnostic.openapi.v3.property) = { description: "权限类型: menuDirectory / menuItem / button" }
+    ];
+
+    string path = 6 [
+        (buf.validate.field).cel = {
+            id: "CREATE_PERMISSION_PATH_MAX"
+            expression: "this.size() <= 256"
+        },
+        (gnostic.openapi.v3.property) = { description: "路由路径" }
+    ];
+
+    string icon = 7 [
+        (buf.validate.field).cel = {
+            id: "CREATE_PERMISSION_ICON_MAX"
+            expression: "this.size() <= 128"
+        },
+        (gnostic.openapi.v3.property) = { description: "图标" }
+    ];
+
+    string url = 8 [
+        (buf.validate.field).cel = {
+            id: "CREATE_PERMISSION_URL_MAX"
+            expression: "this.size() <= 256"
+        },
+        (gnostic.openapi.v3.property) = { description: "URL" }
+    ];
+
+    string component = 9 [
+        (buf.validate.field).cel = {
+            id: "CREATE_PERMISSION_COMPONENT_MAX"
+            expression: "this.size() <= 256"
+        },
+        (gnostic.openapi.v3.property) = { description: "组件路径" }
+    ];
+
+    int32 weigh = 10 [
+        (buf.validate.field).cel = {
+            id: "CREATE_PERMISSION_WEIGH_MIN"
+            expression: "this >= 0"
+        },
+        (gnostic.openapi.v3.property) = { description: "权重" }
+    ];
+
+    PermissionStatus status = 11 [
+        (gnostic.openapi.v3.property) = { description: "状态: enabled / disabled" }
+    ];
+}
+
+// 创建权限响应
+message CreatePermissionResponse {
+    Permission permission = 1;
+}
+
+// 更新权限
+message UpdatePermissionRequest {
+
+    string id = 1 [
+        (buf.validate.field).cel = {
+            id: "UPDATE_PERMISSION_ID_REQUIRED"
+            message: "权限ID不能为空"
+            expression: "this.size() > 0"
+        },
+        (gnostic.openapi.v3.property) = { description: "权限ID" }
+    ];
+
+    optional string name = 2 [
+        (buf.validate.field).cel = {
+            id: "UPDATE_PERMISSION_NAME_MAX"
+            expression: "this.size() <= 64"
+        },
+        (gnostic.openapi.v3.property) = { description: "权限名称" }
+    ];
+
+    optional string code = 3 [
+        (buf.validate.field).cel = {
+            id: "UPDATE_PERMISSION_CODE_MAX"
+            expression: "this.size() <= 64"
+        },
+        (gnostic.openapi.v3.property) = { description: "权限唯一编码" }
+    ];
+
+    optional string description = 4 [
+        (buf.validate.field).cel = {
+            id: "UPDATE_PERMISSION_DESCRIPTION_MAX"
+            expression: "this.size() <= 256"
+        },
+        (gnostic.openapi.v3.property) = { description: "权限描述" }
+    ];
+
+    optional string parentId = 5 [
+        (buf.validate.field).cel = {
+            id: "UPDATE_PERMISSION_PARENTID_MAX"
+            expression: "this.size() <= 36"
+        },
+        (gnostic.openapi.v3.property) = { description: "父权限ID，空表示根节点" }
+    ];
+
+    optional PermissionType type = 6 [
+        (gnostic.openapi.v3.property) = { description: "权限类型: menuDirectory / menuItem / button" }
+    ];
+
+    optional string path = 7 [
+        (buf.validate.field).cel = {
+            id: "UPDATE_PERMISSION_PATH_MAX"
+            expression: "this.size() <= 256"
+        },
+        (gnostic.openapi.v3.property) = { description: "路由路径" }
+    ];
+
+    optional string icon = 8 [
+        (buf.validate.field).cel = {
+            id: "UPDATE_PERMISSION_ICON_MAX"
+            expression: "this.size() <= 128"
+        },
+        (gnostic.openapi.v3.property) = { description: "图标" }
+    ];
+
+    optional string url = 9 [
+        (buf.validate.field).cel = {
+            id: "UPDATE_PERMISSION_URL_MAX"
+            expression: "this.size() <= 256"
+        },
+        (gnostic.openapi.v3.property) = { description: "URL" }
+    ];
+
+    optional string component = 10 [
+        (buf.validate.field).cel = {
+            id: "UPDATE_PERMISSION_COMPONENT_MAX"
+            expression: "this.size() <= 256"
+        },
+        (gnostic.openapi.v3.property) = { description: "组件路径" }
+    ];
+
+    optional int32 weigh = 11 [
+        (buf.validate.field).cel = {
+            id: "UPDATE_PERMISSION_WEIGH_MIN"
+            expression: "this >= 0"
+        },
+        (gnostic.openapi.v3.property) = { description: "权重" }
+    ];
+
+    optional PermissionStatus status = 12 [
+        (gnostic.openapi.v3.property) = { description: "状态: enabled / disabled" }
+    ];
+}
+
+message UpdatePermissionResponse {
+    Permission permission = 1;
+}
+
+// 获取权限
+message GetPermissionRequest {
+    string id = 1 [
+        (buf.validate.field).cel = {
+            id: "GET_PERMISSION_ID_REQUIRED"
+            message: "权限ID不能为空"
+            expression: "this.size() > 0"
+        },
+        (gnostic.openapi.v3.property) = { description: "权限ID" }
+    ];
+}
+
+// 权限列表
+message ListPermissionRequest {
+    int32 page = 1 [
+        (buf.validate.field).cel = {
+            id: "LIST_PERMISSION_PAGE_MIN"
+            expression: "this >= 1"
+        },
+        (gnostic.openapi.v3.property) = { description: "页码" }
+    ];
+    int32 pageSize = 2 [
+        (buf.validate.field).cel = {
+            id: "LIST_PERMISSION_PAGE_SIZE"
+            expression: "this >= 1 && this <= 100"
+        },
+        (gnostic.openapi.v3.property) = { description: "每页数量" }
+    ];
+    string keyword = 3 [(gnostic.openapi.v3.property) = { description: "搜索关键词" }];
+    string parentId = 4 [(gnostic.openapi.v3.property) = { description: "父权限ID，空查根" }];
+    PermissionType type = 5 [(gnostic.openapi.v3.property) = { description: "按类型筛选" }];
+}
+
+message ListPermissionResponse {
+    repeated Permission items = 1;
+    int32 total = 2;
+}
+
+// 树形权限列表（用于菜单）
+message ListPermissionTreeRequest {
+    PermissionType type = 1 [(gnostic.openapi.v3.property) = { description: "通常传 MENU" }];
+}
+
+message ListPermissionTreeResponse {
+    repeated PermissionTreeNode nodes = 1;
+}
+
+// 删除权限
+message DeletePermissionRequest {
+    repeated string ids = 1 [
+        (buf.validate.field).repeated = { min_items: 1 },
+        (gnostic.openapi.v3.property) = { description: "权限ID列表，至少一个" }
+    ];
+}

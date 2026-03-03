@@ -45,13 +45,20 @@ var (
 	// PermissionColumns holds the columns for the "permission" table.
 	PermissionColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
+		{Name: "parent_id", Type: field.TypeString, Nullable: true, Comment: "父权限ID, null表示根节点"},
 		{Name: "name", Type: field.TypeString, Size: 64, Comment: "权限名称"},
 		{Name: "code", Type: field.TypeString, Unique: true, Size: 64, Comment: "权限唯一编码"},
 		{Name: "description", Type: field.TypeString, Nullable: true, Size: 256, Comment: "权限描述"},
-		{Name: "parent_id", Type: field.TypeInt, Nullable: true, Comment: "父权限ID, 0表示根节点", Default: 0},
-		{Name: "type", Type: field.TypeString, Size: 32, Comment: "类型: api/menu", Default: "api"},
+		{Name: "path", Type: field.TypeString, Size: 256, Comment: "路由路径", Default: ""},
+		{Name: "icon", Type: field.TypeString, Size: 128, Comment: "图标", Default: ""},
+		{Name: "type", Type: field.TypeEnum, Comment: "类型:menu_dir=菜单目录,menu=菜单项,button=页面按钮", Enums: []string{"menu_dir", "menu", "button"}, Default: "menu_dir"},
+		{Name: "url", Type: field.TypeString, Size: 256, Comment: "URL", Default: ""},
+		{Name: "component", Type: field.TypeString, Size: 256, Comment: "组件路径", Default: ""},
+		{Name: "weigh", Type: field.TypeInt, Comment: "权重", Default: 0},
+		{Name: "status", Type: field.TypeEnum, Comment: "状态：enabled=启用 disabled=禁用=禁用", Enums: []string{"enabled", "disabled"}, Default: "enabled"},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
 	}
 	// PermissionTable holds the schema information for the "permission" table.
 	PermissionTable = &schema.Table{

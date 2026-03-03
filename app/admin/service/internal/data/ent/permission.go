@@ -17,20 +17,34 @@ type Permission struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID string `json:"id,omitempty"`
+	// 父权限ID, null表示根节点
+	ParentID *string `json:"parent_id,omitempty"`
 	// 权限名称
 	Name string `json:"name,omitempty"`
 	// 权限唯一编码
 	Code string `json:"code,omitempty"`
 	// 权限描述
 	Description string `json:"description,omitempty"`
-	// 父权限ID, 0表示根节点
-	ParentID int `json:"parent_id,omitempty"`
-	// 类型: api/menu
-	Type string `json:"type,omitempty"`
+	// 路由路径
+	Path string `json:"path,omitempty"`
+	// 图标
+	Icon string `json:"icon,omitempty"`
+	// 类型:menu_dir=菜单目录,menu=菜单项,button=页面按钮
+	Type permission.Type `json:"type,omitempty"`
+	// URL
+	URL string `json:"url,omitempty"`
+	// 组件路径
+	Component string `json:"component,omitempty"`
+	// 权重
+	Weigh int `json:"weigh,omitempty"`
+	// 状态：enabled=启用 disabled=禁用=禁用
+	Status permission.Status `json:"status,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
-	UpdatedAt    time.Time `json:"updated_at,omitempty"`
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
+	// 删除时间
+	DeletedAt    *time.Time `json:"deleted_at,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -39,11 +53,11 @@ func (*Permission) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case permission.FieldParentID:
+		case permission.FieldWeigh:
 			values[i] = new(sql.NullInt64)
-		case permission.FieldID, permission.FieldName, permission.FieldCode, permission.FieldDescription, permission.FieldType:
+		case permission.FieldID, permission.FieldParentID, permission.FieldName, permission.FieldCode, permission.FieldDescription, permission.FieldPath, permission.FieldIcon, permission.FieldType, permission.FieldURL, permission.FieldComponent, permission.FieldStatus:
 			values[i] = new(sql.NullString)
-		case permission.FieldCreatedAt, permission.FieldUpdatedAt:
+		case permission.FieldCreatedAt, permission.FieldUpdatedAt, permission.FieldDeletedAt:
 			values[i] = new(sql.NullTime)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -66,6 +80,13 @@ func (_m *Permission) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.ID = value.String
 			}
+		case permission.FieldParentID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field parent_id", values[i])
+			} else if value.Valid {
+				_m.ParentID = new(string)
+				*_m.ParentID = value.String
+			}
 		case permission.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
@@ -84,17 +105,47 @@ func (_m *Permission) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.Description = value.String
 			}
-		case permission.FieldParentID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field parent_id", values[i])
+		case permission.FieldPath:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field path", values[i])
 			} else if value.Valid {
-				_m.ParentID = int(value.Int64)
+				_m.Path = value.String
+			}
+		case permission.FieldIcon:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field icon", values[i])
+			} else if value.Valid {
+				_m.Icon = value.String
 			}
 		case permission.FieldType:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field type", values[i])
 			} else if value.Valid {
-				_m.Type = value.String
+				_m.Type = permission.Type(value.String)
+			}
+		case permission.FieldURL:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field url", values[i])
+			} else if value.Valid {
+				_m.URL = value.String
+			}
+		case permission.FieldComponent:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field component", values[i])
+			} else if value.Valid {
+				_m.Component = value.String
+			}
+		case permission.FieldWeigh:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field weigh", values[i])
+			} else if value.Valid {
+				_m.Weigh = int(value.Int64)
+			}
+		case permission.FieldStatus:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field status", values[i])
+			} else if value.Valid {
+				_m.Status = permission.Status(value.String)
 			}
 		case permission.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -107,6 +158,13 @@ func (_m *Permission) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
 			} else if value.Valid {
 				_m.UpdatedAt = value.Time
+			}
+		case permission.FieldDeletedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
+			} else if value.Valid {
+				_m.DeletedAt = new(time.Time)
+				*_m.DeletedAt = value.Time
 			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
@@ -144,6 +202,11 @@ func (_m *Permission) String() string {
 	var builder strings.Builder
 	builder.WriteString("Permission(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
+	if v := _m.ParentID; v != nil {
+		builder.WriteString("parent_id=")
+		builder.WriteString(*v)
+	}
+	builder.WriteString(", ")
 	builder.WriteString("name=")
 	builder.WriteString(_m.Name)
 	builder.WriteString(", ")
@@ -153,17 +216,37 @@ func (_m *Permission) String() string {
 	builder.WriteString("description=")
 	builder.WriteString(_m.Description)
 	builder.WriteString(", ")
-	builder.WriteString("parent_id=")
-	builder.WriteString(fmt.Sprintf("%v", _m.ParentID))
+	builder.WriteString("path=")
+	builder.WriteString(_m.Path)
+	builder.WriteString(", ")
+	builder.WriteString("icon=")
+	builder.WriteString(_m.Icon)
 	builder.WriteString(", ")
 	builder.WriteString("type=")
-	builder.WriteString(_m.Type)
+	builder.WriteString(fmt.Sprintf("%v", _m.Type))
+	builder.WriteString(", ")
+	builder.WriteString("url=")
+	builder.WriteString(_m.URL)
+	builder.WriteString(", ")
+	builder.WriteString("component=")
+	builder.WriteString(_m.Component)
+	builder.WriteString(", ")
+	builder.WriteString("weigh=")
+	builder.WriteString(fmt.Sprintf("%v", _m.Weigh))
+	builder.WriteString(", ")
+	builder.WriteString("status=")
+	builder.WriteString(fmt.Sprintf("%v", _m.Status))
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(_m.CreatedAt.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("updated_at=")
 	builder.WriteString(_m.UpdatedAt.Format(time.ANSIC))
+	builder.WriteString(", ")
+	if v := _m.DeletedAt; v != nil {
+		builder.WriteString("deleted_at=")
+		builder.WriteString(v.Format(time.ANSIC))
+	}
 	builder.WriteByte(')')
 	return builder.String()
 }

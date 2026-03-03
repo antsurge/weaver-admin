@@ -262,12 +262,12 @@ func (_q *PermissionQuery) Clone() *PermissionQuery {
 // Example:
 //
 //	var v []struct {
-//		Name string `json:"name,omitempty"`
+//		ParentID string `json:"parent_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Permission.Query().
-//		GroupBy(permission.FieldName).
+//		GroupBy(permission.FieldParentID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (_q *PermissionQuery) GroupBy(field string, fields ...string) *PermissionGroupBy {
@@ -285,11 +285,11 @@ func (_q *PermissionQuery) GroupBy(field string, fields ...string) *PermissionGr
 // Example:
 //
 //	var v []struct {
-//		Name string `json:"name,omitempty"`
+//		ParentID string `json:"parent_id,omitempty"`
 //	}
 //
 //	client.Permission.Query().
-//		Select(permission.FieldName).
+//		Select(permission.FieldParentID).
 //		Scan(ctx, &v)
 func (_q *PermissionQuery) Select(fields ...string) *PermissionSelect {
 	_q.ctx.Fields = append(_q.ctx.Fields, fields...)

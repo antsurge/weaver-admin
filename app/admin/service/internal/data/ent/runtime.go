@@ -54,7 +54,7 @@ func init() {
 	permissionFields := schema.Permission{}.Fields()
 	_ = permissionFields
 	// permissionDescName is the schema descriptor for name field.
-	permissionDescName := permissionFields[1].Descriptor()
+	permissionDescName := permissionFields[2].Descriptor()
 	// permission.NameValidator is a validator for the "name" field. It is called by the builders before save.
 	permission.NameValidator = func() func(string) error {
 		validators := permissionDescName.Validators
@@ -72,7 +72,7 @@ func init() {
 		}
 	}()
 	// permissionDescCode is the schema descriptor for code field.
-	permissionDescCode := permissionFields[2].Descriptor()
+	permissionDescCode := permissionFields[3].Descriptor()
 	// permission.CodeValidator is a validator for the "code" field. It is called by the builders before save.
 	permission.CodeValidator = func() func(string) error {
 		validators := permissionDescCode.Validators
@@ -90,25 +90,43 @@ func init() {
 		}
 	}()
 	// permissionDescDescription is the schema descriptor for description field.
-	permissionDescDescription := permissionFields[3].Descriptor()
+	permissionDescDescription := permissionFields[4].Descriptor()
 	// permission.DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
 	permission.DescriptionValidator = permissionDescDescription.Validators[0].(func(string) error)
-	// permissionDescParentID is the schema descriptor for parent_id field.
-	permissionDescParentID := permissionFields[4].Descriptor()
-	// permission.DefaultParentID holds the default value on creation for the parent_id field.
-	permission.DefaultParentID = permissionDescParentID.Default.(int)
-	// permissionDescType is the schema descriptor for type field.
-	permissionDescType := permissionFields[5].Descriptor()
-	// permission.DefaultType holds the default value on creation for the type field.
-	permission.DefaultType = permissionDescType.Default.(string)
-	// permission.TypeValidator is a validator for the "type" field. It is called by the builders before save.
-	permission.TypeValidator = permissionDescType.Validators[0].(func(string) error)
+	// permissionDescPath is the schema descriptor for path field.
+	permissionDescPath := permissionFields[5].Descriptor()
+	// permission.DefaultPath holds the default value on creation for the path field.
+	permission.DefaultPath = permissionDescPath.Default.(string)
+	// permission.PathValidator is a validator for the "path" field. It is called by the builders before save.
+	permission.PathValidator = permissionDescPath.Validators[0].(func(string) error)
+	// permissionDescIcon is the schema descriptor for icon field.
+	permissionDescIcon := permissionFields[6].Descriptor()
+	// permission.DefaultIcon holds the default value on creation for the icon field.
+	permission.DefaultIcon = permissionDescIcon.Default.(string)
+	// permission.IconValidator is a validator for the "icon" field. It is called by the builders before save.
+	permission.IconValidator = permissionDescIcon.Validators[0].(func(string) error)
+	// permissionDescURL is the schema descriptor for url field.
+	permissionDescURL := permissionFields[8].Descriptor()
+	// permission.DefaultURL holds the default value on creation for the url field.
+	permission.DefaultURL = permissionDescURL.Default.(string)
+	// permission.URLValidator is a validator for the "url" field. It is called by the builders before save.
+	permission.URLValidator = permissionDescURL.Validators[0].(func(string) error)
+	// permissionDescComponent is the schema descriptor for component field.
+	permissionDescComponent := permissionFields[9].Descriptor()
+	// permission.DefaultComponent holds the default value on creation for the component field.
+	permission.DefaultComponent = permissionDescComponent.Default.(string)
+	// permission.ComponentValidator is a validator for the "component" field. It is called by the builders before save.
+	permission.ComponentValidator = permissionDescComponent.Validators[0].(func(string) error)
+	// permissionDescWeigh is the schema descriptor for weigh field.
+	permissionDescWeigh := permissionFields[10].Descriptor()
+	// permission.DefaultWeigh holds the default value on creation for the weigh field.
+	permission.DefaultWeigh = permissionDescWeigh.Default.(int)
 	// permissionDescCreatedAt is the schema descriptor for created_at field.
-	permissionDescCreatedAt := permissionFields[6].Descriptor()
+	permissionDescCreatedAt := permissionFields[12].Descriptor()
 	// permission.DefaultCreatedAt holds the default value on creation for the created_at field.
 	permission.DefaultCreatedAt = permissionDescCreatedAt.Default.(func() time.Time)
 	// permissionDescUpdatedAt is the schema descriptor for updated_at field.
-	permissionDescUpdatedAt := permissionFields[7].Descriptor()
+	permissionDescUpdatedAt := permissionFields[13].Descriptor()
 	// permission.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	permission.DefaultUpdatedAt = permissionDescUpdatedAt.Default.(func() time.Time)
 	// permission.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.

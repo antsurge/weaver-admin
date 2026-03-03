@@ -3,6 +3,7 @@
 package permission
 
 import (
+	"fmt"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -13,20 +14,34 @@ const (
 	Label = "permission"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldParentID holds the string denoting the parent_id field in the database.
+	FieldParentID = "parent_id"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
 	// FieldCode holds the string denoting the code field in the database.
 	FieldCode = "code"
 	// FieldDescription holds the string denoting the description field in the database.
 	FieldDescription = "description"
-	// FieldParentID holds the string denoting the parent_id field in the database.
-	FieldParentID = "parent_id"
+	// FieldPath holds the string denoting the path field in the database.
+	FieldPath = "path"
+	// FieldIcon holds the string denoting the icon field in the database.
+	FieldIcon = "icon"
 	// FieldType holds the string denoting the type field in the database.
 	FieldType = "type"
+	// FieldURL holds the string denoting the url field in the database.
+	FieldURL = "url"
+	// FieldComponent holds the string denoting the component field in the database.
+	FieldComponent = "component"
+	// FieldWeigh holds the string denoting the weigh field in the database.
+	FieldWeigh = "weigh"
+	// FieldStatus holds the string denoting the status field in the database.
+	FieldStatus = "status"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
 	FieldUpdatedAt = "updated_at"
+	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
+	FieldDeletedAt = "deleted_at"
 	// Table holds the table name of the permission in the database.
 	Table = "permission"
 )
@@ -34,13 +49,20 @@ const (
 // Columns holds all SQL columns for permission fields.
 var Columns = []string{
 	FieldID,
+	FieldParentID,
 	FieldName,
 	FieldCode,
 	FieldDescription,
-	FieldParentID,
+	FieldPath,
+	FieldIcon,
 	FieldType,
+	FieldURL,
+	FieldComponent,
+	FieldWeigh,
+	FieldStatus,
 	FieldCreatedAt,
 	FieldUpdatedAt,
+	FieldDeletedAt,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -60,12 +82,24 @@ var (
 	CodeValidator func(string) error
 	// DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
 	DescriptionValidator func(string) error
-	// DefaultParentID holds the default value on creation for the "parent_id" field.
-	DefaultParentID int
-	// DefaultType holds the default value on creation for the "type" field.
-	DefaultType string
-	// TypeValidator is a validator for the "type" field. It is called by the builders before save.
-	TypeValidator func(string) error
+	// DefaultPath holds the default value on creation for the "path" field.
+	DefaultPath string
+	// PathValidator is a validator for the "path" field. It is called by the builders before save.
+	PathValidator func(string) error
+	// DefaultIcon holds the default value on creation for the "icon" field.
+	DefaultIcon string
+	// IconValidator is a validator for the "icon" field. It is called by the builders before save.
+	IconValidator func(string) error
+	// DefaultURL holds the default value on creation for the "url" field.
+	DefaultURL string
+	// URLValidator is a validator for the "url" field. It is called by the builders before save.
+	URLValidator func(string) error
+	// DefaultComponent holds the default value on creation for the "component" field.
+	DefaultComponent string
+	// ComponentValidator is a validator for the "component" field. It is called by the builders before save.
+	ComponentValidator func(string) error
+	// DefaultWeigh holds the default value on creation for the "weigh" field.
+	DefaultWeigh int
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() time.Time
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
@@ -76,12 +110,70 @@ var (
 	IDValidator func(string) error
 )
 
+// Type defines the type for the "type" enum field.
+type Type string
+
+// TypeMenuDir is the default value of the Type enum.
+const DefaultType = TypeMenuDir
+
+// Type values.
+const (
+	TypeMenuDir Type = "menu_dir"
+	TypeMenu    Type = "menu"
+	TypeButton  Type = "button"
+)
+
+func (_type Type) String() string {
+	return string(_type)
+}
+
+// TypeValidator is a validator for the "type" field enum values. It is called by the builders before save.
+func TypeValidator(_type Type) error {
+	switch _type {
+	case TypeMenuDir, TypeMenu, TypeButton:
+		return nil
+	default:
+		return fmt.Errorf("permission: invalid enum value for type field: %q", _type)
+	}
+}
+
+// Status defines the type for the "status" enum field.
+type Status string
+
+// StatusEnabled is the default value of the Status enum.
+const DefaultStatus = StatusEnabled
+
+// Status values.
+const (
+	StatusEnabled  Status = "enabled"
+	StatusDisabled Status = "disabled"
+)
+
+func (s Status) String() string {
+	return string(s)
+}
+
+// StatusValidator is a validator for the "status" field enum values. It is called by the builders before save.
+func StatusValidator(s Status) error {
+	switch s {
+	case StatusEnabled, StatusDisabled:
+		return nil
+	default:
+		return fmt.Errorf("permission: invalid enum value for status field: %q", s)
+	}
+}
+
 // OrderOption defines the ordering options for the Permission queries.
 type OrderOption func(*sql.Selector)
 
 // ByID orders the results by the id field.
 func ByID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldID, opts...).ToFunc()
+}
+
+// ByParentID orders the results by the parent_id field.
+func ByParentID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldParentID, opts...).ToFunc()
 }
 
 // ByName orders the results by the name field.
@@ -99,14 +191,39 @@ func ByDescription(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDescription, opts...).ToFunc()
 }
 
-// ByParentID orders the results by the parent_id field.
-func ByParentID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldParentID, opts...).ToFunc()
+// ByPath orders the results by the path field.
+func ByPath(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPath, opts...).ToFunc()
+}
+
+// ByIcon orders the results by the icon field.
+func ByIcon(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldIcon, opts...).ToFunc()
 }
 
 // ByType orders the results by the type field.
 func ByType(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldType, opts...).ToFunc()
+}
+
+// ByURL orders the results by the url field.
+func ByURL(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldURL, opts...).ToFunc()
+}
+
+// ByComponent orders the results by the component field.
+func ByComponent(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldComponent, opts...).ToFunc()
+}
+
+// ByWeigh orders the results by the weigh field.
+func ByWeigh(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldWeigh, opts...).ToFunc()
+}
+
+// ByStatus orders the results by the status field.
+func ByStatus(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStatus, opts...).ToFunc()
 }
 
 // ByCreatedAt orders the results by the created_at field.
@@ -117,4 +234,9 @@ func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 // ByUpdatedAt orders the results by the updated_at field.
 func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUpdatedAt, opts...).ToFunc()
+}
+
+// ByDeletedAt orders the results by the deleted_at field.
+func ByDeletedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDeletedAt, opts...).ToFunc()
 }

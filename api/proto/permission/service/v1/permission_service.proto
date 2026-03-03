@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package permission.service.v1;
+import "google/protobuf/empty.proto";
+import "permission/service/v1/role.proto";
+import "permission/service/v1/permission.proto";
+import "permission/service/v1/rbac.proto";
+
+service PermissionService {
+    // ----- 角色 -----
+//    rpc CreateRole(CreateRoleRequest) returns (CreateRoleResponse);
+//    rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleResponse);
+//    rpc GetRole(GetRoleRequest) returns (Role);
+//    rpc ListRole(ListRoleRequest) returns (ListRoleResponse);
+//    rpc DeleteRole(DeleteRoleRequest) returns (google.protobuf.Empty);
+
+    // ----- 权限 -----
+    rpc CreatePermission(CreatePermissionRequest) returns (CreatePermissionResponse);
+    rpc UpdatePermission(UpdatePermissionRequest) returns (UpdatePermissionResponse);
+    rpc GetPermission(GetPermissionRequest) returns (Permission);
+    rpc ListPermission(ListPermissionRequest) returns (ListPermissionResponse);
+    rpc ListPermissionTree(ListPermissionTreeRequest) returns (ListPermissionTreeResponse);
+    rpc DeletePermission(DeletePermissionRequest) returns (google.protobuf.Empty);
+
+    // ----- RBAC 绑定与查询 -----
+//    rpc BindRolesForAdmin(BindRolesForAdminRequest) returns (google.protobuf.Empty);
+//    rpc BindPermissionsForRole(BindPermissionsForRoleRequest) returns (google.protobuf.Empty);
+//    rpc ListRolesByAdmin(ListRolesByAdminRequest) returns (ListRolesByAdminResponse);
+//    rpc ListPermissionsByRole(ListPermissionsByRoleRequest) returns (ListPermissionsByRoleResponse);
+//    rpc ListPermissionsByAdmin(ListPermissionsByAdminRequest) returns (ListPermissionsByAdminResponse);
+//    rpc CheckPermission(CheckPermissionRequest) returns (CheckPermissionResponse);
+}

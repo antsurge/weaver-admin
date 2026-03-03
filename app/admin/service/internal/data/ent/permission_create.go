@@ -20,6 +20,20 @@ type PermissionCreate struct {
 	hooks    []Hook
 }
 
+// SetParentID sets the "parent_id" field.
+func (_c *PermissionCreate) SetParentID(v string) *PermissionCreate {
+	_c.mutation.SetParentID(v)
+	return _c
+}
+
+// SetNillableParentID sets the "parent_id" field if the given value is not nil.
+func (_c *PermissionCreate) SetNillableParentID(v *string) *PermissionCreate {
+	if v != nil {
+		_c.SetParentID(*v)
+	}
+	return _c
+}
+
 // SetName sets the "name" field.
 func (_c *PermissionCreate) SetName(v string) *PermissionCreate {
 	_c.mutation.SetName(v)
@@ -46,30 +60,100 @@ func (_c *PermissionCreate) SetNillableDescription(v *string) *PermissionCreate 
 	return _c
 }
 
-// SetParentID sets the "parent_id" field.
-func (_c *PermissionCreate) SetParentID(v int) *PermissionCreate {
-	_c.mutation.SetParentID(v)
+// SetPath sets the "path" field.
+func (_c *PermissionCreate) SetPath(v string) *PermissionCreate {
+	_c.mutation.SetPath(v)
 	return _c
 }
 
-// SetNillableParentID sets the "parent_id" field if the given value is not nil.
-func (_c *PermissionCreate) SetNillableParentID(v *int) *PermissionCreate {
+// SetNillablePath sets the "path" field if the given value is not nil.
+func (_c *PermissionCreate) SetNillablePath(v *string) *PermissionCreate {
 	if v != nil {
-		_c.SetParentID(*v)
+		_c.SetPath(*v)
+	}
+	return _c
+}
+
+// SetIcon sets the "icon" field.
+func (_c *PermissionCreate) SetIcon(v string) *PermissionCreate {
+	_c.mutation.SetIcon(v)
+	return _c
+}
+
+// SetNillableIcon sets the "icon" field if the given value is not nil.
+func (_c *PermissionCreate) SetNillableIcon(v *string) *PermissionCreate {
+	if v != nil {
+		_c.SetIcon(*v)
 	}
 	return _c
 }
 
 // SetType sets the "type" field.
-func (_c *PermissionCreate) SetType(v string) *PermissionCreate {
+func (_c *PermissionCreate) SetType(v permission.Type) *PermissionCreate {
 	_c.mutation.SetType(v)
 	return _c
 }
 
 // SetNillableType sets the "type" field if the given value is not nil.
-func (_c *PermissionCreate) SetNillableType(v *string) *PermissionCreate {
+func (_c *PermissionCreate) SetNillableType(v *permission.Type) *PermissionCreate {
 	if v != nil {
 		_c.SetType(*v)
+	}
+	return _c
+}
+
+// SetURL sets the "url" field.
+func (_c *PermissionCreate) SetURL(v string) *PermissionCreate {
+	_c.mutation.SetURL(v)
+	return _c
+}
+
+// SetNillableURL sets the "url" field if the given value is not nil.
+func (_c *PermissionCreate) SetNillableURL(v *string) *PermissionCreate {
+	if v != nil {
+		_c.SetURL(*v)
+	}
+	return _c
+}
+
+// SetComponent sets the "component" field.
+func (_c *PermissionCreate) SetComponent(v string) *PermissionCreate {
+	_c.mutation.SetComponent(v)
+	return _c
+}
+
+// SetNillableComponent sets the "component" field if the given value is not nil.
+func (_c *PermissionCreate) SetNillableComponent(v *string) *PermissionCreate {
+	if v != nil {
+		_c.SetComponent(*v)
+	}
+	return _c
+}
+
+// SetWeigh sets the "weigh" field.
+func (_c *PermissionCreate) SetWeigh(v int) *PermissionCreate {
+	_c.mutation.SetWeigh(v)
+	return _c
+}
+
+// SetNillableWeigh sets the "weigh" field if the given value is not nil.
+func (_c *PermissionCreate) SetNillableWeigh(v *int) *PermissionCreate {
+	if v != nil {
+		_c.SetWeigh(*v)
+	}
+	return _c
+}
+
+// SetStatus sets the "status" field.
+func (_c *PermissionCreate) SetStatus(v permission.Status) *PermissionCreate {
+	_c.mutation.SetStatus(v)
+	return _c
+}
+
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (_c *PermissionCreate) SetNillableStatus(v *permission.Status) *PermissionCreate {
+	if v != nil {
+		_c.SetStatus(*v)
 	}
 	return _c
 }
@@ -98,6 +182,20 @@ func (_c *PermissionCreate) SetUpdatedAt(v time.Time) *PermissionCreate {
 func (_c *PermissionCreate) SetNillableUpdatedAt(v *time.Time) *PermissionCreate {
 	if v != nil {
 		_c.SetUpdatedAt(*v)
+	}
+	return _c
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (_c *PermissionCreate) SetDeletedAt(v time.Time) *PermissionCreate {
+	_c.mutation.SetDeletedAt(v)
+	return _c
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (_c *PermissionCreate) SetNillableDeletedAt(v *time.Time) *PermissionCreate {
+	if v != nil {
+		_c.SetDeletedAt(*v)
 	}
 	return _c
 }
@@ -143,13 +241,33 @@ func (_c *PermissionCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (_c *PermissionCreate) defaults() {
-	if _, ok := _c.mutation.ParentID(); !ok {
-		v := permission.DefaultParentID
-		_c.mutation.SetParentID(v)
+	if _, ok := _c.mutation.Path(); !ok {
+		v := permission.DefaultPath
+		_c.mutation.SetPath(v)
+	}
+	if _, ok := _c.mutation.Icon(); !ok {
+		v := permission.DefaultIcon
+		_c.mutation.SetIcon(v)
 	}
 	if _, ok := _c.mutation.GetType(); !ok {
 		v := permission.DefaultType
 		_c.mutation.SetType(v)
+	}
+	if _, ok := _c.mutation.URL(); !ok {
+		v := permission.DefaultURL
+		_c.mutation.SetURL(v)
+	}
+	if _, ok := _c.mutation.Component(); !ok {
+		v := permission.DefaultComponent
+		_c.mutation.SetComponent(v)
+	}
+	if _, ok := _c.mutation.Weigh(); !ok {
+		v := permission.DefaultWeigh
+		_c.mutation.SetWeigh(v)
+	}
+	if _, ok := _c.mutation.Status(); !ok {
+		v := permission.DefaultStatus
+		_c.mutation.SetStatus(v)
 	}
 	if _, ok := _c.mutation.CreatedAt(); !ok {
 		v := permission.DefaultCreatedAt()
@@ -184,12 +302,55 @@ func (_c *PermissionCreate) check() error {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Permission.description": %w`, err)}
 		}
 	}
+	if _, ok := _c.mutation.Path(); !ok {
+		return &ValidationError{Name: "path", err: errors.New(`ent: missing required field "Permission.path"`)}
+	}
+	if v, ok := _c.mutation.Path(); ok {
+		if err := permission.PathValidator(v); err != nil {
+			return &ValidationError{Name: "path", err: fmt.Errorf(`ent: validator failed for field "Permission.path": %w`, err)}
+		}
+	}
+	if _, ok := _c.mutation.Icon(); !ok {
+		return &ValidationError{Name: "icon", err: errors.New(`ent: missing required field "Permission.icon"`)}
+	}
+	if v, ok := _c.mutation.Icon(); ok {
+		if err := permission.IconValidator(v); err != nil {
+			return &ValidationError{Name: "icon", err: fmt.Errorf(`ent: validator failed for field "Permission.icon": %w`, err)}
+		}
+	}
 	if _, ok := _c.mutation.GetType(); !ok {
 		return &ValidationError{Name: "type", err: errors.New(`ent: missing required field "Permission.type"`)}
 	}
 	if v, ok := _c.mutation.GetType(); ok {
 		if err := permission.TypeValidator(v); err != nil {
 			return &ValidationError{Name: "type", err: fmt.Errorf(`ent: validator failed for field "Permission.type": %w`, err)}
+		}
+	}
+	if _, ok := _c.mutation.URL(); !ok {
+		return &ValidationError{Name: "url", err: errors.New(`ent: missing required field "Permission.url"`)}
+	}
+	if v, ok := _c.mutation.URL(); ok {
+		if err := permission.URLValidator(v); err != nil {
+			return &ValidationError{Name: "url", err: fmt.Errorf(`ent: validator failed for field "Permission.url": %w`, err)}
+		}
+	}
+	if _, ok := _c.mutation.Component(); !ok {
+		return &ValidationError{Name: "component", err: errors.New(`ent: missing required field "Permission.component"`)}
+	}
+	if v, ok := _c.mutation.Component(); ok {
+		if err := permission.ComponentValidator(v); err != nil {
+			return &ValidationError{Name: "component", err: fmt.Errorf(`ent: validator failed for field "Permission.component": %w`, err)}
+		}
+	}
+	if _, ok := _c.mutation.Weigh(); !ok {
+		return &ValidationError{Name: "weigh", err: errors.New(`ent: missing required field "Permission.weigh"`)}
+	}
+	if _, ok := _c.mutation.Status(); !ok {
+		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Permission.status"`)}
+	}
+	if v, ok := _c.mutation.Status(); ok {
+		if err := permission.StatusValidator(v); err != nil {
+			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Permission.status": %w`, err)}
 		}
 	}
 	if _, ok := _c.mutation.CreatedAt(); !ok {
@@ -238,6 +399,10 @@ func (_c *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 		_node.ID = id
 		_spec.ID.Value = id
 	}
+	if value, ok := _c.mutation.ParentID(); ok {
+		_spec.SetField(permission.FieldParentID, field.TypeString, value)
+		_node.ParentID = &value
+	}
 	if value, ok := _c.mutation.Name(); ok {
 		_spec.SetField(permission.FieldName, field.TypeString, value)
 		_node.Name = value
@@ -250,13 +415,33 @@ func (_c *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 		_spec.SetField(permission.FieldDescription, field.TypeString, value)
 		_node.Description = value
 	}
-	if value, ok := _c.mutation.ParentID(); ok {
-		_spec.SetField(permission.FieldParentID, field.TypeInt, value)
-		_node.ParentID = value
+	if value, ok := _c.mutation.Path(); ok {
+		_spec.SetField(permission.FieldPath, field.TypeString, value)
+		_node.Path = value
+	}
+	if value, ok := _c.mutation.Icon(); ok {
+		_spec.SetField(permission.FieldIcon, field.TypeString, value)
+		_node.Icon = value
 	}
 	if value, ok := _c.mutation.GetType(); ok {
-		_spec.SetField(permission.FieldType, field.TypeString, value)
+		_spec.SetField(permission.FieldType, field.TypeEnum, value)
 		_node.Type = value
+	}
+	if value, ok := _c.mutation.URL(); ok {
+		_spec.SetField(permission.FieldURL, field.TypeString, value)
+		_node.URL = value
+	}
+	if value, ok := _c.mutation.Component(); ok {
+		_spec.SetField(permission.FieldComponent, field.TypeString, value)
+		_node.Component = value
+	}
+	if value, ok := _c.mutation.Weigh(); ok {
+		_spec.SetField(permission.FieldWeigh, field.TypeInt, value)
+		_node.Weigh = value
+	}
+	if value, ok := _c.mutation.Status(); ok {
+		_spec.SetField(permission.FieldStatus, field.TypeEnum, value)
+		_node.Status = value
 	}
 	if value, ok := _c.mutation.CreatedAt(); ok {
 		_spec.SetField(permission.FieldCreatedAt, field.TypeTime, value)
@@ -265,6 +450,10 @@ func (_c *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.UpdatedAt(); ok {
 		_spec.SetField(permission.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
+	}
+	if value, ok := _c.mutation.DeletedAt(); ok {
+		_spec.SetField(permission.FieldDeletedAt, field.TypeTime, value)
+		_node.DeletedAt = &value
 	}
 	return _node, _spec
 }
