@@ -4,7 +4,7 @@
 // - protoc             (unknown)
 // source: permission/service/v1/permission_service.proto
 
-package servicev1
+package permissionpb
 
 import (
 	context "context"
@@ -20,12 +20,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	PermissionService_CreatePermission_FullMethodName   = "/permission.service.v1.PermissionService/CreatePermission"
-	PermissionService_UpdatePermission_FullMethodName   = "/permission.service.v1.PermissionService/UpdatePermission"
-	PermissionService_GetPermission_FullMethodName      = "/permission.service.v1.PermissionService/GetPermission"
-	PermissionService_ListPermission_FullMethodName     = "/permission.service.v1.PermissionService/ListPermission"
-	PermissionService_ListPermissionTree_FullMethodName = "/permission.service.v1.PermissionService/ListPermissionTree"
-	PermissionService_DeletePermission_FullMethodName   = "/permission.service.v1.PermissionService/DeletePermission"
+	PermissionService_CreatePermission_FullMethodName = "/permission.service.v1.PermissionService/CreatePermission"
+	PermissionService_UpdatePermission_FullMethodName = "/permission.service.v1.PermissionService/UpdatePermission"
+	PermissionService_GetPermission_FullMethodName    = "/permission.service.v1.PermissionService/GetPermission"
+	PermissionService_ListPermission_FullMethodName   = "/permission.service.v1.PermissionService/ListPermission"
+	PermissionService_PermissionTree_FullMethodName   = "/permission.service.v1.PermissionService/PermissionTree"
+	PermissionService_DeletePermission_FullMethodName = "/permission.service.v1.PermissionService/DeletePermission"
 )
 
 // PermissionServiceClient is the client API for PermissionService service.
@@ -37,7 +37,7 @@ type PermissionServiceClient interface {
 	UpdatePermission(ctx context.Context, in *UpdatePermissionRequest, opts ...grpc.CallOption) (*UpdatePermissionResponse, error)
 	GetPermission(ctx context.Context, in *GetPermissionRequest, opts ...grpc.CallOption) (*Permission, error)
 	ListPermission(ctx context.Context, in *ListPermissionRequest, opts ...grpc.CallOption) (*ListPermissionResponse, error)
-	ListPermissionTree(ctx context.Context, in *ListPermissionTreeRequest, opts ...grpc.CallOption) (*ListPermissionTreeResponse, error)
+	PermissionTree(ctx context.Context, in *PermissionTreeRequest, opts ...grpc.CallOption) (*PermissionTreeResponse, error)
 	DeletePermission(ctx context.Context, in *DeletePermissionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
@@ -89,10 +89,10 @@ func (c *permissionServiceClient) ListPermission(ctx context.Context, in *ListPe
 	return out, nil
 }
 
-func (c *permissionServiceClient) ListPermissionTree(ctx context.Context, in *ListPermissionTreeRequest, opts ...grpc.CallOption) (*ListPermissionTreeResponse, error) {
+func (c *permissionServiceClient) PermissionTree(ctx context.Context, in *PermissionTreeRequest, opts ...grpc.CallOption) (*PermissionTreeResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListPermissionTreeResponse)
-	err := c.cc.Invoke(ctx, PermissionService_ListPermissionTree_FullMethodName, in, out, cOpts...)
+	out := new(PermissionTreeResponse)
+	err := c.cc.Invoke(ctx, PermissionService_PermissionTree_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -118,7 +118,7 @@ type PermissionServiceServer interface {
 	UpdatePermission(context.Context, *UpdatePermissionRequest) (*UpdatePermissionResponse, error)
 	GetPermission(context.Context, *GetPermissionRequest) (*Permission, error)
 	ListPermission(context.Context, *ListPermissionRequest) (*ListPermissionResponse, error)
-	ListPermissionTree(context.Context, *ListPermissionTreeRequest) (*ListPermissionTreeResponse, error)
+	PermissionTree(context.Context, *PermissionTreeRequest) (*PermissionTreeResponse, error)
 	DeletePermission(context.Context, *DeletePermissionRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedPermissionServiceServer()
 }
@@ -142,8 +142,8 @@ func (UnimplementedPermissionServiceServer) GetPermission(context.Context, *GetP
 func (UnimplementedPermissionServiceServer) ListPermission(context.Context, *ListPermissionRequest) (*ListPermissionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListPermission not implemented")
 }
-func (UnimplementedPermissionServiceServer) ListPermissionTree(context.Context, *ListPermissionTreeRequest) (*ListPermissionTreeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListPermissionTree not implemented")
+func (UnimplementedPermissionServiceServer) PermissionTree(context.Context, *PermissionTreeRequest) (*PermissionTreeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PermissionTree not implemented")
 }
 func (UnimplementedPermissionServiceServer) DeletePermission(context.Context, *DeletePermissionRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeletePermission not implemented")
@@ -241,20 +241,20 @@ func _PermissionService_ListPermission_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PermissionService_ListPermissionTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListPermissionTreeRequest)
+func _PermissionService_PermissionTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PermissionTreeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PermissionServiceServer).ListPermissionTree(ctx, in)
+		return srv.(PermissionServiceServer).PermissionTree(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PermissionService_ListPermissionTree_FullMethodName,
+		FullMethod: PermissionService_PermissionTree_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServiceServer).ListPermissionTree(ctx, req.(*ListPermissionTreeRequest))
+		return srv.(PermissionServiceServer).PermissionTree(ctx, req.(*PermissionTreeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -301,8 +301,8 @@ var PermissionService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _PermissionService_ListPermission_Handler,
 		},
 		{
-			MethodName: "ListPermissionTree",
-			Handler:    _PermissionService_ListPermissionTree_Handler,
+			MethodName: "PermissionTree",
+			Handler:    _PermissionService_PermissionTree_Handler,
 		},
 		{
 			MethodName: "DeletePermission",

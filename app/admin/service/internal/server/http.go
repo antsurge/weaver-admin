@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/middleware/selector"
@@ -34,6 +35,7 @@ func NewHTTPServer(
 	c *conf.Server,
 	jwtConf *conf.JWT,
 	authenticationService *service.AuthenticationService,
+	permissionService *service.PermissionService,
 
 	logger log.Logger,
 ) *http.Server {
@@ -59,5 +61,6 @@ func NewHTTPServer(
 	}
 	srv := http.NewServer(opts...)
 	adminV1.RegisterAuthenticationServiceHTTPServer(srv, authenticationService)
+	adminV1.RegisterPermissionServiceHTTPServer(srv, permissionService)
 	return srv
 }

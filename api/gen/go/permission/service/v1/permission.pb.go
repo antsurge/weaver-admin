@@ -4,7 +4,7 @@
 // 	protoc        (unknown)
 // source: permission/service/v1/permission.proto
 
-package servicev1
+package permissionpb
 
 import (
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
@@ -24,109 +24,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// 权限类型
-type PermissionType int32
-
-const (
-	PermissionType_PERMISSION_TYPE_UNSPECIFIED    PermissionType = 0 // 未指定
-	PermissionType_PERMISSION_TYPE_MENU_DIRECTORY PermissionType = 1 // 菜单目录
-	PermissionType_PERMISSION_TYPE_MENU_ITEM      PermissionType = 2 // 菜单项
-	PermissionType_PERMISSION_TYPE_BUTTON         PermissionType = 3 // 页面按钮
-)
-
-// Enum value maps for PermissionType.
-var (
-	PermissionType_name = map[int32]string{
-		0: "PERMISSION_TYPE_UNSPECIFIED",
-		1: "PERMISSION_TYPE_MENU_DIRECTORY",
-		2: "PERMISSION_TYPE_MENU_ITEM",
-		3: "PERMISSION_TYPE_BUTTON",
-	}
-	PermissionType_value = map[string]int32{
-		"PERMISSION_TYPE_UNSPECIFIED":    0,
-		"PERMISSION_TYPE_MENU_DIRECTORY": 1,
-		"PERMISSION_TYPE_MENU_ITEM":      2,
-		"PERMISSION_TYPE_BUTTON":         3,
-	}
-)
-
-func (x PermissionType) Enum() *PermissionType {
-	p := new(PermissionType)
-	*p = x
-	return p
-}
-
-func (x PermissionType) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (PermissionType) Descriptor() protoreflect.EnumDescriptor {
-	return file_permission_service_v1_permission_proto_enumTypes[0].Descriptor()
-}
-
-func (PermissionType) Type() protoreflect.EnumType {
-	return &file_permission_service_v1_permission_proto_enumTypes[0]
-}
-
-func (x PermissionType) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use PermissionType.Descriptor instead.
-func (PermissionType) EnumDescriptor() ([]byte, []int) {
-	return file_permission_service_v1_permission_proto_rawDescGZIP(), []int{0}
-}
-
-// 权限状态
-type PermissionStatus int32
-
-const (
-	PermissionStatus_PERMISSION_STATUS_UNSPECIFIED PermissionStatus = 0
-	PermissionStatus_PERMISSION_STATUS_ENABLED     PermissionStatus = 1
-	PermissionStatus_PERMISSION_STATUS_DISABLED    PermissionStatus = 2
-)
-
-// Enum value maps for PermissionStatus.
-var (
-	PermissionStatus_name = map[int32]string{
-		0: "PERMISSION_STATUS_UNSPECIFIED",
-		1: "PERMISSION_STATUS_ENABLED",
-		2: "PERMISSION_STATUS_DISABLED",
-	}
-	PermissionStatus_value = map[string]int32{
-		"PERMISSION_STATUS_UNSPECIFIED": 0,
-		"PERMISSION_STATUS_ENABLED":     1,
-		"PERMISSION_STATUS_DISABLED":    2,
-	}
-)
-
-func (x PermissionStatus) Enum() *PermissionStatus {
-	p := new(PermissionStatus)
-	*p = x
-	return p
-}
-
-func (x PermissionStatus) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (PermissionStatus) Descriptor() protoreflect.EnumDescriptor {
-	return file_permission_service_v1_permission_proto_enumTypes[1].Descriptor()
-}
-
-func (PermissionStatus) Type() protoreflect.EnumType {
-	return &file_permission_service_v1_permission_proto_enumTypes[1]
-}
-
-func (x PermissionStatus) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use PermissionStatus.Descriptor instead.
-func (PermissionStatus) EnumDescriptor() ([]byte, []int) {
-	return file_permission_service_v1_permission_proto_rawDescGZIP(), []int{1}
-}
-
 // 权限实体
 type Permission struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -135,15 +32,16 @@ type Permission struct {
 	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	Code          string                 `protobuf:"bytes,4,opt,name=code,proto3" json:"code,omitempty"`
 	Description   string                 `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
-	Type          PermissionType         `protobuf:"varint,6,opt,name=type,proto3,enum=permission.service.v1.PermissionType" json:"type,omitempty"`
+	Type          string                 `protobuf:"bytes,6,opt,name=type,proto3" json:"type,omitempty"`
 	Path          string                 `protobuf:"bytes,7,opt,name=path,proto3" json:"path,omitempty"`
 	Icon          string                 `protobuf:"bytes,8,opt,name=icon,proto3" json:"icon,omitempty"`
 	Url           string                 `protobuf:"bytes,9,opt,name=url,proto3" json:"url,omitempty"`
 	Component     string                 `protobuf:"bytes,10,opt,name=component,proto3" json:"component,omitempty"`
-	Weigh         int32                  `protobuf:"varint,11,opt,name=weigh,proto3" json:"weigh,omitempty"`
-	Status        PermissionStatus       `protobuf:"varint,12,opt,name=status,proto3,enum=permission.service.v1.PermissionStatus" json:"status,omitempty"`
+	Weight        int32                  `protobuf:"varint,11,opt,name=weight,proto3" json:"weight,omitempty"`
+	Status        string                 `protobuf:"bytes,12,opt,name=status,proto3" json:"status,omitempty"`
 	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,13,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
 	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,14,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`
+	Children      []*Permission          `protobuf:"bytes,30,rep,name=children,proto3" json:"children,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -213,11 +111,11 @@ func (x *Permission) GetDescription() string {
 	return ""
 }
 
-func (x *Permission) GetType() PermissionType {
+func (x *Permission) GetType() string {
 	if x != nil {
 		return x.Type
 	}
-	return PermissionType_PERMISSION_TYPE_UNSPECIFIED
+	return ""
 }
 
 func (x *Permission) GetPath() string {
@@ -248,18 +146,18 @@ func (x *Permission) GetComponent() string {
 	return ""
 }
 
-func (x *Permission) GetWeigh() int32 {
+func (x *Permission) GetWeight() int32 {
 	if x != nil {
-		return x.Weigh
+		return x.Weight
 	}
 	return 0
 }
 
-func (x *Permission) GetStatus() PermissionStatus {
+func (x *Permission) GetStatus() string {
 	if x != nil {
 		return x.Status
 	}
-	return PermissionStatus_PERMISSION_STATUS_UNSPECIFIED
+	return ""
 }
 
 func (x *Permission) GetCreatedAt() *timestamppb.Timestamp {
@@ -276,53 +174,7 @@ func (x *Permission) GetUpdatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
-// 树形权限节点（用于菜单树）
-type PermissionTreeNode struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Permission    *Permission            `protobuf:"bytes,1,opt,name=permission,proto3" json:"permission,omitempty"`
-	Children      []*PermissionTreeNode  `protobuf:"bytes,2,rep,name=children,proto3" json:"children,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PermissionTreeNode) Reset() {
-	*x = PermissionTreeNode{}
-	mi := &file_permission_service_v1_permission_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PermissionTreeNode) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PermissionTreeNode) ProtoMessage() {}
-
-func (x *PermissionTreeNode) ProtoReflect() protoreflect.Message {
-	mi := &file_permission_service_v1_permission_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PermissionTreeNode.ProtoReflect.Descriptor instead.
-func (*PermissionTreeNode) Descriptor() ([]byte, []int) {
-	return file_permission_service_v1_permission_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *PermissionTreeNode) GetPermission() *Permission {
-	if x != nil {
-		return x.Permission
-	}
-	return nil
-}
-
-func (x *PermissionTreeNode) GetChildren() []*PermissionTreeNode {
+func (x *Permission) GetChildren() []*Permission {
 	if x != nil {
 		return x.Children
 	}
@@ -336,20 +188,20 @@ type CreatePermissionRequest struct {
 	Code          string                 `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"`
 	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
 	ParentId      string                 `protobuf:"bytes,4,opt,name=parentId,proto3" json:"parentId,omitempty"`
-	Type          PermissionType         `protobuf:"varint,5,opt,name=type,proto3,enum=permission.service.v1.PermissionType" json:"type,omitempty"`
+	Type          string                 `protobuf:"bytes,5,opt,name=type,proto3" json:"type,omitempty"`
 	Path          string                 `protobuf:"bytes,6,opt,name=path,proto3" json:"path,omitempty"`
 	Icon          string                 `protobuf:"bytes,7,opt,name=icon,proto3" json:"icon,omitempty"`
 	Url           string                 `protobuf:"bytes,8,opt,name=url,proto3" json:"url,omitempty"`
 	Component     string                 `protobuf:"bytes,9,opt,name=component,proto3" json:"component,omitempty"`
 	Weigh         int32                  `protobuf:"varint,10,opt,name=weigh,proto3" json:"weigh,omitempty"`
-	Status        PermissionStatus       `protobuf:"varint,11,opt,name=status,proto3,enum=permission.service.v1.PermissionStatus" json:"status,omitempty"`
+	Status        string                 `protobuf:"bytes,11,opt,name=status,proto3" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CreatePermissionRequest) Reset() {
 	*x = CreatePermissionRequest{}
-	mi := &file_permission_service_v1_permission_proto_msgTypes[2]
+	mi := &file_permission_service_v1_permission_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -361,7 +213,7 @@ func (x *CreatePermissionRequest) String() string {
 func (*CreatePermissionRequest) ProtoMessage() {}
 
 func (x *CreatePermissionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_permission_service_v1_permission_proto_msgTypes[2]
+	mi := &file_permission_service_v1_permission_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -374,7 +226,7 @@ func (x *CreatePermissionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreatePermissionRequest.ProtoReflect.Descriptor instead.
 func (*CreatePermissionRequest) Descriptor() ([]byte, []int) {
-	return file_permission_service_v1_permission_proto_rawDescGZIP(), []int{2}
+	return file_permission_service_v1_permission_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *CreatePermissionRequest) GetName() string {
@@ -405,11 +257,11 @@ func (x *CreatePermissionRequest) GetParentId() string {
 	return ""
 }
 
-func (x *CreatePermissionRequest) GetType() PermissionType {
+func (x *CreatePermissionRequest) GetType() string {
 	if x != nil {
 		return x.Type
 	}
-	return PermissionType_PERMISSION_TYPE_UNSPECIFIED
+	return ""
 }
 
 func (x *CreatePermissionRequest) GetPath() string {
@@ -447,11 +299,11 @@ func (x *CreatePermissionRequest) GetWeigh() int32 {
 	return 0
 }
 
-func (x *CreatePermissionRequest) GetStatus() PermissionStatus {
+func (x *CreatePermissionRequest) GetStatus() string {
 	if x != nil {
 		return x.Status
 	}
-	return PermissionStatus_PERMISSION_STATUS_UNSPECIFIED
+	return ""
 }
 
 // 创建权限响应
@@ -464,7 +316,7 @@ type CreatePermissionResponse struct {
 
 func (x *CreatePermissionResponse) Reset() {
 	*x = CreatePermissionResponse{}
-	mi := &file_permission_service_v1_permission_proto_msgTypes[3]
+	mi := &file_permission_service_v1_permission_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -476,7 +328,7 @@ func (x *CreatePermissionResponse) String() string {
 func (*CreatePermissionResponse) ProtoMessage() {}
 
 func (x *CreatePermissionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_permission_service_v1_permission_proto_msgTypes[3]
+	mi := &file_permission_service_v1_permission_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -489,7 +341,7 @@ func (x *CreatePermissionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreatePermissionResponse.ProtoReflect.Descriptor instead.
 func (*CreatePermissionResponse) Descriptor() ([]byte, []int) {
-	return file_permission_service_v1_permission_proto_rawDescGZIP(), []int{3}
+	return file_permission_service_v1_permission_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *CreatePermissionResponse) GetPermission() *Permission {
@@ -507,20 +359,20 @@ type UpdatePermissionRequest struct {
 	Code          *string                `protobuf:"bytes,3,opt,name=code,proto3,oneof" json:"code,omitempty"`
 	Description   *string                `protobuf:"bytes,4,opt,name=description,proto3,oneof" json:"description,omitempty"`
 	ParentId      *string                `protobuf:"bytes,5,opt,name=parentId,proto3,oneof" json:"parentId,omitempty"`
-	Type          *PermissionType        `protobuf:"varint,6,opt,name=type,proto3,enum=permission.service.v1.PermissionType,oneof" json:"type,omitempty"`
+	Type          *string                `protobuf:"bytes,6,opt,name=type,proto3,oneof" json:"type,omitempty"`
 	Path          *string                `protobuf:"bytes,7,opt,name=path,proto3,oneof" json:"path,omitempty"`
 	Icon          *string                `protobuf:"bytes,8,opt,name=icon,proto3,oneof" json:"icon,omitempty"`
 	Url           *string                `protobuf:"bytes,9,opt,name=url,proto3,oneof" json:"url,omitempty"`
 	Component     *string                `protobuf:"bytes,10,opt,name=component,proto3,oneof" json:"component,omitempty"`
 	Weigh         *int32                 `protobuf:"varint,11,opt,name=weigh,proto3,oneof" json:"weigh,omitempty"`
-	Status        *PermissionStatus      `protobuf:"varint,12,opt,name=status,proto3,enum=permission.service.v1.PermissionStatus,oneof" json:"status,omitempty"`
+	Status        *string                `protobuf:"bytes,12,opt,name=status,proto3,oneof" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *UpdatePermissionRequest) Reset() {
 	*x = UpdatePermissionRequest{}
-	mi := &file_permission_service_v1_permission_proto_msgTypes[4]
+	mi := &file_permission_service_v1_permission_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -532,7 +384,7 @@ func (x *UpdatePermissionRequest) String() string {
 func (*UpdatePermissionRequest) ProtoMessage() {}
 
 func (x *UpdatePermissionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_permission_service_v1_permission_proto_msgTypes[4]
+	mi := &file_permission_service_v1_permission_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -545,7 +397,7 @@ func (x *UpdatePermissionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePermissionRequest.ProtoReflect.Descriptor instead.
 func (*UpdatePermissionRequest) Descriptor() ([]byte, []int) {
-	return file_permission_service_v1_permission_proto_rawDescGZIP(), []int{4}
+	return file_permission_service_v1_permission_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *UpdatePermissionRequest) GetId() string {
@@ -583,11 +435,11 @@ func (x *UpdatePermissionRequest) GetParentId() string {
 	return ""
 }
 
-func (x *UpdatePermissionRequest) GetType() PermissionType {
+func (x *UpdatePermissionRequest) GetType() string {
 	if x != nil && x.Type != nil {
 		return *x.Type
 	}
-	return PermissionType_PERMISSION_TYPE_UNSPECIFIED
+	return ""
 }
 
 func (x *UpdatePermissionRequest) GetPath() string {
@@ -625,11 +477,11 @@ func (x *UpdatePermissionRequest) GetWeigh() int32 {
 	return 0
 }
 
-func (x *UpdatePermissionRequest) GetStatus() PermissionStatus {
+func (x *UpdatePermissionRequest) GetStatus() string {
 	if x != nil && x.Status != nil {
 		return *x.Status
 	}
-	return PermissionStatus_PERMISSION_STATUS_UNSPECIFIED
+	return ""
 }
 
 type UpdatePermissionResponse struct {
@@ -641,7 +493,7 @@ type UpdatePermissionResponse struct {
 
 func (x *UpdatePermissionResponse) Reset() {
 	*x = UpdatePermissionResponse{}
-	mi := &file_permission_service_v1_permission_proto_msgTypes[5]
+	mi := &file_permission_service_v1_permission_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -653,7 +505,7 @@ func (x *UpdatePermissionResponse) String() string {
 func (*UpdatePermissionResponse) ProtoMessage() {}
 
 func (x *UpdatePermissionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_permission_service_v1_permission_proto_msgTypes[5]
+	mi := &file_permission_service_v1_permission_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -666,7 +518,7 @@ func (x *UpdatePermissionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePermissionResponse.ProtoReflect.Descriptor instead.
 func (*UpdatePermissionResponse) Descriptor() ([]byte, []int) {
-	return file_permission_service_v1_permission_proto_rawDescGZIP(), []int{5}
+	return file_permission_service_v1_permission_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *UpdatePermissionResponse) GetPermission() *Permission {
@@ -686,7 +538,7 @@ type GetPermissionRequest struct {
 
 func (x *GetPermissionRequest) Reset() {
 	*x = GetPermissionRequest{}
-	mi := &file_permission_service_v1_permission_proto_msgTypes[6]
+	mi := &file_permission_service_v1_permission_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -698,7 +550,7 @@ func (x *GetPermissionRequest) String() string {
 func (*GetPermissionRequest) ProtoMessage() {}
 
 func (x *GetPermissionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_permission_service_v1_permission_proto_msgTypes[6]
+	mi := &file_permission_service_v1_permission_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -711,7 +563,7 @@ func (x *GetPermissionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPermissionRequest.ProtoReflect.Descriptor instead.
 func (*GetPermissionRequest) Descriptor() ([]byte, []int) {
-	return file_permission_service_v1_permission_proto_rawDescGZIP(), []int{6}
+	return file_permission_service_v1_permission_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *GetPermissionRequest) GetId() string {
@@ -728,14 +580,14 @@ type ListPermissionRequest struct {
 	PageSize      int32                  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
 	Keyword       string                 `protobuf:"bytes,3,opt,name=keyword,proto3" json:"keyword,omitempty"`
 	ParentId      string                 `protobuf:"bytes,4,opt,name=parentId,proto3" json:"parentId,omitempty"`
-	Type          PermissionType         `protobuf:"varint,5,opt,name=type,proto3,enum=permission.service.v1.PermissionType" json:"type,omitempty"`
+	Type          string                 `protobuf:"bytes,5,opt,name=type,proto3" json:"type,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ListPermissionRequest) Reset() {
 	*x = ListPermissionRequest{}
-	mi := &file_permission_service_v1_permission_proto_msgTypes[7]
+	mi := &file_permission_service_v1_permission_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -747,7 +599,7 @@ func (x *ListPermissionRequest) String() string {
 func (*ListPermissionRequest) ProtoMessage() {}
 
 func (x *ListPermissionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_permission_service_v1_permission_proto_msgTypes[7]
+	mi := &file_permission_service_v1_permission_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -760,7 +612,7 @@ func (x *ListPermissionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListPermissionRequest.ProtoReflect.Descriptor instead.
 func (*ListPermissionRequest) Descriptor() ([]byte, []int) {
-	return file_permission_service_v1_permission_proto_rawDescGZIP(), []int{7}
+	return file_permission_service_v1_permission_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ListPermissionRequest) GetPage() int32 {
@@ -791,11 +643,11 @@ func (x *ListPermissionRequest) GetParentId() string {
 	return ""
 }
 
-func (x *ListPermissionRequest) GetType() PermissionType {
+func (x *ListPermissionRequest) GetType() string {
 	if x != nil {
 		return x.Type
 	}
-	return PermissionType_PERMISSION_TYPE_UNSPECIFIED
+	return ""
 }
 
 type ListPermissionResponse struct {
@@ -808,7 +660,7 @@ type ListPermissionResponse struct {
 
 func (x *ListPermissionResponse) Reset() {
 	*x = ListPermissionResponse{}
-	mi := &file_permission_service_v1_permission_proto_msgTypes[8]
+	mi := &file_permission_service_v1_permission_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -820,7 +672,7 @@ func (x *ListPermissionResponse) String() string {
 func (*ListPermissionResponse) ProtoMessage() {}
 
 func (x *ListPermissionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_permission_service_v1_permission_proto_msgTypes[8]
+	mi := &file_permission_service_v1_permission_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -833,7 +685,7 @@ func (x *ListPermissionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListPermissionResponse.ProtoReflect.Descriptor instead.
 func (*ListPermissionResponse) Descriptor() ([]byte, []int) {
-	return file_permission_service_v1_permission_proto_rawDescGZIP(), []int{8}
+	return file_permission_service_v1_permission_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ListPermissionResponse) GetItems() []*Permission {
@@ -851,28 +703,28 @@ func (x *ListPermissionResponse) GetTotal() int32 {
 }
 
 // 树形权限列表（用于菜单）
-type ListPermissionTreeRequest struct {
+type PermissionTreeRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Type          PermissionType         `protobuf:"varint,1,opt,name=type,proto3,enum=permission.service.v1.PermissionType" json:"type,omitempty"`
+	Type          string                 `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListPermissionTreeRequest) Reset() {
-	*x = ListPermissionTreeRequest{}
-	mi := &file_permission_service_v1_permission_proto_msgTypes[9]
+func (x *PermissionTreeRequest) Reset() {
+	*x = PermissionTreeRequest{}
+	mi := &file_permission_service_v1_permission_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListPermissionTreeRequest) String() string {
+func (x *PermissionTreeRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListPermissionTreeRequest) ProtoMessage() {}
+func (*PermissionTreeRequest) ProtoMessage() {}
 
-func (x *ListPermissionTreeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_permission_service_v1_permission_proto_msgTypes[9]
+func (x *PermissionTreeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_permission_service_v1_permission_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -883,40 +735,41 @@ func (x *ListPermissionTreeRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListPermissionTreeRequest.ProtoReflect.Descriptor instead.
-func (*ListPermissionTreeRequest) Descriptor() ([]byte, []int) {
-	return file_permission_service_v1_permission_proto_rawDescGZIP(), []int{9}
+// Deprecated: Use PermissionTreeRequest.ProtoReflect.Descriptor instead.
+func (*PermissionTreeRequest) Descriptor() ([]byte, []int) {
+	return file_permission_service_v1_permission_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *ListPermissionTreeRequest) GetType() PermissionType {
+func (x *PermissionTreeRequest) GetType() string {
 	if x != nil {
 		return x.Type
 	}
-	return PermissionType_PERMISSION_TYPE_UNSPECIFIED
+	return ""
 }
 
-type ListPermissionTreeResponse struct {
+// 树形权限列表响应
+type PermissionTreeResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Nodes         []*PermissionTreeNode  `protobuf:"bytes,1,rep,name=nodes,proto3" json:"nodes,omitempty"`
+	Data          []*Permission          `protobuf:"bytes,1,rep,name=data,proto3" json:"data,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListPermissionTreeResponse) Reset() {
-	*x = ListPermissionTreeResponse{}
-	mi := &file_permission_service_v1_permission_proto_msgTypes[10]
+func (x *PermissionTreeResponse) Reset() {
+	*x = PermissionTreeResponse{}
+	mi := &file_permission_service_v1_permission_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListPermissionTreeResponse) String() string {
+func (x *PermissionTreeResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListPermissionTreeResponse) ProtoMessage() {}
+func (*PermissionTreeResponse) ProtoMessage() {}
 
-func (x *ListPermissionTreeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_permission_service_v1_permission_proto_msgTypes[10]
+func (x *PermissionTreeResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_permission_service_v1_permission_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -927,14 +780,14 @@ func (x *ListPermissionTreeResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListPermissionTreeResponse.ProtoReflect.Descriptor instead.
-func (*ListPermissionTreeResponse) Descriptor() ([]byte, []int) {
-	return file_permission_service_v1_permission_proto_rawDescGZIP(), []int{10}
+// Deprecated: Use PermissionTreeResponse.ProtoReflect.Descriptor instead.
+func (*PermissionTreeResponse) Descriptor() ([]byte, []int) {
+	return file_permission_service_v1_permission_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *ListPermissionTreeResponse) GetNodes() []*PermissionTreeNode {
+func (x *PermissionTreeResponse) GetData() []*Permission {
 	if x != nil {
-		return x.Nodes
+		return x.Data
 	}
 	return nil
 }
@@ -949,7 +802,7 @@ type DeletePermissionRequest struct {
 
 func (x *DeletePermissionRequest) Reset() {
 	*x = DeletePermissionRequest{}
-	mi := &file_permission_service_v1_permission_proto_msgTypes[11]
+	mi := &file_permission_service_v1_permission_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -961,7 +814,7 @@ func (x *DeletePermissionRequest) String() string {
 func (*DeletePermissionRequest) ProtoMessage() {}
 
 func (x *DeletePermissionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_permission_service_v1_permission_proto_msgTypes[11]
+	mi := &file_permission_service_v1_permission_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -974,7 +827,7 @@ func (x *DeletePermissionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeletePermissionRequest.ProtoReflect.Descriptor instead.
 func (*DeletePermissionRequest) Descriptor() ([]byte, []int) {
-	return file_permission_service_v1_permission_proto_rawDescGZIP(), []int{11}
+	return file_permission_service_v1_permission_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *DeletePermissionRequest) GetIds() []string {
@@ -988,29 +841,25 @@ var File_permission_service_v1_permission_proto protoreflect.FileDescriptor
 
 const file_permission_service_v1_permission_proto_rawDesc = "" +
 	"\n" +
-	"&permission/service/v1/permission.proto\x12\x15permission.service.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bbuf/validate/validate.proto\x1a$gnostic/openapi/v3/annotations.proto\"\xe0\x03\n" +
+	"&permission/service/v1/permission.proto\x12\x15permission.service.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bbuf/validate/validate.proto\x1a$gnostic/openapi/v3/annotations.proto\"\xd1\x03\n" +
 	"\n" +
 	"Permission\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
 	"\bparentId\x18\x02 \x01(\tR\bparentId\x12\x12\n" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12\x12\n" +
 	"\x04code\x18\x04 \x01(\tR\x04code\x12 \n" +
-	"\vdescription\x18\x05 \x01(\tR\vdescription\x129\n" +
-	"\x04type\x18\x06 \x01(\x0e2%.permission.service.v1.PermissionTypeR\x04type\x12\x12\n" +
+	"\vdescription\x18\x05 \x01(\tR\vdescription\x12\x12\n" +
+	"\x04type\x18\x06 \x01(\tR\x04type\x12\x12\n" +
 	"\x04path\x18\a \x01(\tR\x04path\x12\x12\n" +
 	"\x04icon\x18\b \x01(\tR\x04icon\x12\x10\n" +
 	"\x03url\x18\t \x01(\tR\x03url\x12\x1c\n" +
 	"\tcomponent\x18\n" +
-	" \x01(\tR\tcomponent\x12\x14\n" +
-	"\x05weigh\x18\v \x01(\x05R\x05weigh\x12?\n" +
-	"\x06status\x18\f \x01(\x0e2'.permission.service.v1.PermissionStatusR\x06status\x128\n" +
+	" \x01(\tR\tcomponent\x12\x16\n" +
+	"\x06weight\x18\v \x01(\x05R\x06weight\x12\x16\n" +
+	"\x06status\x18\f \x01(\tR\x06status\x128\n" +
 	"\tcreatedAt\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x128\n" +
-	"\tupdatedAt\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\x9e\x01\n" +
-	"\x12PermissionTreeNode\x12A\n" +
-	"\n" +
-	"permission\x18\x01 \x01(\v2!.permission.service.v1.PermissionR\n" +
-	"permission\x12E\n" +
-	"\bchildren\x18\x02 \x03(\v2).permission.service.v1.PermissionTreeNodeR\bchildren\"\xcb\t\n" +
+	"\tupdatedAt\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12=\n" +
+	"\bchildren\x18\x1e \x03(\v2!.permission.service.v1.PermissionR\bchildren\"\xfb\b\n" +
 	"\x17CreatePermissionRequest\x12\x8d\x01\n" +
 	"\x04name\x18\x01 \x01(\tBy\xbaG\x0f\x92\x02\f权限名称\xbaHd\xba\x01a\n" +
 	"\x1fCREATE_PERMISSION_NAME_REQUIRED\x12\x18权限名称不能为空\x1a$this.size() > 0 && this.size() <= 64R\x04name\x12\x93\x01\n" +
@@ -1019,8 +868,8 @@ const file_permission_service_v1_permission_proto_rawDesc = "" +
 	"\vdescription\x18\x03 \x01(\tBO\xbaG\x0f\x92\x02\f权限描述\xbaH:\xba\x017\n" +
 	"!CREATE_PERMISSION_DESCRIPTION_MAX\x1a\x12this.size() <= 256R\vdescription\x12{\n" +
 	"\bparentId\x18\x04 \x01(\tB_\xbaG#\x92\x02 父权限ID，空表示根节点\xbaH6\xba\x013\n" +
-	"\x1eCREATE_PERMISSION_PARENTID_MAX\x1a\x11this.size() <= 36R\bparentId\x12p\n" +
-	"\x04type\x18\x05 \x01(\x0e2%.permission.service.v1.PermissionTypeB5\xbaG2\x92\x02/权限类型: menuDirectory / menuItem / buttonR\x04type\x12\\\n" +
+	"\x1eCREATE_PERMISSION_PARENTID_MAX\x1a\x11this.size() <= 36R\bparentId\x12I\n" +
+	"\x04type\x18\x05 \x01(\tB5\xbaG2\x92\x02/权限类型: menuDirectory / menuItem / buttonR\x04type\x12\\\n" +
 	"\x04path\x18\x06 \x01(\tBH\xbaG\x0f\x92\x02\f路由路径\xbaH3\xba\x010\n" +
 	"\x1aCREATE_PERMISSION_PATH_MAX\x1a\x12this.size() <= 256R\x04path\x12V\n" +
 	"\x04icon\x18\a \x01(\tBB\xbaG\t\x92\x02\x06图标\xbaH3\xba\x010\n" +
@@ -1031,12 +880,12 @@ const file_permission_service_v1_permission_proto_rawDesc = "" +
 	"\x1fCREATE_PERMISSION_COMPONENT_MAX\x1a\x12this.size() <= 256R\tcomponent\x12P\n" +
 	"\x05weigh\x18\n" +
 	" \x01(\x05B:\xbaG\t\x92\x02\x06权重\xbaH+\xba\x01(\n" +
-	"\x1bCREATE_PERMISSION_WEIGH_MIN\x1a\tthis >= 0R\x05weigh\x12a\n" +
-	"\x06status\x18\v \x01(\x0e2'.permission.service.v1.PermissionStatusB \xbaG\x1d\x92\x02\x1a状态: enabled / disabledR\x06status\"]\n" +
+	"\x1bCREATE_PERMISSION_WEIGH_MIN\x1a\tthis >= 0R\x05weigh\x128\n" +
+	"\x06status\x18\v \x01(\tB \xbaG\x1d\x92\x02\x1a状态: enabled / disabledR\x06status\"]\n" +
 	"\x18CreatePermissionResponse\x12A\n" +
 	"\n" +
 	"permission\x18\x01 \x01(\v2!.permission.service.v1.PermissionR\n" +
-	"permission\"\xfe\n" +
+	"permission\"\xae\n" +
 	"\n" +
 	"\x17UpdatePermissionRequest\x12j\n" +
 	"\x02id\x18\x01 \x01(\tBZ\xbaG\v\x92\x02\b权限ID\xbaHI\xba\x01F\n" +
@@ -1048,8 +897,8 @@ const file_permission_service_v1_permission_proto_rawDesc = "" +
 	"\vdescription\x18\x04 \x01(\tBO\xbaG\x0f\x92\x02\f权限描述\xbaH:\xba\x017\n" +
 	"!UPDATE_PERMISSION_DESCRIPTION_MAX\x1a\x12this.size() <= 256H\x02R\vdescription\x88\x01\x01\x12\x80\x01\n" +
 	"\bparentId\x18\x05 \x01(\tB_\xbaG#\x92\x02 父权限ID，空表示根节点\xbaH6\xba\x013\n" +
-	"\x1eUPDATE_PERMISSION_PARENTID_MAX\x1a\x11this.size() <= 36H\x03R\bparentId\x88\x01\x01\x12u\n" +
-	"\x04type\x18\x06 \x01(\x0e2%.permission.service.v1.PermissionTypeB5\xbaG2\x92\x02/权限类型: menuDirectory / menuItem / buttonH\x04R\x04type\x88\x01\x01\x12a\n" +
+	"\x1eUPDATE_PERMISSION_PARENTID_MAX\x1a\x11this.size() <= 36H\x03R\bparentId\x88\x01\x01\x12N\n" +
+	"\x04type\x18\x06 \x01(\tB5\xbaG2\x92\x02/权限类型: menuDirectory / menuItem / buttonH\x04R\x04type\x88\x01\x01\x12a\n" +
 	"\x04path\x18\a \x01(\tBH\xbaG\x0f\x92\x02\f路由路径\xbaH3\xba\x010\n" +
 	"\x1aUPDATE_PERMISSION_PATH_MAX\x1a\x12this.size() <= 256H\x05R\x04path\x88\x01\x01\x12[\n" +
 	"\x04icon\x18\b \x01(\tBB\xbaG\t\x92\x02\x06图标\xbaH3\xba\x010\n" +
@@ -1060,8 +909,8 @@ const file_permission_service_v1_permission_proto_rawDesc = "" +
 	" \x01(\tBM\xbaG\x0f\x92\x02\f组件路径\xbaH8\xba\x015\n" +
 	"\x1fUPDATE_PERMISSION_COMPONENT_MAX\x1a\x12this.size() <= 256H\bR\tcomponent\x88\x01\x01\x12U\n" +
 	"\x05weigh\x18\v \x01(\x05B:\xbaG\t\x92\x02\x06权重\xbaH+\xba\x01(\n" +
-	"\x1bUPDATE_PERMISSION_WEIGH_MIN\x1a\tthis >= 0H\tR\x05weigh\x88\x01\x01\x12f\n" +
-	"\x06status\x18\f \x01(\x0e2'.permission.service.v1.PermissionStatusB \xbaG\x1d\x92\x02\x1a状态: enabled / disabledH\n" +
+	"\x1bUPDATE_PERMISSION_WEIGH_MIN\x1a\tthis >= 0H\tR\x05weigh\x88\x01\x01\x12=\n" +
+	"\x06status\x18\f \x01(\tB \xbaG\x1d\x92\x02\x1a状态: enabled / disabledH\n" +
 	"R\x06status\x88\x01\x01B\a\n" +
 	"\x05_nameB\a\n" +
 	"\x05_codeB\x0e\n" +
@@ -1081,34 +930,25 @@ const file_permission_service_v1_permission_proto_rawDesc = "" +
 	"permission\"\x7f\n" +
 	"\x14GetPermissionRequest\x12g\n" +
 	"\x02id\x18\x01 \x01(\tBW\xbaG\v\x92\x02\b权限ID\xbaHF\xba\x01C\n" +
-	"\x1aGET_PERMISSION_ID_REQUIRED\x12\x14权限ID不能为空\x1a\x0fthis.size() > 0R\x02id\"\x8d\x03\n" +
+	"\x1aGET_PERMISSION_ID_REQUIRED\x12\x14权限ID不能为空\x1a\x0fthis.size() > 0R\x02id\"\xe6\x02\n" +
 	"\x15ListPermissionRequest\x12K\n" +
 	"\x04page\x18\x01 \x01(\x05B7\xbaG\t\x92\x02\x06页码\xbaH(\xba\x01%\n" +
 	"\x18LIST_PERMISSION_PAGE_MIN\x1a\tthis >= 1R\x04page\x12i\n" +
 	"\bpageSize\x18\x02 \x01(\x05BM\xbaG\x0f\x92\x02\f每页数量\xbaH8\xba\x015\n" +
 	"\x19LIST_PERMISSION_PAGE_SIZE\x1a\x18this >= 1 && this <= 100R\bpageSize\x12/\n" +
 	"\akeyword\x18\x03 \x01(\tB\x15\xbaG\x12\x92\x02\x0f搜索关键词R\akeyword\x129\n" +
-	"\bparentId\x18\x04 \x01(\tB\x1d\xbaG\x1a\x92\x02\x17父权限ID，空查根R\bparentId\x12P\n" +
-	"\x04type\x18\x05 \x01(\x0e2%.permission.service.v1.PermissionTypeB\x15\xbaG\x12\x92\x02\x0f按类型筛选R\x04type\"g\n" +
+	"\bparentId\x18\x04 \x01(\tB\x1d\xbaG\x1a\x92\x02\x17父权限ID，空查根R\bparentId\x12)\n" +
+	"\x04type\x18\x05 \x01(\tB\x15\xbaG\x12\x92\x02\x0f按类型筛选R\x04type\"g\n" +
 	"\x16ListPermissionResponse\x127\n" +
 	"\x05items\x18\x01 \x03(\v2!.permission.service.v1.PermissionR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x05R\x05total\"l\n" +
-	"\x19ListPermissionTreeRequest\x12O\n" +
-	"\x04type\x18\x01 \x01(\x0e2%.permission.service.v1.PermissionTypeB\x14\xbaG\x11\x92\x02\x0e通常传 MENUR\x04type\"]\n" +
-	"\x1aListPermissionTreeResponse\x12?\n" +
-	"\x05nodes\x18\x01 \x03(\v2).permission.service.v1.PermissionTreeNodeR\x05nodes\"X\n" +
+	"\x05total\x18\x02 \x01(\x05R\x05total\"A\n" +
+	"\x15PermissionTreeRequest\x12(\n" +
+	"\x04type\x18\x01 \x01(\tB\x14\xbaG\x11\x92\x02\x0e通常传 MENUR\x04type\"O\n" +
+	"\x16PermissionTreeResponse\x125\n" +
+	"\x04data\x18\x01 \x03(\v2!.permission.service.v1.PermissionR\x04data\"X\n" +
 	"\x17DeletePermissionRequest\x12=\n" +
-	"\x03ids\x18\x01 \x03(\tB+\xbaG \x92\x02\x1d权限ID列表，至少一个\xbaH\x05\x92\x01\x02\b\x01R\x03ids*\x90\x01\n" +
-	"\x0ePermissionType\x12\x1f\n" +
-	"\x1bPERMISSION_TYPE_UNSPECIFIED\x10\x00\x12\"\n" +
-	"\x1ePERMISSION_TYPE_MENU_DIRECTORY\x10\x01\x12\x1d\n" +
-	"\x19PERMISSION_TYPE_MENU_ITEM\x10\x02\x12\x1a\n" +
-	"\x16PERMISSION_TYPE_BUTTON\x10\x03*t\n" +
-	"\x10PermissionStatus\x12!\n" +
-	"\x1dPERMISSION_STATUS_UNSPECIFIED\x10\x00\x12\x1d\n" +
-	"\x19PERMISSION_STATUS_ENABLED\x10\x01\x12\x1e\n" +
-	"\x1aPERMISSION_STATUS_DISABLED\x10\x02B\xda\x01\n" +
-	"\x19com.permission.service.v1B\x0fPermissionProtoP\x01Z6hyper-admin/api/gen/go/permission/service/v1;servicev1\xa2\x02\x03PSX\xaa\x02\x15Permission.Service.V1\xca\x02\x15Permission\\Service\\V1\xe2\x02!Permission\\Service\\V1\\GPBMetadata\xea\x02\x17Permission::Service::V1b\x06proto3"
+	"\x03ids\x18\x01 \x03(\tB+\xbaG \x92\x02\x1d权限ID列表，至少一个\xbaH\x05\x92\x01\x02\b\x01R\x03idsB\xf3\x01\n" +
+	"\x19com.permission.service.v1B\x0fPermissionProtoP\x01ZOgithub.com/hypercoze/kratos-admin/api/gen/go/permission/service/v1;permissionpb\xa2\x02\x03PSX\xaa\x02\x15Permission.Service.V1\xca\x02\x15Permission\\Service\\V1\xe2\x02!Permission\\Service\\V1\\GPBMetadata\xea\x02\x17Permission::Service::V1b\x06proto3"
 
 var (
 	file_permission_service_v1_permission_proto_rawDescOnce sync.Once
@@ -1122,47 +962,34 @@ func file_permission_service_v1_permission_proto_rawDescGZIP() []byte {
 	return file_permission_service_v1_permission_proto_rawDescData
 }
 
-var file_permission_service_v1_permission_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_permission_service_v1_permission_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_permission_service_v1_permission_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_permission_service_v1_permission_proto_goTypes = []any{
-	(PermissionType)(0),                // 0: permission.service.v1.PermissionType
-	(PermissionStatus)(0),              // 1: permission.service.v1.PermissionStatus
-	(*Permission)(nil),                 // 2: permission.service.v1.Permission
-	(*PermissionTreeNode)(nil),         // 3: permission.service.v1.PermissionTreeNode
-	(*CreatePermissionRequest)(nil),    // 4: permission.service.v1.CreatePermissionRequest
-	(*CreatePermissionResponse)(nil),   // 5: permission.service.v1.CreatePermissionResponse
-	(*UpdatePermissionRequest)(nil),    // 6: permission.service.v1.UpdatePermissionRequest
-	(*UpdatePermissionResponse)(nil),   // 7: permission.service.v1.UpdatePermissionResponse
-	(*GetPermissionRequest)(nil),       // 8: permission.service.v1.GetPermissionRequest
-	(*ListPermissionRequest)(nil),      // 9: permission.service.v1.ListPermissionRequest
-	(*ListPermissionResponse)(nil),     // 10: permission.service.v1.ListPermissionResponse
-	(*ListPermissionTreeRequest)(nil),  // 11: permission.service.v1.ListPermissionTreeRequest
-	(*ListPermissionTreeResponse)(nil), // 12: permission.service.v1.ListPermissionTreeResponse
-	(*DeletePermissionRequest)(nil),    // 13: permission.service.v1.DeletePermissionRequest
-	(*timestamppb.Timestamp)(nil),      // 14: google.protobuf.Timestamp
+	(*Permission)(nil),               // 0: permission.service.v1.Permission
+	(*CreatePermissionRequest)(nil),  // 1: permission.service.v1.CreatePermissionRequest
+	(*CreatePermissionResponse)(nil), // 2: permission.service.v1.CreatePermissionResponse
+	(*UpdatePermissionRequest)(nil),  // 3: permission.service.v1.UpdatePermissionRequest
+	(*UpdatePermissionResponse)(nil), // 4: permission.service.v1.UpdatePermissionResponse
+	(*GetPermissionRequest)(nil),     // 5: permission.service.v1.GetPermissionRequest
+	(*ListPermissionRequest)(nil),    // 6: permission.service.v1.ListPermissionRequest
+	(*ListPermissionResponse)(nil),   // 7: permission.service.v1.ListPermissionResponse
+	(*PermissionTreeRequest)(nil),    // 8: permission.service.v1.PermissionTreeRequest
+	(*PermissionTreeResponse)(nil),   // 9: permission.service.v1.PermissionTreeResponse
+	(*DeletePermissionRequest)(nil),  // 10: permission.service.v1.DeletePermissionRequest
+	(*timestamppb.Timestamp)(nil),    // 11: google.protobuf.Timestamp
 }
 var file_permission_service_v1_permission_proto_depIdxs = []int32{
-	0,  // 0: permission.service.v1.Permission.type:type_name -> permission.service.v1.PermissionType
-	1,  // 1: permission.service.v1.Permission.status:type_name -> permission.service.v1.PermissionStatus
-	14, // 2: permission.service.v1.Permission.createdAt:type_name -> google.protobuf.Timestamp
-	14, // 3: permission.service.v1.Permission.updatedAt:type_name -> google.protobuf.Timestamp
-	2,  // 4: permission.service.v1.PermissionTreeNode.permission:type_name -> permission.service.v1.Permission
-	3,  // 5: permission.service.v1.PermissionTreeNode.children:type_name -> permission.service.v1.PermissionTreeNode
-	0,  // 6: permission.service.v1.CreatePermissionRequest.type:type_name -> permission.service.v1.PermissionType
-	1,  // 7: permission.service.v1.CreatePermissionRequest.status:type_name -> permission.service.v1.PermissionStatus
-	2,  // 8: permission.service.v1.CreatePermissionResponse.permission:type_name -> permission.service.v1.Permission
-	0,  // 9: permission.service.v1.UpdatePermissionRequest.type:type_name -> permission.service.v1.PermissionType
-	1,  // 10: permission.service.v1.UpdatePermissionRequest.status:type_name -> permission.service.v1.PermissionStatus
-	2,  // 11: permission.service.v1.UpdatePermissionResponse.permission:type_name -> permission.service.v1.Permission
-	0,  // 12: permission.service.v1.ListPermissionRequest.type:type_name -> permission.service.v1.PermissionType
-	2,  // 13: permission.service.v1.ListPermissionResponse.items:type_name -> permission.service.v1.Permission
-	0,  // 14: permission.service.v1.ListPermissionTreeRequest.type:type_name -> permission.service.v1.PermissionType
-	3,  // 15: permission.service.v1.ListPermissionTreeResponse.nodes:type_name -> permission.service.v1.PermissionTreeNode
-	16, // [16:16] is the sub-list for method output_type
-	16, // [16:16] is the sub-list for method input_type
-	16, // [16:16] is the sub-list for extension type_name
-	16, // [16:16] is the sub-list for extension extendee
-	0,  // [0:16] is the sub-list for field type_name
+	11, // 0: permission.service.v1.Permission.createdAt:type_name -> google.protobuf.Timestamp
+	11, // 1: permission.service.v1.Permission.updatedAt:type_name -> google.protobuf.Timestamp
+	0,  // 2: permission.service.v1.Permission.children:type_name -> permission.service.v1.Permission
+	0,  // 3: permission.service.v1.CreatePermissionResponse.permission:type_name -> permission.service.v1.Permission
+	0,  // 4: permission.service.v1.UpdatePermissionResponse.permission:type_name -> permission.service.v1.Permission
+	0,  // 5: permission.service.v1.ListPermissionResponse.items:type_name -> permission.service.v1.Permission
+	0,  // 6: permission.service.v1.PermissionTreeResponse.data:type_name -> permission.service.v1.Permission
+	7,  // [7:7] is the sub-list for method output_type
+	7,  // [7:7] is the sub-list for method input_type
+	7,  // [7:7] is the sub-list for extension type_name
+	7,  // [7:7] is the sub-list for extension extendee
+	0,  // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_permission_service_v1_permission_proto_init() }
@@ -1170,20 +997,19 @@ func file_permission_service_v1_permission_proto_init() {
 	if File_permission_service_v1_permission_proto != nil {
 		return
 	}
-	file_permission_service_v1_permission_proto_msgTypes[4].OneofWrappers = []any{}
+	file_permission_service_v1_permission_proto_msgTypes[3].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_permission_service_v1_permission_proto_rawDesc), len(file_permission_service_v1_permission_proto_rawDesc)),
-			NumEnums:      2,
-			NumMessages:   12,
+			NumEnums:      0,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_permission_service_v1_permission_proto_goTypes,
 		DependencyIndexes: file_permission_service_v1_permission_proto_depIdxs,
-		EnumInfos:         file_permission_service_v1_permission_proto_enumTypes,
 		MessageInfos:      file_permission_service_v1_permission_proto_msgTypes,
 	}.Build()
 	File_permission_service_v1_permission_proto = out.File

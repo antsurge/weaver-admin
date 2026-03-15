@@ -42,12 +42,6 @@ func (_u *PermissionUpdate) SetNillableParentID(v *string) *PermissionUpdate {
 	return _u
 }
 
-// ClearParentID clears the value of the "parent_id" field.
-func (_u *PermissionUpdate) ClearParentID() *PermissionUpdate {
-	_u.mutation.ClearParentID()
-	return _u
-}
-
 // SetName sets the "name" field.
 func (_u *PermissionUpdate) SetName(v string) *PermissionUpdate {
 	_u.mutation.SetName(v)
@@ -138,6 +132,20 @@ func (_u *PermissionUpdate) SetNillableType(v *permission.Type) *PermissionUpdat
 	return _u
 }
 
+// SetMenuType sets the "menu_type" field.
+func (_u *PermissionUpdate) SetMenuType(v permission.MenuType) *PermissionUpdate {
+	_u.mutation.SetMenuType(v)
+	return _u
+}
+
+// SetNillableMenuType sets the "menu_type" field if the given value is not nil.
+func (_u *PermissionUpdate) SetNillableMenuType(v *permission.MenuType) *PermissionUpdate {
+	if v != nil {
+		_u.SetMenuType(*v)
+	}
+	return _u
+}
+
 // SetURL sets the "url" field.
 func (_u *PermissionUpdate) SetURL(v string) *PermissionUpdate {
 	_u.mutation.SetURL(v)
@@ -166,24 +174,24 @@ func (_u *PermissionUpdate) SetNillableComponent(v *string) *PermissionUpdate {
 	return _u
 }
 
-// SetWeigh sets the "weigh" field.
-func (_u *PermissionUpdate) SetWeigh(v int) *PermissionUpdate {
-	_u.mutation.ResetWeigh()
-	_u.mutation.SetWeigh(v)
+// SetWeight sets the "weight" field.
+func (_u *PermissionUpdate) SetWeight(v int) *PermissionUpdate {
+	_u.mutation.ResetWeight()
+	_u.mutation.SetWeight(v)
 	return _u
 }
 
-// SetNillableWeigh sets the "weigh" field if the given value is not nil.
-func (_u *PermissionUpdate) SetNillableWeigh(v *int) *PermissionUpdate {
+// SetNillableWeight sets the "weight" field if the given value is not nil.
+func (_u *PermissionUpdate) SetNillableWeight(v *int) *PermissionUpdate {
 	if v != nil {
-		_u.SetWeigh(*v)
+		_u.SetWeight(*v)
 	}
 	return _u
 }
 
-// AddWeigh adds value to the "weigh" field.
-func (_u *PermissionUpdate) AddWeigh(v int) *PermissionUpdate {
-	_u.mutation.AddWeigh(v)
+// AddWeight adds value to the "weight" field.
+func (_u *PermissionUpdate) AddWeight(v int) *PermissionUpdate {
+	_u.mutation.AddWeight(v)
 	return _u
 }
 
@@ -204,26 +212,6 @@ func (_u *PermissionUpdate) SetNillableStatus(v *permission.Status) *PermissionU
 // SetUpdatedAt sets the "updated_at" field.
 func (_u *PermissionUpdate) SetUpdatedAt(v time.Time) *PermissionUpdate {
 	_u.mutation.SetUpdatedAt(v)
-	return _u
-}
-
-// SetDeletedAt sets the "deleted_at" field.
-func (_u *PermissionUpdate) SetDeletedAt(v time.Time) *PermissionUpdate {
-	_u.mutation.SetDeletedAt(v)
-	return _u
-}
-
-// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
-func (_u *PermissionUpdate) SetNillableDeletedAt(v *time.Time) *PermissionUpdate {
-	if v != nil {
-		_u.SetDeletedAt(*v)
-	}
-	return _u
-}
-
-// ClearDeletedAt clears the value of the "deleted_at" field.
-func (_u *PermissionUpdate) ClearDeletedAt() *PermissionUpdate {
-	_u.mutation.ClearDeletedAt()
 	return _u
 }
 
@@ -300,6 +288,11 @@ func (_u *PermissionUpdate) check() error {
 			return &ValidationError{Name: "type", err: fmt.Errorf(`ent: validator failed for field "Permission.type": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.MenuType(); ok {
+		if err := permission.MenuTypeValidator(v); err != nil {
+			return &ValidationError{Name: "menu_type", err: fmt.Errorf(`ent: validator failed for field "Permission.menu_type": %w`, err)}
+		}
+	}
 	if v, ok := _u.mutation.URL(); ok {
 		if err := permission.URLValidator(v); err != nil {
 			return &ValidationError{Name: "url", err: fmt.Errorf(`ent: validator failed for field "Permission.url": %w`, err)}
@@ -333,9 +326,6 @@ func (_u *PermissionUpdate) sqlSave(ctx context.Context) (_node int, err error) 
 	if value, ok := _u.mutation.ParentID(); ok {
 		_spec.SetField(permission.FieldParentID, field.TypeString, value)
 	}
-	if _u.mutation.ParentIDCleared() {
-		_spec.ClearField(permission.FieldParentID, field.TypeString)
-	}
 	if value, ok := _u.mutation.Name(); ok {
 		_spec.SetField(permission.FieldName, field.TypeString, value)
 	}
@@ -357,29 +347,26 @@ func (_u *PermissionUpdate) sqlSave(ctx context.Context) (_node int, err error) 
 	if value, ok := _u.mutation.GetType(); ok {
 		_spec.SetField(permission.FieldType, field.TypeEnum, value)
 	}
+	if value, ok := _u.mutation.MenuType(); ok {
+		_spec.SetField(permission.FieldMenuType, field.TypeEnum, value)
+	}
 	if value, ok := _u.mutation.URL(); ok {
 		_spec.SetField(permission.FieldURL, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Component(); ok {
 		_spec.SetField(permission.FieldComponent, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Weigh(); ok {
-		_spec.SetField(permission.FieldWeigh, field.TypeInt, value)
+	if value, ok := _u.mutation.Weight(); ok {
+		_spec.SetField(permission.FieldWeight, field.TypeInt, value)
 	}
-	if value, ok := _u.mutation.AddedWeigh(); ok {
-		_spec.AddField(permission.FieldWeigh, field.TypeInt, value)
+	if value, ok := _u.mutation.AddedWeight(); ok {
+		_spec.AddField(permission.FieldWeight, field.TypeInt, value)
 	}
 	if value, ok := _u.mutation.Status(); ok {
 		_spec.SetField(permission.FieldStatus, field.TypeEnum, value)
 	}
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(permission.FieldUpdatedAt, field.TypeTime, value)
-	}
-	if value, ok := _u.mutation.DeletedAt(); ok {
-		_spec.SetField(permission.FieldDeletedAt, field.TypeTime, value)
-	}
-	if _u.mutation.DeletedAtCleared() {
-		_spec.ClearField(permission.FieldDeletedAt, field.TypeTime)
 	}
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -412,12 +399,6 @@ func (_u *PermissionUpdateOne) SetNillableParentID(v *string) *PermissionUpdateO
 	if v != nil {
 		_u.SetParentID(*v)
 	}
-	return _u
-}
-
-// ClearParentID clears the value of the "parent_id" field.
-func (_u *PermissionUpdateOne) ClearParentID() *PermissionUpdateOne {
-	_u.mutation.ClearParentID()
 	return _u
 }
 
@@ -511,6 +492,20 @@ func (_u *PermissionUpdateOne) SetNillableType(v *permission.Type) *PermissionUp
 	return _u
 }
 
+// SetMenuType sets the "menu_type" field.
+func (_u *PermissionUpdateOne) SetMenuType(v permission.MenuType) *PermissionUpdateOne {
+	_u.mutation.SetMenuType(v)
+	return _u
+}
+
+// SetNillableMenuType sets the "menu_type" field if the given value is not nil.
+func (_u *PermissionUpdateOne) SetNillableMenuType(v *permission.MenuType) *PermissionUpdateOne {
+	if v != nil {
+		_u.SetMenuType(*v)
+	}
+	return _u
+}
+
 // SetURL sets the "url" field.
 func (_u *PermissionUpdateOne) SetURL(v string) *PermissionUpdateOne {
 	_u.mutation.SetURL(v)
@@ -539,24 +534,24 @@ func (_u *PermissionUpdateOne) SetNillableComponent(v *string) *PermissionUpdate
 	return _u
 }
 
-// SetWeigh sets the "weigh" field.
-func (_u *PermissionUpdateOne) SetWeigh(v int) *PermissionUpdateOne {
-	_u.mutation.ResetWeigh()
-	_u.mutation.SetWeigh(v)
+// SetWeight sets the "weight" field.
+func (_u *PermissionUpdateOne) SetWeight(v int) *PermissionUpdateOne {
+	_u.mutation.ResetWeight()
+	_u.mutation.SetWeight(v)
 	return _u
 }
 
-// SetNillableWeigh sets the "weigh" field if the given value is not nil.
-func (_u *PermissionUpdateOne) SetNillableWeigh(v *int) *PermissionUpdateOne {
+// SetNillableWeight sets the "weight" field if the given value is not nil.
+func (_u *PermissionUpdateOne) SetNillableWeight(v *int) *PermissionUpdateOne {
 	if v != nil {
-		_u.SetWeigh(*v)
+		_u.SetWeight(*v)
 	}
 	return _u
 }
 
-// AddWeigh adds value to the "weigh" field.
-func (_u *PermissionUpdateOne) AddWeigh(v int) *PermissionUpdateOne {
-	_u.mutation.AddWeigh(v)
+// AddWeight adds value to the "weight" field.
+func (_u *PermissionUpdateOne) AddWeight(v int) *PermissionUpdateOne {
+	_u.mutation.AddWeight(v)
 	return _u
 }
 
@@ -577,26 +572,6 @@ func (_u *PermissionUpdateOne) SetNillableStatus(v *permission.Status) *Permissi
 // SetUpdatedAt sets the "updated_at" field.
 func (_u *PermissionUpdateOne) SetUpdatedAt(v time.Time) *PermissionUpdateOne {
 	_u.mutation.SetUpdatedAt(v)
-	return _u
-}
-
-// SetDeletedAt sets the "deleted_at" field.
-func (_u *PermissionUpdateOne) SetDeletedAt(v time.Time) *PermissionUpdateOne {
-	_u.mutation.SetDeletedAt(v)
-	return _u
-}
-
-// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
-func (_u *PermissionUpdateOne) SetNillableDeletedAt(v *time.Time) *PermissionUpdateOne {
-	if v != nil {
-		_u.SetDeletedAt(*v)
-	}
-	return _u
-}
-
-// ClearDeletedAt clears the value of the "deleted_at" field.
-func (_u *PermissionUpdateOne) ClearDeletedAt() *PermissionUpdateOne {
-	_u.mutation.ClearDeletedAt()
 	return _u
 }
 
@@ -686,6 +661,11 @@ func (_u *PermissionUpdateOne) check() error {
 			return &ValidationError{Name: "type", err: fmt.Errorf(`ent: validator failed for field "Permission.type": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.MenuType(); ok {
+		if err := permission.MenuTypeValidator(v); err != nil {
+			return &ValidationError{Name: "menu_type", err: fmt.Errorf(`ent: validator failed for field "Permission.menu_type": %w`, err)}
+		}
+	}
 	if v, ok := _u.mutation.URL(); ok {
 		if err := permission.URLValidator(v); err != nil {
 			return &ValidationError{Name: "url", err: fmt.Errorf(`ent: validator failed for field "Permission.url": %w`, err)}
@@ -736,9 +716,6 @@ func (_u *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission, 
 	if value, ok := _u.mutation.ParentID(); ok {
 		_spec.SetField(permission.FieldParentID, field.TypeString, value)
 	}
-	if _u.mutation.ParentIDCleared() {
-		_spec.ClearField(permission.FieldParentID, field.TypeString)
-	}
 	if value, ok := _u.mutation.Name(); ok {
 		_spec.SetField(permission.FieldName, field.TypeString, value)
 	}
@@ -760,29 +737,26 @@ func (_u *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission, 
 	if value, ok := _u.mutation.GetType(); ok {
 		_spec.SetField(permission.FieldType, field.TypeEnum, value)
 	}
+	if value, ok := _u.mutation.MenuType(); ok {
+		_spec.SetField(permission.FieldMenuType, field.TypeEnum, value)
+	}
 	if value, ok := _u.mutation.URL(); ok {
 		_spec.SetField(permission.FieldURL, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Component(); ok {
 		_spec.SetField(permission.FieldComponent, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Weigh(); ok {
-		_spec.SetField(permission.FieldWeigh, field.TypeInt, value)
+	if value, ok := _u.mutation.Weight(); ok {
+		_spec.SetField(permission.FieldWeight, field.TypeInt, value)
 	}
-	if value, ok := _u.mutation.AddedWeigh(); ok {
-		_spec.AddField(permission.FieldWeigh, field.TypeInt, value)
+	if value, ok := _u.mutation.AddedWeight(); ok {
+		_spec.AddField(permission.FieldWeight, field.TypeInt, value)
 	}
 	if value, ok := _u.mutation.Status(); ok {
 		_spec.SetField(permission.FieldStatus, field.TypeEnum, value)
 	}
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(permission.FieldUpdatedAt, field.TypeTime, value)
-	}
-	if value, ok := _u.mutation.DeletedAt(); ok {
-		_spec.SetField(permission.FieldDeletedAt, field.TypeTime, value)
-	}
-	if _u.mutation.DeletedAtCleared() {
-		_spec.ClearField(permission.FieldDeletedAt, field.TypeTime)
 	}
 	_node = &Permission{config: _u.config}
 	_spec.Assign = _node.assignValues

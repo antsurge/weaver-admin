@@ -2,6 +2,7 @@ package data
 
 import (
 	"context"
+
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/biz"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent"
@@ -40,7 +41,33 @@ func (r *adminRepo) FindByUsername(ctx context.Context, username string) (*biz.A
 
 	return &biz.Admin{
 		ID:         entAdmin.ID,
-		Name:       entAdmin.Name,
+		RealName:   entAdmin.RealName,
+		Username:   entAdmin.Username,
+		Email:      entAdmin.Email,
+		Phone:      entAdmin.Phone,
+		Avatar:     entAdmin.Avatar,
+		Password:   entAdmin.Password, // 注意：这里包含密码哈希
+		CreateTime: entAdmin.CreateTime,
+		UpdateTime: entAdmin.UpdateTime,
+	}, nil
+}
+
+// FindByUsername 根据用户名查找管理员
+func (r *adminRepo) FindByID(ctx context.Context, id string) (*biz.Admin, error) {
+	entAdmin, err := r.data.db.Admin.Query().
+		Where(admin.IDEQ(id)).
+		Only(ctx)
+	if err != nil {
+		if ent.IsNotFound(err) {
+			return nil, nil
+		}
+		r.log.Errorf("failed to query admin by id: %v", err)
+		return nil, err
+	}
+
+	return &biz.Admin{
+		ID:         entAdmin.ID,
+		RealName:   entAdmin.RealName,
 		Username:   entAdmin.Username,
 		Email:      entAdmin.Email,
 		Phone:      entAdmin.Phone,

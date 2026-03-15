@@ -59,4 +59,16 @@ service AuthenticationService {
             description: "刷新认证令牌"
         };
     };
+
+    // 当前用户
+    rpc CurrentUserInfo(google.protobuf.Empty) returns (authentication.service.v1.CurrentUserInfoResponse) {
+        option (google.api.http) = {
+            get: "admin/v1/current-user"
+        };
+        option (gnostic.openapi.v3.operation) = {
+            tags: "Authentication"
+            summary: "当前登录用户信息"
+            description: "当前登录用户信息"
+        };
+    };
 }

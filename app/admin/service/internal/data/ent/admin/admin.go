@@ -13,8 +13,8 @@ const (
 	Label = "admin"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldName holds the string denoting the name field in the database.
-	FieldName = "name"
+	// FieldRealName holds the string denoting the real_name field in the database.
+	FieldRealName = "real_name"
 	// FieldUsername holds the string denoting the username field in the database.
 	FieldUsername = "username"
 	// FieldEmail holds the string denoting the email field in the database.
@@ -36,7 +36,7 @@ const (
 // Columns holds all SQL columns for admin fields.
 var Columns = []string{
 	FieldID,
-	FieldName,
+	FieldRealName,
 	FieldUsername,
 	FieldEmail,
 	FieldPhone,
@@ -57,8 +57,8 @@ func ValidColumn(column string) bool {
 }
 
 var (
-	// DefaultName holds the default value on creation for the "name" field.
-	DefaultName string
+	// DefaultRealName holds the default value on creation for the "real_name" field.
+	DefaultRealName string
 	// DefaultCreateTime holds the default value on creation for the "create_time" field.
 	DefaultCreateTime func() time.Time
 	// DefaultUpdateTime holds the default value on creation for the "update_time" field.
@@ -75,9 +75,9 @@ func ByID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldID, opts...).ToFunc()
 }
 
-// ByName orders the results by the name field.
-func ByName(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldName, opts...).ToFunc()
+// ByRealName orders the results by the real_name field.
+func ByRealName(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldRealName, opts...).ToFunc()
 }
 
 // ByUsername orders the results by the username field.

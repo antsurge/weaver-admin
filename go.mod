@@ -18,6 +18,7 @@ require (
 	github.com/mojocn/base64Captcha v1.3.8
 	github.com/nicksnyder/go-i18n/v2 v2.6.1
 	github.com/redis/go-redis/v9 v9.17.3
+	github.com/rs/xid v1.6.0
 	github.com/stretchr/testify v1.11.1
 	go.uber.org/automaxprocs v1.6.0
 	golang.org/x/crypto v0.46.0
@@ -51,6 +52,7 @@ require (
 	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/hashicorp/hcl/v2 v2.18.1 // indirect
+	github.com/jinzhu/copier v0.4.0 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/stoewer/go-strcase v1.3.1 // indirect

@@ -280,6 +280,58 @@ func (x *RefreshTokenRequest) GetAccessToken() string {
 	return ""
 }
 
+type CurrentUserInfoResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	RealName      string                 `protobuf:"bytes,2,opt,name=realName,proto3" json:"realName,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CurrentUserInfoResponse) Reset() {
+	*x = CurrentUserInfoResponse{}
+	mi := &file_authentication_service_v1_authentication_service_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CurrentUserInfoResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CurrentUserInfoResponse) ProtoMessage() {}
+
+func (x *CurrentUserInfoResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_authentication_service_v1_authentication_service_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CurrentUserInfoResponse.ProtoReflect.Descriptor instead.
+func (*CurrentUserInfoResponse) Descriptor() ([]byte, []int) {
+	return file_authentication_service_v1_authentication_service_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *CurrentUserInfoResponse) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *CurrentUserInfoResponse) GetRealName() string {
+	if x != nil {
+		return x.RealName
+	}
+	return ""
+}
+
 var File_authentication_service_v1_authentication_service_proto protoreflect.FileDescriptor
 
 const file_authentication_service_v1_authentication_service_proto_rawDesc = "" +
@@ -306,13 +358,17 @@ const file_authentication_service_v1_authentication_service_proto_rawDesc = "" +
 	"\vimageBase64\x18\x02 \x01(\tR\vimageBase64\"[\n" +
 	"\x13RefreshTokenRequest\x12\"\n" +
 	"\frefreshToken\x18\x01 \x01(\tR\frefreshToken\x12 \n" +
-	"\vaccessToken\x18\x02 \x01(\tR\vaccessToken2\x88\x03\n" +
+	"\vaccessToken\x18\x02 \x01(\tR\vaccessToken\"E\n" +
+	"\x17CurrentUserInfoResponse\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
+	"\brealName\x18\x02 \x01(\tR\brealName2\xe7\x03\n" +
 	"\x15AuthenticationService\x12\\\n" +
 	"\x05Login\x12'.authentication.service.v1.LoginRequest\x1a(.authentication.service.v1.LoginResponse\"\x00\x12P\n" +
 	"\x06Logout\x12..authentication.service.v1.RefreshTokenRequest\x1a\x16.google.protobuf.Empty\x12j\n" +
 	"\fRefreshToken\x12..authentication.service.v1.RefreshTokenRequest\x1a(.authentication.service.v1.LoginResponse\"\x00\x12S\n" +
 	"\n" +
-	"GetCaptcha\x12\x16.google.protobuf.Empty\x1a-.authentication.service.v1.GetCaptchaResponseB\x9a\x02\n" +
+	"GetCaptcha\x12\x16.google.protobuf.Empty\x1a-.authentication.service.v1.GetCaptchaResponse\x12]\n" +
+	"\x0fCurrentUserInfo\x12\x16.google.protobuf.Empty\x1a2.authentication.service.v1.CurrentUserInfoResponseB\x9a\x02\n" +
 	"\x1dcom.authentication.service.v1B\x1aAuthenticationServiceProtoP\x01ZWgithub.com/hypercoze/kratos-admin/api/gen/go/authentication/service/v1;authenticationpb\xa2\x02\x03ASX\xaa\x02\x19Authentication.Service.V1\xca\x02\x19Authentication\\Service\\V1\xe2\x02%Authentication\\Service\\V1\\GPBMetadata\xea\x02\x1bAuthentication::Service::V1b\x06proto3"
 
 var (
@@ -327,25 +383,28 @@ func file_authentication_service_v1_authentication_service_proto_rawDescGZIP() [
 	return file_authentication_service_v1_authentication_service_proto_rawDescData
 }
 
-var file_authentication_service_v1_authentication_service_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_authentication_service_v1_authentication_service_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_authentication_service_v1_authentication_service_proto_goTypes = []any{
-	(*LoginRequest)(nil),        // 0: authentication.service.v1.LoginRequest
-	(*LoginResponse)(nil),       // 1: authentication.service.v1.LoginResponse
-	(*GetCaptchaResponse)(nil),  // 2: authentication.service.v1.GetCaptchaResponse
-	(*RefreshTokenRequest)(nil), // 3: authentication.service.v1.RefreshTokenRequest
-	(*emptypb.Empty)(nil),       // 4: google.protobuf.Empty
+	(*LoginRequest)(nil),            // 0: authentication.service.v1.LoginRequest
+	(*LoginResponse)(nil),           // 1: authentication.service.v1.LoginResponse
+	(*GetCaptchaResponse)(nil),      // 2: authentication.service.v1.GetCaptchaResponse
+	(*RefreshTokenRequest)(nil),     // 3: authentication.service.v1.RefreshTokenRequest
+	(*CurrentUserInfoResponse)(nil), // 4: authentication.service.v1.CurrentUserInfoResponse
+	(*emptypb.Empty)(nil),           // 5: google.protobuf.Empty
 }
 var file_authentication_service_v1_authentication_service_proto_depIdxs = []int32{
 	0, // 0: authentication.service.v1.AuthenticationService.Login:input_type -> authentication.service.v1.LoginRequest
 	3, // 1: authentication.service.v1.AuthenticationService.Logout:input_type -> authentication.service.v1.RefreshTokenRequest
 	3, // 2: authentication.service.v1.AuthenticationService.RefreshToken:input_type -> authentication.service.v1.RefreshTokenRequest
-	4, // 3: authentication.service.v1.AuthenticationService.GetCaptcha:input_type -> google.protobuf.Empty
-	1, // 4: authentication.service.v1.AuthenticationService.Login:output_type -> authentication.service.v1.LoginResponse
-	4, // 5: authentication.service.v1.AuthenticationService.Logout:output_type -> google.protobuf.Empty
-	1, // 6: authentication.service.v1.AuthenticationService.RefreshToken:output_type -> authentication.service.v1.LoginResponse
-	2, // 7: authentication.service.v1.AuthenticationService.GetCaptcha:output_type -> authentication.service.v1.GetCaptchaResponse
-	4, // [4:8] is the sub-list for method output_type
-	0, // [0:4] is the sub-list for method input_type
+	5, // 3: authentication.service.v1.AuthenticationService.GetCaptcha:input_type -> google.protobuf.Empty
+	5, // 4: authentication.service.v1.AuthenticationService.CurrentUserInfo:input_type -> google.protobuf.Empty
+	1, // 5: authentication.service.v1.AuthenticationService.Login:output_type -> authentication.service.v1.LoginResponse
+	5, // 6: authentication.service.v1.AuthenticationService.Logout:output_type -> google.protobuf.Empty
+	1, // 7: authentication.service.v1.AuthenticationService.RefreshToken:output_type -> authentication.service.v1.LoginResponse
+	2, // 8: authentication.service.v1.AuthenticationService.GetCaptcha:output_type -> authentication.service.v1.GetCaptchaResponse
+	4, // 9: authentication.service.v1.AuthenticationService.CurrentUserInfo:output_type -> authentication.service.v1.CurrentUserInfoResponse
+	5, // [5:10] is the sub-list for method output_type
+	0, // [0:5] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -362,7 +421,7 @@ func file_authentication_service_v1_authentication_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_authentication_service_v1_authentication_service_proto_rawDesc), len(file_authentication_service_v1_authentication_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

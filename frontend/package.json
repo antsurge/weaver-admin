@@ -10,11 +10,16 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
+    "@ctrl/tinycolor": "^4.2.0",
     "ant-design-vue": "^4.2.6",
     "axios": "^1.13.6",
     "dayjs": "^1.11.19",
+    "http-status-codes": "^2.3.0",
     "pinia": "^3.0.4",
     "pinia-plugin-persistedstate": "^4.7.1",
+    "qs": "^6.15.0",
+    "reka-ui": "^2.9.0",
+    "theme-colors": "^0.1.0",
     "vue": "^3.5.25",
     "vue-i18n": "^11.2.8",
     "vue-router": "^4.6.4"

@@ -36,8 +36,11 @@ func wireApp(confServer *conf.Server, confData *conf.Data, jwt *conf.JWT, logger
 	authenticationUsecase := biz.NewAuthenticationUsecase(logger, adminRepo, captchaRepo, tokenRepo, jwt)
 	captchaUsecase := biz.NewCaptchaUsecase(captchaRepo, logger)
 	authenticationService := service.NewAuthenticationService(authenticationUsecase, captchaUsecase)
-	grpcServer := server.NewGRPCServer(confServer, authenticationService, logger)
-	httpServer := server.NewHTTPServer(confServer, jwt, authenticationService, logger)
+	permissionRepo := data.NewPermissionRepo(dataData, logger)
+	permissionUsecase := biz.NewPermissionUsecase(permissionRepo, logger)
+	permissionService := service.NewPermissionService(permissionUsecase)
+	grpcServer := server.NewGRPCServer(confServer, authenticationService, permissionService, logger)
+	httpServer := server.NewHTTPServer(confServer, jwt, authenticationService, permissionService, logger)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()

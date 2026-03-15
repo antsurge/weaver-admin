@@ -21,10 +21,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthenticationService_GetCaptcha_FullMethodName   = "/admin.service.v1.AuthenticationService/GetCaptcha"
-	AuthenticationService_Login_FullMethodName        = "/admin.service.v1.AuthenticationService/Login"
-	AuthenticationService_Logout_FullMethodName       = "/admin.service.v1.AuthenticationService/Logout"
-	AuthenticationService_RefreshToken_FullMethodName = "/admin.service.v1.AuthenticationService/RefreshToken"
+	AuthenticationService_GetCaptcha_FullMethodName      = "/admin.service.v1.AuthenticationService/GetCaptcha"
+	AuthenticationService_Login_FullMethodName           = "/admin.service.v1.AuthenticationService/Login"
+	AuthenticationService_Logout_FullMethodName          = "/admin.service.v1.AuthenticationService/Logout"
+	AuthenticationService_RefreshToken_FullMethodName    = "/admin.service.v1.AuthenticationService/RefreshToken"
+	AuthenticationService_CurrentUserInfo_FullMethodName = "/admin.service.v1.AuthenticationService/CurrentUserInfo"
 )
 
 // AuthenticationServiceClient is the client API for AuthenticationService service.
@@ -41,6 +42,8 @@ type AuthenticationServiceClient interface {
 	Logout(ctx context.Context, in *v1.RefreshTokenRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 刷新认证令牌
 	RefreshToken(ctx context.Context, in *v1.RefreshTokenRequest, opts ...grpc.CallOption) (*v1.LoginResponse, error)
+	// 当前用户
+	CurrentUserInfo(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*v1.CurrentUserInfoResponse, error)
 }
 
 type authenticationServiceClient struct {
@@ -91,6 +94,16 @@ func (c *authenticationServiceClient) RefreshToken(ctx context.Context, in *v1.R
 	return out, nil
 }
 
+func (c *authenticationServiceClient) CurrentUserInfo(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*v1.CurrentUserInfoResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v1.CurrentUserInfoResponse)
+	err := c.cc.Invoke(ctx, AuthenticationService_CurrentUserInfo_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthenticationServiceServer is the server API for AuthenticationService service.
 // All implementations must embed UnimplementedAuthenticationServiceServer
 // for forward compatibility.
@@ -105,6 +118,8 @@ type AuthenticationServiceServer interface {
 	Logout(context.Context, *v1.RefreshTokenRequest) (*emptypb.Empty, error)
 	// 刷新认证令牌
 	RefreshToken(context.Context, *v1.RefreshTokenRequest) (*v1.LoginResponse, error)
+	// 当前用户
+	CurrentUserInfo(context.Context, *emptypb.Empty) (*v1.CurrentUserInfoResponse, error)
 	mustEmbedUnimplementedAuthenticationServiceServer()
 }
 
@@ -126,6 +141,9 @@ func (UnimplementedAuthenticationServiceServer) Logout(context.Context, *v1.Refr
 }
 func (UnimplementedAuthenticationServiceServer) RefreshToken(context.Context, *v1.RefreshTokenRequest) (*v1.LoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
+}
+func (UnimplementedAuthenticationServiceServer) CurrentUserInfo(context.Context, *emptypb.Empty) (*v1.CurrentUserInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CurrentUserInfo not implemented")
 }
 func (UnimplementedAuthenticationServiceServer) mustEmbedUnimplementedAuthenticationServiceServer() {}
 func (UnimplementedAuthenticationServiceServer) testEmbeddedByValue()                               {}
@@ -220,6 +238,24 @@ func _AuthenticationService_RefreshToken_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthenticationService_CurrentUserInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthenticationServiceServer).CurrentUserInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthenticationService_CurrentUserInfo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthenticationServiceServer).CurrentUserInfo(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthenticationService_ServiceDesc is the grpc.ServiceDesc for AuthenticationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -242,6 +278,10 @@ var AuthenticationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RefreshToken",
 			Handler:    _AuthenticationService_RefreshToken_Handler,
+		},
+		{
+			MethodName: "CurrentUserInfo",
+			Handler:    _AuthenticationService_CurrentUserInfo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -1,0 +1,17 @@
+{
+  "permission": {
+    "fields": {
+      "name": "Permission Name",
+      "code": "Permission Code",
+      "parent_id": "Parent Permission",
+      "path": "Route Path",
+      "icon": "Menu Icon",
+      "type": "Permission Type",
+      "url": "Request URL",
+      "component": "Component Path",
+      "weigh": "Sort Order",
+      "status": "Status",
+      "description": "Permission Description"
+    }
+  }
+}

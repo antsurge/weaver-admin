@@ -102,6 +102,20 @@ func (_c *PermissionCreate) SetNillableType(v *permission.Type) *PermissionCreat
 	return _c
 }
 
+// SetMenuType sets the "menu_type" field.
+func (_c *PermissionCreate) SetMenuType(v permission.MenuType) *PermissionCreate {
+	_c.mutation.SetMenuType(v)
+	return _c
+}
+
+// SetNillableMenuType sets the "menu_type" field if the given value is not nil.
+func (_c *PermissionCreate) SetNillableMenuType(v *permission.MenuType) *PermissionCreate {
+	if v != nil {
+		_c.SetMenuType(*v)
+	}
+	return _c
+}
+
 // SetURL sets the "url" field.
 func (_c *PermissionCreate) SetURL(v string) *PermissionCreate {
 	_c.mutation.SetURL(v)
@@ -130,16 +144,16 @@ func (_c *PermissionCreate) SetNillableComponent(v *string) *PermissionCreate {
 	return _c
 }
 
-// SetWeigh sets the "weigh" field.
-func (_c *PermissionCreate) SetWeigh(v int) *PermissionCreate {
-	_c.mutation.SetWeigh(v)
+// SetWeight sets the "weight" field.
+func (_c *PermissionCreate) SetWeight(v int) *PermissionCreate {
+	_c.mutation.SetWeight(v)
 	return _c
 }
 
-// SetNillableWeigh sets the "weigh" field if the given value is not nil.
-func (_c *PermissionCreate) SetNillableWeigh(v *int) *PermissionCreate {
+// SetNillableWeight sets the "weight" field if the given value is not nil.
+func (_c *PermissionCreate) SetNillableWeight(v *int) *PermissionCreate {
 	if v != nil {
-		_c.SetWeigh(*v)
+		_c.SetWeight(*v)
 	}
 	return _c
 }
@@ -186,20 +200,6 @@ func (_c *PermissionCreate) SetNillableUpdatedAt(v *time.Time) *PermissionCreate
 	return _c
 }
 
-// SetDeletedAt sets the "deleted_at" field.
-func (_c *PermissionCreate) SetDeletedAt(v time.Time) *PermissionCreate {
-	_c.mutation.SetDeletedAt(v)
-	return _c
-}
-
-// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
-func (_c *PermissionCreate) SetNillableDeletedAt(v *time.Time) *PermissionCreate {
-	if v != nil {
-		_c.SetDeletedAt(*v)
-	}
-	return _c
-}
-
 // SetID sets the "id" field.
 func (_c *PermissionCreate) SetID(v string) *PermissionCreate {
 	_c.mutation.SetID(v)
@@ -241,6 +241,10 @@ func (_c *PermissionCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (_c *PermissionCreate) defaults() {
+	if _, ok := _c.mutation.ParentID(); !ok {
+		v := permission.DefaultParentID
+		_c.mutation.SetParentID(v)
+	}
 	if _, ok := _c.mutation.Path(); !ok {
 		v := permission.DefaultPath
 		_c.mutation.SetPath(v)
@@ -253,6 +257,10 @@ func (_c *PermissionCreate) defaults() {
 		v := permission.DefaultType
 		_c.mutation.SetType(v)
 	}
+	if _, ok := _c.mutation.MenuType(); !ok {
+		v := permission.DefaultMenuType
+		_c.mutation.SetMenuType(v)
+	}
 	if _, ok := _c.mutation.URL(); !ok {
 		v := permission.DefaultURL
 		_c.mutation.SetURL(v)
@@ -261,9 +269,9 @@ func (_c *PermissionCreate) defaults() {
 		v := permission.DefaultComponent
 		_c.mutation.SetComponent(v)
 	}
-	if _, ok := _c.mutation.Weigh(); !ok {
-		v := permission.DefaultWeigh
-		_c.mutation.SetWeigh(v)
+	if _, ok := _c.mutation.Weight(); !ok {
+		v := permission.DefaultWeight
+		_c.mutation.SetWeight(v)
 	}
 	if _, ok := _c.mutation.Status(); !ok {
 		v := permission.DefaultStatus
@@ -281,6 +289,9 @@ func (_c *PermissionCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (_c *PermissionCreate) check() error {
+	if _, ok := _c.mutation.ParentID(); !ok {
+		return &ValidationError{Name: "parent_id", err: errors.New(`ent: missing required field "Permission.parent_id"`)}
+	}
 	if _, ok := _c.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Permission.name"`)}
 	}
@@ -326,6 +337,14 @@ func (_c *PermissionCreate) check() error {
 			return &ValidationError{Name: "type", err: fmt.Errorf(`ent: validator failed for field "Permission.type": %w`, err)}
 		}
 	}
+	if _, ok := _c.mutation.MenuType(); !ok {
+		return &ValidationError{Name: "menu_type", err: errors.New(`ent: missing required field "Permission.menu_type"`)}
+	}
+	if v, ok := _c.mutation.MenuType(); ok {
+		if err := permission.MenuTypeValidator(v); err != nil {
+			return &ValidationError{Name: "menu_type", err: fmt.Errorf(`ent: validator failed for field "Permission.menu_type": %w`, err)}
+		}
+	}
 	if _, ok := _c.mutation.URL(); !ok {
 		return &ValidationError{Name: "url", err: errors.New(`ent: missing required field "Permission.url"`)}
 	}
@@ -342,8 +361,8 @@ func (_c *PermissionCreate) check() error {
 			return &ValidationError{Name: "component", err: fmt.Errorf(`ent: validator failed for field "Permission.component": %w`, err)}
 		}
 	}
-	if _, ok := _c.mutation.Weigh(); !ok {
-		return &ValidationError{Name: "weigh", err: errors.New(`ent: missing required field "Permission.weigh"`)}
+	if _, ok := _c.mutation.Weight(); !ok {
+		return &ValidationError{Name: "weight", err: errors.New(`ent: missing required field "Permission.weight"`)}
 	}
 	if _, ok := _c.mutation.Status(); !ok {
 		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Permission.status"`)}
@@ -401,7 +420,7 @@ func (_c *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := _c.mutation.ParentID(); ok {
 		_spec.SetField(permission.FieldParentID, field.TypeString, value)
-		_node.ParentID = &value
+		_node.ParentID = value
 	}
 	if value, ok := _c.mutation.Name(); ok {
 		_spec.SetField(permission.FieldName, field.TypeString, value)
@@ -427,6 +446,10 @@ func (_c *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 		_spec.SetField(permission.FieldType, field.TypeEnum, value)
 		_node.Type = value
 	}
+	if value, ok := _c.mutation.MenuType(); ok {
+		_spec.SetField(permission.FieldMenuType, field.TypeEnum, value)
+		_node.MenuType = value
+	}
 	if value, ok := _c.mutation.URL(); ok {
 		_spec.SetField(permission.FieldURL, field.TypeString, value)
 		_node.URL = value
@@ -435,9 +458,9 @@ func (_c *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 		_spec.SetField(permission.FieldComponent, field.TypeString, value)
 		_node.Component = value
 	}
-	if value, ok := _c.mutation.Weigh(); ok {
-		_spec.SetField(permission.FieldWeigh, field.TypeInt, value)
-		_node.Weigh = value
+	if value, ok := _c.mutation.Weight(); ok {
+		_spec.SetField(permission.FieldWeight, field.TypeInt, value)
+		_node.Weight = value
 	}
 	if value, ok := _c.mutation.Status(); ok {
 		_spec.SetField(permission.FieldStatus, field.TypeEnum, value)
@@ -450,10 +473,6 @@ func (_c *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.UpdatedAt(); ok {
 		_spec.SetField(permission.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
-	}
-	if value, ok := _c.mutation.DeletedAt(); ok {
-		_spec.SetField(permission.FieldDeletedAt, field.TypeTime, value)
-		_node.DeletedAt = &value
 	}
 	return _node, _spec
 }

@@ -2,9 +2,9 @@ syntax = "proto3";
 
 package permission.service.v1;
 import "google/protobuf/empty.proto";
-import "permission/service/v1/role.proto";
+//import "permission/service/v1/role.proto";
 import "permission/service/v1/permission.proto";
-import "permission/service/v1/rbac.proto";
+//import "permission/service/v1/rbac.proto";
 
 service PermissionService {
     // ----- 角色 -----
@@ -19,7 +19,7 @@ service PermissionService {
     rpc UpdatePermission(UpdatePermissionRequest) returns (UpdatePermissionResponse);
     rpc GetPermission(GetPermissionRequest) returns (Permission);
     rpc ListPermission(ListPermissionRequest) returns (ListPermissionResponse);
-    rpc ListPermissionTree(ListPermissionTreeRequest) returns (ListPermissionTreeResponse);
+    rpc PermissionTree(PermissionTreeRequest) returns (PermissionTreeResponse);
     rpc DeletePermission(DeletePermissionRequest) returns (google.protobuf.Empty);
 
     // ----- RBAC 绑定与查询 -----

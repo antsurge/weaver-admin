@@ -104,9 +104,9 @@ func Component(v string) predicate.Permission {
 	return predicate.Permission(sql.FieldEQ(FieldComponent, v))
 }
 
-// Weigh applies equality check predicate on the "weigh" field. It's identical to WeighEQ.
-func Weigh(v int) predicate.Permission {
-	return predicate.Permission(sql.FieldEQ(FieldWeigh, v))
+// Weight applies equality check predicate on the "weight" field. It's identical to WeightEQ.
+func Weight(v int) predicate.Permission {
+	return predicate.Permission(sql.FieldEQ(FieldWeight, v))
 }
 
 // CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
@@ -117,11 +117,6 @@ func CreatedAt(v time.Time) predicate.Permission {
 // UpdatedAt applies equality check predicate on the "updated_at" field. It's identical to UpdatedAtEQ.
 func UpdatedAt(v time.Time) predicate.Permission {
 	return predicate.Permission(sql.FieldEQ(FieldUpdatedAt, v))
-}
-
-// DeletedAt applies equality check predicate on the "deleted_at" field. It's identical to DeletedAtEQ.
-func DeletedAt(v time.Time) predicate.Permission {
-	return predicate.Permission(sql.FieldEQ(FieldDeletedAt, v))
 }
 
 // ParentIDEQ applies the EQ predicate on the "parent_id" field.
@@ -177,16 +172,6 @@ func ParentIDHasPrefix(v string) predicate.Permission {
 // ParentIDHasSuffix applies the HasSuffix predicate on the "parent_id" field.
 func ParentIDHasSuffix(v string) predicate.Permission {
 	return predicate.Permission(sql.FieldHasSuffix(FieldParentID, v))
-}
-
-// ParentIDIsNil applies the IsNil predicate on the "parent_id" field.
-func ParentIDIsNil() predicate.Permission {
-	return predicate.Permission(sql.FieldIsNull(FieldParentID))
-}
-
-// ParentIDNotNil applies the NotNil predicate on the "parent_id" field.
-func ParentIDNotNil() predicate.Permission {
-	return predicate.Permission(sql.FieldNotNull(FieldParentID))
 }
 
 // ParentIDEqualFold applies the EqualFold predicate on the "parent_id" field.
@@ -554,6 +539,26 @@ func TypeNotIn(vs ...Type) predicate.Permission {
 	return predicate.Permission(sql.FieldNotIn(FieldType, vs...))
 }
 
+// MenuTypeEQ applies the EQ predicate on the "menu_type" field.
+func MenuTypeEQ(v MenuType) predicate.Permission {
+	return predicate.Permission(sql.FieldEQ(FieldMenuType, v))
+}
+
+// MenuTypeNEQ applies the NEQ predicate on the "menu_type" field.
+func MenuTypeNEQ(v MenuType) predicate.Permission {
+	return predicate.Permission(sql.FieldNEQ(FieldMenuType, v))
+}
+
+// MenuTypeIn applies the In predicate on the "menu_type" field.
+func MenuTypeIn(vs ...MenuType) predicate.Permission {
+	return predicate.Permission(sql.FieldIn(FieldMenuType, vs...))
+}
+
+// MenuTypeNotIn applies the NotIn predicate on the "menu_type" field.
+func MenuTypeNotIn(vs ...MenuType) predicate.Permission {
+	return predicate.Permission(sql.FieldNotIn(FieldMenuType, vs...))
+}
+
 // URLEQ applies the EQ predicate on the "url" field.
 func URLEQ(v string) predicate.Permission {
 	return predicate.Permission(sql.FieldEQ(FieldURL, v))
@@ -684,44 +689,44 @@ func ComponentContainsFold(v string) predicate.Permission {
 	return predicate.Permission(sql.FieldContainsFold(FieldComponent, v))
 }
 
-// WeighEQ applies the EQ predicate on the "weigh" field.
-func WeighEQ(v int) predicate.Permission {
-	return predicate.Permission(sql.FieldEQ(FieldWeigh, v))
+// WeightEQ applies the EQ predicate on the "weight" field.
+func WeightEQ(v int) predicate.Permission {
+	return predicate.Permission(sql.FieldEQ(FieldWeight, v))
 }
 
-// WeighNEQ applies the NEQ predicate on the "weigh" field.
-func WeighNEQ(v int) predicate.Permission {
-	return predicate.Permission(sql.FieldNEQ(FieldWeigh, v))
+// WeightNEQ applies the NEQ predicate on the "weight" field.
+func WeightNEQ(v int) predicate.Permission {
+	return predicate.Permission(sql.FieldNEQ(FieldWeight, v))
 }
 
-// WeighIn applies the In predicate on the "weigh" field.
-func WeighIn(vs ...int) predicate.Permission {
-	return predicate.Permission(sql.FieldIn(FieldWeigh, vs...))
+// WeightIn applies the In predicate on the "weight" field.
+func WeightIn(vs ...int) predicate.Permission {
+	return predicate.Permission(sql.FieldIn(FieldWeight, vs...))
 }
 
-// WeighNotIn applies the NotIn predicate on the "weigh" field.
-func WeighNotIn(vs ...int) predicate.Permission {
-	return predicate.Permission(sql.FieldNotIn(FieldWeigh, vs...))
+// WeightNotIn applies the NotIn predicate on the "weight" field.
+func WeightNotIn(vs ...int) predicate.Permission {
+	return predicate.Permission(sql.FieldNotIn(FieldWeight, vs...))
 }
 
-// WeighGT applies the GT predicate on the "weigh" field.
-func WeighGT(v int) predicate.Permission {
-	return predicate.Permission(sql.FieldGT(FieldWeigh, v))
+// WeightGT applies the GT predicate on the "weight" field.
+func WeightGT(v int) predicate.Permission {
+	return predicate.Permission(sql.FieldGT(FieldWeight, v))
 }
 
-// WeighGTE applies the GTE predicate on the "weigh" field.
-func WeighGTE(v int) predicate.Permission {
-	return predicate.Permission(sql.FieldGTE(FieldWeigh, v))
+// WeightGTE applies the GTE predicate on the "weight" field.
+func WeightGTE(v int) predicate.Permission {
+	return predicate.Permission(sql.FieldGTE(FieldWeight, v))
 }
 
-// WeighLT applies the LT predicate on the "weigh" field.
-func WeighLT(v int) predicate.Permission {
-	return predicate.Permission(sql.FieldLT(FieldWeigh, v))
+// WeightLT applies the LT predicate on the "weight" field.
+func WeightLT(v int) predicate.Permission {
+	return predicate.Permission(sql.FieldLT(FieldWeight, v))
 }
 
-// WeighLTE applies the LTE predicate on the "weigh" field.
-func WeighLTE(v int) predicate.Permission {
-	return predicate.Permission(sql.FieldLTE(FieldWeigh, v))
+// WeightLTE applies the LTE predicate on the "weight" field.
+func WeightLTE(v int) predicate.Permission {
+	return predicate.Permission(sql.FieldLTE(FieldWeight, v))
 }
 
 // StatusEQ applies the EQ predicate on the "status" field.
@@ -822,56 +827,6 @@ func UpdatedAtLT(v time.Time) predicate.Permission {
 // UpdatedAtLTE applies the LTE predicate on the "updated_at" field.
 func UpdatedAtLTE(v time.Time) predicate.Permission {
 	return predicate.Permission(sql.FieldLTE(FieldUpdatedAt, v))
-}
-
-// DeletedAtEQ applies the EQ predicate on the "deleted_at" field.
-func DeletedAtEQ(v time.Time) predicate.Permission {
-	return predicate.Permission(sql.FieldEQ(FieldDeletedAt, v))
-}
-
-// DeletedAtNEQ applies the NEQ predicate on the "deleted_at" field.
-func DeletedAtNEQ(v time.Time) predicate.Permission {
-	return predicate.Permission(sql.FieldNEQ(FieldDeletedAt, v))
-}
-
-// DeletedAtIn applies the In predicate on the "deleted_at" field.
-func DeletedAtIn(vs ...time.Time) predicate.Permission {
-	return predicate.Permission(sql.FieldIn(FieldDeletedAt, vs...))
-}
-
-// DeletedAtNotIn applies the NotIn predicate on the "deleted_at" field.
-func DeletedAtNotIn(vs ...time.Time) predicate.Permission {
-	return predicate.Permission(sql.FieldNotIn(FieldDeletedAt, vs...))
-}
-
-// DeletedAtGT applies the GT predicate on the "deleted_at" field.
-func DeletedAtGT(v time.Time) predicate.Permission {
-	return predicate.Permission(sql.FieldGT(FieldDeletedAt, v))
-}
-
-// DeletedAtGTE applies the GTE predicate on the "deleted_at" field.
-func DeletedAtGTE(v time.Time) predicate.Permission {
-	return predicate.Permission(sql.FieldGTE(FieldDeletedAt, v))
-}
-
-// DeletedAtLT applies the LT predicate on the "deleted_at" field.
-func DeletedAtLT(v time.Time) predicate.Permission {
-	return predicate.Permission(sql.FieldLT(FieldDeletedAt, v))
-}
-
-// DeletedAtLTE applies the LTE predicate on the "deleted_at" field.
-func DeletedAtLTE(v time.Time) predicate.Permission {
-	return predicate.Permission(sql.FieldLTE(FieldDeletedAt, v))
-}
-
-// DeletedAtIsNil applies the IsNil predicate on the "deleted_at" field.
-func DeletedAtIsNil() predicate.Permission {
-	return predicate.Permission(sql.FieldIsNull(FieldDeletedAt))
-}
-
-// DeletedAtNotNil applies the NotNil predicate on the "deleted_at" field.
-func DeletedAtNotNil() predicate.Permission {
-	return predicate.Permission(sql.FieldNotNull(FieldDeletedAt))
 }
 
 // And groups predicates with the AND operator between them.

@@ -28,16 +28,16 @@ func (_u *AdminUpdate) Where(ps ...predicate.Admin) *AdminUpdate {
 	return _u
 }
 
-// SetName sets the "name" field.
-func (_u *AdminUpdate) SetName(v string) *AdminUpdate {
-	_u.mutation.SetName(v)
+// SetRealName sets the "real_name" field.
+func (_u *AdminUpdate) SetRealName(v string) *AdminUpdate {
+	_u.mutation.SetRealName(v)
 	return _u
 }
 
-// SetNillableName sets the "name" field if the given value is not nil.
-func (_u *AdminUpdate) SetNillableName(v *string) *AdminUpdate {
+// SetNillableRealName sets the "real_name" field if the given value is not nil.
+func (_u *AdminUpdate) SetNillableRealName(v *string) *AdminUpdate {
 	if v != nil {
-		_u.SetName(*v)
+		_u.SetRealName(*v)
 	}
 	return _u
 }
@@ -186,8 +186,8 @@ func (_u *AdminUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 			}
 		}
 	}
-	if value, ok := _u.mutation.Name(); ok {
-		_spec.SetField(admin.FieldName, field.TypeString, value)
+	if value, ok := _u.mutation.RealName(); ok {
+		_spec.SetField(admin.FieldRealName, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Username(); ok {
 		_spec.SetField(admin.FieldUsername, field.TypeString, value)
@@ -236,16 +236,16 @@ type AdminUpdateOne struct {
 	mutation *AdminMutation
 }
 
-// SetName sets the "name" field.
-func (_u *AdminUpdateOne) SetName(v string) *AdminUpdateOne {
-	_u.mutation.SetName(v)
+// SetRealName sets the "real_name" field.
+func (_u *AdminUpdateOne) SetRealName(v string) *AdminUpdateOne {
+	_u.mutation.SetRealName(v)
 	return _u
 }
 
-// SetNillableName sets the "name" field if the given value is not nil.
-func (_u *AdminUpdateOne) SetNillableName(v *string) *AdminUpdateOne {
+// SetNillableRealName sets the "real_name" field if the given value is not nil.
+func (_u *AdminUpdateOne) SetNillableRealName(v *string) *AdminUpdateOne {
 	if v != nil {
-		_u.SetName(*v)
+		_u.SetRealName(*v)
 	}
 	return _u
 }
@@ -424,8 +424,8 @@ func (_u *AdminUpdateOne) sqlSave(ctx context.Context) (_node *Admin, err error)
 			}
 		}
 	}
-	if value, ok := _u.mutation.Name(); ok {
-		_spec.SetField(admin.FieldName, field.TypeString, value)
+	if value, ok := _u.mutation.RealName(); ok {
+		_spec.SetField(admin.FieldRealName, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Username(); ok {
 		_spec.SetField(admin.FieldUsername, field.TypeString, value)

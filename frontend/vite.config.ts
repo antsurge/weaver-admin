@@ -20,9 +20,12 @@ export default defineConfig({
     },
   },
   server: {
-    host: true,
-    hmr: {
-      host: 'localhost',
+    // host: true,
+    proxy: {
+      "/admin": {
+        target: "http://127.0.0.1:8888",
+        changeOrigin: true,
+      },
     },
   },
   // css: {

@@ -73,12 +73,12 @@ func IsInvalidCredentials(err error) bool {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == AuthenticationErrorReason_INVALID_CREDENTIALS.String() && e.Code == 401
+	return e.Reason == AuthenticationErrorReason_INVALID_CREDENTIALS.String() && e.Code == 400
 }
 
 // 401
 func ErrorInvalidCredentials(format string, args ...interface{}) *errors.Error {
-	return errors.New(401, AuthenticationErrorReason_INVALID_CREDENTIALS.String(), fmt.Sprintf(format, args...))
+	return errors.New(400, AuthenticationErrorReason_INVALID_CREDENTIALS.String(), fmt.Sprintf(format, args...))
 }
 
 func IsInvalidToken(err error) bool {

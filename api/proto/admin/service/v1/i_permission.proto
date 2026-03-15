@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package admin.service.v1;
+
+import "permission/service/v1/permission.proto";
+import "google/api/annotations.proto";
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/empty.proto";
+
+service PermissionService {
+    // 列表的tree
+    rpc PermissionTree(permission.service.v1.PermissionTreeRequest) returns (permission.service.v1.PermissionTreeResponse) {
+        option (google.api.http) = {
+            get: "/admin/v1/permission/tree"
+        };
+        option (gnostic.openapi.v3.operation) = {
+            tags: "Permission"
+            summary: "权限树"
+            description: "获取权限树"
+        };
+    }
+    // 创建权限
+    rpc CreatePermission(permission.service.v1.CreatePermissionRequest) returns (permission.service.v1.CreatePermissionResponse) {
+        option (google.api.http) = {
+            post: "/admin/v1/permission"
+            body: "*"
+        };
+        option (gnostic.openapi.v3.operation) = {
+            tags: "Permission"
+            summary: "创建权限"
+            description: "创建权限"
+        };
+    }
+    // 更新权限
+    rpc UpdatePermission(permission.service.v1.UpdatePermissionRequest) returns (permission.service.v1.UpdatePermissionResponse) {
+        option (google.api.http) = {
+            put: "/admin/v1/permission/{id}"
+            body: "*"
+        };
+        option (gnostic.openapi.v3.operation) = {
+            tags: "Permission"
+            summary: "更新权限"
+            description: "更新权限"
+        };
+    }
+    // 批量删除权限
+    rpc DeletePermission(permission.service.v1.DeletePermissionRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            delete: "/admin/v1/permission"
+        };
+        option (gnostic.openapi.v3.operation) = {
+            tags: "Permission"
+            summary: "删除权限"
+            description: "批量删除权限"
+        };
+    }
+}

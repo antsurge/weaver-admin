@@ -14,6 +14,8 @@ import (
 func NewGRPCServer(
 	c *conf.Server,
 	authenticationService *service.AuthenticationService,
+	permissionService *service.PermissionService,
+
 	logger log.Logger,
 ) *grpc.Server {
 	var opts = []grpc.ServerOption{
@@ -33,5 +35,6 @@ func NewGRPCServer(
 	srv := grpc.NewServer(opts...)
 
 	adminV1.RegisterAuthenticationServiceServer(srv, authenticationService)
+	adminV1.RegisterPermissionServiceServer(srv, permissionService)
 	return srv
 }

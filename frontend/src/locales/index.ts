@@ -88,11 +88,10 @@ export const $te = (...args: Parameters<Composer["te"]>) => {
  * 切换当前语言
  */
 export async function setI18nLanguage(lang: string) {
-  const config = useConfigStore();
-
   // 1. 如果当前语言就是目标语言，直接返回
   if (lang === (i18n.global as Composer).locale.value) return;
 
+  const config = useConfigStore();
   // 2. 保存到 Pinia
   config.setLang(lang);
 

@@ -2,11 +2,12 @@ package data
 
 import (
 	"context"
-	"entgo.io/ent/dialect/sql/schema"
 	"fmt"
+	"time"
+
+	"entgo.io/ent/dialect/sql/schema"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/conf"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent"
-	"time"
 
 	"github.com/go-kratos/kratos/v2/log"
 	_ "github.com/go-sql-driver/mysql"
@@ -23,6 +24,8 @@ var ProviderSet = wire.NewSet(
 	NewAdminRepo,
 	NewCaptchaRepo,
 	NewTokenRepo,
+
+	NewPermissionRepo,
 )
 
 // NewEntClient 初始化 Ent 客户端

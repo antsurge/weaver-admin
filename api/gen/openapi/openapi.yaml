@@ -3,8 +3,7 @@
 
 openapi: 3.0.3
 info:
-    title: AuthenticationService API
-    description: 用户后台登录认证服务
+    title: ""
     version: 0.0.1
 paths:
     /admin/v1/login:
@@ -58,6 +57,116 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /admin/v1/permission:
+        post:
+            tags:
+                - PermissionService
+                - Permission
+            summary: 创建权限
+            description: 创建权限
+            operationId: PermissionService_CreatePermission
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreatePermissionRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreatePermissionResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - PermissionService
+                - Permission
+            summary: 删除权限
+            description: 批量删除权限
+            operationId: PermissionService_DeletePermission
+            parameters:
+                - name: ids
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/permission/tree:
+        get:
+            tags:
+                - PermissionService
+                - Permission
+            summary: 权限树
+            description: 获取权限树
+            operationId: PermissionService_PermissionTree
+            parameters:
+                - name: type
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PermissionTreeResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/permission/{id}:
+        put:
+            tags:
+                - PermissionService
+                - Permission
+            summary: 更新权限
+            description: 更新权限
+            operationId: PermissionService_UpdatePermission
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdatePermissionRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdatePermissionResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /admin/v1/refresh-token:
         post:
             tags:
@@ -79,6 +188,27 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/LoginResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    admin/v1/current-user:
+        get:
+            tags:
+                - AuthenticationService
+                - Authentication
+            summary: 当前登录用户信息
+            description: 当前登录用户信息
+            operationId: AuthenticationService_CurrentUserInfo
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CurrentUserInfoResponse'
                 default:
                     description: Default error response
                     content:
@@ -108,6 +238,57 @@ paths:
                                 $ref: '#/components/schemas/Status'
 components:
     schemas:
+        CreatePermissionRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: 权限名称
+                code:
+                    type: string
+                    description: 权限唯一编码
+                description:
+                    type: string
+                    description: 权限描述
+                parentId:
+                    type: string
+                    description: 父权限ID，空表示根节点
+                type:
+                    type: string
+                    description: '权限类型: menuDirectory / menuItem / button'
+                path:
+                    type: string
+                    description: 路由路径
+                icon:
+                    type: string
+                    description: 图标
+                url:
+                    type: string
+                    description: URL
+                component:
+                    type: string
+                    description: 组件路径
+                weigh:
+                    type: integer
+                    description: 权重
+                    format: int32
+                status:
+                    type: string
+                    description: '状态: enabled / disabled'
+            description: 创建权限请求
+        CreatePermissionResponse:
+            type: object
+            properties:
+                permission:
+                    $ref: '#/components/schemas/Permission'
+            description: 创建权限响应
+        CurrentUserInfoResponse:
+            type: object
+            properties:
+                id:
+                    type: string
+                realName:
+                    type: string
         GetCaptchaResponse:
             type: object
             properties:
@@ -153,6 +334,53 @@ components:
                     type: string
                 userId:
                     type: string
+        Permission:
+            type: object
+            properties:
+                id:
+                    type: string
+                parentId:
+                    type: string
+                name:
+                    type: string
+                code:
+                    type: string
+                description:
+                    type: string
+                type:
+                    type: string
+                path:
+                    type: string
+                icon:
+                    type: string
+                url:
+                    type: string
+                component:
+                    type: string
+                weight:
+                    type: integer
+                    format: int32
+                status:
+                    type: string
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+                children:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Permission'
+            description: 权限实体
+        PermissionTreeResponse:
+            type: object
+            properties:
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Permission'
+            description: 树形权限列表响应
         RefreshTokenRequest:
             type: object
             properties:
@@ -176,5 +404,53 @@ components:
                         $ref: '#/components/schemas/GoogleProtobufAny'
                     description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
             description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        UpdatePermissionRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 权限ID
+                name:
+                    type: string
+                    description: 权限名称
+                code:
+                    type: string
+                    description: 权限唯一编码
+                description:
+                    type: string
+                    description: 权限描述
+                parentId:
+                    type: string
+                    description: 父权限ID，空表示根节点
+                type:
+                    type: string
+                    description: '权限类型: menuDirectory / menuItem / button'
+                path:
+                    type: string
+                    description: 路由路径
+                icon:
+                    type: string
+                    description: 图标
+                url:
+                    type: string
+                    description: URL
+                component:
+                    type: string
+                    description: 组件路径
+                weigh:
+                    type: integer
+                    description: 权重
+                    format: int32
+                status:
+                    type: string
+                    description: '状态: enabled / disabled'
+            description: 更新权限
+        UpdatePermissionResponse:
+            type: object
+            properties:
+                permission:
+                    $ref: '#/components/schemas/Permission'
 tags:
     - name: AuthenticationService
+      description: 用户后台登录认证服务
+    - name: PermissionService

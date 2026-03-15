@@ -10,6 +10,9 @@ managed:
     - file_option: go_package
       path: authentication/service/v1
       value: github.com/hypercoze/kratos-admin/api/gen/go/authentication/service/v1;authenticationpb
+    - file_option: go_package
+      path: permission/service/v1
+      value: github.com/hypercoze/kratos-admin/api/gen/go/permission/service/v1;permissionpb
   disable:
     - module: 'buf.build/bufbuild/protovalidate'
     - module: 'buf.build/googleapis/googleapis'

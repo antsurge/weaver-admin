@@ -2,13 +2,14 @@ package biz
 
 import (
 	"context"
+	"math/rand"
+	"strings"
+	"time"
+
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/uuid"
 	authenticationV1 "github.com/hypercoze/kratos-admin/api/gen/go/authentication/service/v1"
 	"github.com/mojocn/base64Captcha"
-	"math/rand"
-	"strings"
-	"time"
 )
 
 type CaptchaRepo interface {
@@ -44,7 +45,7 @@ func (u *CaptchaUsecase) GetCaptcha(ctx context.Context) (*authenticationV1.GetC
 	captchaID := generateCaptchaID()
 
 	// 生成图片 base64
-	driver := base64Captcha.NewDriverString(80, 240, 6, 7, 4, "", nil, nil, nil)
+	driver := base64Captcha.NewDriverString(68, 200, 0, 0, 0, "", nil, nil, nil)
 	b64s, err := driver.DrawCaptcha(code)
 	if err != nil {
 		// 记录日志

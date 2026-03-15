@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+
 	adminV1 "github.com/hypercoze/kratos-admin/api/gen/go/admin/service/v1"
 	authenticationV1 "github.com/hypercoze/kratos-admin/api/gen/go/authentication/service/v1"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/biz"
@@ -44,4 +45,9 @@ func (s *AuthenticationService) RefreshToken(ctx context.Context, req *authentic
 func (s *AuthenticationService) Logout(ctx context.Context, req *authenticationV1.RefreshTokenRequest) (*emptypb.Empty, error) {
 	err := s.authenticationUc.Logout(ctx, req)
 	return nil, err
+}
+
+// 获取验证码
+func (s *AuthenticationService) CurrentUserInfo(ctx context.Context, _ *emptypb.Empty) (*authenticationV1.CurrentUserInfoResponse, error) {
+	return s.authenticationUc.CurrentUserInfo(ctx)
 }

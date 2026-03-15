@@ -19,6 +19,9 @@ service AuthenticationService {
 
     // 获取验证码
     rpc GetCaptcha(google.protobuf.Empty) returns (GetCaptchaResponse);
+
+    // 获取当前用户
+    rpc CurrentUserInfo(google.protobuf.Empty) returns (CurrentUserInfoResponse);
 }
 
 message LoginRequest {
@@ -81,4 +84,9 @@ message GetCaptchaResponse {
 message RefreshTokenRequest {
     string refreshToken = 1;
     string accessToken = 2;
+}
+
+message CurrentUserInfoResponse {
+    string id = 1;
+    string realName = 2;
 }

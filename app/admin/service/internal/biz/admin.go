@@ -2,15 +2,16 @@ package biz
 
 import (
 	"context"
-	"github.com/go-kratos/kratos/v2/log"
 	"time"
+
+	"github.com/go-kratos/kratos/v2/log"
 )
 
 // Admin 是 biz 层的领域模型 (Domain Object)
 // 这里的字段对应你 Proto 中定义的 Admin 消息
 type Admin struct {
 	ID         string
-	Name       string
+	RealName   string
 	Username   string
 	Email      string
 	Phone      string
@@ -25,6 +26,7 @@ type Admin struct {
 type AdminRepo interface {
 	CreateAdmin(ctx context.Context, a *Admin) (*Admin, error)
 	FindByUsername(ctx context.Context, username string) (*Admin, error)
+	FindByID(ctx context.Context, id string) (*Admin, error)
 	//GetAdmin(ctx context.Context, id string) (*Admin, error)
 	//UpdateAdmin(ctx context.Context, a *Admin) (*Admin, error)
 	//DeleteAdmin(ctx context.Context, id string) error

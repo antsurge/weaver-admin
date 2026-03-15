@@ -20,16 +20,16 @@ type AdminCreate struct {
 	hooks    []Hook
 }
 
-// SetName sets the "name" field.
-func (_c *AdminCreate) SetName(v string) *AdminCreate {
-	_c.mutation.SetName(v)
+// SetRealName sets the "real_name" field.
+func (_c *AdminCreate) SetRealName(v string) *AdminCreate {
+	_c.mutation.SetRealName(v)
 	return _c
 }
 
-// SetNillableName sets the "name" field if the given value is not nil.
-func (_c *AdminCreate) SetNillableName(v *string) *AdminCreate {
+// SetNillableRealName sets the "real_name" field if the given value is not nil.
+func (_c *AdminCreate) SetNillableRealName(v *string) *AdminCreate {
 	if v != nil {
-		_c.SetName(*v)
+		_c.SetRealName(*v)
 	}
 	return _c
 }
@@ -157,9 +157,9 @@ func (_c *AdminCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (_c *AdminCreate) defaults() {
-	if _, ok := _c.mutation.Name(); !ok {
-		v := admin.DefaultName
-		_c.mutation.SetName(v)
+	if _, ok := _c.mutation.RealName(); !ok {
+		v := admin.DefaultRealName
+		_c.mutation.SetRealName(v)
 	}
 	if _, ok := _c.mutation.CreateTime(); !ok {
 		v := admin.DefaultCreateTime()
@@ -173,8 +173,8 @@ func (_c *AdminCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (_c *AdminCreate) check() error {
-	if _, ok := _c.mutation.Name(); !ok {
-		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Admin.name"`)}
+	if _, ok := _c.mutation.RealName(); !ok {
+		return &ValidationError{Name: "real_name", err: errors.New(`ent: missing required field "Admin.real_name"`)}
 	}
 	if _, ok := _c.mutation.Username(); !ok {
 		return &ValidationError{Name: "username", err: errors.New(`ent: missing required field "Admin.username"`)}
@@ -223,9 +223,9 @@ func (_c *AdminCreate) createSpec() (*Admin, *sqlgraph.CreateSpec) {
 		_node.ID = id
 		_spec.ID.Value = id
 	}
-	if value, ok := _c.mutation.Name(); ok {
-		_spec.SetField(admin.FieldName, field.TypeString, value)
-		_node.Name = value
+	if value, ok := _c.mutation.RealName(); ok {
+		_spec.SetField(admin.FieldRealName, field.TypeString, value)
+		_node.RealName = value
 	}
 	if value, ok := _c.mutation.Username(); ok {
 		_spec.SetField(admin.FieldUsername, field.TypeString, value)

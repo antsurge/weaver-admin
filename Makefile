@@ -15,7 +15,7 @@ wire:
 
 # generate proto code
 buf:
-	@cd api && rm -rf ./gen && buf generate
+	@cd api && rm -rf ./gen && buf dep update && buf generate
 
 # generate ent code
 ent:

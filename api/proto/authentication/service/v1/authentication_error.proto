@@ -12,6 +12,6 @@ enum AuthenticationErrorReason {
     CAPTCHA_INVALID = 3 [(errors.code) = 400]; // 验证码错误
 
     // 401
-    INVALID_CREDENTIALS = 101 [(errors.code)= 401]; // 用户名或密码错误
+    INVALID_CREDENTIALS = 101 [(errors.code)= 400]; // 用户名或密码错误
     INVALID_TOKEN = 102 [(errors.code)= 401];
 }

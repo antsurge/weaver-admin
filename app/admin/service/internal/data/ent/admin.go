@@ -17,8 +17,8 @@ type Admin struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID string `json:"id,omitempty"`
-	// Name holds the value of the "name" field.
-	Name string `json:"name,omitempty"`
+	// RealName holds the value of the "real_name" field.
+	RealName string `json:"real_name,omitempty"`
 	// Username holds the value of the "username" field.
 	Username string `json:"username,omitempty"`
 	// Email holds the value of the "email" field.
@@ -41,7 +41,7 @@ func (*Admin) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case admin.FieldID, admin.FieldName, admin.FieldUsername, admin.FieldEmail, admin.FieldPhone, admin.FieldAvatar, admin.FieldPassword:
+		case admin.FieldID, admin.FieldRealName, admin.FieldUsername, admin.FieldEmail, admin.FieldPhone, admin.FieldAvatar, admin.FieldPassword:
 			values[i] = new(sql.NullString)
 		case admin.FieldCreateTime, admin.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -66,11 +66,11 @@ func (_m *Admin) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.ID = value.String
 			}
-		case admin.FieldName:
+		case admin.FieldRealName:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field name", values[i])
+				return fmt.Errorf("unexpected type %T for field real_name", values[i])
 			} else if value.Valid {
-				_m.Name = value.String
+				_m.RealName = value.String
 			}
 		case admin.FieldUsername:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -150,8 +150,8 @@ func (_m *Admin) String() string {
 	var builder strings.Builder
 	builder.WriteString("Admin(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
-	builder.WriteString("name=")
-	builder.WriteString(_m.Name)
+	builder.WriteString("real_name=")
+	builder.WriteString(_m.RealName)
 	builder.WriteString(", ")
 	builder.WriteString("username=")
 	builder.WriteString(_m.Username)

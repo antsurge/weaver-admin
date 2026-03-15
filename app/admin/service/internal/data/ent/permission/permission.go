@@ -28,20 +28,20 @@ const (
 	FieldIcon = "icon"
 	// FieldType holds the string denoting the type field in the database.
 	FieldType = "type"
+	// FieldMenuType holds the string denoting the menu_type field in the database.
+	FieldMenuType = "menu_type"
 	// FieldURL holds the string denoting the url field in the database.
 	FieldURL = "url"
 	// FieldComponent holds the string denoting the component field in the database.
 	FieldComponent = "component"
-	// FieldWeigh holds the string denoting the weigh field in the database.
-	FieldWeigh = "weigh"
+	// FieldWeight holds the string denoting the weight field in the database.
+	FieldWeight = "weight"
 	// FieldStatus holds the string denoting the status field in the database.
 	FieldStatus = "status"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
 	FieldUpdatedAt = "updated_at"
-	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
-	FieldDeletedAt = "deleted_at"
 	// Table holds the table name of the permission in the database.
 	Table = "permission"
 )
@@ -56,13 +56,13 @@ var Columns = []string{
 	FieldPath,
 	FieldIcon,
 	FieldType,
+	FieldMenuType,
 	FieldURL,
 	FieldComponent,
-	FieldWeigh,
+	FieldWeight,
 	FieldStatus,
 	FieldCreatedAt,
 	FieldUpdatedAt,
-	FieldDeletedAt,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -76,6 +76,8 @@ func ValidColumn(column string) bool {
 }
 
 var (
+	// DefaultParentID holds the default value on creation for the "parent_id" field.
+	DefaultParentID string
 	// NameValidator is a validator for the "name" field. It is called by the builders before save.
 	NameValidator func(string) error
 	// CodeValidator is a validator for the "code" field. It is called by the builders before save.
@@ -98,8 +100,8 @@ var (
 	DefaultComponent string
 	// ComponentValidator is a validator for the "component" field. It is called by the builders before save.
 	ComponentValidator func(string) error
-	// DefaultWeigh holds the default value on creation for the "weigh" field.
-	DefaultWeigh int
+	// DefaultWeight holds the default value on creation for the "weight" field.
+	DefaultWeight int
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() time.Time
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
@@ -134,6 +136,33 @@ func TypeValidator(_type Type) error {
 		return nil
 	default:
 		return fmt.Errorf("permission: invalid enum value for type field: %q", _type)
+	}
+}
+
+// MenuType defines the type for the "menu_type" enum field.
+type MenuType string
+
+// MenuTypeTab is the default value of the MenuType enum.
+const DefaultMenuType = MenuTypeTab
+
+// MenuType values.
+const (
+	MenuTypeTab    MenuType = "tab"
+	MenuTypeLink   MenuType = "link"
+	MenuTypeIframe MenuType = "iframe"
+)
+
+func (mt MenuType) String() string {
+	return string(mt)
+}
+
+// MenuTypeValidator is a validator for the "menu_type" field enum values. It is called by the builders before save.
+func MenuTypeValidator(mt MenuType) error {
+	switch mt {
+	case MenuTypeTab, MenuTypeLink, MenuTypeIframe:
+		return nil
+	default:
+		return fmt.Errorf("permission: invalid enum value for menu_type field: %q", mt)
 	}
 }
 
@@ -206,6 +235,11 @@ func ByType(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldType, opts...).ToFunc()
 }
 
+// ByMenuType orders the results by the menu_type field.
+func ByMenuType(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldMenuType, opts...).ToFunc()
+}
+
 // ByURL orders the results by the url field.
 func ByURL(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldURL, opts...).ToFunc()
@@ -216,9 +250,9 @@ func ByComponent(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldComponent, opts...).ToFunc()
 }
 
-// ByWeigh orders the results by the weigh field.
-func ByWeigh(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldWeigh, opts...).ToFunc()
+// ByWeight orders the results by the weight field.
+func ByWeight(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldWeight, opts...).ToFunc()
 }
 
 // ByStatus orders the results by the status field.
@@ -234,9 +268,4 @@ func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 // ByUpdatedAt orders the results by the updated_at field.
 func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUpdatedAt, opts...).ToFunc()
-}
-
-// ByDeletedAt orders the results by the deleted_at field.
-func ByDeletedAt(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldDeletedAt, opts...).ToFunc()
 }

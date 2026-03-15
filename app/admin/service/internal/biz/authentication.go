@@ -2,13 +2,16 @@ package biz
 
 import (
 	"context"
+	"strings"
+	"time"
+
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/golang-jwt/jwt/v5"
 	authenticationV1 "github.com/hypercoze/kratos-admin/api/gen/go/authentication/service/v1"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/conf"
+	"github.com/hypercoze/kratos-admin/pkg/metadata"
 	"github.com/hypercoze/kratos-admin/pkg/utils/auth"
 	"github.com/hypercoze/kratos-admin/pkg/utils/crypto"
-	"time"
 )
 
 type TokenRepo interface {
@@ -52,17 +55,17 @@ func NewAuthenticationUsecase(
 // 登录
 func (uc *AuthenticationUsecase) Login(ctx context.Context, req *authenticationV1.LoginRequest) (*authenticationV1.LoginResponse, error) {
 	// 获取验证码并校验
-	//storedCaptcha, err := uc.captchaRepo.Get(ctx, req.CaptchaId)
-	//if err != nil {
-	//	// TODO:记录日志
-	//	return nil, authenticationV1.ErrorCaptchaExpired("CAPTCHA_EXPIRED")
-	//}
-	//// 一次性使用，删除验证码
-	//_ = uc.captchaRepo.Delete(ctx, req.CaptchaId)
-	//if storedCaptcha != strings.ToLower(req.Captcha) {
-	//	// TODO:记录日志
-	//	return nil, authenticationV1.ErrorCaptchaInvalid("CAPTCHA_INVALID")
-	//}
+	storedCaptcha, err := uc.captchaRepo.Get(ctx, req.CaptchaId)
+	if err != nil {
+		// TODO:记录日志
+		return nil, authenticationV1.ErrorCaptchaExpired("CAPTCHA_EXPIRED")
+	}
+	// 一次性使用，删除验证码
+	_ = uc.captchaRepo.Delete(ctx, req.CaptchaId)
+	if storedCaptcha != strings.ToLower(req.Captcha) {
+		// TODO:记录日志
+		return nil, authenticationV1.ErrorCaptchaInvalid("CAPTCHA_INVALID")
+	}
 
 	// 验证用户名和密码
 	admin, err := uc.adminRepo.FindByUsername(ctx, req.Username)
@@ -147,4 +150,21 @@ func (uc *AuthenticationUsecase) Logout(ctx context.Context, req *authentication
 	_ = uc.tokenRepo.Delete(ctx, req.AccessToken)
 
 	return nil
+}
+
+func (uc *AuthenticationUsecase) CurrentUserInfo(ctx context.Context) (*authenticationV1.CurrentUserInfoResponse, error) {
+	// 验证用户名和密码
+	admin, err := uc.adminRepo.FindByID(ctx, metadata.GetAdminID(ctx))
+	if err != nil {
+		// TODO:记录日志
+		return nil, authenticationV1.ErrorInvalidToken("INVALID_TOKEN")
+	}
+	if admin == nil {
+		return nil, authenticationV1.ErrorInvalidToken("INVALID_TOKEN")
+	}
+
+	return &authenticationV1.CurrentUserInfoResponse{
+		Id:       admin.ID,
+		RealName: admin.RealName,
+	}, nil
 }

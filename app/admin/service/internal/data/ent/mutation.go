@@ -41,7 +41,7 @@ type AdminMutation struct {
 	op            Op
 	typ           string
 	id            *string
-	name          *string
+	real_name     *string
 	username      *string
 	email         *string
 	phone         *string
@@ -159,40 +159,40 @@ func (m *AdminMutation) IDs(ctx context.Context) ([]string, error) {
 	}
 }
 
-// SetName sets the "name" field.
-func (m *AdminMutation) SetName(s string) {
-	m.name = &s
+// SetRealName sets the "real_name" field.
+func (m *AdminMutation) SetRealName(s string) {
+	m.real_name = &s
 }
 
-// Name returns the value of the "name" field in the mutation.
-func (m *AdminMutation) Name() (r string, exists bool) {
-	v := m.name
+// RealName returns the value of the "real_name" field in the mutation.
+func (m *AdminMutation) RealName() (r string, exists bool) {
+	v := m.real_name
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldName returns the old "name" field's value of the Admin entity.
+// OldRealName returns the old "real_name" field's value of the Admin entity.
 // If the Admin object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AdminMutation) OldName(ctx context.Context) (v string, err error) {
+func (m *AdminMutation) OldRealName(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldName is only allowed on UpdateOne operations")
+		return v, errors.New("OldRealName is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldName requires an ID field in the mutation")
+		return v, errors.New("OldRealName requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldName: %w", err)
+		return v, fmt.Errorf("querying old value for OldRealName: %w", err)
 	}
-	return oldValue.Name, nil
+	return oldValue.RealName, nil
 }
 
-// ResetName resets all changes to the "name" field.
-func (m *AdminMutation) ResetName() {
-	m.name = nil
+// ResetRealName resets all changes to the "real_name" field.
+func (m *AdminMutation) ResetRealName() {
+	m.real_name = nil
 }
 
 // SetUsername sets the "username" field.
@@ -521,8 +521,8 @@ func (m *AdminMutation) Type() string {
 // AddedFields().
 func (m *AdminMutation) Fields() []string {
 	fields := make([]string, 0, 8)
-	if m.name != nil {
-		fields = append(fields, admin.FieldName)
+	if m.real_name != nil {
+		fields = append(fields, admin.FieldRealName)
 	}
 	if m.username != nil {
 		fields = append(fields, admin.FieldUsername)
@@ -553,8 +553,8 @@ func (m *AdminMutation) Fields() []string {
 // schema.
 func (m *AdminMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case admin.FieldName:
-		return m.Name()
+	case admin.FieldRealName:
+		return m.RealName()
 	case admin.FieldUsername:
 		return m.Username()
 	case admin.FieldEmail:
@@ -578,8 +578,8 @@ func (m *AdminMutation) Field(name string) (ent.Value, bool) {
 // database failed.
 func (m *AdminMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case admin.FieldName:
-		return m.OldName(ctx)
+	case admin.FieldRealName:
+		return m.OldRealName(ctx)
 	case admin.FieldUsername:
 		return m.OldUsername(ctx)
 	case admin.FieldEmail:
@@ -603,12 +603,12 @@ func (m *AdminMutation) OldField(ctx context.Context, name string) (ent.Value, e
 // type.
 func (m *AdminMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case admin.FieldName:
+	case admin.FieldRealName:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetName(v)
+		m.SetRealName(v)
 		return nil
 	case admin.FieldUsername:
 		v, ok := value.(string)
@@ -729,8 +729,8 @@ func (m *AdminMutation) ClearField(name string) error {
 // It returns an error if the field is not defined in the schema.
 func (m *AdminMutation) ResetField(name string) error {
 	switch name {
-	case admin.FieldName:
-		m.ResetName()
+	case admin.FieldRealName:
+		m.ResetRealName()
 		return nil
 	case admin.FieldUsername:
 		m.ResetUsername()
@@ -1258,14 +1258,14 @@ type PermissionMutation struct {
 	_path         *string
 	icon          *string
 	_type         *permission.Type
+	menu_type     *permission.MenuType
 	url           *string
 	component     *string
-	weigh         *int
-	addweigh      *int
+	weight        *int
+	addweight     *int
 	status        *permission.Status
 	created_at    *time.Time
 	updated_at    *time.Time
-	deleted_at    *time.Time
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*Permission, error)
@@ -1393,7 +1393,7 @@ func (m *PermissionMutation) ParentID() (r string, exists bool) {
 // OldParentID returns the old "parent_id" field's value of the Permission entity.
 // If the Permission object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMutation) OldParentID(ctx context.Context) (v *string, err error) {
+func (m *PermissionMutation) OldParentID(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldParentID is only allowed on UpdateOne operations")
 	}
@@ -1407,22 +1407,9 @@ func (m *PermissionMutation) OldParentID(ctx context.Context) (v *string, err er
 	return oldValue.ParentID, nil
 }
 
-// ClearParentID clears the value of the "parent_id" field.
-func (m *PermissionMutation) ClearParentID() {
-	m.parent_id = nil
-	m.clearedFields[permission.FieldParentID] = struct{}{}
-}
-
-// ParentIDCleared returns if the "parent_id" field was cleared in this mutation.
-func (m *PermissionMutation) ParentIDCleared() bool {
-	_, ok := m.clearedFields[permission.FieldParentID]
-	return ok
-}
-
 // ResetParentID resets all changes to the "parent_id" field.
 func (m *PermissionMutation) ResetParentID() {
 	m.parent_id = nil
-	delete(m.clearedFields, permission.FieldParentID)
 }
 
 // SetName sets the "name" field.
@@ -1654,6 +1641,42 @@ func (m *PermissionMutation) ResetType() {
 	m._type = nil
 }
 
+// SetMenuType sets the "menu_type" field.
+func (m *PermissionMutation) SetMenuType(pt permission.MenuType) {
+	m.menu_type = &pt
+}
+
+// MenuType returns the value of the "menu_type" field in the mutation.
+func (m *PermissionMutation) MenuType() (r permission.MenuType, exists bool) {
+	v := m.menu_type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMenuType returns the old "menu_type" field's value of the Permission entity.
+// If the Permission object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PermissionMutation) OldMenuType(ctx context.Context) (v permission.MenuType, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMenuType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMenuType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMenuType: %w", err)
+	}
+	return oldValue.MenuType, nil
+}
+
+// ResetMenuType resets all changes to the "menu_type" field.
+func (m *PermissionMutation) ResetMenuType() {
+	m.menu_type = nil
+}
+
 // SetURL sets the "url" field.
 func (m *PermissionMutation) SetURL(s string) {
 	m.url = &s
@@ -1726,60 +1749,60 @@ func (m *PermissionMutation) ResetComponent() {
 	m.component = nil
 }
 
-// SetWeigh sets the "weigh" field.
-func (m *PermissionMutation) SetWeigh(i int) {
-	m.weigh = &i
-	m.addweigh = nil
+// SetWeight sets the "weight" field.
+func (m *PermissionMutation) SetWeight(i int) {
+	m.weight = &i
+	m.addweight = nil
 }
 
-// Weigh returns the value of the "weigh" field in the mutation.
-func (m *PermissionMutation) Weigh() (r int, exists bool) {
-	v := m.weigh
+// Weight returns the value of the "weight" field in the mutation.
+func (m *PermissionMutation) Weight() (r int, exists bool) {
+	v := m.weight
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldWeigh returns the old "weigh" field's value of the Permission entity.
+// OldWeight returns the old "weight" field's value of the Permission entity.
 // If the Permission object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMutation) OldWeigh(ctx context.Context) (v int, err error) {
+func (m *PermissionMutation) OldWeight(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldWeigh is only allowed on UpdateOne operations")
+		return v, errors.New("OldWeight is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldWeigh requires an ID field in the mutation")
+		return v, errors.New("OldWeight requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldWeigh: %w", err)
+		return v, fmt.Errorf("querying old value for OldWeight: %w", err)
 	}
-	return oldValue.Weigh, nil
+	return oldValue.Weight, nil
 }
 
-// AddWeigh adds i to the "weigh" field.
-func (m *PermissionMutation) AddWeigh(i int) {
-	if m.addweigh != nil {
-		*m.addweigh += i
+// AddWeight adds i to the "weight" field.
+func (m *PermissionMutation) AddWeight(i int) {
+	if m.addweight != nil {
+		*m.addweight += i
 	} else {
-		m.addweigh = &i
+		m.addweight = &i
 	}
 }
 
-// AddedWeigh returns the value that was added to the "weigh" field in this mutation.
-func (m *PermissionMutation) AddedWeigh() (r int, exists bool) {
-	v := m.addweigh
+// AddedWeight returns the value that was added to the "weight" field in this mutation.
+func (m *PermissionMutation) AddedWeight() (r int, exists bool) {
+	v := m.addweight
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// ResetWeigh resets all changes to the "weigh" field.
-func (m *PermissionMutation) ResetWeigh() {
-	m.weigh = nil
-	m.addweigh = nil
+// ResetWeight resets all changes to the "weight" field.
+func (m *PermissionMutation) ResetWeight() {
+	m.weight = nil
+	m.addweight = nil
 }
 
 // SetStatus sets the "status" field.
@@ -1890,55 +1913,6 @@ func (m *PermissionMutation) ResetUpdatedAt() {
 	m.updated_at = nil
 }
 
-// SetDeletedAt sets the "deleted_at" field.
-func (m *PermissionMutation) SetDeletedAt(t time.Time) {
-	m.deleted_at = &t
-}
-
-// DeletedAt returns the value of the "deleted_at" field in the mutation.
-func (m *PermissionMutation) DeletedAt() (r time.Time, exists bool) {
-	v := m.deleted_at
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldDeletedAt returns the old "deleted_at" field's value of the Permission entity.
-// If the Permission object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMutation) OldDeletedAt(ctx context.Context) (v *time.Time, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldDeletedAt is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldDeletedAt requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDeletedAt: %w", err)
-	}
-	return oldValue.DeletedAt, nil
-}
-
-// ClearDeletedAt clears the value of the "deleted_at" field.
-func (m *PermissionMutation) ClearDeletedAt() {
-	m.deleted_at = nil
-	m.clearedFields[permission.FieldDeletedAt] = struct{}{}
-}
-
-// DeletedAtCleared returns if the "deleted_at" field was cleared in this mutation.
-func (m *PermissionMutation) DeletedAtCleared() bool {
-	_, ok := m.clearedFields[permission.FieldDeletedAt]
-	return ok
-}
-
-// ResetDeletedAt resets all changes to the "deleted_at" field.
-func (m *PermissionMutation) ResetDeletedAt() {
-	m.deleted_at = nil
-	delete(m.clearedFields, permission.FieldDeletedAt)
-}
-
 // Where appends a list predicates to the PermissionMutation builder.
 func (m *PermissionMutation) Where(ps ...predicate.Permission) {
 	m.predicates = append(m.predicates, ps...)
@@ -1995,14 +1969,17 @@ func (m *PermissionMutation) Fields() []string {
 	if m._type != nil {
 		fields = append(fields, permission.FieldType)
 	}
+	if m.menu_type != nil {
+		fields = append(fields, permission.FieldMenuType)
+	}
 	if m.url != nil {
 		fields = append(fields, permission.FieldURL)
 	}
 	if m.component != nil {
 		fields = append(fields, permission.FieldComponent)
 	}
-	if m.weigh != nil {
-		fields = append(fields, permission.FieldWeigh)
+	if m.weight != nil {
+		fields = append(fields, permission.FieldWeight)
 	}
 	if m.status != nil {
 		fields = append(fields, permission.FieldStatus)
@@ -2012,9 +1989,6 @@ func (m *PermissionMutation) Fields() []string {
 	}
 	if m.updated_at != nil {
 		fields = append(fields, permission.FieldUpdatedAt)
-	}
-	if m.deleted_at != nil {
-		fields = append(fields, permission.FieldDeletedAt)
 	}
 	return fields
 }
@@ -2038,20 +2012,20 @@ func (m *PermissionMutation) Field(name string) (ent.Value, bool) {
 		return m.Icon()
 	case permission.FieldType:
 		return m.GetType()
+	case permission.FieldMenuType:
+		return m.MenuType()
 	case permission.FieldURL:
 		return m.URL()
 	case permission.FieldComponent:
 		return m.Component()
-	case permission.FieldWeigh:
-		return m.Weigh()
+	case permission.FieldWeight:
+		return m.Weight()
 	case permission.FieldStatus:
 		return m.Status()
 	case permission.FieldCreatedAt:
 		return m.CreatedAt()
 	case permission.FieldUpdatedAt:
 		return m.UpdatedAt()
-	case permission.FieldDeletedAt:
-		return m.DeletedAt()
 	}
 	return nil, false
 }
@@ -2075,20 +2049,20 @@ func (m *PermissionMutation) OldField(ctx context.Context, name string) (ent.Val
 		return m.OldIcon(ctx)
 	case permission.FieldType:
 		return m.OldType(ctx)
+	case permission.FieldMenuType:
+		return m.OldMenuType(ctx)
 	case permission.FieldURL:
 		return m.OldURL(ctx)
 	case permission.FieldComponent:
 		return m.OldComponent(ctx)
-	case permission.FieldWeigh:
-		return m.OldWeigh(ctx)
+	case permission.FieldWeight:
+		return m.OldWeight(ctx)
 	case permission.FieldStatus:
 		return m.OldStatus(ctx)
 	case permission.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
 	case permission.FieldUpdatedAt:
 		return m.OldUpdatedAt(ctx)
-	case permission.FieldDeletedAt:
-		return m.OldDeletedAt(ctx)
 	}
 	return nil, fmt.Errorf("unknown Permission field %s", name)
 }
@@ -2147,6 +2121,13 @@ func (m *PermissionMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetType(v)
 		return nil
+	case permission.FieldMenuType:
+		v, ok := value.(permission.MenuType)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMenuType(v)
+		return nil
 	case permission.FieldURL:
 		v, ok := value.(string)
 		if !ok {
@@ -2161,12 +2142,12 @@ func (m *PermissionMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetComponent(v)
 		return nil
-	case permission.FieldWeigh:
+	case permission.FieldWeight:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetWeigh(v)
+		m.SetWeight(v)
 		return nil
 	case permission.FieldStatus:
 		v, ok := value.(permission.Status)
@@ -2189,13 +2170,6 @@ func (m *PermissionMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetUpdatedAt(v)
 		return nil
-	case permission.FieldDeletedAt:
-		v, ok := value.(time.Time)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetDeletedAt(v)
-		return nil
 	}
 	return fmt.Errorf("unknown Permission field %s", name)
 }
@@ -2204,8 +2178,8 @@ func (m *PermissionMutation) SetField(name string, value ent.Value) error {
 // this mutation.
 func (m *PermissionMutation) AddedFields() []string {
 	var fields []string
-	if m.addweigh != nil {
-		fields = append(fields, permission.FieldWeigh)
+	if m.addweight != nil {
+		fields = append(fields, permission.FieldWeight)
 	}
 	return fields
 }
@@ -2215,8 +2189,8 @@ func (m *PermissionMutation) AddedFields() []string {
 // was not set, or was not defined in the schema.
 func (m *PermissionMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
-	case permission.FieldWeigh:
-		return m.AddedWeigh()
+	case permission.FieldWeight:
+		return m.AddedWeight()
 	}
 	return nil, false
 }
@@ -2226,12 +2200,12 @@ func (m *PermissionMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *PermissionMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case permission.FieldWeigh:
+	case permission.FieldWeight:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.AddWeigh(v)
+		m.AddWeight(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Permission numeric field %s", name)
@@ -2241,14 +2215,8 @@ func (m *PermissionMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *PermissionMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(permission.FieldParentID) {
-		fields = append(fields, permission.FieldParentID)
-	}
 	if m.FieldCleared(permission.FieldDescription) {
 		fields = append(fields, permission.FieldDescription)
-	}
-	if m.FieldCleared(permission.FieldDeletedAt) {
-		fields = append(fields, permission.FieldDeletedAt)
 	}
 	return fields
 }
@@ -2264,14 +2232,8 @@ func (m *PermissionMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *PermissionMutation) ClearField(name string) error {
 	switch name {
-	case permission.FieldParentID:
-		m.ClearParentID()
-		return nil
 	case permission.FieldDescription:
 		m.ClearDescription()
-		return nil
-	case permission.FieldDeletedAt:
-		m.ClearDeletedAt()
 		return nil
 	}
 	return fmt.Errorf("unknown Permission nullable field %s", name)
@@ -2302,14 +2264,17 @@ func (m *PermissionMutation) ResetField(name string) error {
 	case permission.FieldType:
 		m.ResetType()
 		return nil
+	case permission.FieldMenuType:
+		m.ResetMenuType()
+		return nil
 	case permission.FieldURL:
 		m.ResetURL()
 		return nil
 	case permission.FieldComponent:
 		m.ResetComponent()
 		return nil
-	case permission.FieldWeigh:
-		m.ResetWeigh()
+	case permission.FieldWeight:
+		m.ResetWeight()
 		return nil
 	case permission.FieldStatus:
 		m.ResetStatus()
@@ -2319,9 +2284,6 @@ func (m *PermissionMutation) ResetField(name string) error {
 		return nil
 	case permission.FieldUpdatedAt:
 		m.ResetUpdatedAt()
-		return nil
-	case permission.FieldDeletedAt:
-		m.ResetDeletedAt()
 		return nil
 	}
 	return fmt.Errorf("unknown Permission field %s", name)

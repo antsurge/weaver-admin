@@ -4,7 +4,7 @@
 // 	protoc        (unknown)
 // source: permission/service/v1/role.proto
 
-package servicev1
+package permissionpb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -24,8 +24,8 @@ var File_permission_service_v1_role_proto protoreflect.FileDescriptor
 
 const file_permission_service_v1_role_proto_rawDesc = "" +
 	"\n" +
-	" permission/service/v1/role.proto\x12\x15permission.service.v1B\xd4\x01\n" +
-	"\x19com.permission.service.v1B\tRoleProtoP\x01Z6hyper-admin/api/gen/go/permission/service/v1;servicev1\xa2\x02\x03PSX\xaa\x02\x15Permission.Service.V1\xca\x02\x15Permission\\Service\\V1\xe2\x02!Permission\\Service\\V1\\GPBMetadata\xea\x02\x17Permission::Service::V1b\x06proto3"
+	" permission/service/v1/role.proto\x12\x15permission.service.v1B\xed\x01\n" +
+	"\x19com.permission.service.v1B\tRoleProtoP\x01ZOgithub.com/hypercoze/kratos-admin/api/gen/go/permission/service/v1;permissionpb\xa2\x02\x03PSX\xaa\x02\x15Permission.Service.V1\xca\x02\x15Permission\\Service\\V1\xe2\x02!Permission\\Service\\V1\\GPBMetadata\xea\x02\x17Permission::Service::V1b\x06proto3"
 
 var file_permission_service_v1_role_proto_goTypes = []any{}
 var file_permission_service_v1_role_proto_depIdxs = []int32{

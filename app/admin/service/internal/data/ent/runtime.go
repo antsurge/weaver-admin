@@ -19,10 +19,10 @@ import (
 func init() {
 	adminFields := schema.Admin{}.Fields()
 	_ = adminFields
-	// adminDescName is the schema descriptor for name field.
-	adminDescName := adminFields[1].Descriptor()
-	// admin.DefaultName holds the default value on creation for the name field.
-	admin.DefaultName = adminDescName.Default.(string)
+	// adminDescRealName is the schema descriptor for real_name field.
+	adminDescRealName := adminFields[1].Descriptor()
+	// admin.DefaultRealName holds the default value on creation for the real_name field.
+	admin.DefaultRealName = adminDescRealName.Default.(string)
 	// adminDescCreateTime is the schema descriptor for create_time field.
 	adminDescCreateTime := adminFields[7].Descriptor()
 	// admin.DefaultCreateTime holds the default value on creation for the create_time field.
@@ -53,6 +53,10 @@ func init() {
 	adminrole.IDValidator = adminroleDescID.Validators[0].(func(string) error)
 	permissionFields := schema.Permission{}.Fields()
 	_ = permissionFields
+	// permissionDescParentID is the schema descriptor for parent_id field.
+	permissionDescParentID := permissionFields[1].Descriptor()
+	// permission.DefaultParentID holds the default value on creation for the parent_id field.
+	permission.DefaultParentID = permissionDescParentID.Default.(string)
 	// permissionDescName is the schema descriptor for name field.
 	permissionDescName := permissionFields[2].Descriptor()
 	// permission.NameValidator is a validator for the "name" field. It is called by the builders before save.
@@ -106,27 +110,27 @@ func init() {
 	// permission.IconValidator is a validator for the "icon" field. It is called by the builders before save.
 	permission.IconValidator = permissionDescIcon.Validators[0].(func(string) error)
 	// permissionDescURL is the schema descriptor for url field.
-	permissionDescURL := permissionFields[8].Descriptor()
+	permissionDescURL := permissionFields[9].Descriptor()
 	// permission.DefaultURL holds the default value on creation for the url field.
 	permission.DefaultURL = permissionDescURL.Default.(string)
 	// permission.URLValidator is a validator for the "url" field. It is called by the builders before save.
 	permission.URLValidator = permissionDescURL.Validators[0].(func(string) error)
 	// permissionDescComponent is the schema descriptor for component field.
-	permissionDescComponent := permissionFields[9].Descriptor()
+	permissionDescComponent := permissionFields[10].Descriptor()
 	// permission.DefaultComponent holds the default value on creation for the component field.
 	permission.DefaultComponent = permissionDescComponent.Default.(string)
 	// permission.ComponentValidator is a validator for the "component" field. It is called by the builders before save.
 	permission.ComponentValidator = permissionDescComponent.Validators[0].(func(string) error)
-	// permissionDescWeigh is the schema descriptor for weigh field.
-	permissionDescWeigh := permissionFields[10].Descriptor()
-	// permission.DefaultWeigh holds the default value on creation for the weigh field.
-	permission.DefaultWeigh = permissionDescWeigh.Default.(int)
+	// permissionDescWeight is the schema descriptor for weight field.
+	permissionDescWeight := permissionFields[11].Descriptor()
+	// permission.DefaultWeight holds the default value on creation for the weight field.
+	permission.DefaultWeight = permissionDescWeight.Default.(int)
 	// permissionDescCreatedAt is the schema descriptor for created_at field.
-	permissionDescCreatedAt := permissionFields[12].Descriptor()
+	permissionDescCreatedAt := permissionFields[13].Descriptor()
 	// permission.DefaultCreatedAt holds the default value on creation for the created_at field.
 	permission.DefaultCreatedAt = permissionDescCreatedAt.Default.(func() time.Time)
 	// permissionDescUpdatedAt is the schema descriptor for updated_at field.
-	permissionDescUpdatedAt := permissionFields[13].Descriptor()
+	permissionDescUpdatedAt := permissionFields[14].Descriptor()
 	// permission.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	permission.DefaultUpdatedAt = permissionDescUpdatedAt.Default.(func() time.Time)
 	// permission.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
