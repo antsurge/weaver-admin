@@ -837,11 +837,63 @@ func (x *DeletePermissionRequest) GetIds() []string {
 	return nil
 }
 
+type UpdatePermissionStatusRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Status        string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdatePermissionStatusRequest) Reset() {
+	*x = UpdatePermissionStatusRequest{}
+	mi := &file_permission_service_v1_permission_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdatePermissionStatusRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdatePermissionStatusRequest) ProtoMessage() {}
+
+func (x *UpdatePermissionStatusRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_permission_service_v1_permission_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdatePermissionStatusRequest.ProtoReflect.Descriptor instead.
+func (*UpdatePermissionStatusRequest) Descriptor() ([]byte, []int) {
+	return file_permission_service_v1_permission_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *UpdatePermissionStatusRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *UpdatePermissionStatusRequest) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
 var File_permission_service_v1_permission_proto protoreflect.FileDescriptor
 
 const file_permission_service_v1_permission_proto_rawDesc = "" +
 	"\n" +
-	"&permission/service/v1/permission.proto\x12\x15permission.service.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bbuf/validate/validate.proto\x1a$gnostic/openapi/v3/annotations.proto\"\xd1\x03\n" +
+	"&permission/service/v1/permission.proto\x12\x15permission.service.v1\x1a\x1bbuf/validate/validate.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xd1\x03\n" +
 	"\n" +
 	"Permission\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
@@ -947,7 +999,11 @@ const file_permission_service_v1_permission_proto_rawDesc = "" +
 	"\x16PermissionTreeResponse\x125\n" +
 	"\x04data\x18\x01 \x03(\v2!.permission.service.v1.PermissionR\x04data\"X\n" +
 	"\x17DeletePermissionRequest\x12=\n" +
-	"\x03ids\x18\x01 \x03(\tB+\xbaG \x92\x02\x1d权限ID列表，至少一个\xbaH\x05\x92\x01\x02\b\x01R\x03idsB\xf3\x01\n" +
+	"\x03ids\x18\x01 \x03(\tB+\xbaG \x92\x02\x1d权限ID列表，至少一个\xbaH\x05\x92\x01\x02\b\x01R\x03ids\"\xc2\x01\n" +
+	"\x1dUpdatePermissionStatusRequest\x12g\n" +
+	"\x02id\x18\x01 \x01(\tBW\xbaG\v\x92\x02\b权限ID\xbaHF\xba\x01C\n" +
+	"\x1aGET_PERMISSION_ID_REQUIRED\x12\x14权限ID不能为空\x1a\x0fthis.size() > 0R\x02id\x128\n" +
+	"\x06status\x18\x02 \x01(\tB \xbaG\x1d\x92\x02\x1a状态: enabled / disabledR\x06statusB\xf3\x01\n" +
 	"\x19com.permission.service.v1B\x0fPermissionProtoP\x01ZOgithub.com/hypercoze/kratos-admin/api/gen/go/permission/service/v1;permissionpb\xa2\x02\x03PSX\xaa\x02\x15Permission.Service.V1\xca\x02\x15Permission\\Service\\V1\xe2\x02!Permission\\Service\\V1\\GPBMetadata\xea\x02\x17Permission::Service::V1b\x06proto3"
 
 var (
@@ -962,24 +1018,25 @@ func file_permission_service_v1_permission_proto_rawDescGZIP() []byte {
 	return file_permission_service_v1_permission_proto_rawDescData
 }
 
-var file_permission_service_v1_permission_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_permission_service_v1_permission_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_permission_service_v1_permission_proto_goTypes = []any{
-	(*Permission)(nil),               // 0: permission.service.v1.Permission
-	(*CreatePermissionRequest)(nil),  // 1: permission.service.v1.CreatePermissionRequest
-	(*CreatePermissionResponse)(nil), // 2: permission.service.v1.CreatePermissionResponse
-	(*UpdatePermissionRequest)(nil),  // 3: permission.service.v1.UpdatePermissionRequest
-	(*UpdatePermissionResponse)(nil), // 4: permission.service.v1.UpdatePermissionResponse
-	(*GetPermissionRequest)(nil),     // 5: permission.service.v1.GetPermissionRequest
-	(*ListPermissionRequest)(nil),    // 6: permission.service.v1.ListPermissionRequest
-	(*ListPermissionResponse)(nil),   // 7: permission.service.v1.ListPermissionResponse
-	(*PermissionTreeRequest)(nil),    // 8: permission.service.v1.PermissionTreeRequest
-	(*PermissionTreeResponse)(nil),   // 9: permission.service.v1.PermissionTreeResponse
-	(*DeletePermissionRequest)(nil),  // 10: permission.service.v1.DeletePermissionRequest
-	(*timestamppb.Timestamp)(nil),    // 11: google.protobuf.Timestamp
+	(*Permission)(nil),                    // 0: permission.service.v1.Permission
+	(*CreatePermissionRequest)(nil),       // 1: permission.service.v1.CreatePermissionRequest
+	(*CreatePermissionResponse)(nil),      // 2: permission.service.v1.CreatePermissionResponse
+	(*UpdatePermissionRequest)(nil),       // 3: permission.service.v1.UpdatePermissionRequest
+	(*UpdatePermissionResponse)(nil),      // 4: permission.service.v1.UpdatePermissionResponse
+	(*GetPermissionRequest)(nil),          // 5: permission.service.v1.GetPermissionRequest
+	(*ListPermissionRequest)(nil),         // 6: permission.service.v1.ListPermissionRequest
+	(*ListPermissionResponse)(nil),        // 7: permission.service.v1.ListPermissionResponse
+	(*PermissionTreeRequest)(nil),         // 8: permission.service.v1.PermissionTreeRequest
+	(*PermissionTreeResponse)(nil),        // 9: permission.service.v1.PermissionTreeResponse
+	(*DeletePermissionRequest)(nil),       // 10: permission.service.v1.DeletePermissionRequest
+	(*UpdatePermissionStatusRequest)(nil), // 11: permission.service.v1.UpdatePermissionStatusRequest
+	(*timestamppb.Timestamp)(nil),         // 12: google.protobuf.Timestamp
 }
 var file_permission_service_v1_permission_proto_depIdxs = []int32{
-	11, // 0: permission.service.v1.Permission.createdAt:type_name -> google.protobuf.Timestamp
-	11, // 1: permission.service.v1.Permission.updatedAt:type_name -> google.protobuf.Timestamp
+	12, // 0: permission.service.v1.Permission.createdAt:type_name -> google.protobuf.Timestamp
+	12, // 1: permission.service.v1.Permission.updatedAt:type_name -> google.protobuf.Timestamp
 	0,  // 2: permission.service.v1.Permission.children:type_name -> permission.service.v1.Permission
 	0,  // 3: permission.service.v1.CreatePermissionResponse.permission:type_name -> permission.service.v1.Permission
 	0,  // 4: permission.service.v1.UpdatePermissionResponse.permission:type_name -> permission.service.v1.Permission
@@ -1004,7 +1061,7 @@ func file_permission_service_v1_permission_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_permission_service_v1_permission_proto_rawDesc), len(file_permission_service_v1_permission_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   11,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

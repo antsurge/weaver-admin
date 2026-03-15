@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package organization.service.v1;
+
+import "google/protobuf/timestamp.proto";
+
+message Position {
+    string id = 1;
+
+
+    google.protobuf.Timestamp createdAt = 13;
+    google.protobuf.Timestamp updatedAt = 14;
+}

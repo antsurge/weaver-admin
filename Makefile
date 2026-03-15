@@ -14,8 +14,14 @@ wire:
 	@cd app/admin/service/cmd/service && wire
 
 # generate proto code
-buf:
+buf-generate:
 	@cd api && rm -rf ./gen && buf dep update && buf generate
+# format proto code
+buf-format:
+	@cd api && buf format -w
+# lint proto code
+buf-lint:
+	@cd api && buf lint
 
 # generate ent code
 ent:
@@ -23,3 +29,4 @@ ent:
 	@cd app/admin/service/internal/data && \
     	go generate ./ent
 	@echo "✅ Ent code generated successfully!"
+

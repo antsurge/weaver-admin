@@ -336,7 +336,7 @@ var File_authentication_service_v1_authentication_service_proto protoreflect.Fil
 
 const file_authentication_service_v1_authentication_service_proto_rawDesc = "" +
 	"\n" +
-	"6authentication/service/v1/authentication_service.proto\x12\x19authentication.service.v1\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1bbuf/validate/validate.proto\x1a$gnostic/openapi/v3/annotations.proto\"\x9e\x04\n" +
+	"6authentication/service/v1/authentication_service.proto\x12\x19authentication.service.v1\x1a\x1bbuf/validate/validate.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\"\x9e\x04\n" +
 	"\fLoginRequest\x12\x82\x01\n" +
 	"\busername\x18\x01 \x01(\tBf\xbaG\f\x92\x02\t用户名\xbaHT\xba\x01Q\n" +
 	"\x1eLOGINREQUEST_USERNAME_REQUIRED\x12\x1eLOGINREQUEST_USERNAME_REQUIRED\x1a\x0fthis.size() > 0R\busername\x12\x7f\n" +

@@ -15,9 +15,12 @@
     "edit": "Modify {0}",
     "create": "Create {0}",
     "delete": "Delete {0}",
-    "view": "View {0}"
+    "view": "View {0}",
+    "confirm": "OK",
+    "cancel": "Cancel"
   },
   "actionMessage": {
+    "confirmDelete": "Confirm Delete",
     "deleteConfirm": "Are you sure to delete {0}?",
     "deleting": "Deleting {0} ...",
     "deleteSuccess": "{0} deleted successfully",

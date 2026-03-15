@@ -122,12 +122,26 @@ async function updatePermission(
   return requestClient.put(`/admin/v1/permission/${id}`, data);
 }
 
+/**
+ * 更新权限状态
+ *
+ * @param id 权限 ID
+ * @param data 权限数据
+ */
+async function updatePermissionStatusApi(
+  id: string,
+  status: string,
+) {
+  return requestClient.put(`/admin/v1/permission/${id}/status`, {
+    status
+  });
+}
 
 /**
  * 删除权限
  * @param id 权限 ID
  */
-async function deletePermission(ids: string[]) {
+async function deletePermissionApi(ids: string[]) {
   return requestClient.delete(`/admin/v1/permission`, {
     params: {
       ids: ids
@@ -158,9 +172,10 @@ async function isPermissionPathExists(
 
 export {
   createPermission,
-  deletePermission,
+  deletePermissionApi,
   getPermissionTreeApi,
   isPermissionCodeExists,
   isPermissionPathExists,
   updatePermission,
+  updatePermissionStatusApi,
 };

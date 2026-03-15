@@ -1479,3 +1479,110 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = DeletePermissionRequestValidationError{}
+
+// Validate checks the field values on UpdatePermissionStatusRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdatePermissionStatusRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdatePermissionStatusRequest with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// UpdatePermissionStatusRequestMultiError, or nil if none found.
+func (m *UpdatePermissionStatusRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdatePermissionStatusRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Status
+
+	if len(errors) > 0 {
+		return UpdatePermissionStatusRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdatePermissionStatusRequestMultiError is an error wrapping multiple
+// validation errors returned by UpdatePermissionStatusRequest.ValidateAll()
+// if the designated constraints aren't met.
+type UpdatePermissionStatusRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdatePermissionStatusRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdatePermissionStatusRequestMultiError) AllErrors() []error { return m }
+
+// UpdatePermissionStatusRequestValidationError is the validation error
+// returned by UpdatePermissionStatusRequest.Validate if the designated
+// constraints aren't met.
+type UpdatePermissionStatusRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdatePermissionStatusRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdatePermissionStatusRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdatePermissionStatusRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdatePermissionStatusRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdatePermissionStatusRequestValidationError) ErrorName() string {
+	return "UpdatePermissionStatusRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdatePermissionStatusRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdatePermissionStatusRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdatePermissionStatusRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdatePermissionStatusRequestValidationError{}

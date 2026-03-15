@@ -28,7 +28,7 @@ var File_admin_service_v1_i_permission_proto protoreflect.FileDescriptor
 
 const file_admin_service_v1_i_permission_proto_rawDesc = "" +
 	"\n" +
-	"#admin/service/v1/i_permission.proto\x12\x10admin.service.v1\x1a&permission/service/v1/permission.proto\x1a\x1cgoogle/api/annotations.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto2\x86\x06\n" +
+	"#admin/service/v1/i_permission.proto\x12\x10admin.service.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a&permission/service/v1/permission.proto2\xc7\a\n" +
 	"\x11PermissionService\x12\xbb\x01\n" +
 	"\x0ePermissionTree\x12,.permission.service.v1.PermissionTreeRequest\x1a-.permission.service.v1.PermissionTreeResponse\"L\xbaG(\n" +
 	"\n" +
@@ -38,33 +38,39 @@ const file_admin_service_v1_i_permission_proto_rawDesc = "" +
 	"Permission\x12\f创建权限\x1a\f创建权限\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/admin/v1/permission\x12\xc4\x01\n" +
 	"\x10UpdatePermission\x12..permission.service.v1.UpdatePermissionRequest\x1a/.permission.service.v1.UpdatePermissionResponse\"O\xbaG(\n" +
 	"\n" +
-	"Permission\x12\f更新权限\x1a\f更新权限\x82\xd3\xe4\x93\x02\x1e:\x01*\x1a\x19/admin/v1/permission/{id}\x12\xa9\x01\n" +
+	"Permission\x12\f更新权限\x1a\f更新权限\x82\xd3\xe4\x93\x02\x1e:\x01*\x1a\x19/admin/v1/permission/{id}\x12\xbe\x01\n" +
+	"\x16UpdatePermissionStatus\x124.permission.service.v1.UpdatePermissionStatusRequest\x1a\x16.google.protobuf.Empty\"V\xbaG(\n" +
+	"\n" +
+	"Permission\x12\f更新权限\x1a\f更新权限\x82\xd3\xe4\x93\x02%:\x01*\x1a /admin/v1/permission/{id}/status\x12\xa9\x01\n" +
 	"\x10DeletePermission\x12..permission.service.v1.DeletePermissionRequest\x1a\x16.google.protobuf.Empty\"M\xbaG.\n" +
 	"\n" +
 	"Permission\x12\f删除权限\x1a\x12批量删除权限\x82\xd3\xe4\x93\x02\x16*\x14/admin/v1/permissionB\xd2\x01\n" +
 	"\x14com.admin.service.v1B\x10IPermissionProtoP\x01ZFgithub.com/hypercoze/kratos-admin/api/gen/go/admin/services/v1;adminpb\xa2\x02\x03ASX\xaa\x02\x10Admin.Service.V1\xca\x02\x10Admin\\Service\\V1\xe2\x02\x1cAdmin\\Service\\V1\\GPBMetadata\xea\x02\x12Admin::Service::V1b\x06proto3"
 
 var file_admin_service_v1_i_permission_proto_goTypes = []any{
-	(*v1.PermissionTreeRequest)(nil),    // 0: permission.service.v1.PermissionTreeRequest
-	(*v1.CreatePermissionRequest)(nil),  // 1: permission.service.v1.CreatePermissionRequest
-	(*v1.UpdatePermissionRequest)(nil),  // 2: permission.service.v1.UpdatePermissionRequest
-	(*v1.DeletePermissionRequest)(nil),  // 3: permission.service.v1.DeletePermissionRequest
-	(*v1.PermissionTreeResponse)(nil),   // 4: permission.service.v1.PermissionTreeResponse
-	(*v1.CreatePermissionResponse)(nil), // 5: permission.service.v1.CreatePermissionResponse
-	(*v1.UpdatePermissionResponse)(nil), // 6: permission.service.v1.UpdatePermissionResponse
-	(*emptypb.Empty)(nil),               // 7: google.protobuf.Empty
+	(*v1.PermissionTreeRequest)(nil),         // 0: permission.service.v1.PermissionTreeRequest
+	(*v1.CreatePermissionRequest)(nil),       // 1: permission.service.v1.CreatePermissionRequest
+	(*v1.UpdatePermissionRequest)(nil),       // 2: permission.service.v1.UpdatePermissionRequest
+	(*v1.UpdatePermissionStatusRequest)(nil), // 3: permission.service.v1.UpdatePermissionStatusRequest
+	(*v1.DeletePermissionRequest)(nil),       // 4: permission.service.v1.DeletePermissionRequest
+	(*v1.PermissionTreeResponse)(nil),        // 5: permission.service.v1.PermissionTreeResponse
+	(*v1.CreatePermissionResponse)(nil),      // 6: permission.service.v1.CreatePermissionResponse
+	(*v1.UpdatePermissionResponse)(nil),      // 7: permission.service.v1.UpdatePermissionResponse
+	(*emptypb.Empty)(nil),                    // 8: google.protobuf.Empty
 }
 var file_admin_service_v1_i_permission_proto_depIdxs = []int32{
 	0, // 0: admin.service.v1.PermissionService.PermissionTree:input_type -> permission.service.v1.PermissionTreeRequest
 	1, // 1: admin.service.v1.PermissionService.CreatePermission:input_type -> permission.service.v1.CreatePermissionRequest
 	2, // 2: admin.service.v1.PermissionService.UpdatePermission:input_type -> permission.service.v1.UpdatePermissionRequest
-	3, // 3: admin.service.v1.PermissionService.DeletePermission:input_type -> permission.service.v1.DeletePermissionRequest
-	4, // 4: admin.service.v1.PermissionService.PermissionTree:output_type -> permission.service.v1.PermissionTreeResponse
-	5, // 5: admin.service.v1.PermissionService.CreatePermission:output_type -> permission.service.v1.CreatePermissionResponse
-	6, // 6: admin.service.v1.PermissionService.UpdatePermission:output_type -> permission.service.v1.UpdatePermissionResponse
-	7, // 7: admin.service.v1.PermissionService.DeletePermission:output_type -> google.protobuf.Empty
-	4, // [4:8] is the sub-list for method output_type
-	0, // [0:4] is the sub-list for method input_type
+	3, // 3: admin.service.v1.PermissionService.UpdatePermissionStatus:input_type -> permission.service.v1.UpdatePermissionStatusRequest
+	4, // 4: admin.service.v1.PermissionService.DeletePermission:input_type -> permission.service.v1.DeletePermissionRequest
+	5, // 5: admin.service.v1.PermissionService.PermissionTree:output_type -> permission.service.v1.PermissionTreeResponse
+	6, // 6: admin.service.v1.PermissionService.CreatePermission:output_type -> permission.service.v1.CreatePermissionResponse
+	7, // 7: admin.service.v1.PermissionService.UpdatePermission:output_type -> permission.service.v1.UpdatePermissionResponse
+	8, // 8: admin.service.v1.PermissionService.UpdatePermissionStatus:output_type -> google.protobuf.Empty
+	8, // 9: admin.service.v1.PermissionService.DeletePermission:output_type -> google.protobuf.Empty
+	5, // [5:10] is the sub-list for method output_type
+	0, // [0:5] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

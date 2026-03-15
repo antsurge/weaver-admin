@@ -167,6 +167,36 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /admin/v1/permission/{id}/status:
+        put:
+            tags:
+                - PermissionService
+                - Permission
+            summary: 更新权限
+            description: 更新权限
+            operationId: PermissionService_UpdatePermissionStatus
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdatePermissionStatusRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /admin/v1/refresh-token:
         post:
             tags:
@@ -450,6 +480,15 @@ components:
             properties:
                 permission:
                     $ref: '#/components/schemas/Permission'
+        UpdatePermissionStatusRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 权限ID
+                status:
+                    type: string
+                    description: '状态: enabled / disabled'
 tags:
     - name: AuthenticationService
       description: 用户后台登录认证服务

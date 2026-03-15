@@ -52,6 +52,7 @@ export function getPermissionMenuTypeOptions() {
 // 标题，图标，Code、类型、状态、修改时间
 export function useColumns(
   onActionClick: OnActionClickFn<SystemPermissionApi.SystemPermission>,
+  onStatusChange?: (newStatus: any, row: T) => PromiseLike<boolean | undefined>,
 ): VxeTableGridOptions<SystemPermissionApi.SystemPermission>['columns'] {
   return [
     {
@@ -103,6 +104,7 @@ export function useColumns(
       field: 'status',
       cellRender: {
         name: 'CellSwitch',
+        attrs: { beforeChange: onStatusChange },
       },
       align: 'center',
       title: $t('system.permission.fields.status'),

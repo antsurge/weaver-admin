@@ -28,7 +28,7 @@ var File_admin_service_v1_i_authentication_proto protoreflect.FileDescriptor
 
 const file_admin_service_v1_i_authentication_proto_rawDesc = "" +
 	"\n" +
-	"'admin/service/v1/i_authentication.proto\x12\x10admin.service.v1\x1a6authentication/service/v1/authentication_service.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a$gnostic/openapi/v3/annotations.proto2\x97\a\n" +
+	"'admin/service/v1/i_authentication.proto\x12\x10admin.service.v1\x1a6authentication/service/v1/authentication_service.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto2\x97\a\n" +
 	"\x15AuthenticationService\x12\xa6\x01\n" +
 	"\n" +
 	"GetCaptcha\x12\x16.google.protobuf.Empty\x1a-.authentication.service.v1.GetCaptchaResponse\"Q\xbaG2\n" +

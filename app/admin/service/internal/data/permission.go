@@ -2,6 +2,7 @@ package data
 
 import (
 	"context"
+	"time"
 
 	"github.com/go-kratos/kratos/v2/log"
 	permissionV1 "github.com/hypercoze/kratos-admin/api/gen/go/permission/service/v1"
@@ -143,4 +144,12 @@ func (r *permissionRepo) ListPermission(
 	}
 
 	return res, nil
+}
+
+func (r *permissionRepo) UpdatePermissionStatus(ctx context.Context, id, status string) error {
+	_, err := r.data.db.Permission.UpdateOneID(id).
+		SetStatus(permission.Status(status)).
+		SetUpdatedAt(time.Now()).
+		Save(ctx)
+	return err
 }

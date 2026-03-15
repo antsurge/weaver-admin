@@ -2,91 +2,83 @@ syntax = "proto3";
 
 package authentication.service.v1;
 
-import "google/protobuf/empty.proto";
 import "buf/validate/validate.proto";
 import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/empty.proto";
 
 // 用户登录认证服务
 service AuthenticationService {
-    // 用户登录
-    rpc Login (LoginRequest) returns (LoginResponse) {}
+  // 用户登录
+  rpc Login(LoginRequest) returns (LoginResponse) {}
 
-    // 用户退出
-    rpc Logout(RefreshTokenRequest) returns (google.protobuf.Empty);
+  // 用户退出
+  rpc Logout(RefreshTokenRequest) returns (google.protobuf.Empty);
 
-    // 刷新认证令牌
-    rpc RefreshToken (RefreshTokenRequest) returns (LoginResponse) {}
+  // 刷新认证令牌
+  rpc RefreshToken(RefreshTokenRequest) returns (LoginResponse) {}
 
-    // 获取验证码
-    rpc GetCaptcha(google.protobuf.Empty) returns (GetCaptchaResponse);
+  // 获取验证码
+  rpc GetCaptcha(google.protobuf.Empty) returns (GetCaptchaResponse);
 
-    // 获取当前用户
-    rpc CurrentUserInfo(google.protobuf.Empty) returns (CurrentUserInfoResponse);
+  // 获取当前用户
+  rpc CurrentUserInfo(google.protobuf.Empty) returns (CurrentUserInfoResponse);
 }
 
 message LoginRequest {
-    string username = 1 [
-        (buf.validate.field).cel = {
-            id:"LOGINREQUEST_USERNAME_REQUIRED"
-            message: "LOGINREQUEST_USERNAME_REQUIRED"
-            expression: "this.size() > 0"
-        },
-        (gnostic.openapi.v3.property) = {
-            description: "用户名"
-        }
-    ];
-    string password = 2 [
-        (buf.validate.field).cel = {
-            id:"LOGINREQUEST_PASSWORD_REQUIRED"
-            message: "LOGINREQUEST_PASSWORD_REQUIRED"
-            expression: "this.size() > 0"
-        },
-        (gnostic.openapi.v3.property) = {
-            description: "密码"
-        }
-    ];
-    string captcha = 3 [
-        (buf.validate.field).cel = {
-            id:"LOGINREQUEST_CAPTCHA_REQUIRED"
-            message: "LOGINREQUEST_CAPTCHA_REQUIRED"
-            expression: "this.size() > 0"
-        },
-        (gnostic.openapi.v3.property) = {
-            description: "验证码"
-        }
-    ];
-    string captchaId = 4 [
-        (buf.validate.field).cel = {
-            id:"LOGINREQUEST_CAPTCHA_ID_REQUIRED"
-            message: "LOGINREQUEST_CAPTCHA_REQUIRED"
-            expression: "this.size() > 0"
-        },
-        (gnostic.openapi.v3.property) = {
-            description: "验证码ID"
-        }
-    ];
+  string username = 1 [
+    (buf.validate.field).cel = {
+      id: "LOGINREQUEST_USERNAME_REQUIRED"
+      message: "LOGINREQUEST_USERNAME_REQUIRED"
+      expression: "this.size() > 0"
+    },
+    (gnostic.openapi.v3.property) = {description: "用户名"}
+  ];
+  string password = 2 [
+    (buf.validate.field).cel = {
+      id: "LOGINREQUEST_PASSWORD_REQUIRED"
+      message: "LOGINREQUEST_PASSWORD_REQUIRED"
+      expression: "this.size() > 0"
+    },
+    (gnostic.openapi.v3.property) = {description: "密码"}
+  ];
+  string captcha = 3 [
+    (buf.validate.field).cel = {
+      id: "LOGINREQUEST_CAPTCHA_REQUIRED"
+      message: "LOGINREQUEST_CAPTCHA_REQUIRED"
+      expression: "this.size() > 0"
+    },
+    (gnostic.openapi.v3.property) = {description: "验证码"}
+  ];
+  string captchaId = 4 [
+    (buf.validate.field).cel = {
+      id: "LOGINREQUEST_CAPTCHA_ID_REQUIRED"
+      message: "LOGINREQUEST_CAPTCHA_REQUIRED"
+      expression: "this.size() > 0"
+    },
+    (gnostic.openapi.v3.property) = {description: "验证码ID"}
+  ];
 }
 
 message LoginResponse {
-    string accessToken = 1;
-    string refreshToken = 2;
-    int64 accessTokenExpiresIn = 3;
-    int64 refreshTokenExpiresIn = 4;
-    string tokenType = 5;
-    string userId = 6;
+  string accessToken = 1;
+  string refreshToken = 2;
+  int64 accessTokenExpiresIn = 3;
+  int64 refreshTokenExpiresIn = 4;
+  string tokenType = 5;
+  string userId = 6;
 }
 
 message GetCaptchaResponse {
-    string captchaId = 1;
-    string imageBase64 = 2; // data:image/png;base64,...
+  string captchaId = 1;
+  string imageBase64 = 2; // data:image/png;base64,...
 }
 
 message RefreshTokenRequest {
-    string refreshToken = 1;
-    string accessToken = 2;
+  string refreshToken = 1;
+  string accessToken = 2;
 }
 
 message CurrentUserInfoResponse {
-    string id = 1;
-    string realName = 2;
+  string id = 1;
+  string realName = 2;
 }

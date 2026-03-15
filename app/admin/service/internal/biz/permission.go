@@ -31,6 +31,7 @@ type Permission struct {
 type PermissionRepo interface {
 	CreatePermission(ctx context.Context, p *Permission) error
 	UpdatePermission(ctx context.Context, p *Permission) error
+	UpdatePermissionStatus(ctx context.Context, id, status string) error
 	DeletePermission(ctx context.Context, ids []string) error
 	ListPermission(ctx context.Context, req *permissionV1.ListPermissionRequest) ([]*Permission, error)
 }
@@ -92,4 +93,9 @@ func (uc *PermissionUsecase) UpdatePermission(ctx context.Context, req *Permissi
 // 删除权限
 func (uc *PermissionUsecase) DeletePermission(ctx context.Context, ids []string) error {
 	return uc.repo.DeletePermission(ctx, ids)
+}
+
+// 更新权限状态
+func (uc *PermissionUsecase) UpdatePermissionStatus(ctx context.Context, id, status string) error {
+	return uc.repo.UpdatePermissionStatus(ctx, id, status)
 }

@@ -15,9 +15,12 @@
     "edit": "修改{0}",
     "create": "新增{0}",
     "delete": "删除{0}",
-    "view": "查看{0}"
+    "view": "查看{0}",
+    "confirm": "确定",
+    "cancel": "取消"
   },
   "actionMessage": {
+    "confirmDelete": "确认删除",
     "deleteConfirm": "确定删除 {0} 吗？",
     "deleting": "正在删除 {0} ...",
     "deleteSuccess": "{0} 删除成功",

@@ -80,3 +80,9 @@ func (s *PermissionService) DeletePermission(ctx context.Context, req *permissio
 	err := s.permissionUc.DeletePermission(ctx, req.Ids)
 	return nil, err
 }
+
+// 更新权限状态
+func (s *PermissionService) UpdatePermissionStatus(ctx context.Context, req *permissionV1.UpdatePermissionStatusRequest) (*emptypb.Empty, error) {
+	err := s.permissionUc.UpdatePermissionStatus(ctx, req.Id, req.Status)
+	return nil, err
+}

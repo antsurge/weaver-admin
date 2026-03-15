@@ -25,6 +25,7 @@ const OperationPermissionServiceCreatePermission = "/admin.service.v1.Permission
 const OperationPermissionServiceDeletePermission = "/admin.service.v1.PermissionService/DeletePermission"
 const OperationPermissionServicePermissionTree = "/admin.service.v1.PermissionService/PermissionTree"
 const OperationPermissionServiceUpdatePermission = "/admin.service.v1.PermissionService/UpdatePermission"
+const OperationPermissionServiceUpdatePermissionStatus = "/admin.service.v1.PermissionService/UpdatePermissionStatus"
 
 type PermissionServiceHTTPServer interface {
 	// CreatePermission 创建权限
@@ -35,6 +36,8 @@ type PermissionServiceHTTPServer interface {
 	PermissionTree(context.Context, *v1.PermissionTreeRequest) (*v1.PermissionTreeResponse, error)
 	// UpdatePermission 更新权限
 	UpdatePermission(context.Context, *v1.UpdatePermissionRequest) (*v1.UpdatePermissionResponse, error)
+	// UpdatePermissionStatus 更新权限状态
+	UpdatePermissionStatus(context.Context, *v1.UpdatePermissionStatusRequest) (*emptypb.Empty, error)
 }
 
 func RegisterPermissionServiceHTTPServer(s *http.Server, srv PermissionServiceHTTPServer) {
@@ -42,6 +45,7 @@ func RegisterPermissionServiceHTTPServer(s *http.Server, srv PermissionServiceHT
 	r.GET("/admin/v1/permission/tree", _PermissionService_PermissionTree0_HTTP_Handler(srv))
 	r.POST("/admin/v1/permission", _PermissionService_CreatePermission0_HTTP_Handler(srv))
 	r.PUT("/admin/v1/permission/{id}", _PermissionService_UpdatePermission0_HTTP_Handler(srv))
+	r.PUT("/admin/v1/permission/{id}/status", _PermissionService_UpdatePermissionStatus0_HTTP_Handler(srv))
 	r.DELETE("/admin/v1/permission", _PermissionService_DeletePermission0_HTTP_Handler(srv))
 }
 
@@ -111,6 +115,31 @@ func _PermissionService_UpdatePermission0_HTTP_Handler(srv PermissionServiceHTTP
 	}
 }
 
+func _PermissionService_UpdatePermissionStatus0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.UpdatePermissionStatusRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationPermissionServiceUpdatePermissionStatus)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdatePermissionStatus(ctx, req.(*v1.UpdatePermissionStatusRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _PermissionService_DeletePermission0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in v1.DeletePermissionRequest
@@ -139,6 +168,8 @@ type PermissionServiceHTTPClient interface {
 	PermissionTree(ctx context.Context, req *v1.PermissionTreeRequest, opts ...http.CallOption) (rsp *v1.PermissionTreeResponse, err error)
 	// UpdatePermission 更新权限
 	UpdatePermission(ctx context.Context, req *v1.UpdatePermissionRequest, opts ...http.CallOption) (rsp *v1.UpdatePermissionResponse, err error)
+	// UpdatePermissionStatus 更新权限状态
+	UpdatePermissionStatus(ctx context.Context, req *v1.UpdatePermissionStatusRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 }
 
 type PermissionServiceHTTPClientImpl struct {
@@ -197,6 +228,20 @@ func (c *PermissionServiceHTTPClientImpl) UpdatePermission(ctx context.Context, 
 	pattern := "/admin/v1/permission/{id}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationPermissionServiceUpdatePermission))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// UpdatePermissionStatus 更新权限状态
+func (c *PermissionServiceHTTPClientImpl) UpdatePermissionStatus(ctx context.Context, in *v1.UpdatePermissionStatusRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/admin/v1/permission/{id}/status"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationPermissionServiceUpdatePermissionStatus))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {

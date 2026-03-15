@@ -1,10 +1,11 @@
 <script lang="ts" setup>
+import type { Recordable } from '@vben/types';
 import type {
   OnActionClickParams,
   VxeTableGridOptions,
 } from '#/adapter/vxe-table';
 
-import {ref} from "vue"
+import { nextTick, ref } from 'vue';
 
 import { Page, useVbenModal } from '@vben/common-ui';
 import { IconifyIcon, Plus } from '@vben/icons';
@@ -12,10 +13,15 @@ import { $t } from '@vben/locales';
 
 // import { MenuBadge } from '@vben-core/menu-ui';
 
-import { Button, message } from 'ant-design-vue';
+import { Button, message, Modal } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { deletePermission, getPermissionTreeApi, SystemPermissionApi } from '#/api/system/permission';
+import {
+  deletePermissionApi,
+  getPermissionTreeApi,
+  updatePermissionStatusApi,
+  SystemPermissionApi
+} from '#/api/system/permission';
 
 import { useColumns } from './data';
 import Form from './modules/form/index.vue';
@@ -27,13 +33,9 @@ const [FormModel, formModelApi] = useVbenModal({
 
 const selectedRows = ref<SystemPermissionApi.SystemPermission[]>([]);
 
-function onSelectionChange(rows: SystemPermissionApi.SystemPermission[]) {
-  selectedRows.value = rows;
-}
-
 const [Grid, gridApi] = useVbenVxeGrid({
   gridOptions: {
-    columns: useColumns(onActionClick),
+    columns: useColumns(onActionClick, onStatusChange),
     height: 'auto',
     keepSource: true,
     pagerConfig: {
@@ -50,7 +52,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     rowConfig: {
       keyField: 'permission.id',
     },
-    checkboxConfig: { range: false }, // 开启多选
+    checkboxConfig: { range: false, checkStrictly: true }, // 开启多选，父子不联动
     toolbarConfig: {
       custom: true,
       export: false,
@@ -63,6 +65,14 @@ const [Grid, gridApi] = useVbenVxeGrid({
       transform: false,
     },
   } as VxeTableGridOptions,
+  gridEvents: {
+    checkboxChange() {
+      nextTick(() => {
+        const records = (gridApi.grid as any)?.getCheckboxRecords?.() ?? [];
+        selectedRows.value = records;
+      });
+    },
+  },
 });
 
 function onActionClick({
@@ -75,7 +85,7 @@ function onActionClick({
       break;
     }
     case 'delete': {
-      onDelete([row]);
+      onDelete(row);
       break;
     }
     case 'edit': {
@@ -103,14 +113,44 @@ function onAppend(row: SystemPermissionApi.SystemPermission) {
   formModelApi.setData({ parentId: row.id }).open();
 }
 
+async function onStatusChange(
+  newStatus: number,
+  row: SystemPermissionApi.SystemPermission,
+) {
+  const status: Recordable<string> = {
+    "disabled": '禁用',
+    "enabled": '启用',
+  };
+
+  return new Promise((resolve) => {
+    Modal.confirm({
+      title: '切换状态',
+      content: `你要将 ${row.name} 的状态切换为 【${status[newStatus]}】 吗？`,
+      okText: '确认',
+      cancelText: '取消',
+      async onOk() {
+        try {
+          await updatePermissionStatusApi(row.id, newStatus);
+          resolve(true);
+        } catch (e) {
+          resolve(false);
+        }
+      },
+      onCancel() {
+        resolve(false);
+      },
+    });
+  });
+}
+
 function onDelete(row: SystemPermissionApi.SystemPermission) {
   const hideLoading = message.loading({
-    content: $t('ui.actionMessage.deleting',[row.name]),
+    content: $t('ui.actionMessage.deleting', [row.name]),
     duration: 0,
     key: 'action_process_msg',
   });
 
-  deletePermission([row.id])
+  deletePermissionApi([row.id])
     .then(() => {
       message.success({
         content: $t('ui.actionMessage.deleteSuccess', [row.name]),
@@ -125,17 +165,47 @@ function onDelete(row: SystemPermissionApi.SystemPermission) {
 
 // 批量删除
 function onBatchDelete() {
-  console.log("批量删除")
+  const rows = selectedRows.value;
+  if (!rows?.length) return;
+  const ids = rows.map((r) => r.id);
+  const names = rows.map((r) => r.name ?? r.meta?.title ?? r.id).join('、');
+
+  Modal.confirm({
+    title: $t('ui.actionMessage.confirmDelete'),
+    content: $t('ui.actionMessage.deleteConfirm', [names]),
+    okText: $t('ui.actionTitle.confirm'),
+    cancelText: $t('ui.actionTitle.cancel'),
+    okType: 'danger',
+    onOk() {
+      const hideLoading = message.loading({
+        content: $t('ui.actionMessage.deleting', [names]),
+        duration: 0,
+        key: 'batch_delete_msg',
+      });
+      return deletePermissionApi(ids)
+        .then(() => {
+          message.success({
+            content: $t('ui.actionMessage.deleteSuccess', [names]),
+            key: 'batch_delete_msg',
+          });
+          selectedRows.value = [];
+          onRefresh();
+        })
+        .catch(() => {
+          hideLoading();
+        });
+    },
+  });
 }
 
 </script>
 <template>
   <Page auto-content-height>
     <FormModel @success="onRefresh" />
-    <Grid @checkbox-change="onSelectionChange">
+    <Grid>
       <template #toolbar-tools>
         <div class="flex gap-2">
-          <Button type="primary" @click="onBatchDelete" :disabled="selectedRows.length === 0">
+          <Button type="primary" danger @click="onBatchDelete" :disabled="!selectedRows.length">
             <IconifyIcon icon="ant-design:delete-outlined" class="size-5" />
             {{ $t('ui.actionTitle.delete') }}
           </Button>
