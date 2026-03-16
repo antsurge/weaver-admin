@@ -26,6 +26,9 @@ var ProviderSet = wire.NewSet(
 	NewTokenRepo,
 
 	NewPermissionRepo,
+
+	NewOrganizationRepo,
+	NewPositionRepo,
 )
 
 // NewEntClient 初始化 Ent 客户端

@@ -9,4 +9,7 @@ var ProviderSet = wire.NewSet(
 	NewCaptchaUsecase,
 
 	NewPermissionUsecase,
+
+	NewOrganizationUsecase,
+	NewPositionUsecase,
 )

@@ -16,8 +16,12 @@ type Tx struct {
 	Admin *AdminClient
 	// AdminRole is the client for interacting with the AdminRole builders.
 	AdminRole *AdminRoleClient
+	// Organization is the client for interacting with the Organization builders.
+	Organization *OrganizationClient
 	// Permission is the client for interacting with the Permission builders.
 	Permission *PermissionClient
+	// Position is the client for interacting with the Position builders.
+	Position *PositionClient
 	// Role is the client for interacting with the Role builders.
 	Role *RoleClient
 	// RolePermission is the client for interacting with the RolePermission builders.
@@ -155,7 +159,9 @@ func (tx *Tx) Client() *Client {
 func (tx *Tx) init() {
 	tx.Admin = NewAdminClient(tx.config)
 	tx.AdminRole = NewAdminRoleClient(tx.config)
+	tx.Organization = NewOrganizationClient(tx.config)
 	tx.Permission = NewPermissionClient(tx.config)
+	tx.Position = NewPositionClient(tx.config)
 	tx.Role = NewRoleClient(tx.config)
 	tx.RolePermission = NewRolePermissionClient(tx.config)
 }

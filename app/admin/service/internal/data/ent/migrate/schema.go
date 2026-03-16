@@ -42,6 +42,27 @@ var (
 		Columns:    AdminRoleColumns,
 		PrimaryKey: []*schema.Column{AdminRoleColumns[0]},
 	}
+	// OrganizationColumns holds the columns for the "organization" table.
+	OrganizationColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
+		{Name: "parent_id", Type: field.TypeString, Comment: "父部门ID，空表示根节点", Default: ""},
+		{Name: "name", Type: field.TypeString, Size: 64, Comment: "部门名称"},
+		{Name: "code", Type: field.TypeString, Unique: true, Size: 64, Comment: "部门code"},
+		{Name: "weight", Type: field.TypeInt, Comment: "权重", Default: 0},
+		{Name: "status", Type: field.TypeEnum, Comment: "状态：enabled=启用 disabled=禁用", Enums: []string{"enabled", "disabled"}, Default: "enabled"},
+		{Name: "leader_name", Type: field.TypeString, Nullable: true, Size: 64, Comment: "负责人姓名"},
+		{Name: "leader_phone", Type: field.TypeString, Nullable: true, Size: 20, Comment: "联系电话"},
+		{Name: "leader_email", Type: field.TypeString, Nullable: true, Size: 128, Comment: "邮箱"},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
+	}
+	// OrganizationTable holds the schema information for the "organization" table.
+	OrganizationTable = &schema.Table{
+		Name:       "organization",
+		Comment:    "权限表",
+		Columns:    OrganizationColumns,
+		PrimaryKey: []*schema.Column{OrganizationColumns[0]},
+	}
 	// PermissionColumns holds the columns for the "permission" table.
 	PermissionColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
@@ -66,6 +87,24 @@ var (
 		Comment:    "权限表",
 		Columns:    PermissionColumns,
 		PrimaryKey: []*schema.Column{PermissionColumns[0]},
+	}
+	// PositionColumns holds the columns for the "position" table.
+	PositionColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
+		{Name: "name", Type: field.TypeString, Size: 64, Comment: "岗位名称"},
+		{Name: "code", Type: field.TypeString, Unique: true, Size: 64, Comment: "岗位code"},
+		{Name: "weight", Type: field.TypeInt, Comment: "权重", Default: 0},
+		{Name: "status", Type: field.TypeEnum, Comment: "状态：enabled=启用 disabled=禁用", Enums: []string{"enabled", "disabled"}, Default: "enabled"},
+		{Name: "description", Type: field.TypeString, Nullable: true, Size: 256, Comment: "描述"},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
+	}
+	// PositionTable holds the schema information for the "position" table.
+	PositionTable = &schema.Table{
+		Name:       "position",
+		Comment:    "岗位表",
+		Columns:    PositionColumns,
+		PrimaryKey: []*schema.Column{PositionColumns[0]},
 	}
 	// RoleColumns holds the columns for the "role" table.
 	RoleColumns = []*schema.Column{
@@ -101,7 +140,9 @@ var (
 	Tables = []*schema.Table{
 		AdminTable,
 		AdminRoleTable,
+		OrganizationTable,
 		PermissionTable,
+		PositionTable,
 		RoleTable,
 		RolePermissionTable,
 	}
@@ -114,8 +155,14 @@ func init() {
 	AdminRoleTable.Annotation = &entsql.Annotation{
 		Table: "admin_role",
 	}
+	OrganizationTable.Annotation = &entsql.Annotation{
+		Table: "organization",
+	}
 	PermissionTable.Annotation = &entsql.Annotation{
 		Table: "permission",
+	}
+	PositionTable.Annotation = &entsql.Annotation{
+		Table: "position",
 	}
 	RoleTable.Annotation = &entsql.Annotation{
 		Table: "role",

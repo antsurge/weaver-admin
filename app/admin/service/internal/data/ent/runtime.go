@@ -7,7 +7,9 @@ import (
 
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/admin"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/adminrole"
+	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/organization"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/permission"
+	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/position"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/role"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/rolepermission"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/schema"
@@ -51,6 +53,78 @@ func init() {
 	adminroleDescID := adminroleFields[0].Descriptor()
 	// adminrole.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	adminrole.IDValidator = adminroleDescID.Validators[0].(func(string) error)
+	organizationFields := schema.Organization{}.Fields()
+	_ = organizationFields
+	// organizationDescParentID is the schema descriptor for parent_id field.
+	organizationDescParentID := organizationFields[1].Descriptor()
+	// organization.DefaultParentID holds the default value on creation for the parent_id field.
+	organization.DefaultParentID = organizationDescParentID.Default.(string)
+	// organizationDescName is the schema descriptor for name field.
+	organizationDescName := organizationFields[2].Descriptor()
+	// organization.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	organization.NameValidator = func() func(string) error {
+		validators := organizationDescName.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(name string) error {
+			for _, fn := range fns {
+				if err := fn(name); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// organizationDescCode is the schema descriptor for code field.
+	organizationDescCode := organizationFields[3].Descriptor()
+	// organization.CodeValidator is a validator for the "code" field. It is called by the builders before save.
+	organization.CodeValidator = func() func(string) error {
+		validators := organizationDescCode.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(code string) error {
+			for _, fn := range fns {
+				if err := fn(code); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// organizationDescWeight is the schema descriptor for weight field.
+	organizationDescWeight := organizationFields[4].Descriptor()
+	// organization.DefaultWeight holds the default value on creation for the weight field.
+	organization.DefaultWeight = organizationDescWeight.Default.(int)
+	// organizationDescLeaderName is the schema descriptor for leader_name field.
+	organizationDescLeaderName := organizationFields[6].Descriptor()
+	// organization.LeaderNameValidator is a validator for the "leader_name" field. It is called by the builders before save.
+	organization.LeaderNameValidator = organizationDescLeaderName.Validators[0].(func(string) error)
+	// organizationDescLeaderPhone is the schema descriptor for leader_phone field.
+	organizationDescLeaderPhone := organizationFields[7].Descriptor()
+	// organization.LeaderPhoneValidator is a validator for the "leader_phone" field. It is called by the builders before save.
+	organization.LeaderPhoneValidator = organizationDescLeaderPhone.Validators[0].(func(string) error)
+	// organizationDescLeaderEmail is the schema descriptor for leader_email field.
+	organizationDescLeaderEmail := organizationFields[8].Descriptor()
+	// organization.LeaderEmailValidator is a validator for the "leader_email" field. It is called by the builders before save.
+	organization.LeaderEmailValidator = organizationDescLeaderEmail.Validators[0].(func(string) error)
+	// organizationDescCreatedAt is the schema descriptor for created_at field.
+	organizationDescCreatedAt := organizationFields[9].Descriptor()
+	// organization.DefaultCreatedAt holds the default value on creation for the created_at field.
+	organization.DefaultCreatedAt = organizationDescCreatedAt.Default.(func() time.Time)
+	// organizationDescUpdatedAt is the schema descriptor for updated_at field.
+	organizationDescUpdatedAt := organizationFields[10].Descriptor()
+	// organization.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	organization.DefaultUpdatedAt = organizationDescUpdatedAt.Default.(func() time.Time)
+	// organization.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	organization.UpdateDefaultUpdatedAt = organizationDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// organizationDescID is the schema descriptor for id field.
+	organizationDescID := organizationFields[0].Descriptor()
+	// organization.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	organization.IDValidator = organizationDescID.Validators[0].(func(string) error)
 	permissionFields := schema.Permission{}.Fields()
 	_ = permissionFields
 	// permissionDescParentID is the schema descriptor for parent_id field.
@@ -139,6 +213,66 @@ func init() {
 	permissionDescID := permissionFields[0].Descriptor()
 	// permission.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	permission.IDValidator = permissionDescID.Validators[0].(func(string) error)
+	positionFields := schema.Position{}.Fields()
+	_ = positionFields
+	// positionDescName is the schema descriptor for name field.
+	positionDescName := positionFields[1].Descriptor()
+	// position.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	position.NameValidator = func() func(string) error {
+		validators := positionDescName.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(name string) error {
+			for _, fn := range fns {
+				if err := fn(name); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// positionDescCode is the schema descriptor for code field.
+	positionDescCode := positionFields[2].Descriptor()
+	// position.CodeValidator is a validator for the "code" field. It is called by the builders before save.
+	position.CodeValidator = func() func(string) error {
+		validators := positionDescCode.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(code string) error {
+			for _, fn := range fns {
+				if err := fn(code); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// positionDescWeight is the schema descriptor for weight field.
+	positionDescWeight := positionFields[3].Descriptor()
+	// position.DefaultWeight holds the default value on creation for the weight field.
+	position.DefaultWeight = positionDescWeight.Default.(int)
+	// positionDescDescription is the schema descriptor for description field.
+	positionDescDescription := positionFields[5].Descriptor()
+	// position.DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
+	position.DescriptionValidator = positionDescDescription.Validators[0].(func(string) error)
+	// positionDescCreatedAt is the schema descriptor for created_at field.
+	positionDescCreatedAt := positionFields[6].Descriptor()
+	// position.DefaultCreatedAt holds the default value on creation for the created_at field.
+	position.DefaultCreatedAt = positionDescCreatedAt.Default.(func() time.Time)
+	// positionDescUpdatedAt is the schema descriptor for updated_at field.
+	positionDescUpdatedAt := positionFields[7].Descriptor()
+	// position.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	position.DefaultUpdatedAt = positionDescUpdatedAt.Default.(func() time.Time)
+	// position.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	position.UpdateDefaultUpdatedAt = positionDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// positionDescID is the schema descriptor for id field.
+	positionDescID := positionFields[0].Descriptor()
+	// position.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	position.IDValidator = positionDescID.Validators[0].(func(string) error)
 	roleFields := schema.Role{}.Fields()
 	_ = roleFields
 	// roleDescName is the schema descriptor for name field.

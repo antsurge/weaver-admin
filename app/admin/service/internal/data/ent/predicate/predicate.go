@@ -12,8 +12,14 @@ type Admin func(*sql.Selector)
 // AdminRole is the predicate function for adminrole builders.
 type AdminRole func(*sql.Selector)
 
+// Organization is the predicate function for organization builders.
+type Organization func(*sql.Selector)
+
 // Permission is the predicate function for permission builders.
 type Permission func(*sql.Selector)
+
+// Position is the predicate function for position builders.
+type Position func(*sql.Selector)
 
 // Role is the predicate function for role builders.
 type Role func(*sql.Selector)

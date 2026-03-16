@@ -36,6 +36,7 @@ func NewHTTPServer(
 	jwtConf *conf.JWT,
 	authenticationService *service.AuthenticationService,
 	permissionService *service.PermissionService,
+	organizationService *service.OrganizationService,
 
 	logger log.Logger,
 ) *http.Server {
@@ -62,5 +63,6 @@ func NewHTTPServer(
 	srv := http.NewServer(opts...)
 	adminV1.RegisterAuthenticationServiceHTTPServer(srv, authenticationService)
 	adminV1.RegisterPermissionServiceHTTPServer(srv, permissionService)
+	adminV1.RegisterOrganizationHTTPServer(srv, organizationService)
 	return srv
 }

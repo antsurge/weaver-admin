@@ -121,7 +121,7 @@ export function useColumns(
         options: [
           {
             code: 'append',
-            text: '新增下级',
+            text: $t('system.permission.operation.appendChildren'),
             show: (row: any) => row.type !== PermissionTypeOptionsValueButton,
           },
           'edit', // 默认的编辑按钮

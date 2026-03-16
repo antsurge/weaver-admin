@@ -115,7 +115,7 @@ func (r *permissionRepo) ListPermission(
 ) ([]*biz.Permission, error) {
 	list, err := r.data.db.Permission.
 		Query().
-		Order(ent.Asc(permission.FieldWeight)).
+		Order(ent.Desc(permission.FieldWeight)).
 		All(ctx)
 
 	if err != nil {

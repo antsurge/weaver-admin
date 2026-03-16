@@ -13,5 +13,23 @@
       "status": "Status",
       "description": "Permission Description"
     }
+  },
+  "position": {
+    "name": "Position",
+    "fields": {
+      "name": "Position Name",
+      "code": "Position Code",
+      "weight": "Weight",
+      "status": "Status",
+      "description": "Description",
+      "operation": "Operation"
+    },
+    "actions": {
+      "switchStatus": "Switch Position Status",
+      "switchStatusConfirm": "Confirm to switch 【{0}】 status to 【{1}】?"
+    },
+    "form_placeholder": {
+      "description": "Enter description"
+    }
   }
 }

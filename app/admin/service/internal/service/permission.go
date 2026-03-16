@@ -66,6 +66,9 @@ func (s *PermissionService) UpdatePermission(ctx context.Context, req *permissio
 		return nil, err
 	}
 	permission, err := s.permissionUc.UpdatePermission(ctx, input)
+	if err != nil {
+		return nil, err
+	}
 
 	output := &permissionV1.Permission{}
 	err = copier.Copy(&output, &permission)

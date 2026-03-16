@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package organization.service.v1;
 
-service Organization {
+import "organization/service/v1/organization.proto";
 
+service OrganizationService {
+  rpc CreateOrganization(CreateOrganizationRequest) returns (Organization);
 }

@@ -1,5 +1,231 @@
+<script lang="ts" setup>
+import type { Recordable } from '@vben/types';
+import type {
+  OnActionClickParams,
+  VxeTableGridOptions,
+} from '#/adapter/vxe-table';
+
+import { nextTick, ref } from 'vue';
+
+import { Page, useVbenModal } from '@vben/common-ui';
+import { IconifyIcon, Plus } from '@vben/icons';
+import { $t } from '@vben/locales';
+
+import { Button, message, Modal } from 'ant-design-vue';
+
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import {
+  deleteOrganizationApi,
+  getOrganizationTreeApi,
+  updateOrganizationStatusApi,
+} from '#/api/system/organization';
+import type { SystemOrganizationApi } from '#/api/system/organization';
+
+import { useColumns } from './data';
+import Form from './modules/form/index.vue';
+
+const [FormModel, formModelApi] = useVbenModal({
+  connectedComponent: Form,
+  destroyOnClose: true,
+});
+
+const selectedRows = ref<SystemOrganizationApi.Organization[]>([]);
+
+const [Grid, gridApi] = useVbenVxeGrid({
+  gridOptions: {
+    columns: useColumns(onActionClick, onStatusChange),
+    height: 'auto',
+    keepSource: true,
+    pagerConfig: {
+      enabled: false,
+    },
+    proxyConfig: {
+      ajax: {
+        query: async (_params) => {
+          const res = await getOrganizationTreeApi();
+          return res?.data ?? [];
+        },
+      },
+    },
+    rowConfig: {
+      keyField: 'id',
+    },
+    checkboxConfig: { range: false, checkStrictly: true },
+    toolbarConfig: {
+      custom: true,
+      export: false,
+      refresh: true,
+      zoom: true,
+    },
+    treeConfig: {
+      parentField: 'parentId',
+      rowField: 'id',
+      transform: false,
+    },
+  } as VxeTableGridOptions,
+  gridEvents: {
+    checkboxChange() {
+      nextTick(() => {
+        const records =
+          (gridApi.grid as any)?.getCheckboxRecords?.() ?? [];
+        selectedRows.value = records;
+      });
+    },
+  },
+});
+
+function onActionClick({
+  code,
+  row,
+}: OnActionClickParams<SystemOrganizationApi.Organization>) {
+  switch (code) {
+    case 'append': {
+      onAppend(row);
+      break;
+    }
+    case 'delete': {
+      onDelete(row);
+      break;
+    }
+    case 'edit': {
+      onEdit(row);
+      break;
+    }
+    default: {
+      break;
+    }
+  }
+}
+
+function onRefresh() {
+  gridApi.query();
+}
+
+function onEdit(row: SystemOrganizationApi.Organization) {
+  formModelApi.setData(row).open();
+}
+
+function onCreate() {
+  formModelApi.setData({}).open();
+}
+
+function onAppend(row: SystemOrganizationApi.Organization) {
+  formModelApi.setData({ parentId: row.id }).open();
+}
+
+async function onStatusChange(
+  newStatus: SystemOrganizationApi.Organization['status'],
+  row: SystemOrganizationApi.Organization,
+) {
+  const statusText: Recordable<string> = {
+    disabled: $t('common.disabled'),
+    enabled: $t('common.enabled'),
+  };
+
+  return new Promise((resolve) => {
+    Modal.confirm({
+      title: $t('system.organization.actions.switchStatus'),
+      content: $t('system.organization.actions.switchStatusConfirm', [
+        row.name,
+        statusText[newStatus],
+      ]),
+      okText: $t('ui.actionTitle.confirm'),
+      cancelText: $t('ui.actionTitle.cancel'),
+      async onOk() {
+        try {
+          await updateOrganizationStatusApi(row.id, newStatus);
+          resolve(true);
+        } catch (e) {
+          resolve(false);
+        }
+      },
+      onCancel() {
+        resolve(false);
+      },
+    });
+  });
+}
+
+function onDelete(row: SystemOrganizationApi.Organization) {
+  const hideLoading = message.loading({
+    content: $t('ui.actionMessage.deleting', [row.name]),
+    duration: 0,
+    key: 'action_process_msg',
+  });
+
+  deleteOrganizationApi([row.id])
+    .then(() => {
+      message.success({
+        content: $t('ui.actionMessage.deleteSuccess', [row.name]),
+        key: 'action_process_msg',
+      });
+      onRefresh();
+    })
+    .catch(() => {
+      hideLoading();
+    });
+}
+
+function onBatchDelete() {
+  const rows = selectedRows.value;
+  if (!rows?.length) return;
+  const ids = rows.map((r) => r.id);
+  const names = rows.map((r) => r.name || r.id).join('、');
+
+  Modal.confirm({
+    title: $t('ui.actionMessage.confirmDelete'),
+    content: $t('ui.actionMessage.deleteConfirm', [names]),
+    okText: $t('ui.actionTitle.confirm'),
+    cancelText: $t('ui.actionTitle.cancel'),
+    okType: 'danger',
+    onOk() {
+      const hideLoading = message.loading({
+        content: $t('ui.actionMessage.deleting', [names]),
+        duration: 0,
+        key: 'batch_delete_msg',
+      });
+      return deleteOrganizationApi(ids)
+        .then(() => {
+          message.success({
+            content: $t('ui.actionMessage.deleteSuccess', [names]),
+            key: 'batch_delete_msg',
+          });
+          selectedRows.value = [];
+          onRefresh();
+        })
+        .catch(() => {
+          hideLoading();
+        });
+    },
+  });
+}
+</script>
+
 <template>
-  <div class="p-5">组织管理</div>
+  <Page auto-content-height>
+    <FormModel @success="onRefresh" />
+    <Grid>
+      <template #toolbar-tools>
+        <div class="flex gap-2">
+          <Button
+            type="primary"
+            danger
+            :disabled="!selectedRows.length"
+            @click="onBatchDelete"
+          >
+            <IconifyIcon
+              icon="ant-design:delete-outlined"
+              class="size-5"
+            />
+            {{ $t('ui.actionTitle.delete') }}
+          </Button>
+          <Button type="primary" @click="onCreate">
+            <Plus class="size-5" />
+            {{ $t('ui.actionTitle.create') }}
+          </Button>
+        </div>
+      </template>
+    </Grid>
+  </Page>
 </template>
-<script lang="ts" setup></script>
 

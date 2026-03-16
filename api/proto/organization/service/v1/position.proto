@@ -5,9 +5,71 @@ package organization.service.v1;
 import "google/protobuf/timestamp.proto";
 
 message Position {
-    string id = 1;
+  // 岗位ID
+  string id = 1;
 
+  // 岗位名称
+  string name = 2;
 
-    google.protobuf.Timestamp createdAt = 13;
-    google.protobuf.Timestamp updatedAt = 14;
+  // 岗位code
+  string code = 3;
+
+  // 权重
+  int32 weight = 4;
+
+  // 状态：enabled=启用 disabled=禁用
+  string status = 5;
+
+  // 描述
+  string description = 6;
+
+  // 创建时间
+  google.protobuf.Timestamp created_at = 7;
+
+  // 更新时间
+  google.protobuf.Timestamp updated_at = 8;
+}
+
+message ListPositionRequest {}
+
+message ListPositionResponse {
+  repeated Position data = 1;
+  int64 total = 2;
+}
+
+message CreatePositionRequest {
+  // 岗位名称
+  string name = 1;
+
+  // 岗位code
+  string code = 2;
+
+  // 权重
+  int32 weight = 3;
+
+  // 状态
+  string status = 4;
+
+  // 描述
+  string description = 5;
+}
+
+message UpdatePositionRequest {
+  // 岗位ID
+  string id = 1;
+
+  // 岗位名称
+  string name = 2;
+
+  // 岗位code
+  string code = 3;
+
+  // 权重
+  int32 weight = 4;
+
+  // 状态
+  string status = 5;
+
+  // 描述
+  string description = 6;
 }
