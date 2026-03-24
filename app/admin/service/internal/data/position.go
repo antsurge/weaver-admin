@@ -4,10 +4,12 @@ import (
 	"context"
 	"time"
 
+	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/biz"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/position"
+	"github.com/hypercoze/kratos-admin/pkg/enthelper"
 )
 
 type positionRepo struct {
@@ -22,6 +24,88 @@ func NewPositionRepo(data *Data, logger log.Logger) biz.PositionRepo {
 	}
 }
 
+func (repo *positionRepo) ListPosition(ctx context.Context, params *biz.ListPositionRequest, opts ...*biz.ListPositionOption) (*biz.ListPositionResponse, error) {
+	query := repo.data.db.Position.Query().
+		Order(ent.Desc(position.FieldCreatedAt))
+
+	opt := &biz.ListPositionOption{}
+	if len(opts) > 0 {
+		opt = opts[0]
+	}
+
+	if opt.OnlyDeleted {
+		query = query.Where(position.DeletedAtNotNil())
+	} else if !opt.IncludeDeleted {
+		query = query.Where(position.DeletedAtIsNil())
+	}
+
+	// 名称
+	if v := params.Name; len(v) > 0 {
+		query = query.Where(position.NameContains(v))
+	}
+
+	// code
+	if v := params.Code; len(v) > 0 {
+		query = query.Where(position.CodeContains(v))
+	}
+
+	// 状态
+	if v := params.Status; len(v) > 0 {
+		query = query.Where(position.StatusEQ(position.Status(v)))
+	}
+
+	res, err := enthelper.Pagination[
+		*ent.Position,
+		*ent.PositionQuery,
+	](ctx, query, params.PaginationParams)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// 转换为biz结构
+	data := make([]*biz.Position, 0, res.Total)
+	for _, v := range res.Data {
+		data = append(data, &biz.Position{
+			ID:        v.ID,
+			Name:      v.Name,
+			Code:      v.Code,
+			Weight:    v.Weight,
+			Status:    string(v.Status),
+			Remark:    v.Remark,
+			CreatedAt: v.CreatedAt,
+			UpdatedAt: v.UpdatedAt,
+		})
+	}
+
+	return &biz.ListPositionResponse{
+		Items: data,
+		Total: res.Total,
+	}, nil
+}
+
+func (repo *positionRepo) GetPosition(ctx context.Context, id string) (*biz.Position, error) {
+	p, err := repo.data.db.Position.Get(ctx, id)
+	if err != nil {
+		if ent.IsNotFound(err) {
+			return nil, errors.NotFound("POSITION_NOT_FOUND", "岗位不存在")
+		}
+		return nil, err
+	}
+	position := &biz.Position{
+		ID:        p.ID,
+		Name:      p.Name,
+		Code:      p.Code,
+		Weight:    p.Weight,
+		Status:    string(p.Status),
+		Remark:    p.Remark,
+		CreatedAt: p.CreatedAt,
+		UpdatedAt: p.UpdatedAt,
+	}
+
+	return position, nil
+}
+
 func (r *positionRepo) CreatePosition(ctx context.Context, req *biz.Position) error {
 	_, err := r.data.db.Position.Create().
 		SetID(req.ID).
@@ -29,7 +113,7 @@ func (r *positionRepo) CreatePosition(ctx context.Context, req *biz.Position) er
 		SetCode(req.Code).
 		SetWeight(req.Weight).
 		SetStatus(position.Status(req.Status)).
-		SetDescription(req.Description).
+		SetRemark(req.Remark).
 		SetCreatedAt(req.CreatedAt).
 		SetUpdatedAt(req.UpdatedAt).
 		Save(ctx)
@@ -43,65 +127,20 @@ func (r *positionRepo) UpdatePosition(ctx context.Context, req *biz.Position) er
 		SetCode(req.Code).
 		SetWeight(req.Weight).
 		SetStatus(position.Status(req.Status)).
-		SetDescription(req.Description).
+		SetRemark(req.Remark).
 		SetUpdatedAt(req.UpdatedAt).
 		Save(ctx)
 	return err
 }
 
 func (r *positionRepo) DeletePosition(ctx context.Context, ids []string) error {
-	_, err := r.data.db.Position.
-		Delete().
+	err := r.data.db.Position.
+		Update().
 		Where(position.IDIn(ids...)).
+		SetDeletedAt(time.Now()).
 		Exec(ctx)
 
 	return err
-}
-
-func (repo *positionRepo) GetPosition(ctx context.Context, id string) (*biz.Position, error) {
-	return nil, nil
-}
-
-func (repo *positionRepo) ListPosition(ctx context.Context, req *biz.ListPositionRequest) (*biz.ListPositionResponse, error) {
-	query := repo.data.db.Position.Query()
-
-	// 查询总数
-	total, err := query.Count(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	// 分页
-	list, err := query.
-		Order(ent.Desc(position.FieldCreatedAt)).
-		Offset((req.Page - 1) * req.PageSize).
-		Limit(req.PageSize).
-		All(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	// 转换为biz结构
-	data := make([]*biz.Position, 0, len(list))
-	for _, v := range list {
-		data = append(data, &biz.Position{
-			ID:          v.ID,
-			Name:        v.Name,
-			Code:        v.Code,
-			Weight:      v.Weight,
-			Status:      string(v.Status),
-			Description: v.Description,
-			CreatedAt:   v.CreatedAt,
-			UpdatedAt:   v.UpdatedAt,
-		})
-	}
-
-	return &biz.ListPositionResponse{
-		Data:  data,
-		Total: total,
-	}, nil
-
-	return nil, nil
 }
 
 func (r *positionRepo) UpdatePositionStatus(ctx context.Context, id, status string) error {

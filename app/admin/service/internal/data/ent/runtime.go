@@ -7,6 +7,8 @@ import (
 
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/admin"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/adminrole"
+	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/dictdata"
+	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/dicttype"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/organization"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/permission"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/position"
@@ -53,6 +55,140 @@ func init() {
 	adminroleDescID := adminroleFields[0].Descriptor()
 	// adminrole.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	adminrole.IDValidator = adminroleDescID.Validators[0].(func(string) error)
+	dictdataFields := schema.DictData{}.Fields()
+	_ = dictdataFields
+	// dictdataDescDictTypeID is the schema descriptor for dict_type_id field.
+	dictdataDescDictTypeID := dictdataFields[1].Descriptor()
+	// dictdata.DictTypeIDValidator is a validator for the "dict_type_id" field. It is called by the builders before save.
+	dictdata.DictTypeIDValidator = func() func(string) error {
+		validators := dictdataDescDictTypeID.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(dict_type_id string) error {
+			for _, fn := range fns {
+				if err := fn(dict_type_id); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// dictdataDescLabel is the schema descriptor for label field.
+	dictdataDescLabel := dictdataFields[2].Descriptor()
+	// dictdata.LabelValidator is a validator for the "label" field. It is called by the builders before save.
+	dictdata.LabelValidator = func() func(string) error {
+		validators := dictdataDescLabel.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(label string) error {
+			for _, fn := range fns {
+				if err := fn(label); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// dictdataDescValue is the schema descriptor for value field.
+	dictdataDescValue := dictdataFields[3].Descriptor()
+	// dictdata.ValueValidator is a validator for the "value" field. It is called by the builders before save.
+	dictdata.ValueValidator = func() func(string) error {
+		validators := dictdataDescValue.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(value string) error {
+			for _, fn := range fns {
+				if err := fn(value); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// dictdataDescWeight is the schema descriptor for weight field.
+	dictdataDescWeight := dictdataFields[4].Descriptor()
+	// dictdata.DefaultWeight holds the default value on creation for the weight field.
+	dictdata.DefaultWeight = dictdataDescWeight.Default.(int)
+	// dictdataDescDescription is the schema descriptor for description field.
+	dictdataDescDescription := dictdataFields[7].Descriptor()
+	// dictdata.DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
+	dictdata.DescriptionValidator = dictdataDescDescription.Validators[0].(func(string) error)
+	// dictdataDescCreatedAt is the schema descriptor for created_at field.
+	dictdataDescCreatedAt := dictdataFields[8].Descriptor()
+	// dictdata.DefaultCreatedAt holds the default value on creation for the created_at field.
+	dictdata.DefaultCreatedAt = dictdataDescCreatedAt.Default.(func() time.Time)
+	// dictdataDescUpdatedAt is the schema descriptor for updated_at field.
+	dictdataDescUpdatedAt := dictdataFields[9].Descriptor()
+	// dictdata.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	dictdata.DefaultUpdatedAt = dictdataDescUpdatedAt.Default.(func() time.Time)
+	// dictdata.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	dictdata.UpdateDefaultUpdatedAt = dictdataDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// dictdataDescID is the schema descriptor for id field.
+	dictdataDescID := dictdataFields[0].Descriptor()
+	// dictdata.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	dictdata.IDValidator = dictdataDescID.Validators[0].(func(string) error)
+	dicttypeFields := schema.DictType{}.Fields()
+	_ = dicttypeFields
+	// dicttypeDescName is the schema descriptor for name field.
+	dicttypeDescName := dicttypeFields[1].Descriptor()
+	// dicttype.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	dicttype.NameValidator = func() func(string) error {
+		validators := dicttypeDescName.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(name string) error {
+			for _, fn := range fns {
+				if err := fn(name); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// dicttypeDescCode is the schema descriptor for code field.
+	dicttypeDescCode := dicttypeFields[2].Descriptor()
+	// dicttype.CodeValidator is a validator for the "code" field. It is called by the builders before save.
+	dicttype.CodeValidator = func() func(string) error {
+		validators := dicttypeDescCode.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(code string) error {
+			for _, fn := range fns {
+				if err := fn(code); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// dicttypeDescDescription is the schema descriptor for description field.
+	dicttypeDescDescription := dicttypeFields[4].Descriptor()
+	// dicttype.DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
+	dicttype.DescriptionValidator = dicttypeDescDescription.Validators[0].(func(string) error)
+	// dicttypeDescCreatedAt is the schema descriptor for created_at field.
+	dicttypeDescCreatedAt := dicttypeFields[5].Descriptor()
+	// dicttype.DefaultCreatedAt holds the default value on creation for the created_at field.
+	dicttype.DefaultCreatedAt = dicttypeDescCreatedAt.Default.(func() time.Time)
+	// dicttypeDescUpdatedAt is the schema descriptor for updated_at field.
+	dicttypeDescUpdatedAt := dicttypeFields[6].Descriptor()
+	// dicttype.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	dicttype.DefaultUpdatedAt = dicttypeDescUpdatedAt.Default.(func() time.Time)
+	// dicttype.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	dicttype.UpdateDefaultUpdatedAt = dicttypeDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// dicttypeDescID is the schema descriptor for id field.
+	dicttypeDescID := dicttypeFields[0].Descriptor()
+	// dicttype.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	dicttype.IDValidator = dicttypeDescID.Validators[0].(func(string) error)
 	organizationFields := schema.Organization{}.Fields()
 	_ = organizationFields
 	// organizationDescParentID is the schema descriptor for parent_id field.
@@ -255,10 +391,10 @@ func init() {
 	positionDescWeight := positionFields[3].Descriptor()
 	// position.DefaultWeight holds the default value on creation for the weight field.
 	position.DefaultWeight = positionDescWeight.Default.(int)
-	// positionDescDescription is the schema descriptor for description field.
-	positionDescDescription := positionFields[5].Descriptor()
-	// position.DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
-	position.DescriptionValidator = positionDescDescription.Validators[0].(func(string) error)
+	// positionDescRemark is the schema descriptor for remark field.
+	positionDescRemark := positionFields[5].Descriptor()
+	// position.RemarkValidator is a validator for the "remark" field. It is called by the builders before save.
+	position.RemarkValidator = positionDescRemark.Validators[0].(func(string) error)
 	// positionDescCreatedAt is the schema descriptor for created_at field.
 	positionDescCreatedAt := positionFields[6].Descriptor()
 	// position.DefaultCreatedAt holds the default value on creation for the created_at field.

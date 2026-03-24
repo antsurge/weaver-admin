@@ -7,6 +7,7 @@ import (
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
+	"entgo.io/ent/schema/index"
 )
 
 type Position struct {
@@ -23,46 +24,51 @@ func (Position) Annotations() []schema.Annotation {
 
 func (Position) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("id").Unique().Immutable().MaxLen(36),
-
+		field.String("id").
+			Unique().
+			Immutable().
+			MaxLen(36).
+			Comment("ID"),
 		field.String("name").
 			NotEmpty().
 			MaxLen(64).
 			Comment("岗位名称"),
-
 		field.String("code").
 			NotEmpty().
-			Unique().
 			MaxLen(64).
-			Comment("岗位code"),
-
+			Comment("岗位编码"),
 		field.Int("weight").
 			Default(0).
 			Comment("权重"),
-
 		field.Enum("status").
 			Values("enabled", "disabled").
 			Default("enabled").
 			Comment("状态：enabled=启用 disabled=禁用"),
-
-		field.String("description").Optional().MaxLen(256).Comment("描述"),
-
+		field.String("remark").
+			Optional().
+			MaxLen(256).
+			Comment("备注"),
 		field.Time("created_at").
 			Immutable().
-			Default(time.Now),
-
+			Default(time.Now).
+			Comment("创建时间"),
 		field.Time("updated_at").
 			Default(time.Now).
-			UpdateDefault(time.Now),
+			UpdateDefault(time.Now).
+			Comment("更新时间"),
+		field.Time("deleted_at").
+			Optional().
+			Nillable().
+			Comment("删除时间"),
 	}
 }
 
 func (Position) Edges() []ent.Edge {
 	return nil
-	//return []ent.Edge{
-	//	// 反向：哪些角色拥有此权限
-	//	edge.From("roles", Role.Type).
-	//		Ref("permissions").
-	//		Through("role_permissions", RolePermission.Type),
-	//}
+}
+
+func (Position) Indexes() []ent.Index {
+	return []ent.Index{
+		index.Fields("code", "deleted_at").Unique(),
+	}
 }

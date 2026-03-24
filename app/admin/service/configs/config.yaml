@@ -8,7 +8,7 @@ server:
 data:
   database:
     driver: mysql
-    source: root:@tcp(127.0.0.1:3306)/hyper_admin?parseTime=True&loc=Local
+    source: root:@tcp(127.0.0.1:3306)/kratos_admin?parseTime=True&loc=Local
   redis:
     addr: 127.0.0.1:6379
     read_timeout: 3s

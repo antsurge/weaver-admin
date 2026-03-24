@@ -91,29 +91,49 @@ func (_u *PositionUpdate) SetNillableStatus(v *position.Status) *PositionUpdate 
 	return _u
 }
 
-// SetDescription sets the "description" field.
-func (_u *PositionUpdate) SetDescription(v string) *PositionUpdate {
-	_u.mutation.SetDescription(v)
+// SetRemark sets the "remark" field.
+func (_u *PositionUpdate) SetRemark(v string) *PositionUpdate {
+	_u.mutation.SetRemark(v)
 	return _u
 }
 
-// SetNillableDescription sets the "description" field if the given value is not nil.
-func (_u *PositionUpdate) SetNillableDescription(v *string) *PositionUpdate {
+// SetNillableRemark sets the "remark" field if the given value is not nil.
+func (_u *PositionUpdate) SetNillableRemark(v *string) *PositionUpdate {
 	if v != nil {
-		_u.SetDescription(*v)
+		_u.SetRemark(*v)
 	}
 	return _u
 }
 
-// ClearDescription clears the value of the "description" field.
-func (_u *PositionUpdate) ClearDescription() *PositionUpdate {
-	_u.mutation.ClearDescription()
+// ClearRemark clears the value of the "remark" field.
+func (_u *PositionUpdate) ClearRemark() *PositionUpdate {
+	_u.mutation.ClearRemark()
 	return _u
 }
 
 // SetUpdatedAt sets the "updated_at" field.
 func (_u *PositionUpdate) SetUpdatedAt(v time.Time) *PositionUpdate {
 	_u.mutation.SetUpdatedAt(v)
+	return _u
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (_u *PositionUpdate) SetDeletedAt(v time.Time) *PositionUpdate {
+	_u.mutation.SetDeletedAt(v)
+	return _u
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (_u *PositionUpdate) SetNillableDeletedAt(v *time.Time) *PositionUpdate {
+	if v != nil {
+		_u.SetDeletedAt(*v)
+	}
+	return _u
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (_u *PositionUpdate) ClearDeletedAt() *PositionUpdate {
+	_u.mutation.ClearDeletedAt()
 	return _u
 }
 
@@ -175,9 +195,9 @@ func (_u *PositionUpdate) check() error {
 			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Position.status": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.Description(); ok {
-		if err := position.DescriptionValidator(v); err != nil {
-			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Position.description": %w`, err)}
+	if v, ok := _u.mutation.Remark(); ok {
+		if err := position.RemarkValidator(v); err != nil {
+			return &ValidationError{Name: "remark", err: fmt.Errorf(`ent: validator failed for field "Position.remark": %w`, err)}
 		}
 	}
 	return nil
@@ -210,14 +230,20 @@ func (_u *PositionUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.Status(); ok {
 		_spec.SetField(position.FieldStatus, field.TypeEnum, value)
 	}
-	if value, ok := _u.mutation.Description(); ok {
-		_spec.SetField(position.FieldDescription, field.TypeString, value)
+	if value, ok := _u.mutation.Remark(); ok {
+		_spec.SetField(position.FieldRemark, field.TypeString, value)
 	}
-	if _u.mutation.DescriptionCleared() {
-		_spec.ClearField(position.FieldDescription, field.TypeString)
+	if _u.mutation.RemarkCleared() {
+		_spec.ClearField(position.FieldRemark, field.TypeString)
 	}
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(position.FieldUpdatedAt, field.TypeTime, value)
+	}
+	if value, ok := _u.mutation.DeletedAt(); ok {
+		_spec.SetField(position.FieldDeletedAt, field.TypeTime, value)
+	}
+	if _u.mutation.DeletedAtCleared() {
+		_spec.ClearField(position.FieldDeletedAt, field.TypeTime)
 	}
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -302,29 +328,49 @@ func (_u *PositionUpdateOne) SetNillableStatus(v *position.Status) *PositionUpda
 	return _u
 }
 
-// SetDescription sets the "description" field.
-func (_u *PositionUpdateOne) SetDescription(v string) *PositionUpdateOne {
-	_u.mutation.SetDescription(v)
+// SetRemark sets the "remark" field.
+func (_u *PositionUpdateOne) SetRemark(v string) *PositionUpdateOne {
+	_u.mutation.SetRemark(v)
 	return _u
 }
 
-// SetNillableDescription sets the "description" field if the given value is not nil.
-func (_u *PositionUpdateOne) SetNillableDescription(v *string) *PositionUpdateOne {
+// SetNillableRemark sets the "remark" field if the given value is not nil.
+func (_u *PositionUpdateOne) SetNillableRemark(v *string) *PositionUpdateOne {
 	if v != nil {
-		_u.SetDescription(*v)
+		_u.SetRemark(*v)
 	}
 	return _u
 }
 
-// ClearDescription clears the value of the "description" field.
-func (_u *PositionUpdateOne) ClearDescription() *PositionUpdateOne {
-	_u.mutation.ClearDescription()
+// ClearRemark clears the value of the "remark" field.
+func (_u *PositionUpdateOne) ClearRemark() *PositionUpdateOne {
+	_u.mutation.ClearRemark()
 	return _u
 }
 
 // SetUpdatedAt sets the "updated_at" field.
 func (_u *PositionUpdateOne) SetUpdatedAt(v time.Time) *PositionUpdateOne {
 	_u.mutation.SetUpdatedAt(v)
+	return _u
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (_u *PositionUpdateOne) SetDeletedAt(v time.Time) *PositionUpdateOne {
+	_u.mutation.SetDeletedAt(v)
+	return _u
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (_u *PositionUpdateOne) SetNillableDeletedAt(v *time.Time) *PositionUpdateOne {
+	if v != nil {
+		_u.SetDeletedAt(*v)
+	}
+	return _u
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (_u *PositionUpdateOne) ClearDeletedAt() *PositionUpdateOne {
+	_u.mutation.ClearDeletedAt()
 	return _u
 }
 
@@ -399,9 +445,9 @@ func (_u *PositionUpdateOne) check() error {
 			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Position.status": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.Description(); ok {
-		if err := position.DescriptionValidator(v); err != nil {
-			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Position.description": %w`, err)}
+	if v, ok := _u.mutation.Remark(); ok {
+		if err := position.RemarkValidator(v); err != nil {
+			return &ValidationError{Name: "remark", err: fmt.Errorf(`ent: validator failed for field "Position.remark": %w`, err)}
 		}
 	}
 	return nil
@@ -451,14 +497,20 @@ func (_u *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err 
 	if value, ok := _u.mutation.Status(); ok {
 		_spec.SetField(position.FieldStatus, field.TypeEnum, value)
 	}
-	if value, ok := _u.mutation.Description(); ok {
-		_spec.SetField(position.FieldDescription, field.TypeString, value)
+	if value, ok := _u.mutation.Remark(); ok {
+		_spec.SetField(position.FieldRemark, field.TypeString, value)
 	}
-	if _u.mutation.DescriptionCleared() {
-		_spec.ClearField(position.FieldDescription, field.TypeString)
+	if _u.mutation.RemarkCleared() {
+		_spec.ClearField(position.FieldRemark, field.TypeString)
 	}
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(position.FieldUpdatedAt, field.TypeTime, value)
+	}
+	if value, ok := _u.mutation.DeletedAt(); ok {
+		_spec.SetField(position.FieldDeletedAt, field.TypeTime, value)
+	}
+	if _u.mutation.DeletedAtCleared() {
+		_spec.ClearField(position.FieldDeletedAt, field.TypeTime)
 	}
 	_node = &Position{config: _u.config}
 	_spec.Assign = _node.assignValues

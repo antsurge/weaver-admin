@@ -6,6 +6,7 @@ import (
 	adminV1 "github.com/hypercoze/kratos-admin/api/gen/go/admin/service/v1"
 	organizationV1 "github.com/hypercoze/kratos-admin/api/gen/go/organization/service/v1"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/biz"
+	"github.com/hypercoze/kratos-admin/pkg/utils/copierx"
 	"github.com/jinzhu/copier"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
@@ -91,24 +92,38 @@ func (s *OrganizationService) UpdateOrganizationStatus(ctx context.Context, req 
 
 // 岗位列表
 func (s *OrganizationService) ListPosition(ctx context.Context, req *organizationV1.ListPositionRequest) (*organizationV1.ListPositionResponse, error) {
-	list, err := s.positionUc.ListPosition(ctx, &biz.ListPositionRequest{
-		PaginationParam: biz.PaginationParam{
-			Page:     1,
-			PageSize: 10,
-		},
-	})
+	input := biz.ListPositionRequest{}
+	var err error
+	err = copier.Copy(&input, req)
+	if err != nil {
+		return nil, err
+	}
+
+	list, err := s.positionUc.ListPosition(ctx, &input)
 	if err != nil {
 		return nil, err
 	}
 
 	output := &organizationV1.ListPositionResponse{}
 	if list != nil {
-		err = copier.Copy(output, list)
+		err = copierx.Copy(output, list)
 	}
 
 	return output, err
 }
 
+// 获取岗位
+func (s *OrganizationService) GetPosition(ctx context.Context, req *organizationV1.GetPositionRequest) (*organizationV1.Position, error) {
+	position, err := s.positionUc.GetPosition(ctx, req.Id)
+	if err != nil {
+		return nil, err
+	}
+	output := &organizationV1.Position{}
+	err = copier.Copy(output, position)
+	return output, err
+}
+
+// 岗位创建
 func (s *OrganizationService) CreatePosition(ctx context.Context, req *organizationV1.CreatePositionRequest) (*organizationV1.Position, error) {
 	input := biz.Position{}
 	var err error
@@ -125,6 +140,7 @@ func (s *OrganizationService) CreatePosition(ctx context.Context, req *organizat
 	return output, err
 }
 
+// 岗位编辑
 func (s *OrganizationService) UpdatePosition(ctx context.Context, req *organizationV1.UpdatePositionRequest) (*organizationV1.Position, error) {
 	input := biz.Position{}
 	var err error
@@ -140,4 +156,16 @@ func (s *OrganizationService) UpdatePosition(ctx context.Context, req *organizat
 	output := &organizationV1.Position{}
 	err = copier.Copy(output, position)
 	return output, err
+}
+
+// 岗位更新状态
+func (s *OrganizationService) UpdatePositionStatus(ctx context.Context, req *organizationV1.UpdatePositionStatusRequest) (*emptypb.Empty, error) {
+	err := s.positionUc.UpdatePositionStatus(ctx, req.Id, req.Status)
+	return nil, err
+}
+
+// 岗位删除
+func (s *OrganizationService) DeletePosition(ctx context.Context, req *organizationV1.DeletePositionRequest) (*emptypb.Empty, error) {
+	err := s.positionUc.DeletePosition(ctx, req.Ids)
+	return nil, err
 }

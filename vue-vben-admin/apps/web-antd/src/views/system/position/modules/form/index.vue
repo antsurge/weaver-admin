@@ -8,6 +8,7 @@ import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
 
 import { useVbenForm } from '#/adapter/form';
 import {
+  getPositionApi,
   createPositionApi,
   updatePositionApi,
 } from '#/api/system/position';
@@ -50,6 +51,7 @@ const schema: VbenFormSchema[] = [
     fieldName: 'weight',
     label: $t('system.position.fields.weight'),
     component: 'InputNumber',
+    defaultValue: 0,
     componentProps: {
       placeholder: $t('ui.formRules.required', [
         $t('system.position.fields.weight'),
@@ -75,11 +77,11 @@ const schema: VbenFormSchema[] = [
     },
   },
   {
-    fieldName: 'description',
-    label: $t('system.position.fields.description'),
+    fieldName: 'remark',
+    label: $t('system.position.fields.remark'),
     component: 'Textarea',
     componentProps: {
-      placeholder: $t('system.position.form_placeholder.description'),
+      placeholder: $t('system.position.form_placeholder.remark'),
     },
   },
 ];
@@ -100,15 +102,22 @@ const [Form, formApi] = useVbenForm({
 
 const [Modal, modalApi] = useVbenModal({
   onConfirm: onSubmit,
-  onOpenChange(isOpen) {
+  onOpenChange:async (isOpen) => {
     if (!isOpen) return;
 
     const data = modalApi.getData<SystemPositionApi.Position>();
-
-    if (data) {
-      formData.value = data;
-      formApi.setValues(data);
+    // 编辑
+    if (data?.id) {
+      modalApi.lock(); // 加个loading体验更好
+      try {
+        const res = await getPositionApi(data.id);
+        formData.value = res;
+        formApi.setValues(res);
+      } finally {
+        modalApi.unlock();
+      }
     } else {
+      // 👉 新增
       formData.value = undefined;
       formApi.resetForm();
     }
@@ -118,18 +127,14 @@ const [Modal, modalApi] = useVbenModal({
 async function onSubmit() {
   const { valid } = await formApi.validate();
   if (!valid) return;
-
   modalApi.lock();
-
   const data = await formApi.getValues<SystemPositionApi.Position>();
-
   try {
     if (formData.value?.id) {
       await updatePositionApi(formData.value.id, data);
     } else {
       await createPositionApi(data);
     }
-
     modalApi.close();
     emit('success');
   } finally {
@@ -146,9 +151,6 @@ const getModalTitle = computed(() =>
 
 <template>
   <Modal class="w-full max-w-[720px]" :title="getModalTitle">
-    <Form
-      class="mx-4"
-      :layout="isHorizontal ? 'horizontal' : 'vertical'"
-    />
+    <Form class="mx-4" :layout="isHorizontal ? 'horizontal' : 'vertical'" />
   </Modal>
 </template>

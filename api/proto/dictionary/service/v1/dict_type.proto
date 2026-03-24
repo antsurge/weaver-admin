@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package dictionary.service.v1;
+
+import "dictionary/service/v1/dict_data.proto";
+import "google/protobuf/timestamp.proto";
+
+message DictType {
+  // 字典ID
+  string id = 1;
+
+  // 字典名称
+  string name = 2;
+
+  // 字典编码
+  string code = 3;
+
+  // 状态
+  string status = 4;
+
+  // 描述
+  string description = 5;
+
+  // 创建时间
+  google.protobuf.Timestamp createdAt = 6;
+
+  // 更新时间
+  google.protobuf.Timestamp updatedAt = 7;
+
+  // 删除时间
+  google.protobuf.Timestamp deletedAt = 8;
+
+  repeated DictData dictData = 20;
+}
+
+message ListDictTypeRequest {}
+
+message ListDictTypeResponse {
+  repeated DictType data = 1;
+  int64 total = 2;
+}

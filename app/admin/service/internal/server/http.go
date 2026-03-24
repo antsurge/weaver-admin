@@ -37,18 +37,19 @@ func NewHTTPServer(
 	authenticationService *service.AuthenticationService,
 	permissionService *service.PermissionService,
 	organizationService *service.OrganizationService,
+	dictionaryService *service.DictionaryService,
 
 	logger log.Logger,
 ) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
 			localize.I18N(),
-			recovery.Recovery(),
-			bufvalidate.BufValidator(),
 			selector.Server(auth.Server(
 				authUtils.WithSecret([]byte(jwtConf.AccessSecret)),
 				authUtils.WithSigningMethod(jwt.SigningMethodHS256),
 			)).Match(NewWhiteListMatcher()).Build(),
+			recovery.Recovery(),
+			bufvalidate.BufValidator(),
 		),
 	}
 	if c.Http.Network != "" {
@@ -64,5 +65,6 @@ func NewHTTPServer(
 	adminV1.RegisterAuthenticationServiceHTTPServer(srv, authenticationService)
 	adminV1.RegisterPermissionServiceHTTPServer(srv, permissionService)
 	adminV1.RegisterOrganizationHTTPServer(srv, organizationService)
+	adminV1.RegisterDictionaryHTTPServer(srv, dictionaryService)
 	return srv
 }

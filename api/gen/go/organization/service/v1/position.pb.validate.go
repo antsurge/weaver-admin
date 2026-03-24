@@ -67,7 +67,7 @@ func (m *Position) validate(all bool) error {
 
 	// no validation rules for Status
 
-	// no validation rules for Description
+	// no validation rules for Remark
 
 	if all {
 		switch v := interface{}(m.GetCreatedAt()).(type) {
@@ -226,6 +226,16 @@ func (m *ListPositionRequest) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for CurrentPage
+
+	// no validation rules for PageSize
+
+	// no validation rules for Name
+
+	// no validation rules for Code
+
+	// no validation rules for Status
+
 	if len(errors) > 0 {
 		return ListPositionRequestMultiError(errors)
 	}
@@ -328,7 +338,7 @@ func (m *ListPositionResponse) validate(all bool) error {
 
 	var errors []error
 
-	for idx, item := range m.GetData() {
+	for idx, item := range m.GetItems() {
 		_, _ = idx, item
 
 		if all {
@@ -336,7 +346,7 @@ func (m *ListPositionResponse) validate(all bool) error {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
 					errors = append(errors, ListPositionResponseValidationError{
-						field:  fmt.Sprintf("Data[%v]", idx),
+						field:  fmt.Sprintf("Items[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -344,7 +354,7 @@ func (m *ListPositionResponse) validate(all bool) error {
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
 					errors = append(errors, ListPositionResponseValidationError{
-						field:  fmt.Sprintf("Data[%v]", idx),
+						field:  fmt.Sprintf("Items[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -353,7 +363,7 @@ func (m *ListPositionResponse) validate(all bool) error {
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
 				return ListPositionResponseValidationError{
-					field:  fmt.Sprintf("Data[%v]", idx),
+					field:  fmt.Sprintf("Items[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
 				}
@@ -444,6 +454,110 @@ var _ interface {
 	ErrorName() string
 } = ListPositionResponseValidationError{}
 
+// Validate checks the field values on GetPositionRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetPositionRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetPositionRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetPositionRequestMultiError, or nil if none found.
+func (m *GetPositionRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetPositionRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	if len(errors) > 0 {
+		return GetPositionRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetPositionRequestMultiError is an error wrapping multiple validation errors
+// returned by GetPositionRequest.ValidateAll() if the designated constraints
+// aren't met.
+type GetPositionRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetPositionRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetPositionRequestMultiError) AllErrors() []error { return m }
+
+// GetPositionRequestValidationError is the validation error returned by
+// GetPositionRequest.Validate if the designated constraints aren't met.
+type GetPositionRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetPositionRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetPositionRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetPositionRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetPositionRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetPositionRequestValidationError) ErrorName() string {
+	return "GetPositionRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetPositionRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetPositionRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetPositionRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetPositionRequestValidationError{}
+
 // Validate checks the field values on CreatePositionRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -474,7 +588,7 @@ func (m *CreatePositionRequest) validate(all bool) error {
 
 	// no validation rules for Status
 
-	// no validation rules for Description
+	// no validation rules for Remark
 
 	if len(errors) > 0 {
 		return CreatePositionRequestMultiError(errors)
@@ -578,8 +692,6 @@ func (m *UpdatePositionRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
-
 	// no validation rules for Name
 
 	// no validation rules for Code
@@ -588,7 +700,9 @@ func (m *UpdatePositionRequest) validate(all bool) error {
 
 	// no validation rules for Status
 
-	// no validation rules for Description
+	// no validation rules for Remark
+
+	// no validation rules for Id
 
 	if len(errors) > 0 {
 		return UpdatePositionRequestMultiError(errors)
@@ -669,3 +783,212 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = UpdatePositionRequestValidationError{}
+
+// Validate checks the field values on UpdatePositionStatusRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdatePositionStatusRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdatePositionStatusRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdatePositionStatusRequestMultiError, or nil if none found.
+func (m *UpdatePositionStatusRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdatePositionStatusRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Status
+
+	if len(errors) > 0 {
+		return UpdatePositionStatusRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdatePositionStatusRequestMultiError is an error wrapping multiple
+// validation errors returned by UpdatePositionStatusRequest.ValidateAll() if
+// the designated constraints aren't met.
+type UpdatePositionStatusRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdatePositionStatusRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdatePositionStatusRequestMultiError) AllErrors() []error { return m }
+
+// UpdatePositionStatusRequestValidationError is the validation error returned
+// by UpdatePositionStatusRequest.Validate if the designated constraints
+// aren't met.
+type UpdatePositionStatusRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdatePositionStatusRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdatePositionStatusRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdatePositionStatusRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdatePositionStatusRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdatePositionStatusRequestValidationError) ErrorName() string {
+	return "UpdatePositionStatusRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdatePositionStatusRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdatePositionStatusRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdatePositionStatusRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdatePositionStatusRequestValidationError{}
+
+// Validate checks the field values on DeletePositionRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *DeletePositionRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on DeletePositionRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// DeletePositionRequestMultiError, or nil if none found.
+func (m *DeletePositionRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *DeletePositionRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return DeletePositionRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// DeletePositionRequestMultiError is an error wrapping multiple validation
+// errors returned by DeletePositionRequest.ValidateAll() if the designated
+// constraints aren't met.
+type DeletePositionRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m DeletePositionRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m DeletePositionRequestMultiError) AllErrors() []error { return m }
+
+// DeletePositionRequestValidationError is the validation error returned by
+// DeletePositionRequest.Validate if the designated constraints aren't met.
+type DeletePositionRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e DeletePositionRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e DeletePositionRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e DeletePositionRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e DeletePositionRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e DeletePositionRequestValidationError) ErrorName() string {
+	return "DeletePositionRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e DeletePositionRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sDeletePositionRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = DeletePositionRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = DeletePositionRequestValidationError{}

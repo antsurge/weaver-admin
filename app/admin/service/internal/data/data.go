@@ -12,6 +12,7 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/wire"
+	_ "github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/runtime"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -29,6 +30,9 @@ var ProviderSet = wire.NewSet(
 
 	NewOrganizationRepo,
 	NewPositionRepo,
+
+	NewDictTypeRepo,
+	NewDictDataRepo,
 )
 
 // NewEntClient 初始化 Ent 客户端

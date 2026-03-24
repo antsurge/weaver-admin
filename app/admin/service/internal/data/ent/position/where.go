@@ -79,9 +79,9 @@ func Weight(v int) predicate.Position {
 	return predicate.Position(sql.FieldEQ(FieldWeight, v))
 }
 
-// Description applies equality check predicate on the "description" field. It's identical to DescriptionEQ.
-func Description(v string) predicate.Position {
-	return predicate.Position(sql.FieldEQ(FieldDescription, v))
+// Remark applies equality check predicate on the "remark" field. It's identical to RemarkEQ.
+func Remark(v string) predicate.Position {
+	return predicate.Position(sql.FieldEQ(FieldRemark, v))
 }
 
 // CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
@@ -92,6 +92,11 @@ func CreatedAt(v time.Time) predicate.Position {
 // UpdatedAt applies equality check predicate on the "updated_at" field. It's identical to UpdatedAtEQ.
 func UpdatedAt(v time.Time) predicate.Position {
 	return predicate.Position(sql.FieldEQ(FieldUpdatedAt, v))
+}
+
+// DeletedAt applies equality check predicate on the "deleted_at" field. It's identical to DeletedAtEQ.
+func DeletedAt(v time.Time) predicate.Position {
+	return predicate.Position(sql.FieldEQ(FieldDeletedAt, v))
 }
 
 // NameEQ applies the EQ predicate on the "name" field.
@@ -284,79 +289,79 @@ func StatusNotIn(vs ...Status) predicate.Position {
 	return predicate.Position(sql.FieldNotIn(FieldStatus, vs...))
 }
 
-// DescriptionEQ applies the EQ predicate on the "description" field.
-func DescriptionEQ(v string) predicate.Position {
-	return predicate.Position(sql.FieldEQ(FieldDescription, v))
+// RemarkEQ applies the EQ predicate on the "remark" field.
+func RemarkEQ(v string) predicate.Position {
+	return predicate.Position(sql.FieldEQ(FieldRemark, v))
 }
 
-// DescriptionNEQ applies the NEQ predicate on the "description" field.
-func DescriptionNEQ(v string) predicate.Position {
-	return predicate.Position(sql.FieldNEQ(FieldDescription, v))
+// RemarkNEQ applies the NEQ predicate on the "remark" field.
+func RemarkNEQ(v string) predicate.Position {
+	return predicate.Position(sql.FieldNEQ(FieldRemark, v))
 }
 
-// DescriptionIn applies the In predicate on the "description" field.
-func DescriptionIn(vs ...string) predicate.Position {
-	return predicate.Position(sql.FieldIn(FieldDescription, vs...))
+// RemarkIn applies the In predicate on the "remark" field.
+func RemarkIn(vs ...string) predicate.Position {
+	return predicate.Position(sql.FieldIn(FieldRemark, vs...))
 }
 
-// DescriptionNotIn applies the NotIn predicate on the "description" field.
-func DescriptionNotIn(vs ...string) predicate.Position {
-	return predicate.Position(sql.FieldNotIn(FieldDescription, vs...))
+// RemarkNotIn applies the NotIn predicate on the "remark" field.
+func RemarkNotIn(vs ...string) predicate.Position {
+	return predicate.Position(sql.FieldNotIn(FieldRemark, vs...))
 }
 
-// DescriptionGT applies the GT predicate on the "description" field.
-func DescriptionGT(v string) predicate.Position {
-	return predicate.Position(sql.FieldGT(FieldDescription, v))
+// RemarkGT applies the GT predicate on the "remark" field.
+func RemarkGT(v string) predicate.Position {
+	return predicate.Position(sql.FieldGT(FieldRemark, v))
 }
 
-// DescriptionGTE applies the GTE predicate on the "description" field.
-func DescriptionGTE(v string) predicate.Position {
-	return predicate.Position(sql.FieldGTE(FieldDescription, v))
+// RemarkGTE applies the GTE predicate on the "remark" field.
+func RemarkGTE(v string) predicate.Position {
+	return predicate.Position(sql.FieldGTE(FieldRemark, v))
 }
 
-// DescriptionLT applies the LT predicate on the "description" field.
-func DescriptionLT(v string) predicate.Position {
-	return predicate.Position(sql.FieldLT(FieldDescription, v))
+// RemarkLT applies the LT predicate on the "remark" field.
+func RemarkLT(v string) predicate.Position {
+	return predicate.Position(sql.FieldLT(FieldRemark, v))
 }
 
-// DescriptionLTE applies the LTE predicate on the "description" field.
-func DescriptionLTE(v string) predicate.Position {
-	return predicate.Position(sql.FieldLTE(FieldDescription, v))
+// RemarkLTE applies the LTE predicate on the "remark" field.
+func RemarkLTE(v string) predicate.Position {
+	return predicate.Position(sql.FieldLTE(FieldRemark, v))
 }
 
-// DescriptionContains applies the Contains predicate on the "description" field.
-func DescriptionContains(v string) predicate.Position {
-	return predicate.Position(sql.FieldContains(FieldDescription, v))
+// RemarkContains applies the Contains predicate on the "remark" field.
+func RemarkContains(v string) predicate.Position {
+	return predicate.Position(sql.FieldContains(FieldRemark, v))
 }
 
-// DescriptionHasPrefix applies the HasPrefix predicate on the "description" field.
-func DescriptionHasPrefix(v string) predicate.Position {
-	return predicate.Position(sql.FieldHasPrefix(FieldDescription, v))
+// RemarkHasPrefix applies the HasPrefix predicate on the "remark" field.
+func RemarkHasPrefix(v string) predicate.Position {
+	return predicate.Position(sql.FieldHasPrefix(FieldRemark, v))
 }
 
-// DescriptionHasSuffix applies the HasSuffix predicate on the "description" field.
-func DescriptionHasSuffix(v string) predicate.Position {
-	return predicate.Position(sql.FieldHasSuffix(FieldDescription, v))
+// RemarkHasSuffix applies the HasSuffix predicate on the "remark" field.
+func RemarkHasSuffix(v string) predicate.Position {
+	return predicate.Position(sql.FieldHasSuffix(FieldRemark, v))
 }
 
-// DescriptionIsNil applies the IsNil predicate on the "description" field.
-func DescriptionIsNil() predicate.Position {
-	return predicate.Position(sql.FieldIsNull(FieldDescription))
+// RemarkIsNil applies the IsNil predicate on the "remark" field.
+func RemarkIsNil() predicate.Position {
+	return predicate.Position(sql.FieldIsNull(FieldRemark))
 }
 
-// DescriptionNotNil applies the NotNil predicate on the "description" field.
-func DescriptionNotNil() predicate.Position {
-	return predicate.Position(sql.FieldNotNull(FieldDescription))
+// RemarkNotNil applies the NotNil predicate on the "remark" field.
+func RemarkNotNil() predicate.Position {
+	return predicate.Position(sql.FieldNotNull(FieldRemark))
 }
 
-// DescriptionEqualFold applies the EqualFold predicate on the "description" field.
-func DescriptionEqualFold(v string) predicate.Position {
-	return predicate.Position(sql.FieldEqualFold(FieldDescription, v))
+// RemarkEqualFold applies the EqualFold predicate on the "remark" field.
+func RemarkEqualFold(v string) predicate.Position {
+	return predicate.Position(sql.FieldEqualFold(FieldRemark, v))
 }
 
-// DescriptionContainsFold applies the ContainsFold predicate on the "description" field.
-func DescriptionContainsFold(v string) predicate.Position {
-	return predicate.Position(sql.FieldContainsFold(FieldDescription, v))
+// RemarkContainsFold applies the ContainsFold predicate on the "remark" field.
+func RemarkContainsFold(v string) predicate.Position {
+	return predicate.Position(sql.FieldContainsFold(FieldRemark, v))
 }
 
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
@@ -437,6 +442,56 @@ func UpdatedAtLT(v time.Time) predicate.Position {
 // UpdatedAtLTE applies the LTE predicate on the "updated_at" field.
 func UpdatedAtLTE(v time.Time) predicate.Position {
 	return predicate.Position(sql.FieldLTE(FieldUpdatedAt, v))
+}
+
+// DeletedAtEQ applies the EQ predicate on the "deleted_at" field.
+func DeletedAtEQ(v time.Time) predicate.Position {
+	return predicate.Position(sql.FieldEQ(FieldDeletedAt, v))
+}
+
+// DeletedAtNEQ applies the NEQ predicate on the "deleted_at" field.
+func DeletedAtNEQ(v time.Time) predicate.Position {
+	return predicate.Position(sql.FieldNEQ(FieldDeletedAt, v))
+}
+
+// DeletedAtIn applies the In predicate on the "deleted_at" field.
+func DeletedAtIn(vs ...time.Time) predicate.Position {
+	return predicate.Position(sql.FieldIn(FieldDeletedAt, vs...))
+}
+
+// DeletedAtNotIn applies the NotIn predicate on the "deleted_at" field.
+func DeletedAtNotIn(vs ...time.Time) predicate.Position {
+	return predicate.Position(sql.FieldNotIn(FieldDeletedAt, vs...))
+}
+
+// DeletedAtGT applies the GT predicate on the "deleted_at" field.
+func DeletedAtGT(v time.Time) predicate.Position {
+	return predicate.Position(sql.FieldGT(FieldDeletedAt, v))
+}
+
+// DeletedAtGTE applies the GTE predicate on the "deleted_at" field.
+func DeletedAtGTE(v time.Time) predicate.Position {
+	return predicate.Position(sql.FieldGTE(FieldDeletedAt, v))
+}
+
+// DeletedAtLT applies the LT predicate on the "deleted_at" field.
+func DeletedAtLT(v time.Time) predicate.Position {
+	return predicate.Position(sql.FieldLT(FieldDeletedAt, v))
+}
+
+// DeletedAtLTE applies the LTE predicate on the "deleted_at" field.
+func DeletedAtLTE(v time.Time) predicate.Position {
+	return predicate.Position(sql.FieldLTE(FieldDeletedAt, v))
+}
+
+// DeletedAtIsNil applies the IsNil predicate on the "deleted_at" field.
+func DeletedAtIsNil() predicate.Position {
+	return predicate.Position(sql.FieldIsNull(FieldDeletedAt))
+}
+
+// DeletedAtNotNil applies the NotNil predicate on the "deleted_at" field.
+func DeletedAtNotNil() predicate.Position {
+	return predicate.Position(sql.FieldNotNull(FieldDeletedAt))
 }
 
 // And groups predicates with the AND operator between them.

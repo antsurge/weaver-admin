@@ -23,6 +23,7 @@ import { refreshTokenApi } from './core';
 
 const { apiURL } = useAppConfig(import.meta.env, import.meta.env.PROD);
 
+
 /**
  * token格式
  */
@@ -106,13 +107,43 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
   );
 
   /**
-   * 错误提示
+  * 成功提示拦截器（🔥新增）
+  */
+  client.addResponseInterceptor({
+    fulfilled: (response) => {
+      const config = response.config
+      const resData = response.data ?? {};
+
+      const shouldShowSuccess =
+        config?.showSuccessMessage === true || Boolean(config?.successMessage);
+
+      if (shouldShowSuccess) {
+        const msg =
+          typeof config?.successMessage === 'string'
+            ? config.successMessage
+            : resData?.message || '操作成功';
+
+        message.success(msg);
+      }
+
+      return response;
+    },
+  });
+
+  /**
+   * 错误响应拦截器
    */
   client.addResponseInterceptor(
     errorMessageResponseInterceptor((msg: string, error) => {
+      const config = error?.config as CustomRequestOptions;
+
+      if (config?.showFailMessage === false) return;
+
+
       const responseData = error?.response?.data ?? {};
 
       const errorMessage =
+        config?.failMessage ||
         responseData?.message ||
         responseData?.error ||
         msg ||

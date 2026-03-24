@@ -16,8 +16,8 @@
       "description": "描述",
       "operation": "操作"
     },
-    "operation":{
-      "appendChildren":"新增下级"
+    "operation": {
+      "appendChildren": "新增下级"
     },
     "type_options": {
       "menu_dir": "菜单目录",
@@ -41,7 +41,7 @@
     "fields": {
       "name": "组织名称",
       "parentId": "上级组织",
-      "code":"组织编码",
+      "code": "组织编码",
       "weight": "权重",
       "leaderName": "负责人姓名",
       "leaderPhone": "联系电话",
@@ -54,8 +54,8 @@
       "switchStatus": "切换组织状态",
       "switchStatusConfirm": "确认将【{0}】状态切换为【{1}】？"
     },
-    "operation":{
-      "appendChildren":"新增下级"
+    "operation": {
+      "appendChildren": "新增下级"
     },
     "form_placeholder": {
       "parentId": "请选择上级组织",
@@ -71,15 +71,28 @@
       "code": "岗位编码",
       "weight": "权重",
       "status": "状态",
-      "description": "描述",
-      "operation": "操作"
+      "remark": "备注"
     },
     "actions": {
       "switchStatus": "切换岗位状态",
       "switchStatusConfirm": "确认将【{0}】状态切换为【{1}】？"
     },
     "form_placeholder": {
-      "description": "请输入描述"
+      "remark": "请输入备注"
+    }
+  },
+  "dict_type": {
+    "name":"字典类型",
+    "fields": {
+      "name": "名称",
+      "code": "编码",
+      "status": "状态",
+      "updatedAt": "更新时间",
+      "description": "描述",
+      "operation": "操作"
+    },
+    "operation":{
+      "appendDictData":"新增字典值"
     }
   }
 }

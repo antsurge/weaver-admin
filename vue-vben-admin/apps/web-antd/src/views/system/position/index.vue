@@ -21,8 +21,9 @@ import {
 } from '#/api/system/position';
 import type { SystemPositionApi } from '#/api/system/position';
 
-import { useColumns } from './data';
+import { useFormOptions, useColumns } from './data';
 import Form from './modules/form/index.vue';
+import { DEFAULT_PAGE_SIZE, PAGE_SIZES } from "#/types/pagination"
 
 const [FormModel, formModelApi] = useVbenModal({
   connectedComponent: Form,
@@ -32,43 +33,62 @@ const [FormModel, formModelApi] = useVbenModal({
 const selectedRows = ref<SystemPositionApi.Position[]>([]);
 
 const [Grid, gridApi] = useVbenVxeGrid({
+  formOptions: useFormOptions(),
   gridOptions: {
     columns: useColumns(onActionClick, onStatusChange),
     height: 'auto',
     keepSource: true,
     pagerConfig: {
-      enabled: false,
+      enabled: true,
+      pageSize: DEFAULT_PAGE_SIZE,
+      pageSizes: PAGE_SIZES,
     },
     proxyConfig: {
+      autoLoad: true,
       ajax: {
-        query: async (_params) => {
-          const res = await getPositionListApi();
-          const list = (res as { data?: SystemPositionApi.Position[] })?.data ?? res;
-          return Array.isArray(list) ? list : [];
+        query: async ({ page }, formValues) => {
+          const res = await getPositionListApi({
+            ...page,
+            ...formValues,
+          });
+          return res
         },
       },
     },
     rowConfig: {
       keyField: 'id',
     },
-    checkboxConfig: { range: false },
+    checkboxConfig: {
+      reserve: true,
+      showReserveStatus: true,
+    },
     toolbarConfig: {
       custom: true,
       export: false,
       refresh: true,
       zoom: true,
+      search: true,
     },
   } as VxeTableGridOptions,
   gridEvents: {
     checkboxChange() {
       nextTick(() => {
-        const records =
-          (gridApi.grid as any)?.getCheckboxRecords?.() ?? [];
-        selectedRows.value = records;
-      });
+        onCheckboxChange()
+      })
     },
+    checkboxAll() {
+      nextTick(() => {
+        onCheckboxChange()
+      })
+    }
   },
 });
+
+function onCheckboxChange() {
+  const checkboxRecords = gridApi.grid?.getCheckboxRecords?.() ?? []
+  const checkboxReserveRecords = gridApi.grid?.getCheckboxReserveRecords?.() ?? []
+  selectedRows.value = [...checkboxRecords, ...checkboxReserveRecords]
+}
 
 function onActionClick({
   code,
@@ -135,22 +155,11 @@ function onStatusChange(
 }
 
 function onDelete(row: SystemPositionApi.Position) {
-  const hideLoading = message.loading({
-    content: $t('ui.actionMessage.deleting', [row.name]),
-    duration: 0,
-    key: 'action_process_msg',
-  });
-
   deletePositionApi([row.id])
     .then(() => {
-      message.success({
-        content: $t('ui.actionMessage.deleteSuccess', [row.name]),
-        key: 'action_process_msg',
-      });
       onRefresh();
     })
     .catch(() => {
-      hideLoading();
     });
 }
 
@@ -195,16 +204,8 @@ function onBatchDelete() {
     <Grid>
       <template #toolbar-tools>
         <div class="flex gap-2">
-          <Button
-            type="primary"
-            danger
-            :disabled="!selectedRows.length"
-            @click="onBatchDelete"
-          >
-            <IconifyIcon
-              icon="ant-design:delete-outlined"
-              class="size-5"
-            />
+          <Button type="primary" danger :disabled="!selectedRows.length" @click="onBatchDelete">
+            <IconifyIcon icon="ant-design:delete-outlined" class="size-5" />
             {{ $t('ui.actionTitle.delete') }}
           </Button>
           <Button type="primary" @click="onCreate">

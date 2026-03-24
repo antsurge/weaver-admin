@@ -24,11 +24,14 @@ const _ = http.SupportPackageIsVersion1
 const OperationOrganizationCreateOrganization = "/admin.service.v1.Organization/CreateOrganization"
 const OperationOrganizationCreatePosition = "/admin.service.v1.Organization/CreatePosition"
 const OperationOrganizationDeleteOrganization = "/admin.service.v1.Organization/DeleteOrganization"
+const OperationOrganizationDeletePosition = "/admin.service.v1.Organization/DeletePosition"
+const OperationOrganizationGetPosition = "/admin.service.v1.Organization/GetPosition"
 const OperationOrganizationListPosition = "/admin.service.v1.Organization/ListPosition"
 const OperationOrganizationOrganizationTree = "/admin.service.v1.Organization/OrganizationTree"
 const OperationOrganizationUpdateOrganization = "/admin.service.v1.Organization/UpdateOrganization"
 const OperationOrganizationUpdateOrganizationStatus = "/admin.service.v1.Organization/UpdateOrganizationStatus"
 const OperationOrganizationUpdatePosition = "/admin.service.v1.Organization/UpdatePosition"
+const OperationOrganizationUpdatePositionStatus = "/admin.service.v1.Organization/UpdatePositionStatus"
 
 type OrganizationHTTPServer interface {
 	// CreateOrganization 创建
@@ -37,6 +40,9 @@ type OrganizationHTTPServer interface {
 	CreatePosition(context.Context, *v1.CreatePositionRequest) (*v1.Position, error)
 	// DeleteOrganization 批量删除
 	DeleteOrganization(context.Context, *v1.DeleteOrganizationRequset) (*emptypb.Empty, error)
+	// DeletePosition 删除
+	DeletePosition(context.Context, *v1.DeletePositionRequest) (*emptypb.Empty, error)
+	GetPosition(context.Context, *v1.GetPositionRequest) (*v1.Position, error)
 	// ListPosition 岗位模块
 	// 列表
 	ListPosition(context.Context, *v1.ListPositionRequest) (*v1.ListPositionResponse, error)
@@ -48,6 +54,8 @@ type OrganizationHTTPServer interface {
 	UpdateOrganizationStatus(context.Context, *v1.UpdateOrganizationStatusRequest) (*v1.Organization, error)
 	// UpdatePosition 更新
 	UpdatePosition(context.Context, *v1.UpdatePositionRequest) (*v1.Position, error)
+	// UpdatePositionStatus 更新状态
+	UpdatePositionStatus(context.Context, *v1.UpdatePositionStatusRequest) (*emptypb.Empty, error)
 }
 
 func RegisterOrganizationHTTPServer(s *http.Server, srv OrganizationHTTPServer) {
@@ -58,8 +66,11 @@ func RegisterOrganizationHTTPServer(s *http.Server, srv OrganizationHTTPServer) 
 	r.PUT("/admin/v1/organization/{id}/status", _Organization_UpdateOrganizationStatus0_HTTP_Handler(srv))
 	r.DELETE("/admin/v1/organization", _Organization_DeleteOrganization0_HTTP_Handler(srv))
 	r.GET("/admin/v1/position", _Organization_ListPosition0_HTTP_Handler(srv))
+	r.GET("/admin/v1/position/{id}", _Organization_GetPosition0_HTTP_Handler(srv))
 	r.POST("/admin/v1/position", _Organization_CreatePosition0_HTTP_Handler(srv))
 	r.PUT("/admin/v1/position/{id}", _Organization_UpdatePosition0_HTTP_Handler(srv))
+	r.PUT("/admin/v1/position/{id}/status", _Organization_UpdatePositionStatus0_HTTP_Handler(srv))
+	r.DELETE("/admin/v1/position", _Organization_DeletePosition0_HTTP_Handler(srv))
 }
 
 func _Organization_OrganizationTree0_HTTP_Handler(srv OrganizationHTTPServer) func(ctx http.Context) error {
@@ -191,6 +202,28 @@ func _Organization_ListPosition0_HTTP_Handler(srv OrganizationHTTPServer) func(c
 	}
 }
 
+func _Organization_GetPosition0_HTTP_Handler(srv OrganizationHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.GetPositionRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationOrganizationGetPosition)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetPosition(ctx, req.(*v1.GetPositionRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.Position)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _Organization_CreatePosition0_HTTP_Handler(srv OrganizationHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in v1.CreatePositionRequest
@@ -238,6 +271,50 @@ func _Organization_UpdatePosition0_HTTP_Handler(srv OrganizationHTTPServer) func
 	}
 }
 
+func _Organization_UpdatePositionStatus0_HTTP_Handler(srv OrganizationHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.UpdatePositionStatusRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationOrganizationUpdatePositionStatus)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdatePositionStatus(ctx, req.(*v1.UpdatePositionStatusRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Organization_DeletePosition0_HTTP_Handler(srv OrganizationHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.DeletePositionRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationOrganizationDeletePosition)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeletePosition(ctx, req.(*v1.DeletePositionRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
 type OrganizationHTTPClient interface {
 	// CreateOrganization 创建
 	CreateOrganization(ctx context.Context, req *v1.CreateOrganizationRequest, opts ...http.CallOption) (rsp *v1.Organization, err error)
@@ -245,6 +322,9 @@ type OrganizationHTTPClient interface {
 	CreatePosition(ctx context.Context, req *v1.CreatePositionRequest, opts ...http.CallOption) (rsp *v1.Position, err error)
 	// DeleteOrganization 批量删除
 	DeleteOrganization(ctx context.Context, req *v1.DeleteOrganizationRequset, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	// DeletePosition 删除
+	DeletePosition(ctx context.Context, req *v1.DeletePositionRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	GetPosition(ctx context.Context, req *v1.GetPositionRequest, opts ...http.CallOption) (rsp *v1.Position, err error)
 	// ListPosition 岗位模块
 	// 列表
 	ListPosition(ctx context.Context, req *v1.ListPositionRequest, opts ...http.CallOption) (rsp *v1.ListPositionResponse, err error)
@@ -256,6 +336,8 @@ type OrganizationHTTPClient interface {
 	UpdateOrganizationStatus(ctx context.Context, req *v1.UpdateOrganizationStatusRequest, opts ...http.CallOption) (rsp *v1.Organization, err error)
 	// UpdatePosition 更新
 	UpdatePosition(ctx context.Context, req *v1.UpdatePositionRequest, opts ...http.CallOption) (rsp *v1.Position, err error)
+	// UpdatePositionStatus 更新状态
+	UpdatePositionStatus(ctx context.Context, req *v1.UpdatePositionStatusRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 }
 
 type OrganizationHTTPClientImpl struct {
@@ -302,6 +384,33 @@ func (c *OrganizationHTTPClientImpl) DeleteOrganization(ctx context.Context, in 
 	opts = append(opts, http.Operation(OperationOrganizationDeleteOrganization))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DeletePosition 删除
+func (c *OrganizationHTTPClientImpl) DeletePosition(ctx context.Context, in *v1.DeletePositionRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/admin/v1/position"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationOrganizationDeletePosition))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *OrganizationHTTPClientImpl) GetPosition(ctx context.Context, in *v1.GetPositionRequest, opts ...http.CallOption) (*v1.Position, error) {
+	var out v1.Position
+	pattern := "/admin/v1/position/{id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationOrganizationGetPosition))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -371,6 +480,20 @@ func (c *OrganizationHTTPClientImpl) UpdatePosition(ctx context.Context, in *v1.
 	pattern := "/admin/v1/position/{id}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationOrganizationUpdatePosition))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// UpdatePositionStatus 更新状态
+func (c *OrganizationHTTPClientImpl) UpdatePositionStatus(ctx context.Context, in *v1.UpdatePositionStatusRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/admin/v1/position/{id}/status"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationOrganizationUpdatePositionStatus))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {

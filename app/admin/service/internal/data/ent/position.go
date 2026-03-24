@@ -16,21 +16,24 @@ import (
 type Position struct {
 	config `json:"-"`
 	// ID of the ent.
+	// ID
 	ID string `json:"id,omitempty"`
 	// 岗位名称
 	Name string `json:"name,omitempty"`
-	// 岗位code
+	// 岗位编码
 	Code string `json:"code,omitempty"`
 	// 权重
 	Weight int `json:"weight,omitempty"`
 	// 状态：enabled=启用 disabled=禁用
 	Status position.Status `json:"status,omitempty"`
-	// 描述
-	Description string `json:"description,omitempty"`
-	// CreatedAt holds the value of the "created_at" field.
+	// 备注
+	Remark string `json:"remark,omitempty"`
+	// 创建时间
 	CreatedAt time.Time `json:"created_at,omitempty"`
-	// UpdatedAt holds the value of the "updated_at" field.
-	UpdatedAt    time.Time `json:"updated_at,omitempty"`
+	// 更新时间
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
+	// 删除时间
+	DeletedAt    *time.Time `json:"deleted_at,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -41,9 +44,9 @@ func (*Position) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case position.FieldWeight:
 			values[i] = new(sql.NullInt64)
-		case position.FieldID, position.FieldName, position.FieldCode, position.FieldStatus, position.FieldDescription:
+		case position.FieldID, position.FieldName, position.FieldCode, position.FieldStatus, position.FieldRemark:
 			values[i] = new(sql.NullString)
-		case position.FieldCreatedAt, position.FieldUpdatedAt:
+		case position.FieldCreatedAt, position.FieldUpdatedAt, position.FieldDeletedAt:
 			values[i] = new(sql.NullTime)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -90,11 +93,11 @@ func (_m *Position) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.Status = position.Status(value.String)
 			}
-		case position.FieldDescription:
+		case position.FieldRemark:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field description", values[i])
+				return fmt.Errorf("unexpected type %T for field remark", values[i])
 			} else if value.Valid {
-				_m.Description = value.String
+				_m.Remark = value.String
 			}
 		case position.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -107,6 +110,13 @@ func (_m *Position) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
 			} else if value.Valid {
 				_m.UpdatedAt = value.Time
+			}
+		case position.FieldDeletedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
+			} else if value.Valid {
+				_m.DeletedAt = new(time.Time)
+				*_m.DeletedAt = value.Time
 			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
@@ -156,14 +166,19 @@ func (_m *Position) String() string {
 	builder.WriteString("status=")
 	builder.WriteString(fmt.Sprintf("%v", _m.Status))
 	builder.WriteString(", ")
-	builder.WriteString("description=")
-	builder.WriteString(_m.Description)
+	builder.WriteString("remark=")
+	builder.WriteString(_m.Remark)
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(_m.CreatedAt.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("updated_at=")
 	builder.WriteString(_m.UpdatedAt.Format(time.ANSIC))
+	builder.WriteString(", ")
+	if v := _m.DeletedAt; v != nil {
+		builder.WriteString("deleted_at=")
+		builder.WriteString(v.Format(time.ANSIC))
+	}
 	builder.WriteByte(')')
 	return builder.String()
 }

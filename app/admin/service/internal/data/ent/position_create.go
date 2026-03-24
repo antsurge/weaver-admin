@@ -60,16 +60,16 @@ func (_c *PositionCreate) SetNillableStatus(v *position.Status) *PositionCreate 
 	return _c
 }
 
-// SetDescription sets the "description" field.
-func (_c *PositionCreate) SetDescription(v string) *PositionCreate {
-	_c.mutation.SetDescription(v)
+// SetRemark sets the "remark" field.
+func (_c *PositionCreate) SetRemark(v string) *PositionCreate {
+	_c.mutation.SetRemark(v)
 	return _c
 }
 
-// SetNillableDescription sets the "description" field if the given value is not nil.
-func (_c *PositionCreate) SetNillableDescription(v *string) *PositionCreate {
+// SetNillableRemark sets the "remark" field if the given value is not nil.
+func (_c *PositionCreate) SetNillableRemark(v *string) *PositionCreate {
 	if v != nil {
-		_c.SetDescription(*v)
+		_c.SetRemark(*v)
 	}
 	return _c
 }
@@ -98,6 +98,20 @@ func (_c *PositionCreate) SetUpdatedAt(v time.Time) *PositionCreate {
 func (_c *PositionCreate) SetNillableUpdatedAt(v *time.Time) *PositionCreate {
 	if v != nil {
 		_c.SetUpdatedAt(*v)
+	}
+	return _c
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (_c *PositionCreate) SetDeletedAt(v time.Time) *PositionCreate {
+	_c.mutation.SetDeletedAt(v)
+	return _c
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (_c *PositionCreate) SetNillableDeletedAt(v *time.Time) *PositionCreate {
+	if v != nil {
+		_c.SetDeletedAt(*v)
 	}
 	return _c
 }
@@ -190,9 +204,9 @@ func (_c *PositionCreate) check() error {
 			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Position.status": %w`, err)}
 		}
 	}
-	if v, ok := _c.mutation.Description(); ok {
-		if err := position.DescriptionValidator(v); err != nil {
-			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Position.description": %w`, err)}
+	if v, ok := _c.mutation.Remark(); ok {
+		if err := position.RemarkValidator(v); err != nil {
+			return &ValidationError{Name: "remark", err: fmt.Errorf(`ent: validator failed for field "Position.remark": %w`, err)}
 		}
 	}
 	if _, ok := _c.mutation.CreatedAt(); !ok {
@@ -257,9 +271,9 @@ func (_c *PositionCreate) createSpec() (*Position, *sqlgraph.CreateSpec) {
 		_spec.SetField(position.FieldStatus, field.TypeEnum, value)
 		_node.Status = value
 	}
-	if value, ok := _c.mutation.Description(); ok {
-		_spec.SetField(position.FieldDescription, field.TypeString, value)
-		_node.Description = value
+	if value, ok := _c.mutation.Remark(); ok {
+		_spec.SetField(position.FieldRemark, field.TypeString, value)
+		_node.Remark = value
 	}
 	if value, ok := _c.mutation.CreatedAt(); ok {
 		_spec.SetField(position.FieldCreatedAt, field.TypeTime, value)
@@ -268,6 +282,10 @@ func (_c *PositionCreate) createSpec() (*Position, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.UpdatedAt(); ok {
 		_spec.SetField(position.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
+	}
+	if value, ok := _c.mutation.DeletedAt(); ok {
+		_spec.SetField(position.FieldDeletedAt, field.TypeTime, value)
+		_node.DeletedAt = &value
 	}
 	return _node, _spec
 }

@@ -42,6 +42,45 @@ var (
 		Columns:    AdminRoleColumns,
 		PrimaryKey: []*schema.Column{AdminRoleColumns[0]},
 	}
+	// DictDataColumns holds the columns for the "dict_data" table.
+	DictDataColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36, Comment: "字典数据ID"},
+		{Name: "dict_type_id", Type: field.TypeString, Size: 36, Comment: "字典类型ID"},
+		{Name: "label", Type: field.TypeString, Size: 64, Comment: "标签"},
+		{Name: "value", Type: field.TypeString, Size: 64, Comment: "值"},
+		{Name: "weight", Type: field.TypeInt, Comment: "排序", Default: 0},
+		{Name: "status", Type: field.TypeEnum, Comment: "状态", Enums: []string{"enabled", "disabled"}, Default: "enabled"},
+		{Name: "extension", Type: field.TypeJSON, Nullable: true, Comment: "扩展参数"},
+		{Name: "description", Type: field.TypeString, Nullable: true, Size: 256, Comment: "描述"},
+		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间"},
+		{Name: "updated_at", Type: field.TypeTime, Comment: "更新时间"},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
+	}
+	// DictDataTable holds the schema information for the "dict_data" table.
+	DictDataTable = &schema.Table{
+		Name:       "dict_data",
+		Comment:    "字典数据表",
+		Columns:    DictDataColumns,
+		PrimaryKey: []*schema.Column{DictDataColumns[0]},
+	}
+	// DictTypeColumns holds the columns for the "dict_type" table.
+	DictTypeColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36, Comment: "字典ID"},
+		{Name: "name", Type: field.TypeString, Size: 64, Comment: "字典名称"},
+		{Name: "code", Type: field.TypeString, Unique: true, Size: 64, Comment: "字典编码"},
+		{Name: "status", Type: field.TypeEnum, Comment: "状态", Enums: []string{"enabled", "disabled"}, Default: "enabled"},
+		{Name: "description", Type: field.TypeString, Nullable: true, Size: 256, Comment: "描述"},
+		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间"},
+		{Name: "updated_at", Type: field.TypeTime, Comment: "更新时间"},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
+	}
+	// DictTypeTable holds the schema information for the "dict_type" table.
+	DictTypeTable = &schema.Table{
+		Name:       "dict_type",
+		Comment:    "字典类型表",
+		Columns:    DictTypeColumns,
+		PrimaryKey: []*schema.Column{DictTypeColumns[0]},
+	}
 	// OrganizationColumns holds the columns for the "organization" table.
 	OrganizationColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
@@ -90,14 +129,15 @@ var (
 	}
 	// PositionColumns holds the columns for the "position" table.
 	PositionColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36, Comment: "ID"},
 		{Name: "name", Type: field.TypeString, Size: 64, Comment: "岗位名称"},
-		{Name: "code", Type: field.TypeString, Unique: true, Size: 64, Comment: "岗位code"},
+		{Name: "code", Type: field.TypeString, Size: 64, Comment: "岗位编码"},
 		{Name: "weight", Type: field.TypeInt, Comment: "权重", Default: 0},
 		{Name: "status", Type: field.TypeEnum, Comment: "状态：enabled=启用 disabled=禁用", Enums: []string{"enabled", "disabled"}, Default: "enabled"},
-		{Name: "description", Type: field.TypeString, Nullable: true, Size: 256, Comment: "描述"},
-		{Name: "created_at", Type: field.TypeTime},
-		{Name: "updated_at", Type: field.TypeTime},
+		{Name: "remark", Type: field.TypeString, Nullable: true, Size: 256, Comment: "备注"},
+		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间"},
+		{Name: "updated_at", Type: field.TypeTime, Comment: "更新时间"},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
 	}
 	// PositionTable holds the schema information for the "position" table.
 	PositionTable = &schema.Table{
@@ -105,6 +145,13 @@ var (
 		Comment:    "岗位表",
 		Columns:    PositionColumns,
 		PrimaryKey: []*schema.Column{PositionColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "position_code_deleted_at",
+				Unique:  true,
+				Columns: []*schema.Column{PositionColumns[2], PositionColumns[8]},
+			},
+		},
 	}
 	// RoleColumns holds the columns for the "role" table.
 	RoleColumns = []*schema.Column{
@@ -140,6 +187,8 @@ var (
 	Tables = []*schema.Table{
 		AdminTable,
 		AdminRoleTable,
+		DictDataTable,
+		DictTypeTable,
 		OrganizationTable,
 		PermissionTable,
 		PositionTable,
@@ -154,6 +203,12 @@ func init() {
 	}
 	AdminRoleTable.Annotation = &entsql.Annotation{
 		Table: "admin_role",
+	}
+	DictDataTable.Annotation = &entsql.Annotation{
+		Table: "dict_data",
+	}
+	DictTypeTable.Annotation = &entsql.Annotation{
+		Table: "dict_type",
 	}
 	OrganizationTable.Annotation = &entsql.Annotation{
 		Table: "organization",

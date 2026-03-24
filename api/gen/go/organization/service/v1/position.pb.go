@@ -7,6 +7,8 @@
 package organizationpb
 
 import (
+	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	_ "github.com/google/gnostic/openapiv3"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -31,11 +33,11 @@ type Position struct {
 	// 岗位code
 	Code string `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
 	// 权重
-	Weight int32 `protobuf:"varint,4,opt,name=weight,proto3" json:"weight,omitempty"`
+	Weight int64 `protobuf:"varint,4,opt,name=weight,proto3" json:"weight,omitempty"`
 	// 状态：enabled=启用 disabled=禁用
 	Status string `protobuf:"bytes,5,opt,name=status,proto3" json:"status,omitempty"`
-	// 描述
-	Description string `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"`
+	// 备注
+	Remark string `protobuf:"bytes,6,opt,name=remark,proto3" json:"remark,omitempty"`
 	// 创建时间
 	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	// 更新时间
@@ -95,7 +97,7 @@ func (x *Position) GetCode() string {
 	return ""
 }
 
-func (x *Position) GetWeight() int32 {
+func (x *Position) GetWeight() int64 {
 	if x != nil {
 		return x.Weight
 	}
@@ -109,9 +111,9 @@ func (x *Position) GetStatus() string {
 	return ""
 }
 
-func (x *Position) GetDescription() string {
+func (x *Position) GetRemark() string {
 	if x != nil {
-		return x.Description
+		return x.Remark
 	}
 	return ""
 }
@@ -132,6 +134,11 @@ func (x *Position) GetUpdatedAt() *timestamppb.Timestamp {
 
 type ListPositionRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	CurrentPage   int64                  `protobuf:"varint,1,opt,name=currentPage,proto3" json:"currentPage,omitempty"`
+	PageSize      int64                  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
+	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Code          string                 `protobuf:"bytes,4,opt,name=code,proto3" json:"code,omitempty"`
+	Status        string                 `protobuf:"bytes,5,opt,name=status,proto3" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -166,9 +173,44 @@ func (*ListPositionRequest) Descriptor() ([]byte, []int) {
 	return file_organization_service_v1_position_proto_rawDescGZIP(), []int{1}
 }
 
+func (x *ListPositionRequest) GetCurrentPage() int64 {
+	if x != nil {
+		return x.CurrentPage
+	}
+	return 0
+}
+
+func (x *ListPositionRequest) GetPageSize() int64 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListPositionRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *ListPositionRequest) GetCode() string {
+	if x != nil {
+		return x.Code
+	}
+	return ""
+}
+
+func (x *ListPositionRequest) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
 type ListPositionResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Data          []*Position            `protobuf:"bytes,1,rep,name=data,proto3" json:"data,omitempty"`
+	Items         []*Position            `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
 	Total         int64                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -204,9 +246,9 @@ func (*ListPositionResponse) Descriptor() ([]byte, []int) {
 	return file_organization_service_v1_position_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *ListPositionResponse) GetData() []*Position {
+func (x *ListPositionResponse) GetItems() []*Position {
 	if x != nil {
-		return x.Data
+		return x.Items
 	}
 	return nil
 }
@@ -218,25 +260,69 @@ func (x *ListPositionResponse) GetTotal() int64 {
 	return 0
 }
 
+type GetPositionRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetPositionRequest) Reset() {
+	*x = GetPositionRequest{}
+	mi := &file_organization_service_v1_position_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetPositionRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetPositionRequest) ProtoMessage() {}
+
+func (x *GetPositionRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_organization_service_v1_position_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetPositionRequest.ProtoReflect.Descriptor instead.
+func (*GetPositionRequest) Descriptor() ([]byte, []int) {
+	return file_organization_service_v1_position_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *GetPositionRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
 type CreatePositionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 岗位名称
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	// 岗位code
+	// 岗位编码
 	Code string `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"`
 	// 权重
-	Weight int32 `protobuf:"varint,3,opt,name=weight,proto3" json:"weight,omitempty"`
+	Weight int64 `protobuf:"varint,3,opt,name=weight,proto3" json:"weight,omitempty"`
 	// 状态
 	Status string `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`
-	// 描述
-	Description   string `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
+	// 备注
+	Remark        string `protobuf:"bytes,5,opt,name=remark,proto3" json:"remark,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CreatePositionRequest) Reset() {
 	*x = CreatePositionRequest{}
-	mi := &file_organization_service_v1_position_proto_msgTypes[3]
+	mi := &file_organization_service_v1_position_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -248,7 +334,7 @@ func (x *CreatePositionRequest) String() string {
 func (*CreatePositionRequest) ProtoMessage() {}
 
 func (x *CreatePositionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_organization_service_v1_position_proto_msgTypes[3]
+	mi := &file_organization_service_v1_position_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -261,7 +347,7 @@ func (x *CreatePositionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreatePositionRequest.ProtoReflect.Descriptor instead.
 func (*CreatePositionRequest) Descriptor() ([]byte, []int) {
-	return file_organization_service_v1_position_proto_rawDescGZIP(), []int{3}
+	return file_organization_service_v1_position_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *CreatePositionRequest) GetName() string {
@@ -278,7 +364,7 @@ func (x *CreatePositionRequest) GetCode() string {
 	return ""
 }
 
-func (x *CreatePositionRequest) GetWeight() int32 {
+func (x *CreatePositionRequest) GetWeight() int64 {
 	if x != nil {
 		return x.Weight
 	}
@@ -292,34 +378,34 @@ func (x *CreatePositionRequest) GetStatus() string {
 	return ""
 }
 
-func (x *CreatePositionRequest) GetDescription() string {
+func (x *CreatePositionRequest) GetRemark() string {
 	if x != nil {
-		return x.Description
+		return x.Remark
 	}
 	return ""
 }
 
 type UpdatePositionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 岗位ID
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	// 岗位名称
-	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	// 岗位code
-	Code string `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	// 岗位编码
+	Code string `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"`
 	// 权重
-	Weight int32 `protobuf:"varint,4,opt,name=weight,proto3" json:"weight,omitempty"`
+	Weight int64 `protobuf:"varint,3,opt,name=weight,proto3" json:"weight,omitempty"`
 	// 状态
-	Status string `protobuf:"bytes,5,opt,name=status,proto3" json:"status,omitempty"`
-	// 描述
-	Description   string `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"`
+	Status string `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`
+	// 备注
+	Remark string `protobuf:"bytes,5,opt,name=remark,proto3" json:"remark,omitempty"`
+	// 岗位ID
+	Id            string `protobuf:"bytes,6,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *UpdatePositionRequest) Reset() {
 	*x = UpdatePositionRequest{}
-	mi := &file_organization_service_v1_position_proto_msgTypes[4]
+	mi := &file_organization_service_v1_position_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -331,7 +417,7 @@ func (x *UpdatePositionRequest) String() string {
 func (*UpdatePositionRequest) ProtoMessage() {}
 
 func (x *UpdatePositionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_organization_service_v1_position_proto_msgTypes[4]
+	mi := &file_organization_service_v1_position_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -344,14 +430,7 @@ func (x *UpdatePositionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePositionRequest.ProtoReflect.Descriptor instead.
 func (*UpdatePositionRequest) Descriptor() ([]byte, []int) {
-	return file_organization_service_v1_position_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *UpdatePositionRequest) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
+	return file_organization_service_v1_position_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *UpdatePositionRequest) GetName() string {
@@ -368,7 +447,7 @@ func (x *UpdatePositionRequest) GetCode() string {
 	return ""
 }
 
-func (x *UpdatePositionRequest) GetWeight() int32 {
+func (x *UpdatePositionRequest) GetWeight() int64 {
 	if x != nil {
 		return x.Weight
 	}
@@ -382,46 +461,178 @@ func (x *UpdatePositionRequest) GetStatus() string {
 	return ""
 }
 
-func (x *UpdatePositionRequest) GetDescription() string {
+func (x *UpdatePositionRequest) GetRemark() string {
 	if x != nil {
-		return x.Description
+		return x.Remark
 	}
 	return ""
+}
+
+func (x *UpdatePositionRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type UpdatePositionStatusRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// ID
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// 岗位状态
+	Status        string `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdatePositionStatusRequest) Reset() {
+	*x = UpdatePositionStatusRequest{}
+	mi := &file_organization_service_v1_position_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdatePositionStatusRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdatePositionStatusRequest) ProtoMessage() {}
+
+func (x *UpdatePositionStatusRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_organization_service_v1_position_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdatePositionStatusRequest.ProtoReflect.Descriptor instead.
+func (*UpdatePositionStatusRequest) Descriptor() ([]byte, []int) {
+	return file_organization_service_v1_position_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *UpdatePositionStatusRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *UpdatePositionStatusRequest) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+type DeletePositionRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Ids           []string               `protobuf:"bytes,1,rep,name=ids,proto3" json:"ids,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeletePositionRequest) Reset() {
+	*x = DeletePositionRequest{}
+	mi := &file_organization_service_v1_position_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeletePositionRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeletePositionRequest) ProtoMessage() {}
+
+func (x *DeletePositionRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_organization_service_v1_position_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeletePositionRequest.ProtoReflect.Descriptor instead.
+func (*DeletePositionRequest) Descriptor() ([]byte, []int) {
+	return file_organization_service_v1_position_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *DeletePositionRequest) GetIds() []string {
+	if x != nil {
+		return x.Ids
+	}
+	return nil
 }
 
 var File_organization_service_v1_position_proto protoreflect.FileDescriptor
 
 const file_organization_service_v1_position_proto_rawDesc = "" +
 	"\n" +
-	"&organization/service/v1/position.proto\x12\x17organization.service.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x8a\x02\n" +
-	"\bPosition\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x12\n" +
-	"\x04code\x18\x03 \x01(\tR\x04code\x12\x16\n" +
-	"\x06weight\x18\x04 \x01(\x05R\x06weight\x12\x16\n" +
-	"\x06status\x18\x05 \x01(\tR\x06status\x12 \n" +
-	"\vdescription\x18\x06 \x01(\tR\vdescription\x129\n" +
+	"&organization/service/v1/position.proto\x12\x17organization.service.v1\x1a\x1bbuf/validate/validate.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xd1\x03\n" +
+	"\bPosition\x12\x18\n" +
+	"\x02id\x18\x01 \x01(\tB\b\xbaG\x05\x92\x02\x02IDR\x02id\x12&\n" +
+	"\x04name\x18\x02 \x01(\tB\x12\xbaG\x0f\x92\x02\f岗位名称R\x04name\x12&\n" +
+	"\x04code\x18\x03 \x01(\tB\x12\xbaG\x0f\x92\x02\f岗位编码R\x04code\x12E\n" +
+	"\x06weight\x18\x04 \x01(\x03B-\xbaG*\x92\x02'权重（数值越大排序越靠前）R\x06weight\x12J\n" +
+	"\x06status\x18\x05 \x01(\tB2\xbaG/\x92\x02,状态（enabled=启用，disabled=禁用）R\x06status\x12*\n" +
+	"\x06remark\x18\x06 \x01(\tB\x12\xbaG\x0f\x92\x02\f备注说明R\x06remark\x12M\n" +
 	"\n" +
-	"created_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"created_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间R\tcreatedAt\x12M\n" +
 	"\n" +
-	"updated_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\x15\n" +
-	"\x13ListPositionRequest\"c\n" +
-	"\x14ListPositionResponse\x125\n" +
-	"\x04data\x18\x01 \x03(\v2!.organization.service.v1.PositionR\x04data\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x03R\x05total\"\x91\x01\n" +
-	"\x15CreatePositionRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x12\n" +
-	"\x04code\x18\x02 \x01(\tR\x04code\x12\x16\n" +
-	"\x06weight\x18\x03 \x01(\x05R\x06weight\x12\x16\n" +
-	"\x06status\x18\x04 \x01(\tR\x06status\x12 \n" +
-	"\vdescription\x18\x05 \x01(\tR\vdescription\"\xa1\x01\n" +
-	"\x15UpdatePositionRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x12\n" +
-	"\x04code\x18\x03 \x01(\tR\x04code\x12\x16\n" +
-	"\x06weight\x18\x04 \x01(\x05R\x06weight\x12\x16\n" +
-	"\x06status\x18\x05 \x01(\tR\x06status\x12 \n" +
-	"\vdescription\x18\x06 \x01(\tR\vdescriptionB\xff\x01\n" +
+	"updated_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间R\tupdatedAt\"\xea\x02\n" +
+	"\x13ListPositionRequest\x12D\n" +
+	"\vcurrentPage\x18\x01 \x01(\x03B\"\xbaG\x1f\x92\x02\x1c当前页码（从1开始）R\vcurrentPage\x12A\n" +
+	"\bpageSize\x18\x02 \x01(\x03B%\xbaG\"\x92\x02\x1f每页条数（传0为全部）R\bpageSize\x12>\n" +
+	"\x04name\x18\x03 \x01(\tB*\xbaG'\x92\x02$岗位名称（支持模糊查询）R\x04name\x12>\n" +
+	"\x04code\x18\x04 \x01(\tB*\xbaG'\x92\x02$岗位编码（支持模糊查询）R\x04code\x12J\n" +
+	"\x06status\x18\x05 \x01(\tB2\xbaG/\x92\x02,状态（enabled=启用，disabled=禁用）R\x06status\"\x81\x01\n" +
+	"\x14ListPositionResponse\x12E\n" +
+	"\x05items\x18\x01 \x03(\v2!.organization.service.v1.PositionB\f\xbaG\t\x92\x02\x06列表R\x05items\x12\"\n" +
+	"\x05total\x18\x02 \x01(\x03B\f\xbaG\t\x92\x02\x06总数R\x05total\"e\n" +
+	"\x12GetPositionRequest\x12O\n" +
+	"\x02id\x18\x01 \x01(\tB?\xbaG\v\x92\x02\b岗位ID\xbaH.\xba\x01+\n" +
+	"\x18GET_POSITION_ID_REQUIRED\x1a\x0fthis.size() > 0R\x02id\"\xe3\x05\n" +
+	"\x15CreatePositionRequest\x12\xb3\x01\n" +
+	"\x04name\x18\x01 \x01(\tB\x9e\x01\xbaG\x0f\x92\x02\f岗位名称\xbaH\x88\x01\xba\x01A\n" +
+	"\x16position.name.required\x12\x16position.name.required\x1a\x0fthis.size() > 0\xba\x01A\n" +
+	"\x15position.name.max_len\x12\x15position.name.max_len\x1a\x11this.size() <= 64R\x04name\x12\xb3\x01\n" +
+	"\x04code\x18\x02 \x01(\tB\x9e\x01\xbaG\x0f\x92\x02\f岗位编码\xbaH\x88\x01\xba\x01A\n" +
+	"\x16position.code.required\x12\x16position.code.required\x1a\x0fthis.size() > 0\xba\x01A\n" +
+	"\x15position.code.max_len\x12\x15position.code.max_len\x1a\x11this.size() <= 64R\x04code\x12$\n" +
+	"\x06weight\x18\x03 \x01(\x03B\f\xbaG\t\x92\x02\x06权重R\x06weight\x12\xa9\x01\n" +
+	"\x06status\x18\x04 \x01(\tB\x90\x01\xbaG\x1f\x92\x02\x1c状态（enabled/disabled）\xbaHk\xba\x01S\n" +
+	"\x17position.status.invalid\x12\x17position.status.invalid\x1a\x1fthis in ['enabled', 'disabled']r\x13R\aenabledR\bdisabledR\x06status\x12p\n" +
+	"\x06remark\x18\x05 \x01(\tBX\xbaG\t\x92\x02\x06备注\xbaHI\xba\x01F\n" +
+	"\x17position.remark.max_len\x12\x17position.remark.max_len\x1a\x12this.size() <= 255R\x06remark:\x1a\xbaG\x17\xba\x01\x04name\xba\x01\x04code\xba\x01\x06status\"\xf3\x05\n" +
+	"\x15UpdatePositionRequest\x12\xb3\x01\n" +
+	"\x04name\x18\x01 \x01(\tB\x9e\x01\xbaG\x0f\x92\x02\f岗位名称\xbaH\x88\x01\xba\x01A\n" +
+	"\x16position.name.required\x12\x16position.name.required\x1a\x0fthis.size() > 0\xba\x01A\n" +
+	"\x15position.name.max_len\x12\x15position.name.max_len\x1a\x11this.size() <= 64R\x04name\x12\xb3\x01\n" +
+	"\x04code\x18\x02 \x01(\tB\x9e\x01\xbaG\x0f\x92\x02\f岗位编码\xbaH\x88\x01\xba\x01A\n" +
+	"\x16position.code.required\x12\x16position.code.required\x1a\x0fthis.size() > 0\xba\x01A\n" +
+	"\x15position.code.max_len\x12\x15position.code.max_len\x1a\x11this.size() <= 64R\x04code\x12$\n" +
+	"\x06weight\x18\x03 \x01(\x03B\f\xbaG\t\x92\x02\x06权重R\x06weight\x12\xa9\x01\n" +
+	"\x06status\x18\x04 \x01(\tB\x90\x01\xbaG\x1f\x92\x02\x1c状态（enabled/disabled）\xbaHk\xba\x01S\n" +
+	"\x17position.status.invalid\x12\x17position.status.invalid\x1a\x1fthis in ['enabled', 'disabled']r\x13R\aenabledR\bdisabledR\x06status\x12p\n" +
+	"\x06remark\x18\x05 \x01(\tBX\xbaG\t\x92\x02\x06备注\xbaHI\xba\x01F\n" +
+	"\x17position.remark.max_len\x12\x17position.remark.max_len\x1a\x12this.size() <= 255R\x06remark\x12\x0e\n" +
+	"\x02id\x18\x06 \x01(\tR\x02id:\x1a\xbaG\x17\xba\x01\x04name\xba\x01\x04code\xba\x01\x06status\"\xf1\x01\n" +
+	"\x1bUpdatePositionStatusRequest\x12\x18\n" +
+	"\x02id\x18\x01 \x01(\tB\b\xbaG\x05\x92\x02\x02IDR\x02id\x12\xa9\x01\n" +
+	"\x06status\x18\x02 \x01(\tB\x90\x01\xbaG\x1f\x92\x02\x1c状态（enabled/disabled）\xbaHk\xba\x01S\n" +
+	"\x17position.status.invalid\x12\x17position.status.invalid\x1a\x1fthis in ['enabled', 'disabled']r\x13R\aenabledR\bdisabledR\x06status:\f\xbaG\t\xba\x01\x06status\"\x86\x01\n" +
+	"\x15DeletePositionRequest\x12m\n" +
+	"\x03ids\x18\x01 \x03(\tB[\xbaG\x11\x92\x02\x0e岗位ID列表\xbaHD\xba\x01:\n" +
+	"\x1dDELETE_POSITION_IDS_NOT_EMPTY\x1a\x19this.all(x, x.size() > 0)\x92\x01\x04\b\x01\x10dR\x03idsB\xff\x01\n" +
 	"\x1bcom.organization.service.v1B\rPositionProtoP\x01ZSgithub.com/hypercoze/kratos-admin/api/gen/go/organization/service/v1;organizationpb\xa2\x02\x03OSX\xaa\x02\x17Organization.Service.V1\xca\x02\x17Organization\\Service\\V1\xe2\x02#Organization\\Service\\V1\\GPBMetadata\xea\x02\x19Organization::Service::V1b\x06proto3"
 
 var (
@@ -436,19 +647,22 @@ func file_organization_service_v1_position_proto_rawDescGZIP() []byte {
 	return file_organization_service_v1_position_proto_rawDescData
 }
 
-var file_organization_service_v1_position_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_organization_service_v1_position_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_organization_service_v1_position_proto_goTypes = []any{
-	(*Position)(nil),              // 0: organization.service.v1.Position
-	(*ListPositionRequest)(nil),   // 1: organization.service.v1.ListPositionRequest
-	(*ListPositionResponse)(nil),  // 2: organization.service.v1.ListPositionResponse
-	(*CreatePositionRequest)(nil), // 3: organization.service.v1.CreatePositionRequest
-	(*UpdatePositionRequest)(nil), // 4: organization.service.v1.UpdatePositionRequest
-	(*timestamppb.Timestamp)(nil), // 5: google.protobuf.Timestamp
+	(*Position)(nil),                    // 0: organization.service.v1.Position
+	(*ListPositionRequest)(nil),         // 1: organization.service.v1.ListPositionRequest
+	(*ListPositionResponse)(nil),        // 2: organization.service.v1.ListPositionResponse
+	(*GetPositionRequest)(nil),          // 3: organization.service.v1.GetPositionRequest
+	(*CreatePositionRequest)(nil),       // 4: organization.service.v1.CreatePositionRequest
+	(*UpdatePositionRequest)(nil),       // 5: organization.service.v1.UpdatePositionRequest
+	(*UpdatePositionStatusRequest)(nil), // 6: organization.service.v1.UpdatePositionStatusRequest
+	(*DeletePositionRequest)(nil),       // 7: organization.service.v1.DeletePositionRequest
+	(*timestamppb.Timestamp)(nil),       // 8: google.protobuf.Timestamp
 }
 var file_organization_service_v1_position_proto_depIdxs = []int32{
-	5, // 0: organization.service.v1.Position.created_at:type_name -> google.protobuf.Timestamp
-	5, // 1: organization.service.v1.Position.updated_at:type_name -> google.protobuf.Timestamp
-	0, // 2: organization.service.v1.ListPositionResponse.data:type_name -> organization.service.v1.Position
+	8, // 0: organization.service.v1.Position.created_at:type_name -> google.protobuf.Timestamp
+	8, // 1: organization.service.v1.Position.updated_at:type_name -> google.protobuf.Timestamp
+	0, // 2: organization.service.v1.ListPositionResponse.items:type_name -> organization.service.v1.Position
 	3, // [3:3] is the sub-list for method output_type
 	3, // [3:3] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
@@ -467,7 +681,7 @@ func file_organization_service_v1_position_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_organization_service_v1_position_proto_rawDesc), len(file_organization_service_v1_position_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

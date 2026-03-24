@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package admin.service.v1;
+
+import "dictionary/service/v1/dict_type.proto";
+import "gnostic/openapi/v3/annotations.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "organization/service/v1/position.proto";
+
+service Dictionary {
+  rpc ListDictType(dictionary.service.v1.ListDictTypeRequest) returns (dictionary.service.v1.ListDictTypeResponse) {
+    option (google.api.http) = {get: "/admin/v1/dict-type"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Dictionary"
+      summary: "字典类型列表"
+      description: "字典类型列表"
+    };
+  }
+}

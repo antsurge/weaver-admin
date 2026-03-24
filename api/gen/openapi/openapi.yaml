@@ -6,6 +6,27 @@ info:
     title: ""
     version: 0.0.1
 paths:
+    /admin/v1/dict-type:
+        get:
+            tags:
+                - Dictionary
+                - Dictionary
+            summary: 字典类型列表
+            description: 字典类型列表
+            operationId: Dictionary_ListDictType
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListDictTypeResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /admin/v1/login:
         post:
             tags:
@@ -62,7 +83,7 @@ paths:
             tags:
                 - Organization
                 - Organization
-            summary: 创建组织
+            summary: 组织-创建
             description: 创建组织
             operationId: Organization_CreateOrganization
             requestBody:
@@ -88,7 +109,7 @@ paths:
             tags:
                 - Organization
                 - Organization
-            summary: 删除组织
+            summary: 组织-删除(批量)
             description: 删除组织(支持批量)
             operationId: Organization_DeleteOrganization
             parameters:
@@ -113,7 +134,7 @@ paths:
             tags:
                 - Organization
                 - Organization
-            summary: 组织树
+            summary: 组织-Tree
             description: 获取组织树
             operationId: Organization_OrganizationTree
             responses:
@@ -134,7 +155,7 @@ paths:
             tags:
                 - Organization
                 - Organization
-            summary: 更新组织
+            summary: 组织-更新
             description: 更新组织
             operationId: Organization_UpdateOrganization
             parameters:
@@ -167,7 +188,7 @@ paths:
             tags:
                 - Organization
                 - Organization
-            summary: 更新组织状态
+            summary: 组织-更新状态
             description: 更新组织状态
             operationId: Organization_UpdateOrganizationStatus
             parameters:
@@ -340,9 +361,30 @@ paths:
             tags:
                 - Organization
                 - Organization
-            summary: 岗位列表
+            summary: 岗位-列表
             description: 获取岗位列表
             operationId: Organization_ListPosition
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: code
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -360,7 +402,7 @@ paths:
             tags:
                 - Organization
                 - Organization
-            summary: 岗位创建
+            summary: 岗位-创建
             description: 岗位创建
             operationId: Organization_CreatePosition
             requestBody:
@@ -382,12 +424,62 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Organization
+                - Organization
+            summary: 岗位-删除(批量)
+            description: 岗位删除，支持批量删除
+            operationId: Organization_DeletePosition
+            parameters:
+                - name: ids
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /admin/v1/position/{id}:
+        get:
+            tags:
+                - Organization
+                - Organization
+            summary: 岗位-详情
+            description: 岗位详情
+            operationId: Organization_GetPosition
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Position'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
         put:
             tags:
                 - Organization
                 - Organization
-            summary: 岗位修改
+            summary: 岗位-修改
             description: 岗位修改
             operationId: Organization_UpdatePosition
             parameters:
@@ -410,6 +502,37 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Position'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/position/{id}/status:
+        put:
+            tags:
+                - Organization
+                - Organization
+            summary: 岗位-修改状态
+            description: 修改状态
+            operationId: Organization_UpdatePositionStatus
+            parameters:
+                - name: id
+                  in: path
+                  description: ID
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdatePositionStatusRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
                 default:
                     description: Default error response
                     content:
@@ -561,6 +684,10 @@ components:
                     $ref: '#/components/schemas/Permission'
             description: 创建权限响应
         CreatePositionRequest:
+            required:
+                - name
+                - code
+                - status
             type: object
             properties:
                 name:
@@ -568,17 +695,16 @@ components:
                     description: 岗位名称
                 code:
                     type: string
-                    description: 岗位code
+                    description: 岗位编码
                 weight:
-                    type: integer
+                    type: string
                     description: 权重
-                    format: int32
                 status:
                     type: string
-                    description: 状态
-                description:
+                    description: 状态（enabled/disabled）
+                remark:
                     type: string
-                    description: 描述
+                    description: 备注
         CurrentUserInfoResponse:
             type: object
             properties:
@@ -586,6 +712,80 @@ components:
                     type: string
                 realName:
                     type: string
+        DictData:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 字典ID
+                dictTypeId:
+                    type: string
+                    description: 字典类型ID
+                label:
+                    type: string
+                    description: 标签
+                value:
+                    type: string
+                    description: 值
+                weight:
+                    type: integer
+                    description: 排序
+                    format: int32
+                status:
+                    type: string
+                    description: 状态
+                extension:
+                    type: string
+                    description: 扩展参数(JSON)
+                description:
+                    type: string
+                    description: 描述
+                createdAt:
+                    type: string
+                    description: 创建时间
+                    format: date-time
+                updatedAt:
+                    type: string
+                    description: 更新时间
+                    format: date-time
+                deletedAt:
+                    type: string
+                    description: 删除时间
+                    format: date-time
+        DictType:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 字典ID
+                name:
+                    type: string
+                    description: 字典名称
+                code:
+                    type: string
+                    description: 字典编码
+                status:
+                    type: string
+                    description: 状态
+                description:
+                    type: string
+                    description: 描述
+                createdAt:
+                    type: string
+                    description: 创建时间
+                    format: date-time
+                updatedAt:
+                    type: string
+                    description: 更新时间
+                    format: date-time
+                deletedAt:
+                    type: string
+                    description: 删除时间
+                    format: date-time
+                dictData:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/DictData'
         GetCaptchaResponse:
             type: object
             properties:
@@ -601,15 +801,26 @@ components:
                     description: The type of the serialized message.
             additionalProperties: true
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
-        ListPositionResponse:
+        ListDictTypeResponse:
             type: object
             properties:
                 data:
                     type: array
                     items:
-                        $ref: '#/components/schemas/Position'
+                        $ref: '#/components/schemas/DictType'
                 total:
                     type: string
+        ListPositionResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Position'
+                    description: 列表
+                total:
+                    type: string
+                    description: 总数
         LoginRequest:
             type: object
             properties:
@@ -743,23 +954,22 @@ components:
             properties:
                 id:
                     type: string
-                    description: 岗位ID
+                    description: ID
                 name:
                     type: string
                     description: 岗位名称
                 code:
                     type: string
-                    description: 岗位code
+                    description: 岗位编码
                 weight:
-                    type: integer
-                    description: 权重
-                    format: int32
+                    type: string
+                    description: 权重（数值越大排序越靠前）
                 status:
                     type: string
-                    description: 状态：enabled=启用 disabled=禁用
-                description:
+                    description: 状态（enabled=启用，disabled=禁用）
+                remark:
                     type: string
-                    description: 描述
+                    description: 备注说明
                 createdAt:
                     type: string
                     description: 创建时间
@@ -888,29 +1098,44 @@ components:
                     type: string
                     description: '状态: enabled / disabled'
         UpdatePositionRequest:
+            required:
+                - name
+                - code
+                - status
             type: object
             properties:
-                id:
-                    type: string
-                    description: 岗位ID
                 name:
                     type: string
                     description: 岗位名称
                 code:
                     type: string
-                    description: 岗位code
+                    description: 岗位编码
                 weight:
-                    type: integer
+                    type: string
                     description: 权重
-                    format: int32
                 status:
                     type: string
-                    description: 状态
-                description:
+                    description: 状态（enabled/disabled）
+                remark:
                     type: string
-                    description: 描述
+                    description: 备注
+                id:
+                    type: string
+                    description: 岗位ID
+        UpdatePositionStatusRequest:
+            required:
+                - status
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: ID
+                status:
+                    type: string
+                    description: 状态（enabled/disabled）
 tags:
     - name: AuthenticationService
       description: 用户后台登录认证服务
+    - name: Dictionary
     - name: Organization
     - name: PermissionService

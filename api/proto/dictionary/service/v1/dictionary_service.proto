@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+package dictionary.service.v1;
+
+service DictionaryService {}

@@ -1,4 +1,5 @@
 import { requestClient } from '#/api/request';
+import type { PaginationParams,PaginationResult } from '#/types/pagination'
 
 export namespace SystemPositionApi {
   /** 岗位 */
@@ -13,21 +14,39 @@ export namespace SystemPositionApi {
     weight: number;
     /** 状态：enabled=启用 disabled=禁用 */
     status: 'enabled' | 'disabled';
-    /** 描述 */
-    description?: string;
+    /** 备注 */
+    remark: string;
     /** 创建时间 */
     createdAt?: string;
     /** 更新时间 */
     updatedAt?: string;
+  }
+
+  export interface PositionListParams extends PaginationParams{
+    name?: string;
+    code?: string;
+    status?: 'enabled' | 'disabled';
   }
 }
 
 /**
  * 获取岗位列表
  */
-async function getPositionListApi() {
-  return requestClient.get<Array<SystemPositionApi.Position>>(
+async function getPositionListApi(params?:SystemPositionApi.PositionListParams) {
+  return requestClient.get<PaginationResult<SystemPositionApi.Position>>(
     '/admin/v1/position',
+    {
+      params:params
+    }
+  );
+}
+
+/**
+ * 获取岗位
+ */
+async function getPositionApi(id: string, params: object = {}) {
+  return requestClient.get<SystemPositionApi.Position>(
+    `/admin/v1/position/${id}`
   );
 }
 
@@ -38,7 +57,9 @@ async function getPositionListApi() {
 async function createPositionApi(
   data: Omit<SystemPositionApi.Position, 'id' | 'createdAt' | 'updatedAt'>,
 ) {
-  return requestClient.post('/admin/v1/position', data);
+  return requestClient.post('/admin/v1/position', data, {
+    showSuccessMessage: true,
+  });
 }
 
 /**
@@ -50,7 +71,9 @@ async function updatePositionApi(
   id: string,
   data: Omit<SystemPositionApi.Position, 'id' | 'createdAt' | 'updatedAt'>,
 ) {
-  return requestClient.put(`/admin/v1/position/${id}`, data);
+  return requestClient.put(`/admin/v1/position/${id}`, data, {
+    showSuccessMessage: true,
+  });
 }
 
 /**
@@ -76,13 +99,15 @@ async function deletePositionApi(ids: string[]) {
     params: {
       ids,
     },
+    showSuccessMessage: true,
   });
 }
 
 export {
-  createPositionApi,
-  deletePositionApi,
   getPositionListApi,
+  getPositionApi,
+  createPositionApi,
   updatePositionApi,
   updatePositionStatusApi,
+  deletePositionApi,
 };

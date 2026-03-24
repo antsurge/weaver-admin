@@ -8,4 +8,6 @@ var ProviderSet = wire.NewSet(
 	NewPermissionService,
 
 	NewOrganizationService,
+
+	NewDictionaryService,
 )
