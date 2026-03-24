@@ -23,13 +23,28 @@ func NewOrganizationRepo(data *Data, logger log.Logger) biz.OrganizationRepo {
 	}
 }
 
-func (r *organizationRepo) ListOrganization(ctx context.Context) ([]*biz.Organization, error) {
-	list, err := r.data.db.Organization.
-		Query().
-		Order(ent.Desc(organization.FieldWeight)).
-		All(ctx)
-	res := make([]*biz.Organization, 0, len(list))
+func (r *organizationRepo) ListOrganization(ctx context.Context, params *biz.OrganizationListResult) ([]*biz.Organization, error) {
+	query := r.data.db.Organization.Query().
+		Order(ent.Desc(organization.FieldWeight))
 
+	// 名称
+	if v := params.Name; len(v) > 0 {
+		query = query.Where(organization.NameContains(v))
+	}
+
+	// code
+	if v := params.Code; len(v) > 0 {
+		query = query.Where(organization.CodeContains(v))
+	}
+
+	// 状态
+	if v := params.Status; len(v) > 0 {
+		query = query.Where(organization.StatusEQ(organization.Status(v)))
+	}
+
+	list, err := query.All(ctx)
+
+	res := make([]*biz.Organization, 0, len(list))
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +52,7 @@ func (r *organizationRepo) ListOrganization(ctx context.Context) ([]*biz.Organiz
 	for _, v := range list {
 		res = append(res, &biz.Organization{
 			ID:          v.ID,
-			ParentId:    v.ParentID,
+			ParentID:    v.ParentID,
 			Name:        v.Name,
 			Code:        v.Code,
 			Weight:      v.Weight,
@@ -56,7 +71,7 @@ func (r *organizationRepo) ListOrganization(ctx context.Context) ([]*biz.Organiz
 func (r *organizationRepo) CreateOrganization(ctx context.Context, req *biz.Organization) error {
 	_, err := r.data.db.Organization.Create().
 		SetID(req.ID).
-		SetParentID(req.ParentId).
+		SetParentID(req.ParentID).
 		SetName(req.Name).
 		SetCode(req.Code).
 		SetLeaderName(req.LeaderName).
@@ -72,7 +87,7 @@ func (r *organizationRepo) CreateOrganization(ctx context.Context, req *biz.Orga
 
 func (r *organizationRepo) UpdateOrganization(ctx context.Context, req *biz.Organization) error {
 	_, err := r.data.db.Organization.UpdateOneID(req.ID).
-		SetParentID(req.ParentId).
+		SetParentID(req.ParentID).
 		SetName(req.Name).
 		SetCode(req.Code).
 		SetLeaderName(req.LeaderName).

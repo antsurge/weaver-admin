@@ -59,11 +59,11 @@ const schema: VbenFormSchema[] = [
     },
   },
   {
-    fieldName: 'description',
-    label: $t('system.dict_type.fields.description'),
+    fieldName: 'remark',
+    label: $t('system.dict_type.fields.remark'),
     component: 'Textarea',
     componentProps: {
-      placeholder: $t('system.dict_type.form_placeholder.description'),
+      placeholder: $t('system.dict_type.form_placeholder.remark'),
       autoSize: { minRows: 2, maxRows: 4 },
     },
   },

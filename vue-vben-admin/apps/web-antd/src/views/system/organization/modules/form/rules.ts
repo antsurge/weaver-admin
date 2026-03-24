@@ -10,12 +10,12 @@ const nameRule = z
     ]),
   );
 
-const parentIdRule = z
+const parentIDRule = z
   .string()
 // .min(
 //   1,
 //   $t('ui.formRules.required', [
-//     $t('system.organization.fields.parentId'),
+//     $t('system.organization.fields.parentID'),
 //   ]),
 // );
 
@@ -30,6 +30,6 @@ const codeRule = z
 
 export {
   nameRule,
-  parentIdRule,
+  parentIDRule,
   codeRule,
 }

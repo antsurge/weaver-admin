@@ -7,6 +7,8 @@
 package dictionarypb
 
 import (
+	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	_ "github.com/google/gnostic/openapiv3"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -38,8 +40,8 @@ type DictData struct {
 	Status string `protobuf:"bytes,6,opt,name=status,proto3" json:"status,omitempty"`
 	// 扩展参数(JSON)
 	Extension string `protobuf:"bytes,7,opt,name=extension,proto3" json:"extension,omitempty"`
-	// 描述
-	Description string `protobuf:"bytes,8,opt,name=description,proto3" json:"description,omitempty"`
+	// 备注
+	Remark string `protobuf:"bytes,8,opt,name=remark,proto3" json:"remark,omitempty"`
 	// 创建时间
 	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
 	// 更新时间
@@ -129,9 +131,9 @@ func (x *DictData) GetExtension() string {
 	return ""
 }
 
-func (x *DictData) GetDescription() string {
+func (x *DictData) GetRemark() string {
 	if x != nil {
-		return x.Description
+		return x.Remark
 	}
 	return ""
 }
@@ -159,6 +161,11 @@ func (x *DictData) GetDeletedAt() *timestamppb.Timestamp {
 
 type ListDictDataRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	CurrentPage   int64                  `protobuf:"varint,1,opt,name=currentPage,proto3" json:"currentPage,omitempty"`
+	PageSize      int64                  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
+	Label         string                 `protobuf:"bytes,3,opt,name=label,proto3" json:"label,omitempty"`
+	Value         string                 `protobuf:"bytes,4,opt,name=value,proto3" json:"value,omitempty"`
+	Status        string                 `protobuf:"bytes,5,opt,name=status,proto3" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -193,8 +200,45 @@ func (*ListDictDataRequest) Descriptor() ([]byte, []int) {
 	return file_dictionary_service_v1_dict_data_proto_rawDescGZIP(), []int{1}
 }
 
+func (x *ListDictDataRequest) GetCurrentPage() int64 {
+	if x != nil {
+		return x.CurrentPage
+	}
+	return 0
+}
+
+func (x *ListDictDataRequest) GetPageSize() int64 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListDictDataRequest) GetLabel() string {
+	if x != nil {
+		return x.Label
+	}
+	return ""
+}
+
+func (x *ListDictDataRequest) GetValue() string {
+	if x != nil {
+		return x.Value
+	}
+	return ""
+}
+
+func (x *ListDictDataRequest) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
 type ListDictDataResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	Items         []*DictData            `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	Total         int64                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -229,28 +273,402 @@ func (*ListDictDataResponse) Descriptor() ([]byte, []int) {
 	return file_dictionary_service_v1_dict_data_proto_rawDescGZIP(), []int{2}
 }
 
+func (x *ListDictDataResponse) GetItems() []*DictData {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+func (x *ListDictDataResponse) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+type CreateDictDataRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 字典类型ID
+	DictTypeId string `protobuf:"bytes,1,opt,name=dictTypeId,proto3" json:"dictTypeId,omitempty"`
+	// 标签
+	Label string `protobuf:"bytes,2,opt,name=label,proto3" json:"label,omitempty"`
+	// 值
+	Value string `protobuf:"bytes,3,opt,name=value,proto3" json:"value,omitempty"`
+	// 排序
+	Weight int32 `protobuf:"varint,4,opt,name=weight,proto3" json:"weight,omitempty"`
+	// 状态
+	Status string `protobuf:"bytes,5,opt,name=status,proto3" json:"status,omitempty"`
+	// 扩展参数(JSON)
+	Extension string `protobuf:"bytes,6,opt,name=extension,proto3" json:"extension,omitempty"`
+	// 备注
+	Remark        string `protobuf:"bytes,7,opt,name=remark,proto3" json:"remark,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateDictDataRequest) Reset() {
+	*x = CreateDictDataRequest{}
+	mi := &file_dictionary_service_v1_dict_data_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateDictDataRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateDictDataRequest) ProtoMessage() {}
+
+func (x *CreateDictDataRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_dictionary_service_v1_dict_data_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateDictDataRequest.ProtoReflect.Descriptor instead.
+func (*CreateDictDataRequest) Descriptor() ([]byte, []int) {
+	return file_dictionary_service_v1_dict_data_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *CreateDictDataRequest) GetDictTypeId() string {
+	if x != nil {
+		return x.DictTypeId
+	}
+	return ""
+}
+
+func (x *CreateDictDataRequest) GetLabel() string {
+	if x != nil {
+		return x.Label
+	}
+	return ""
+}
+
+func (x *CreateDictDataRequest) GetValue() string {
+	if x != nil {
+		return x.Value
+	}
+	return ""
+}
+
+func (x *CreateDictDataRequest) GetWeight() int32 {
+	if x != nil {
+		return x.Weight
+	}
+	return 0
+}
+
+func (x *CreateDictDataRequest) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *CreateDictDataRequest) GetExtension() string {
+	if x != nil {
+		return x.Extension
+	}
+	return ""
+}
+
+func (x *CreateDictDataRequest) GetRemark() string {
+	if x != nil {
+		return x.Remark
+	}
+	return ""
+}
+
+type UpdateDictDataRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 字典类型ID
+	DictTypeId string `protobuf:"bytes,1,opt,name=dictTypeId,proto3" json:"dictTypeId,omitempty"`
+	// 标签
+	Label string `protobuf:"bytes,2,opt,name=label,proto3" json:"label,omitempty"`
+	// 值
+	Value string `protobuf:"bytes,3,opt,name=value,proto3" json:"value,omitempty"`
+	// 排序
+	Weight int32 `protobuf:"varint,4,opt,name=weight,proto3" json:"weight,omitempty"`
+	// 状态
+	Status string `protobuf:"bytes,5,opt,name=status,proto3" json:"status,omitempty"`
+	// 扩展参数(JSON)
+	Extension string `protobuf:"bytes,6,opt,name=extension,proto3" json:"extension,omitempty"`
+	// 备注
+	Remark        string `protobuf:"bytes,7,opt,name=remark,proto3" json:"remark,omitempty"`
+	Id            string `protobuf:"bytes,10,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateDictDataRequest) Reset() {
+	*x = UpdateDictDataRequest{}
+	mi := &file_dictionary_service_v1_dict_data_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateDictDataRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateDictDataRequest) ProtoMessage() {}
+
+func (x *UpdateDictDataRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_dictionary_service_v1_dict_data_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateDictDataRequest.ProtoReflect.Descriptor instead.
+func (*UpdateDictDataRequest) Descriptor() ([]byte, []int) {
+	return file_dictionary_service_v1_dict_data_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *UpdateDictDataRequest) GetDictTypeId() string {
+	if x != nil {
+		return x.DictTypeId
+	}
+	return ""
+}
+
+func (x *UpdateDictDataRequest) GetLabel() string {
+	if x != nil {
+		return x.Label
+	}
+	return ""
+}
+
+func (x *UpdateDictDataRequest) GetValue() string {
+	if x != nil {
+		return x.Value
+	}
+	return ""
+}
+
+func (x *UpdateDictDataRequest) GetWeight() int32 {
+	if x != nil {
+		return x.Weight
+	}
+	return 0
+}
+
+func (x *UpdateDictDataRequest) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *UpdateDictDataRequest) GetExtension() string {
+	if x != nil {
+		return x.Extension
+	}
+	return ""
+}
+
+func (x *UpdateDictDataRequest) GetRemark() string {
+	if x != nil {
+		return x.Remark
+	}
+	return ""
+}
+
+func (x *UpdateDictDataRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type UpdateDictDataStatusRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// ID
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// 岗位状态
+	Status        string `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateDictDataStatusRequest) Reset() {
+	*x = UpdateDictDataStatusRequest{}
+	mi := &file_dictionary_service_v1_dict_data_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateDictDataStatusRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateDictDataStatusRequest) ProtoMessage() {}
+
+func (x *UpdateDictDataStatusRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_dictionary_service_v1_dict_data_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateDictDataStatusRequest.ProtoReflect.Descriptor instead.
+func (*UpdateDictDataStatusRequest) Descriptor() ([]byte, []int) {
+	return file_dictionary_service_v1_dict_data_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *UpdateDictDataStatusRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *UpdateDictDataStatusRequest) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+type DeleteDictDataRequset struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Ids           []string               `protobuf:"bytes,1,rep,name=ids,proto3" json:"ids,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteDictDataRequset) Reset() {
+	*x = DeleteDictDataRequset{}
+	mi := &file_dictionary_service_v1_dict_data_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteDictDataRequset) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteDictDataRequset) ProtoMessage() {}
+
+func (x *DeleteDictDataRequset) ProtoReflect() protoreflect.Message {
+	mi := &file_dictionary_service_v1_dict_data_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteDictDataRequset.ProtoReflect.Descriptor instead.
+func (*DeleteDictDataRequset) Descriptor() ([]byte, []int) {
+	return file_dictionary_service_v1_dict_data_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *DeleteDictDataRequset) GetIds() []string {
+	if x != nil {
+		return x.Ids
+	}
+	return nil
+}
+
 var File_dictionary_service_v1_dict_data_proto protoreflect.FileDescriptor
 
 const file_dictionary_service_v1_dict_data_proto_rawDesc = "" +
 	"\n" +
-	"%dictionary/service/v1/dict_data.proto\x12\x15dictionary.service.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x84\x03\n" +
-	"\bDictData\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1e\n" +
+	"%dictionary/service/v1/dict_data.proto\x12\x15dictionary.service.v1\x1a\x1bbuf/validate/validate.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xf6\x05\n" +
+	"\bDictData\x12\x18\n" +
+	"\x02id\x18\x01 \x01(\tB\b\xbaG\x05\x92\x02\x02IDR\x02id\x12:\n" +
 	"\n" +
-	"dictTypeId\x18\x02 \x01(\tR\n" +
-	"dictTypeId\x12\x14\n" +
-	"\x05label\x18\x03 \x01(\tR\x05label\x12\x14\n" +
-	"\x05value\x18\x04 \x01(\tR\x05value\x12\x16\n" +
-	"\x06weight\x18\x05 \x01(\x05R\x06weight\x12\x16\n" +
-	"\x06status\x18\x06 \x01(\tR\x06status\x12\x1c\n" +
-	"\textension\x18\a \x01(\tR\textension\x12 \n" +
-	"\vdescription\x18\b \x01(\tR\vdescription\x128\n" +
-	"\tcreatedAt\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x128\n" +
+	"dictTypeId\x18\x02 \x01(\tB\x1a\xbaG\x17\x92\x02\x14所属字典类型IDR\n" +
+	"dictTypeId\x12=\n" +
+	"\x05label\x18\x03 \x01(\tB'\xbaG$\x92\x02!显示标签（给前端展示）R\x05label\x12:\n" +
+	"\x05value\x18\x04 \x01(\tB$\xbaG!\x92\x02\x1e字典值（实际存储值）R\x05value\x12?\n" +
+	"\x06weight\x18\x05 \x01(\x05B'\xbaG$\x92\x02!排序权重，值越大越靠前R\x06weight\x12G\n" +
+	"\x06status\x18\x06 \x01(\tB/\xbaG,\x92\x02)状态：enabled=启用，disabled=禁用R\x06status\x12^\n" +
+	"\textension\x18\a \x01(\tB@\xbaG=\x92\x02:扩展参数（JSON字符串，用于存储额外信息）R\textension\x12*\n" +
+	"\x06remark\x18\b \x01(\tB\x12\xbaG\x0f\x92\x02\f备注说明R\x06remark\x12L\n" +
+	"\tcreatedAt\x18\t \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间R\tcreatedAt\x12L\n" +
 	"\tupdatedAt\x18\n" +
-	" \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x128\n" +
-	"\tdeletedAt\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tdeletedAt\"\x15\n" +
-	"\x13ListDictDataRequest\"\x16\n" +
-	"\x14ListDictDataResponseB\xf1\x01\n" +
+	" \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间R\tupdatedAt\x12g\n" +
+	"\tdeletedAt\x18\v \x01(\v2\x1a.google.protobuf.TimestampB-\xbaG*\x92\x02'删除时间（为空表示未删除）R\tdeletedAt\"\xe5\x02\n" +
+	"\x13ListDictDataRequest\x12D\n" +
+	"\vcurrentPage\x18\x01 \x01(\x03B\"\xbaG\x1f\x92\x02\x1c当前页码（从1开始）R\vcurrentPage\x12A\n" +
+	"\bpageSize\x18\x02 \x01(\x03B%\xbaG\"\x92\x02\x1f每页条数（传0为全部）R\bpageSize\x12@\n" +
+	"\x05label\x18\x03 \x01(\tB*\xbaG'\x92\x02$显示标签（支持模糊查询）R\x05label\x127\n" +
+	"\x05value\x18\x04 \x01(\tB!\xbaG\x1e\x92\x02\x1b值（支持模糊查询）R\x05value\x12J\n" +
+	"\x06status\x18\x05 \x01(\tB2\xbaG/\x92\x02,状态（enabled=启用，disabled=禁用）R\x06status\"c\n" +
+	"\x14ListDictDataResponse\x125\n" +
+	"\x05items\x18\x01 \x03(\v2\x1f.dictionary.service.v1.DictDataR\x05items\x12\x14\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"\xe4\t\n" +
+	"\x15CreateDictDataRequest\x12\xdf\x01\n" +
+	"\n" +
+	"dictTypeId\x18\x01 \x01(\tB\xbe\x01\xbaG\x17\x92\x02\x14所属字典类型ID\xbaH\xa0\x01\xba\x01M\n" +
+	"\x1cdictData.dictTypeId.required\x12\x1cdictData.dictTypeId.required\x1a\x0fthis.size() > 0\xba\x01M\n" +
+	"\x1bdictData.dictTypeId.max_len\x12\x1bdictData.dictTypeId.max_len\x1a\x11this.size() <= 36R\n" +
+	"dictTypeId\x12\xce\x01\n" +
+	"\x05label\x18\x02 \x01(\tB\xb7\x01\xbaG$\x92\x02!显示标签（给前端展示）\xbaH\x8c\x01\xba\x01C\n" +
+	"\x17dictData.label.required\x12\x17dictData.label.required\x1a\x0fthis.size() > 0\xba\x01C\n" +
+	"\x16dictData.label.max_len\x12\x16dictData.label.max_len\x1a\x11this.size() <= 64R\x05label\x12\xcb\x01\n" +
+	"\x05value\x18\x03 \x01(\tB\xb4\x01\xbaG!\x92\x02\x1e字典值（实际存储值）\xbaH\x8c\x01\xba\x01C\n" +
+	"\x17dictData.value.required\x12\x17dictData.value.required\x1a\x0fthis.size() > 0\xba\x01C\n" +
+	"\x16dictData.value.max_len\x12\x16dictData.value.max_len\x1a\x11this.size() <= 64R\x05value\x12?\n" +
+	"\x06weight\x18\x04 \x01(\x05B'\xbaG$\x92\x02!排序权重，值越大越靠前R\x06weight\x12\xb9\x01\n" +
+	"\x06status\x18\x05 \x01(\tB\xa0\x01\xbaG/\x92\x02,状态（enabled=启用，disabled=禁用）\xbaHk\xba\x01S\n" +
+	"\x17dictData.status.invalid\x12\x17dictData.status.invalid\x1a\x1fthis in ['enabled', 'disabled']r\x13R\aenabledR\bdisabledR\x06status\x12\xb2\x01\n" +
+	"\textension\x18\x06 \x01(\tB\x93\x01\xbaG=\x92\x02:扩展参数（JSON字符串，用于存储额外信息）\xbaHP\xba\x01M\n" +
+	"\x1adictData.extension.max_len\x12\x1adictData.extension.max_len\x1a\x13this.size() <= 1024R\textension\x12v\n" +
+	"\x06remark\x18\a \x01(\tB^\xbaG\x0f\x92\x02\f备注说明\xbaHI\xba\x01F\n" +
+	"\x17dictData.remark.max_len\x12\x17dictData.remark.max_len\x1a\x12this.size() <= 255R\x06remark: \xbaG\x1d\xba\x01\n" +
+	"dictTypeId\xba\x01\x05label\xba\x01\x05value\"\xf4\t\n" +
+	"\x15UpdateDictDataRequest\x12\xdf\x01\n" +
+	"\n" +
+	"dictTypeId\x18\x01 \x01(\tB\xbe\x01\xbaG\x17\x92\x02\x14所属字典类型ID\xbaH\xa0\x01\xba\x01M\n" +
+	"\x1cdictData.dictTypeId.required\x12\x1cdictData.dictTypeId.required\x1a\x0fthis.size() > 0\xba\x01M\n" +
+	"\x1bdictData.dictTypeId.max_len\x12\x1bdictData.dictTypeId.max_len\x1a\x11this.size() <= 36R\n" +
+	"dictTypeId\x12\xce\x01\n" +
+	"\x05label\x18\x02 \x01(\tB\xb7\x01\xbaG$\x92\x02!显示标签（给前端展示）\xbaH\x8c\x01\xba\x01C\n" +
+	"\x17dictData.label.required\x12\x17dictData.label.required\x1a\x0fthis.size() > 0\xba\x01C\n" +
+	"\x16dictData.label.max_len\x12\x16dictData.label.max_len\x1a\x11this.size() <= 64R\x05label\x12\xcb\x01\n" +
+	"\x05value\x18\x03 \x01(\tB\xb4\x01\xbaG!\x92\x02\x1e字典值（实际存储值）\xbaH\x8c\x01\xba\x01C\n" +
+	"\x17dictData.value.required\x12\x17dictData.value.required\x1a\x0fthis.size() > 0\xba\x01C\n" +
+	"\x16dictData.value.max_len\x12\x16dictData.value.max_len\x1a\x11this.size() <= 64R\x05value\x12?\n" +
+	"\x06weight\x18\x04 \x01(\x05B'\xbaG$\x92\x02!排序权重，值越大越靠前R\x06weight\x12\xb9\x01\n" +
+	"\x06status\x18\x05 \x01(\tB\xa0\x01\xbaG/\x92\x02,状态（enabled=启用，disabled=禁用）\xbaHk\xba\x01S\n" +
+	"\x17dictData.status.invalid\x12\x17dictData.status.invalid\x1a\x1fthis in ['enabled', 'disabled']r\x13R\aenabledR\bdisabledR\x06status\x12\xb2\x01\n" +
+	"\textension\x18\x06 \x01(\tB\x93\x01\xbaG=\x92\x02:扩展参数（JSON字符串，用于存储额外信息）\xbaHP\xba\x01M\n" +
+	"\x1adictData.extension.max_len\x12\x1adictData.extension.max_len\x1a\x13this.size() <= 1024R\textension\x12v\n" +
+	"\x06remark\x18\a \x01(\tB^\xbaG\x0f\x92\x02\f备注说明\xbaHI\xba\x01F\n" +
+	"\x17dictData.remark.max_len\x12\x17dictData.remark.max_len\x1a\x12this.size() <= 255R\x06remark\x12\x0e\n" +
+	"\x02id\x18\n" +
+	" \x01(\tR\x02id: \xbaG\x1d\xba\x01\n" +
+	"dictTypeId\xba\x01\x05label\xba\x01\x05value\"\xf1\x01\n" +
+	"\x1bUpdateDictDataStatusRequest\x12\x18\n" +
+	"\x02id\x18\x01 \x01(\tB\b\xbaG\x05\x92\x02\x02IDR\x02id\x12\xa9\x01\n" +
+	"\x06status\x18\x02 \x01(\tB\x90\x01\xbaG\x1f\x92\x02\x1c状态（enabled/disabled）\xbaHk\xba\x01S\n" +
+	"\x17dictData.status.invalid\x12\x17dictData.status.invalid\x1a\x1fthis in ['enabled', 'disabled']r\x13R\aenabledR\bdisabledR\x06status:\f\xbaG\t\xba\x01\x06status\"\xa7\x01\n" +
+	"\x15DeleteDictDataRequset\x12\x8d\x01\n" +
+	"\x03ids\x18\x01 \x03(\tB{\xbaG \x92\x02\x1d组织ID列表，至少一个\xbaHU\xba\x01K\n" +
+	"\x16dictData.ids.not_empty\x12\x16dictData.ids.not_empty\x1a\x19this.all(x, x.size() > 0)\x92\x01\x04\b\x01\x10dR\x03idsB\xf1\x01\n" +
 	"\x19com.dictionary.service.v1B\rDictDataProtoP\x01ZOgithub.com/hypercoze/kratos-admin/api/gen/go/dictionary/service/v1;dictionarypb\xa2\x02\x03DSX\xaa\x02\x15Dictionary.Service.V1\xca\x02\x15Dictionary\\Service\\V1\xe2\x02!Dictionary\\Service\\V1\\GPBMetadata\xea\x02\x17Dictionary::Service::V1b\x06proto3"
 
 var (
@@ -265,22 +683,27 @@ func file_dictionary_service_v1_dict_data_proto_rawDescGZIP() []byte {
 	return file_dictionary_service_v1_dict_data_proto_rawDescData
 }
 
-var file_dictionary_service_v1_dict_data_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_dictionary_service_v1_dict_data_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_dictionary_service_v1_dict_data_proto_goTypes = []any{
-	(*DictData)(nil),              // 0: dictionary.service.v1.DictData
-	(*ListDictDataRequest)(nil),   // 1: dictionary.service.v1.ListDictDataRequest
-	(*ListDictDataResponse)(nil),  // 2: dictionary.service.v1.ListDictDataResponse
-	(*timestamppb.Timestamp)(nil), // 3: google.protobuf.Timestamp
+	(*DictData)(nil),                    // 0: dictionary.service.v1.DictData
+	(*ListDictDataRequest)(nil),         // 1: dictionary.service.v1.ListDictDataRequest
+	(*ListDictDataResponse)(nil),        // 2: dictionary.service.v1.ListDictDataResponse
+	(*CreateDictDataRequest)(nil),       // 3: dictionary.service.v1.CreateDictDataRequest
+	(*UpdateDictDataRequest)(nil),       // 4: dictionary.service.v1.UpdateDictDataRequest
+	(*UpdateDictDataStatusRequest)(nil), // 5: dictionary.service.v1.UpdateDictDataStatusRequest
+	(*DeleteDictDataRequset)(nil),       // 6: dictionary.service.v1.DeleteDictDataRequset
+	(*timestamppb.Timestamp)(nil),       // 7: google.protobuf.Timestamp
 }
 var file_dictionary_service_v1_dict_data_proto_depIdxs = []int32{
-	3, // 0: dictionary.service.v1.DictData.createdAt:type_name -> google.protobuf.Timestamp
-	3, // 1: dictionary.service.v1.DictData.updatedAt:type_name -> google.protobuf.Timestamp
-	3, // 2: dictionary.service.v1.DictData.deletedAt:type_name -> google.protobuf.Timestamp
-	3, // [3:3] is the sub-list for method output_type
-	3, // [3:3] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	7, // 0: dictionary.service.v1.DictData.createdAt:type_name -> google.protobuf.Timestamp
+	7, // 1: dictionary.service.v1.DictData.updatedAt:type_name -> google.protobuf.Timestamp
+	7, // 2: dictionary.service.v1.DictData.deletedAt:type_name -> google.protobuf.Timestamp
+	0, // 3: dictionary.service.v1.ListDictDataResponse.items:type_name -> dictionary.service.v1.DictData
+	4, // [4:4] is the sub-list for method output_type
+	4, // [4:4] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_dictionary_service_v1_dict_data_proto_init() }
@@ -294,7 +717,7 @@ func file_dictionary_service_v1_dict_data_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_dictionary_service_v1_dict_data_proto_rawDesc), len(file_dictionary_service_v1_dict_data_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

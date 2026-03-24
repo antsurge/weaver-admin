@@ -4,7 +4,7 @@
     "fields": {
       "name": "权限名称",
       "code": "权限编码",
-      "parentId": "上级菜单",
+      "parentID": "上级菜单",
       "path": "路由路径",
       "icon": "图标",
       "type": "权限类型",
@@ -13,7 +13,7 @@
       "component": "组件路径",
       "weight": "权重",
       "status": "状态",
-      "description": "描述",
+      "remark": "备注",
       "operation": "操作"
     },
     "operation": {
@@ -30,7 +30,7 @@
       "iframe": "Iframe"
     },
     "form_placeholder": {
-      "parentId": "点击选择",
+      "parentID": "点击选择",
       "path": "web端路由路径(path)，无需以`/admin`开头，如:system/permission",
       "component": "web端组件路径，请以/src开头，如:src/views/system/permission.vue",
       "url": "请输入链接或Iframe的URL地址"
@@ -40,7 +40,7 @@
     "name": "组织机构",
     "fields": {
       "name": "组织名称",
-      "parentId": "上级组织",
+      "parentID": "上级组织",
       "code": "组织编码",
       "weight": "权重",
       "leaderName": "负责人姓名",
@@ -58,7 +58,7 @@
       "appendChildren": "新增下级"
     },
     "form_placeholder": {
-      "parentId": "请选择上级组织",
+      "parentID": "请选择上级组织",
       "leaderName": "请输入负责人姓名",
       "leaderPhone": "请输入联系电话",
       "leaderEmail": "请输入邮箱"
@@ -88,8 +88,11 @@
       "code": "编码",
       "status": "状态",
       "updatedAt": "更新时间",
-      "description": "描述",
+      "remark": "备注",
       "operation": "操作"
+    },
+    "form_placeholder":{
+      "remark":"请输入备注"
     },
     "operation":{
       "appendDictData":"新增字典值"

@@ -39,9 +39,7 @@ message ListPositionResponse {
 }
 
 message GetPositionRequest {
-  string id = 1 [
-    (gnostic.openapi.v3.property) = {description: "岗位ID"}
-  ];
+  string id = 1 [(gnostic.openapi.v3.property) = {description: "岗位ID"}];
 }
 
 message CreatePositionRequest {
@@ -210,8 +208,6 @@ message DeletePositionRequest {
       message: "position.ids.not_empty"
       expression: "this.all(x, x.size() > 0)"
     },
-    (gnostic.openapi.v3.property) = {
-      description: "岗位ID列表（必填，至少1个，最多100个，每个ID不能为空）"
-    }
+    (gnostic.openapi.v3.property) = {description: "岗位ID列表（必填，至少1个，最多100个，每个ID不能为空）"}
   ];
 }

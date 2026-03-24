@@ -14,12 +14,12 @@ func buildOrganizationTree(perms []*Organization) []*Organization {
 	for _, p := range perms {
 		node := nodeMap[p.ID]
 
-		if p.ParentId == "" {
+		if p.ParentID == "" {
 			roots = append(roots, node)
 			continue
 		}
 
-		parent, ok := nodeMap[p.ParentId]
+		parent, ok := nodeMap[p.ParentID]
 		if ok {
 			parent.Children = append(parent.Children, node)
 		} else {

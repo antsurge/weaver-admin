@@ -26,10 +26,10 @@ const (
 
 type Organization struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 部门ID
+	// ID
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	// 父部门ID，空表示根节点
-	ParentId string `protobuf:"bytes,2,opt,name=parent_id,json=parentId,proto3" json:"parent_id,omitempty"`
+	ParentID string `protobuf:"bytes,2,opt,name=parentID,proto3" json:"parentID,omitempty"`
 	// 部门名称
 	Name string `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	// 部门code
@@ -39,16 +39,17 @@ type Organization struct {
 	// 状态：enabled=启用 disabled=禁用
 	Status string `protobuf:"bytes,6,opt,name=status,proto3" json:"status,omitempty"`
 	// 负责人姓名
-	LeaderName string `protobuf:"bytes,7,opt,name=leader_name,json=leaderName,proto3" json:"leader_name,omitempty"`
+	LeaderName string `protobuf:"bytes,7,opt,name=leaderName,proto3" json:"leaderName,omitempty"`
 	// 联系电话
-	LeaderPhone string `protobuf:"bytes,8,opt,name=leader_phone,json=leaderPhone,proto3" json:"leader_phone,omitempty"`
+	LeaderPhone string `protobuf:"bytes,8,opt,name=leaderPhone,proto3" json:"leaderPhone,omitempty"`
 	// 邮箱
-	LeaderEmail string `protobuf:"bytes,9,opt,name=leader_email,json=leaderEmail,proto3" json:"leader_email,omitempty"`
+	LeaderEmail string `protobuf:"bytes,9,opt,name=leaderEmail,proto3" json:"leaderEmail,omitempty"`
 	// 创建时间
-	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
 	// 更新时间
-	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	Children      []*Organization        `protobuf:"bytes,30,rep,name=children,proto3" json:"children,omitempty"`
+	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`
+	// 子部门
+	Children      []*Organization `protobuf:"bytes,30,rep,name=children,proto3" json:"children,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -90,9 +91,9 @@ func (x *Organization) GetId() string {
 	return ""
 }
 
-func (x *Organization) GetParentId() string {
+func (x *Organization) GetParentID() string {
 	if x != nil {
-		return x.ParentId
+		return x.ParentID
 	}
 	return ""
 }
@@ -170,14 +171,14 @@ func (x *Organization) GetChildren() []*Organization {
 // 创建组织请求
 type CreateOrganizationRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ParentId      string                 `protobuf:"bytes,1,opt,name=parent_id,json=parentId,proto3" json:"parent_id,omitempty"`
+	ParentID      string                 `protobuf:"bytes,1,opt,name=parentID,proto3" json:"parentID,omitempty"`
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	Code          string                 `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
 	Weight        int32                  `protobuf:"varint,4,opt,name=weight,proto3" json:"weight,omitempty"`
 	Status        string                 `protobuf:"bytes,5,opt,name=status,proto3" json:"status,omitempty"`
-	LeaderName    string                 `protobuf:"bytes,6,opt,name=leader_name,json=leaderName,proto3" json:"leader_name,omitempty"`
-	LeaderPhone   string                 `protobuf:"bytes,7,opt,name=leader_phone,json=leaderPhone,proto3" json:"leader_phone,omitempty"`
-	LeaderEmail   string                 `protobuf:"bytes,8,opt,name=leader_email,json=leaderEmail,proto3" json:"leader_email,omitempty"`
+	LeaderName    string                 `protobuf:"bytes,6,opt,name=leaderName,proto3" json:"leaderName,omitempty"`
+	LeaderPhone   string                 `protobuf:"bytes,7,opt,name=leaderPhone,proto3" json:"leaderPhone,omitempty"`
+	LeaderEmail   string                 `protobuf:"bytes,8,opt,name=leaderEmail,proto3" json:"leaderEmail,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -212,9 +213,9 @@ func (*CreateOrganizationRequest) Descriptor() ([]byte, []int) {
 	return file_organization_service_v1_organization_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *CreateOrganizationRequest) GetParentId() string {
+func (x *CreateOrganizationRequest) GetParentID() string {
 	if x != nil {
-		return x.ParentId
+		return x.ParentID
 	}
 	return ""
 }
@@ -271,15 +272,15 @@ func (x *CreateOrganizationRequest) GetLeaderEmail() string {
 // 编辑组织请求
 type UpdateOrganizationRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	ParentId      string                 `protobuf:"bytes,2,opt,name=parent_id,json=parentId,proto3" json:"parent_id,omitempty"`
-	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
-	Code          string                 `protobuf:"bytes,4,opt,name=code,proto3" json:"code,omitempty"`
-	Weight        int32                  `protobuf:"varint,5,opt,name=weight,proto3" json:"weight,omitempty"`
-	Status        string                 `protobuf:"bytes,6,opt,name=status,proto3" json:"status,omitempty"`
-	LeaderName    string                 `protobuf:"bytes,7,opt,name=leader_name,json=leaderName,proto3" json:"leader_name,omitempty"`
-	LeaderPhone   string                 `protobuf:"bytes,8,opt,name=leader_phone,json=leaderPhone,proto3" json:"leader_phone,omitempty"`
-	LeaderEmail   string                 `protobuf:"bytes,9,opt,name=leader_email,json=leaderEmail,proto3" json:"leader_email,omitempty"`
+	ParentID      string                 `protobuf:"bytes,1,opt,name=parentID,proto3" json:"parentID,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Code          string                 `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
+	Weight        int32                  `protobuf:"varint,4,opt,name=weight,proto3" json:"weight,omitempty"`
+	Status        string                 `protobuf:"bytes,5,opt,name=status,proto3" json:"status,omitempty"`
+	LeaderName    string                 `protobuf:"bytes,6,opt,name=leaderName,proto3" json:"leaderName,omitempty"`
+	LeaderPhone   string                 `protobuf:"bytes,7,opt,name=leaderPhone,proto3" json:"leaderPhone,omitempty"`
+	LeaderEmail   string                 `protobuf:"bytes,8,opt,name=leaderEmail,proto3" json:"leaderEmail,omitempty"`
+	Id            string                 `protobuf:"bytes,20,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -314,16 +315,9 @@ func (*UpdateOrganizationRequest) Descriptor() ([]byte, []int) {
 	return file_organization_service_v1_organization_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *UpdateOrganizationRequest) GetId() string {
+func (x *UpdateOrganizationRequest) GetParentID() string {
 	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-func (x *UpdateOrganizationRequest) GetParentId() string {
-	if x != nil {
-		return x.ParentId
+		return x.ParentID
 	}
 	return ""
 }
@@ -377,9 +371,19 @@ func (x *UpdateOrganizationRequest) GetLeaderEmail() string {
 	return ""
 }
 
+func (x *UpdateOrganizationRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
 // 组织tree请求
 type OrganizationTreeRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Code          string                 `protobuf:"bytes,4,opt,name=code,proto3" json:"code,omitempty"`
+	Status        string                 `protobuf:"bytes,5,opt,name=status,proto3" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -414,10 +418,31 @@ func (*OrganizationTreeRequest) Descriptor() ([]byte, []int) {
 	return file_organization_service_v1_organization_proto_rawDescGZIP(), []int{3}
 }
 
+func (x *OrganizationTreeRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *OrganizationTreeRequest) GetCode() string {
+	if x != nil {
+		return x.Code
+	}
+	return ""
+}
+
+func (x *OrganizationTreeRequest) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
 // 树形权限列表响应
 type OrganizationTreeResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Data          []*Organization        `protobuf:"bytes,1,rep,name=data,proto3" json:"data,omitempty"`
+	Items         []*Organization        `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -452,9 +477,9 @@ func (*OrganizationTreeResponse) Descriptor() ([]byte, []int) {
 	return file_organization_service_v1_organization_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *OrganizationTreeResponse) GetData() []*Organization {
+func (x *OrganizationTreeResponse) GetItems() []*Organization {
 	if x != nil {
-		return x.Data
+		return x.Items
 	}
 	return nil
 }
@@ -506,9 +531,11 @@ func (x *DeleteOrganizationRequset) GetIds() []string {
 
 // 更新组织状态请求
 type UpdateOrganizationStatusRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Status        string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// ID
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// 岗位状态
+	Status        string `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -561,70 +588,75 @@ var File_organization_service_v1_organization_proto protoreflect.FileDescriptor
 
 const file_organization_service_v1_organization_proto_rawDesc = "" +
 	"\n" +
-	"*organization/service/v1/organization.proto\x12\x17organization.service.v1\x1a\x1bbuf/validate/validate.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xb3\x03\n" +
-	"\fOrganization\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1b\n" +
-	"\tparent_id\x18\x02 \x01(\tR\bparentId\x12\x12\n" +
-	"\x04name\x18\x03 \x01(\tR\x04name\x12\x12\n" +
-	"\x04code\x18\x04 \x01(\tR\x04code\x12\x16\n" +
-	"\x06weight\x18\x05 \x01(\x05R\x06weight\x12\x16\n" +
-	"\x06status\x18\x06 \x01(\tR\x06status\x12\x1f\n" +
-	"\vleader_name\x18\a \x01(\tR\n" +
-	"leaderName\x12!\n" +
-	"\fleader_phone\x18\b \x01(\tR\vleaderPhone\x12!\n" +
-	"\fleader_email\x18\t \x01(\tR\vleaderEmail\x129\n" +
+	"*organization/service/v1/organization.proto\x12\x17organization.service.v1\x1a\x1bbuf/validate/validate.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x80\x06\n" +
+	"\fOrganization\x12\x18\n" +
+	"\x02id\x18\x01 \x01(\tB\b\xbaG\x05\x92\x02\x02IDR\x02id\x12B\n" +
+	"\bparentID\x18\x02 \x01(\tB&\xbaG#\x92\x02 父组织ID，空表示根节点R\bparentID\x12&\n" +
+	"\x04name\x18\x03 \x01(\tB\x12\xbaG\x0f\x92\x02\f组织名称R\x04name\x12,\n" +
+	"\x04code\x18\x04 \x01(\tB\x18\xbaG\x15\x92\x02\x12组织唯一编码R\x04code\x12?\n" +
+	"\x06weight\x18\x05 \x01(\x05B'\xbaG$\x92\x02!排序权重，值越大越靠前R\x06weight\x12G\n" +
+	"\x06status\x18\x06 \x01(\tB/\xbaG,\x92\x02)状态：enabled=启用，disabled=禁用R\x06status\x125\n" +
 	"\n" +
-	"created_at\x18\n" +
-	" \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"leaderName\x18\a \x01(\tB\x15\xbaG\x12\x92\x02\x0f负责人姓名R\n" +
+	"leaderName\x12=\n" +
+	"\vleaderPhone\x18\b \x01(\tB\x1b\xbaG\x18\x92\x02\x15负责人联系电话R\vleaderPhone\x127\n" +
+	"\vleaderEmail\x18\t \x01(\tB\x15\xbaG\x12\x92\x02\x0f负责人邮箱R\vleaderEmail\x12L\n" +
+	"\tcreatedAt\x18\n" +
+	" \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间R\tcreatedAt\x12L\n" +
+	"\tupdatedAt\x18\v \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间R\tupdatedAt\x12g\n" +
+	"\bchildren\x18\x1e \x03(\v2%.organization.service.v1.OrganizationB$\xbaG!\x92\x02\x1e子部门列表（树结构）R\bchildren\"\x92\t\n" +
+	"\x19CreateOrganizationRequest\x12B\n" +
+	"\bparentID\x18\x01 \x01(\tB&\xbaG#\x92\x02 父组织ID，空表示根节点R\bparentID\x12\xc3\x01\n" +
+	"\x04name\x18\x02 \x01(\tB\xae\x01\xbaG\x0f\x92\x02\f组织名称\xbaH\x98\x01\xba\x01I\n" +
+	"\x1aorganization.name.required\x12\x1aorganization.name.required\x1a\x0fthis.size() > 0\xba\x01I\n" +
+	"\x19organization.name.max_len\x12\x19organization.name.max_len\x1a\x11this.size() <= 64R\x04name\x12\xc3\x01\n" +
+	"\x04code\x18\x03 \x01(\tB\xae\x01\xbaG\x0f\x92\x02\f组织编码\xbaH\x98\x01\xba\x01I\n" +
+	"\x1aorganization.code.required\x12\x1aorganization.code.required\x1a\x0fthis.size() > 0\xba\x01I\n" +
+	"\x19organization.code.max_len\x12\x19organization.code.max_len\x1a\x11this.size() <= 64R\x04code\x12*\n" +
+	"\x06weight\x18\x04 \x01(\x05B\x12\xbaG\x0f\x92\x02\f部门权重R\x06weight\x12\xb1\x01\n" +
+	"\x06status\x18\x05 \x01(\tB\x98\x01\xbaG\x1f\x92\x02\x1c状态（enabled/disabled）\xbaHs\xba\x01[\n" +
+	"\x1borganization.status.invalid\x12\x1borganization.status.invalid\x1a\x1fthis in ['enabled', 'disabled']r\x13R\aenabledR\bdisabledR\x06status\x12\x90\x01\n" +
 	"\n" +
-	"updated_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12A\n" +
-	"\bchildren\x18\x1e \x03(\v2%.organization.service.v1.OrganizationR\bchildren\"\xe9\a\n" +
-	"\x19CreateOrganizationRequest\x12u\n" +
-	"\tparent_id\x18\x01 \x01(\tBX\xbaG#\x92\x02 父部门ID，空表示根节点\xbaH/\xba\x01,\n" +
-	"\x17CREATE_ORG_PARENTID_MAX\x1a\x11this.size() <= 36R\bparentId\x12\x86\x01\n" +
-	"\x04name\x18\x02 \x01(\tBr\xbaG\x0f\x92\x02\f部门名称\xbaH]\xba\x01Z\n" +
-	"\x18CREATE_ORG_NAME_REQUIRED\x12\x18部门名称不能为空\x1a$this.size() > 0 && this.size() <= 64R\x04name\x12\x8c\x01\n" +
-	"\x04code\x18\x03 \x01(\tBx\xbaG\x15\x92\x02\x12部门唯一编码\xbaH]\xba\x01Z\n" +
-	"\x18CREATE_ORG_CODE_REQUIRED\x12\x18部门编码不能为空\x1a$this.size() > 0 && this.size() <= 64R\x04code\x12d\n" +
-	"\x06weight\x18\x04 \x01(\x05BL\xbaG!\x92\x02\x1e部门权重，越大越靠前\xbaH%\xba\x01\"\n" +
-	"\x15CREATE_ORG_WEIGHT_MIN\x1a\tthis >= 0R\x06weight\x12\x82\x01\n" +
-	"\x06status\x18\x05 \x01(\tBj\xbaG\x1d\x92\x02\x1a状态: enabled / disabled\xbaHG\xba\x01D\n" +
-	"\x19CREATE_ORG_STATUS_ALLOWED\x1a'this == 'enabled' || this == 'disabled'R\x06status\x12k\n" +
-	"\vleader_name\x18\x06 \x01(\tBJ\xbaG\x12\x92\x02\x0f负责人姓名\xbaH2\xba\x01/\n" +
-	"\x1aCREATE_ORG_LEADER_NAME_MAX\x1a\x11this.size() <= 64R\n" +
-	"leaderName\x12t\n" +
-	"\fleader_phone\x18\a \x01(\tBQ\xbaG\x18\x92\x02\x15负责人联系电话\xbaH3\xba\x010\n" +
-	"\x1bCREATE_ORG_LEADER_PHONE_MAX\x1a\x11this.size() <= 20R\vleaderPhone\x12o\n" +
-	"\fleader_email\x18\b \x01(\tBL\xbaG\x12\x92\x02\x0f负责人邮箱\xbaH4\xba\x011\n" +
-	"\x1bCREATE_ORG_LEADER_EMAIL_MAX\x1a\x12this.size() <= 128R\vleaderEmail\"\xf9\a\n" +
-	"\x19UpdateOrganizationRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12u\n" +
-	"\tparent_id\x18\x02 \x01(\tBX\xbaG#\x92\x02 父部门ID，空表示根节点\xbaH/\xba\x01,\n" +
-	"\x17CREATE_ORG_PARENTID_MAX\x1a\x11this.size() <= 36R\bparentId\x12\x86\x01\n" +
-	"\x04name\x18\x03 \x01(\tBr\xbaG\x0f\x92\x02\f部门名称\xbaH]\xba\x01Z\n" +
-	"\x18CREATE_ORG_NAME_REQUIRED\x12\x18部门名称不能为空\x1a$this.size() > 0 && this.size() <= 64R\x04name\x12\x8c\x01\n" +
-	"\x04code\x18\x04 \x01(\tBx\xbaG\x15\x92\x02\x12部门唯一编码\xbaH]\xba\x01Z\n" +
-	"\x18CREATE_ORG_CODE_REQUIRED\x12\x18部门编码不能为空\x1a$this.size() > 0 && this.size() <= 64R\x04code\x12d\n" +
-	"\x06weight\x18\x05 \x01(\x05BL\xbaG!\x92\x02\x1e部门权重，越大越靠前\xbaH%\xba\x01\"\n" +
-	"\x15CREATE_ORG_WEIGHT_MIN\x1a\tthis >= 0R\x06weight\x12\x82\x01\n" +
-	"\x06status\x18\x06 \x01(\tBj\xbaG\x1d\x92\x02\x1a状态: enabled / disabled\xbaHG\xba\x01D\n" +
-	"\x19CREATE_ORG_STATUS_ALLOWED\x1a'this == 'enabled' || this == 'disabled'R\x06status\x12k\n" +
-	"\vleader_name\x18\a \x01(\tBJ\xbaG\x12\x92\x02\x0f负责人姓名\xbaH2\xba\x01/\n" +
-	"\x1aCREATE_ORG_LEADER_NAME_MAX\x1a\x11this.size() <= 64R\n" +
-	"leaderName\x12t\n" +
-	"\fleader_phone\x18\b \x01(\tBQ\xbaG\x18\x92\x02\x15负责人联系电话\xbaH3\xba\x010\n" +
-	"\x1bCREATE_ORG_LEADER_PHONE_MAX\x1a\x11this.size() <= 20R\vleaderPhone\x12o\n" +
-	"\fleader_email\x18\t \x01(\tBL\xbaG\x12\x92\x02\x0f负责人邮箱\xbaH4\xba\x011\n" +
-	"\x1bCREATE_ORG_LEADER_EMAIL_MAX\x1a\x12this.size() <= 128R\vleaderEmail\"\x19\n" +
-	"\x17OrganizationTreeRequest\"U\n" +
-	"\x18OrganizationTreeResponse\x129\n" +
-	"\x04data\x18\x01 \x03(\v2%.organization.service.v1.OrganizationR\x04data\"Z\n" +
-	"\x19DeleteOrganizationRequset\x12=\n" +
-	"\x03ids\x18\x01 \x03(\tB+\xbaG \x92\x02\x1d组织ID列表，至少一个\xbaH\x05\x92\x01\x02\b\x01R\x03ids\"\xc4\x01\n" +
-	"\x1fUpdateOrganizationStatusRequest\x12g\n" +
-	"\x02id\x18\x01 \x01(\tBW\xbaG\v\x92\x02\b权限ID\xbaHF\xba\x01C\n" +
-	"\x1aGET_PERMISSION_ID_REQUIRED\x12\x14权限ID不能为空\x1a\x0fthis.size() > 0R\x02id\x128\n" +
-	"\x06status\x18\x02 \x01(\tB \xbaG\x1d\x92\x02\x1a状态: enabled / disabledR\x06statusB\x83\x02\n" +
+	"leaderName\x18\x06 \x01(\tBp\xbaG\x12\x92\x02\x0f负责人姓名\xbaHX\xba\x01U\n" +
+	"\x1forganization.leaderName.max_len\x12\x1forganization.leaderName.max_len\x1a\x11this.size() <= 64R\n" +
+	"leaderName\x12\x9a\x01\n" +
+	"\vleaderPhone\x18\a \x01(\tBx\xbaG\x18\x92\x02\x15负责人联系电话\xbaHZ\xba\x01W\n" +
+	" organization.leaderPhone.max_len\x12 organization.leaderPhone.max_len\x1a\x11this.size() <= 20R\vleaderPhone\x12\x94\x01\n" +
+	"\vleaderEmail\x18\b \x01(\tBr\xbaG\x12\x92\x02\x0f负责人邮箱\xbaHZ\xba\x01W\n" +
+	" organization.leaderEmail.max_len\x12 organization.leaderEmail.max_len\x1a\x11this.size() <= 20R\vleaderEmail\"\xa2\t\n" +
+	"\x19UpdateOrganizationRequest\x12B\n" +
+	"\bparentID\x18\x01 \x01(\tB&\xbaG#\x92\x02 父组织ID，空表示根节点R\bparentID\x12\xc3\x01\n" +
+	"\x04name\x18\x02 \x01(\tB\xae\x01\xbaG\x0f\x92\x02\f组织名称\xbaH\x98\x01\xba\x01I\n" +
+	"\x1aorganization.name.required\x12\x1aorganization.name.required\x1a\x0fthis.size() > 0\xba\x01I\n" +
+	"\x19organization.name.max_len\x12\x19organization.name.max_len\x1a\x11this.size() <= 64R\x04name\x12\xc3\x01\n" +
+	"\x04code\x18\x03 \x01(\tB\xae\x01\xbaG\x0f\x92\x02\f组织编码\xbaH\x98\x01\xba\x01I\n" +
+	"\x1aorganization.code.required\x12\x1aorganization.code.required\x1a\x0fthis.size() > 0\xba\x01I\n" +
+	"\x19organization.code.max_len\x12\x19organization.code.max_len\x1a\x11this.size() <= 64R\x04code\x12*\n" +
+	"\x06weight\x18\x04 \x01(\x05B\x12\xbaG\x0f\x92\x02\f部门权重R\x06weight\x12\xb1\x01\n" +
+	"\x06status\x18\x05 \x01(\tB\x98\x01\xbaG\x1f\x92\x02\x1c状态（enabled/disabled）\xbaHs\xba\x01[\n" +
+	"\x1borganization.status.invalid\x12\x1borganization.status.invalid\x1a\x1fthis in ['enabled', 'disabled']r\x13R\aenabledR\bdisabledR\x06status\x12\x90\x01\n" +
+	"\n" +
+	"leaderName\x18\x06 \x01(\tBp\xbaG\x12\x92\x02\x0f负责人姓名\xbaHX\xba\x01U\n" +
+	"\x1forganization.leaderName.max_len\x12\x1forganization.leaderName.max_len\x1a\x11this.size() <= 64R\n" +
+	"leaderName\x12\x9a\x01\n" +
+	"\vleaderPhone\x18\a \x01(\tBx\xbaG\x18\x92\x02\x15负责人联系电话\xbaHZ\xba\x01W\n" +
+	" organization.leaderPhone.max_len\x12 organization.leaderPhone.max_len\x1a\x11this.size() <= 20R\vleaderPhone\x12\x94\x01\n" +
+	"\vleaderEmail\x18\b \x01(\tBr\xbaG\x12\x92\x02\x0f负责人邮箱\xbaHZ\xba\x01W\n" +
+	" organization.leaderEmail.max_len\x12 organization.leaderEmail.max_len\x1a\x11this.size() <= 20R\vleaderEmail\x12\x0e\n" +
+	"\x02id\x18\x14 \x01(\tR\x02id\"\xe5\x01\n" +
+	"\x17OrganizationTreeRequest\x12>\n" +
+	"\x04name\x18\x03 \x01(\tB*\xbaG'\x92\x02$组织名称（支持模糊查询）R\x04name\x12>\n" +
+	"\x04code\x18\x04 \x01(\tB*\xbaG'\x92\x02$组织编码（支持模糊查询）R\x04code\x12J\n" +
+	"\x06status\x18\x05 \x01(\tB2\xbaG/\x92\x02,状态（enabled=启用，disabled=禁用）R\x06status\"W\n" +
+	"\x18OrganizationTreeResponse\x12;\n" +
+	"\x05items\x18\x01 \x03(\v2%.organization.service.v1.OrganizationR\x05items\"\xb4\x01\n" +
+	"\x19DeleteOrganizationRequset\x12\x96\x01\n" +
+	"\x03ids\x18\x01 \x03(\tB\x83\x01\xbaG \x92\x02\x1d组织ID列表，至少一个\xbaH]\xba\x01S\n" +
+	"\x1aorganization.ids.not_empty\x12\x1aorganization.ids.not_empty\x1a\x19this.all(x, x.size() > 0)\x92\x01\x04\b\x01\x10dR\x03ids\"\xfd\x01\n" +
+	"\x1fUpdateOrganizationStatusRequest\x12\x18\n" +
+	"\x02id\x18\x01 \x01(\tB\b\xbaG\x05\x92\x02\x02IDR\x02id\x12\xb1\x01\n" +
+	"\x06status\x18\x02 \x01(\tB\x98\x01\xbaG\x1f\x92\x02\x1c状态（enabled/disabled）\xbaHs\xba\x01[\n" +
+	"\x1borganization.status.invalid\x12\x1borganization.status.invalid\x1a\x1fthis in ['enabled', 'disabled']r\x13R\aenabledR\bdisabledR\x06status:\f\xbaG\t\xba\x01\x06statusB\x83\x02\n" +
 	"\x1bcom.organization.service.v1B\x11OrganizationProtoP\x01ZSgithub.com/hypercoze/kratos-admin/api/gen/go/organization/service/v1;organizationpb\xa2\x02\x03OSX\xaa\x02\x17Organization.Service.V1\xca\x02\x17Organization\\Service\\V1\xe2\x02#Organization\\Service\\V1\\GPBMetadata\xea\x02\x19Organization::Service::V1b\x06proto3"
 
 var (
@@ -651,10 +683,10 @@ var file_organization_service_v1_organization_proto_goTypes = []any{
 	(*timestamppb.Timestamp)(nil),           // 7: google.protobuf.Timestamp
 }
 var file_organization_service_v1_organization_proto_depIdxs = []int32{
-	7, // 0: organization.service.v1.Organization.created_at:type_name -> google.protobuf.Timestamp
-	7, // 1: organization.service.v1.Organization.updated_at:type_name -> google.protobuf.Timestamp
+	7, // 0: organization.service.v1.Organization.createdAt:type_name -> google.protobuf.Timestamp
+	7, // 1: organization.service.v1.Organization.updatedAt:type_name -> google.protobuf.Timestamp
 	0, // 2: organization.service.v1.Organization.children:type_name -> organization.service.v1.Organization
-	0, // 3: organization.service.v1.OrganizationTreeResponse.data:type_name -> organization.service.v1.Organization
+	0, // 3: organization.service.v1.OrganizationTreeResponse.items:type_name -> organization.service.v1.Organization
 	4, // [4:4] is the sub-list for method output_type
 	4, // [4:4] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name

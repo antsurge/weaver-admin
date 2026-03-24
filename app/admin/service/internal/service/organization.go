@@ -30,14 +30,21 @@ func NewOrganizationService(
 
 // 组织tree
 func (s *OrganizationService) OrganizationTree(ctx context.Context, req *organizationV1.OrganizationTreeRequest) (*organizationV1.OrganizationTreeResponse, error) {
-	tree, err := s.organizationUc.OrganizationTree(ctx)
+	input := biz.OrganizationListResult{}
+	var err error
+	err = copier.Copy(&input, req)
+	if err != nil {
+		return nil, err
+	}
+
+	tree, err := s.organizationUc.OrganizationTree(ctx, &input)
 	if err != nil {
 		return nil, err
 	}
 	output := make([]*organizationV1.Organization, 0)
 	err = copier.Copy(&output, &tree)
 
-	return &organizationV1.OrganizationTreeResponse{Data: output}, nil
+	return &organizationV1.OrganizationTreeResponse{Items: output}, nil
 }
 
 // 创建

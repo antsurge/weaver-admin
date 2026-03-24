@@ -6,14 +6,194 @@ info:
     title: ""
     version: 0.0.1
 paths:
+    /admin/v1/dict-data:
+        get:
+            tags:
+                - Dictionary
+                - Dictionary
+            summary: 字典数据-列表
+            description: 字典数据列表
+            operationId: Dictionary_ListDictData
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: label
+                  in: query
+                  schema:
+                    type: string
+                - name: value
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListDictDataResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Dictionary
+                - Dictionary
+            summary: 字典数据-创建
+            description: 创建字典数据
+            operationId: Dictionary_CreateDictData
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateDictDataRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DictData'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Dictionary
+                - Dictionary
+            summary: 字典数据-删除(批量)
+            description: 删除字典类型(支持批量)
+            operationId: Dictionary_DeleteDictData
+            parameters:
+                - name: ids
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/dict-data/{id}:
+        put:
+            tags:
+                - Dictionary
+                - Dictionary
+            summary: 字典数据-修改
+            description: 字典数据修改
+            operationId: Dictionary_UpdateDictData
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateDictDataRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DictData'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/dict-data/{id}/status:
+        put:
+            tags:
+                - Dictionary
+                - Dictionary
+            summary: 字典数据-更新状态
+            description: 更新字典类型状态
+            operationId: Dictionary_UpdateDictDataStatus
+            parameters:
+                - name: id
+                  in: path
+                  description: ID
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateDictDataStatusRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DictData'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /admin/v1/dict-type:
         get:
             tags:
                 - Dictionary
                 - Dictionary
-            summary: 字典类型列表
+            summary: 字典类型-列表
             description: 字典类型列表
             operationId: Dictionary_ListDictType
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: code
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -21,6 +201,123 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/ListDictTypeResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Dictionary
+                - Dictionary
+            summary: 字典类型-创建
+            description: 创建字典类型
+            operationId: Dictionary_CreateDictType
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateDictTypeRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DictType'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Dictionary
+                - Dictionary
+            summary: 字典类型-删除(批量)
+            description: 删除字典类型(支持批量)
+            operationId: Dictionary_DeleteDictType
+            parameters:
+                - name: ids
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/dict-type/{id}:
+        put:
+            tags:
+                - Dictionary
+                - Dictionary
+            summary: 字典类型-修改
+            description: 创建字典修改
+            operationId: Dictionary_UpdateDictType
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateDictTypeRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DictType'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/dict-type/{id}/status:
+        put:
+            tags:
+                - Dictionary
+                - Dictionary
+            summary: 字典类型-更新状态
+            description: 更新字典类型状态
+            operationId: Dictionary_UpdateDictTypeStatus
+            parameters:
+                - name: id
+                  in: path
+                  description: ID
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateDictTypeStatusRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DictType'
                 default:
                     description: Default error response
                     content:
@@ -137,6 +434,19 @@ paths:
             summary: 组织-Tree
             description: 获取组织树
             operationId: Organization_OrganizationTree
+            parameters:
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: code
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -194,6 +504,7 @@ paths:
             parameters:
                 - name: id
                   in: path
+                  description: ID
                   required: true
                   schema:
                     type: string
@@ -610,25 +921,73 @@ paths:
                                 $ref: '#/components/schemas/Status'
 components:
     schemas:
-        CreateOrganizationRequest:
+        CreateDictDataRequest:
+            required:
+                - dictTypeId
+                - label
+                - value
             type: object
             properties:
-                parentId:
+                dictTypeId:
                     type: string
-                    description: 父部门ID，空表示根节点
-                name:
+                    description: 所属字典类型ID
+                label:
                     type: string
-                    description: 部门名称
-                code:
+                    description: 显示标签（给前端展示）
+                value:
                     type: string
-                    description: 部门唯一编码
+                    description: 字典值（实际存储值）
                 weight:
                     type: integer
-                    description: 部门权重，越大越靠前
+                    description: 排序权重，值越大越靠前
                     format: int32
                 status:
                     type: string
-                    description: '状态: enabled / disabled'
+                    description: 状态（enabled=启用，disabled=禁用）
+                extension:
+                    type: string
+                    description: 扩展参数（JSON字符串，用于存储额外信息）
+                remark:
+                    type: string
+                    description: 备注说明
+        CreateDictTypeRequest:
+            required:
+                - name
+                - code
+                - status
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: 名称
+                code:
+                    type: string
+                    description: 编码
+                remark:
+                    type: string
+                    description: 备注
+                status:
+                    type: string
+                    description: 状态（enabled/disabled）
+        CreateOrganizationRequest:
+            type: object
+            properties:
+                parentID:
+                    type: string
+                    description: 父组织ID，空表示根节点
+                name:
+                    type: string
+                    description: 组织名称
+                code:
+                    type: string
+                    description: 组织编码
+                weight:
+                    type: integer
+                    description: 部门权重
+                    format: int32
+                status:
+                    type: string
+                    description: 状态（enabled/disabled）
                 leaderName:
                     type: string
                     description: 负责人姓名
@@ -717,29 +1076,29 @@ components:
             properties:
                 id:
                     type: string
-                    description: 字典ID
+                    description: ID
                 dictTypeId:
                     type: string
-                    description: 字典类型ID
+                    description: 所属字典类型ID
                 label:
                     type: string
-                    description: 标签
+                    description: 显示标签（给前端展示）
                 value:
                     type: string
-                    description: 值
+                    description: 字典值（实际存储值）
                 weight:
                     type: integer
-                    description: 排序
+                    description: 排序权重，值越大越靠前
                     format: int32
                 status:
                     type: string
-                    description: 状态
+                    description: 状态：enabled=启用，disabled=禁用
                 extension:
                     type: string
-                    description: 扩展参数(JSON)
-                description:
+                    description: 扩展参数（JSON字符串，用于存储额外信息）
+                remark:
                     type: string
-                    description: 描述
+                    description: 备注说明
                 createdAt:
                     type: string
                     description: 创建时间
@@ -750,26 +1109,26 @@ components:
                     format: date-time
                 deletedAt:
                     type: string
-                    description: 删除时间
+                    description: 删除时间（为空表示未删除）
                     format: date-time
         DictType:
             type: object
             properties:
                 id:
                     type: string
-                    description: 字典ID
+                    description: ID
                 name:
                     type: string
                     description: 字典名称
                 code:
                     type: string
-                    description: 字典编码
+                    description: 字典唯一编码
                 status:
                     type: string
-                    description: 状态
-                description:
+                    description: 状态：enabled=启用，disabled=禁用
+                remark:
                     type: string
-                    description: 描述
+                    description: 备注信息
                 createdAt:
                     type: string
                     description: 创建时间
@@ -780,12 +1139,13 @@ components:
                     format: date-time
                 deletedAt:
                     type: string
-                    description: 删除时间
+                    description: 删除时间（软删除标记）
                     format: date-time
                 dictData:
                     type: array
                     items:
                         $ref: '#/components/schemas/DictData'
+                    description: 字典数据列表
         GetCaptchaResponse:
             type: object
             properties:
@@ -801,10 +1161,19 @@ components:
                     description: The type of the serialized message.
             additionalProperties: true
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        ListDictDataResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/DictData'
+                total:
+                    type: string
         ListDictTypeResponse:
             type: object
             properties:
-                data:
+                items:
                     type: array
                     items:
                         $ref: '#/components/schemas/DictType'
@@ -856,32 +1225,32 @@ components:
             properties:
                 id:
                     type: string
-                    description: 部门ID
-                parentId:
+                    description: ID
+                parentID:
                     type: string
-                    description: 父部门ID，空表示根节点
+                    description: 父组织ID，空表示根节点
                 name:
                     type: string
-                    description: 部门名称
+                    description: 组织名称
                 code:
                     type: string
-                    description: 部门code
+                    description: 组织唯一编码
                 weight:
                     type: integer
-                    description: 权重
+                    description: 排序权重，值越大越靠前
                     format: int32
                 status:
                     type: string
-                    description: 状态：enabled=启用 disabled=禁用
+                    description: 状态：enabled=启用，disabled=禁用
                 leaderName:
                     type: string
                     description: 负责人姓名
                 leaderPhone:
                     type: string
-                    description: 联系电话
+                    description: 负责人联系电话
                 leaderEmail:
                     type: string
-                    description: 邮箱
+                    description: 负责人邮箱
                 createdAt:
                     type: string
                     description: 创建时间
@@ -894,10 +1263,11 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/Organization'
+                    description: 子部门列表（树结构）
         OrganizationTreeResponse:
             type: object
             properties:
-                data:
+                items:
                     type: array
                     items:
                         $ref: '#/components/schemas/Organization'
@@ -1001,27 +1371,99 @@ components:
                         $ref: '#/components/schemas/GoogleProtobufAny'
                     description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
             description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
-        UpdateOrganizationRequest:
+        UpdateDictDataRequest:
+            required:
+                - dictTypeId
+                - label
+                - value
+            type: object
+            properties:
+                dictTypeId:
+                    type: string
+                    description: 所属字典类型ID
+                label:
+                    type: string
+                    description: 显示标签（给前端展示）
+                value:
+                    type: string
+                    description: 字典值（实际存储值）
+                weight:
+                    type: integer
+                    description: 排序权重，值越大越靠前
+                    format: int32
+                status:
+                    type: string
+                    description: 状态（enabled=启用，disabled=禁用）
+                extension:
+                    type: string
+                    description: 扩展参数（JSON字符串，用于存储额外信息）
+                remark:
+                    type: string
+                    description: 备注说明
+                id:
+                    type: string
+        UpdateDictDataStatusRequest:
+            required:
+                - status
             type: object
             properties:
                 id:
                     type: string
-                parentId:
+                    description: ID
+                status:
                     type: string
-                    description: 父部门ID，空表示根节点
+                    description: 状态（enabled/disabled）
+        UpdateDictTypeRequest:
+            required:
+                - name
+                - code
+                - status
+            type: object
+            properties:
                 name:
                     type: string
-                    description: 部门名称
+                    description: 名称
                 code:
                     type: string
-                    description: 部门唯一编码
+                    description: 编码
+                remark:
+                    type: string
+                    description: 备注
+                status:
+                    type: string
+                    description: 状态（enabled/disabled）
+                id:
+                    type: string
+        UpdateDictTypeStatusRequest:
+            required:
+                - status
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: ID
+                status:
+                    type: string
+                    description: 状态（enabled/disabled）
+        UpdateOrganizationRequest:
+            type: object
+            properties:
+                parentID:
+                    type: string
+                    description: 父组织ID，空表示根节点
+                name:
+                    type: string
+                    description: 组织名称
+                code:
+                    type: string
+                    description: 组织编码
                 weight:
                     type: integer
-                    description: 部门权重，越大越靠前
+                    description: 部门权重
                     format: int32
                 status:
                     type: string
-                    description: '状态: enabled / disabled'
+                    description: 状态（enabled/disabled）
                 leaderName:
                     type: string
                     description: 负责人姓名
@@ -1031,16 +1473,20 @@ components:
                 leaderEmail:
                     type: string
                     description: 负责人邮箱
+                id:
+                    type: string
             description: 编辑组织请求
         UpdateOrganizationStatusRequest:
+            required:
+                - status
             type: object
             properties:
                 id:
                     type: string
-                    description: 权限ID
+                    description: ID
                 status:
                     type: string
-                    description: '状态: enabled / disabled'
+                    description: 状态（enabled/disabled）
             description: 更新组织状态请求
         UpdatePermissionRequest:
             type: object

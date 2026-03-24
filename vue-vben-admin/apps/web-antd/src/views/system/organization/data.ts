@@ -1,6 +1,6 @@
 import type { OnActionClickFn, VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { SystemOrganizationApi } from '#/api/system/organization';
-
+import type { VbenFormProps } from '#/adapter/form';
 import { $t } from '#/locales';
 
 export function useColumns(
@@ -12,9 +12,8 @@ export function useColumns(
 ): VxeTableGridOptions<SystemOrganizationApi.Organization>['columns'] {
   return [
     {
-      field: 'id',
-      align: 'center',
       type: 'checkbox',
+      align: 'center',
       width: 80,
       fixed: 'left',
     },
@@ -78,3 +77,54 @@ export function useColumns(
   ];
 }
 
+export function useFormOptions(): VbenFormProps {
+  return {
+    collapsed: false,
+    schema: [
+      {
+        component: 'Input',
+        componentProps: {
+          placeholder: $t('ui.formRules.required', [
+            $t('system.organization.fields.name'),
+          ]),
+        },
+        fieldName: 'name',
+        label: $t('system.organization.fields.name'),
+      },
+      {
+        component: 'Input',
+        componentProps: {
+          placeholder: $t('ui.formRules.required', [
+            $t('system.organization.fields.code'),
+          ]),
+        },
+        fieldName: 'code',
+        label: $t('system.organization.fields.code'),
+      },
+      {
+        component: 'Select',
+        fieldName: 'status',
+        label: $t('system.organization.fields.status'),
+        componentProps: {
+          placeholder: $t('ui.formRules.selectRequired', [
+            $t('system.organization.fields.status'),
+          ]),
+          options: [
+            { label: '启用', value: 'enabled' },
+            { label: '禁用', value: 'disabled' },
+          ],
+          allowClear: true,
+        },
+      },
+    ],
+    // 控制表单是否显示折叠按钮
+    showCollapseButton: true,
+    submitButtonOptions: {
+      content: '查询',
+    },
+    // 是否在字段值改变时提交表单
+    submitOnChange: false,
+    // 按下回车时是否提交表单
+    submitOnEnter: false,
+  }
+}

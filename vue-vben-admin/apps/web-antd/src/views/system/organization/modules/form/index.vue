@@ -23,7 +23,7 @@ import { $t } from '#/locales';
 
 import {
   nameRule,
-  parentIdRule,
+  parentIDRule,
   codeRule,
 } from "./rules"
 
@@ -34,15 +34,12 @@ const emit = defineEmits<{
 const formData = ref<SystemOrganizationApi.Organization>();
 
 
-
-
-
 const schema: VbenFormSchema[] = [
   {
-    fieldName: 'parentId',
-    label: $t('system.organization.fields.parentId'),
+    fieldName: 'parentID',
+    label: $t('system.organization.fields.parentID'),
     component: 'ApiTreeSelect',
-    rules: parentIdRule,
+    rules: parentIDRule,
     componentProps: {
       api: getOrganizationTreeApi,
       allowClear: true,
@@ -53,9 +50,9 @@ const schema: VbenFormSchema[] = [
       valueField: 'id',
       childrenField: 'children',
       getPopupContainer,
-      placeholder: $t('system.organization.form_placeholder.parentId'),
+      placeholder: $t('system.organization.form_placeholder.parentID'),
       afterFetch: (res: any[]) => {
-        const list = (res as any)?.data || res;
+        const list = (res as any)?.items || res;
         const convert = (items: any[]): any[] =>
           items.map((item) => ({
             id: item.id,

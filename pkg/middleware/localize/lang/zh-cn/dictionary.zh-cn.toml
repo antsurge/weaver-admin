@@ -1,0 +1,16 @@
+[dictType.name]
+required = "名称不能为空"
+max_len = "名称不能超过64个字符"
+
+[dictType.code]
+required = "编码不能为空"
+max_len = "编码不能超过64个字符"
+
+[dictType.status]
+invalid = "状态异常"
+
+[dictType.remark]
+max_len = "备注不能超过255个字符"
+
+[dictType.ids]
+not_empty = "Ids不能为空"

@@ -9,11 +9,10 @@ package adminpb
 import (
 	_ "github.com/google/gnostic/openapiv3"
 	v1 "github.com/hypercoze/kratos-admin/api/gen/go/dictionary/service/v1"
-	_ "github.com/hypercoze/kratos-admin/api/gen/go/organization/service/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	_ "google.golang.org/protobuf/types/known/emptypb"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	unsafe "unsafe"
 )
@@ -29,26 +28,84 @@ var File_admin_service_v1_i_dictionary_proto protoreflect.FileDescriptor
 
 const file_admin_service_v1_i_dictionary_proto_rawDesc = "" +
 	"\n" +
-	"#admin/service/v1/i_dictionary.proto\x12\x10admin.service.v1\x1a%dictionary/service/v1/dict_type.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a&organization/service/v1/position.proto2\xca\x01\n" +
+	"#admin/service/v1/i_dictionary.proto\x12\x10admin.service.v1\x1a%dictionary/service/v1/dict_data.proto\x1a%dictionary/service/v1/dict_type.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto2\xc0\x0f\n" +
 	"\n" +
-	"Dictionary\x12\xbb\x01\n" +
-	"\fListDictType\x12*.dictionary.service.v1.ListDictTypeRequest\x1a+.dictionary.service.v1.ListDictTypeResponse\"R\xbaG4\n" +
+	"Dictionary\x12\xbc\x01\n" +
+	"\fListDictType\x12*.dictionary.service.v1.ListDictTypeRequest\x1a+.dictionary.service.v1.ListDictTypeResponse\"S\xbaG5\n" +
 	"\n" +
-	"Dictionary\x12\x12字典类型列表\x1a\x12字典类型列表\x82\xd3\xe4\x93\x02\x15\x12\x13/admin/v1/dict-typeB\xd2\x01\n" +
+	"Dictionary\x12\x13字典类型-列表\x1a\x12字典类型列表\x82\xd3\xe4\x93\x02\x15\x12\x13/admin/v1/dict-type\x12\xb7\x01\n" +
+	"\x0eCreateDictType\x12,.dictionary.service.v1.CreateDictTypeRequest\x1a\x1f.dictionary.service.v1.DictType\"V\xbaG5\n" +
+	"\n" +
+	"Dictionary\x12\x13字典类型-创建\x1a\x12创建字典类型\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/admin/v1/dict-type\x12\xbc\x01\n" +
+	"\x0eUpdateDictType\x12,.dictionary.service.v1.UpdateDictTypeRequest\x1a\x1f.dictionary.service.v1.DictType\"[\xbaG5\n" +
+	"\n" +
+	"Dictionary\x12\x13字典类型-修改\x1a\x12创建字典修改\x82\xd3\xe4\x93\x02\x1d:\x01*\x1a\x18/admin/v1/dict-type/{id}\x12\xdb\x01\n" +
+	"\x14UpdateDictTypeStatus\x122.dictionary.service.v1.UpdateDictTypeStatusRequest\x1a\x1f.dictionary.service.v1.DictType\"n\xbaGA\n" +
+	"\n" +
+	"Dictionary\x12\x19字典类型-更新状态\x1a\x18更新字典类型状态\x82\xd3\xe4\x93\x02$:\x01*\x1a\x1f/admin/v1/dict-type/{id}/status\x12\xc1\x01\n" +
+	"\x0eDeleteDictType\x12,.dictionary.service.v1.DeleteDictTypeRequset\x1a\x16.google.protobuf.Empty\"i\xbaGK\n" +
+	"\n" +
+	"Dictionary\x12\x1b字典类型-删除(批量)\x1a 删除字典类型(支持批量)\x82\xd3\xe4\x93\x02\x15*\x13/admin/v1/dict-type\x12\xbc\x01\n" +
+	"\fListDictData\x12*.dictionary.service.v1.ListDictDataRequest\x1a+.dictionary.service.v1.ListDictDataResponse\"S\xbaG5\n" +
+	"\n" +
+	"Dictionary\x12\x13字典数据-列表\x1a\x12字典数据列表\x82\xd3\xe4\x93\x02\x15\x12\x13/admin/v1/dict-data\x12\xb7\x01\n" +
+	"\x0eCreateDictData\x12,.dictionary.service.v1.CreateDictDataRequest\x1a\x1f.dictionary.service.v1.DictData\"V\xbaG5\n" +
+	"\n" +
+	"Dictionary\x12\x13字典数据-创建\x1a\x12创建字典数据\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/admin/v1/dict-data\x12\xbc\x01\n" +
+	"\x0eUpdateDictData\x12,.dictionary.service.v1.UpdateDictDataRequest\x1a\x1f.dictionary.service.v1.DictData\"[\xbaG5\n" +
+	"\n" +
+	"Dictionary\x12\x13字典数据-修改\x1a\x12字典数据修改\x82\xd3\xe4\x93\x02\x1d:\x01*\x1a\x18/admin/v1/dict-data/{id}\x12\xdb\x01\n" +
+	"\x14UpdateDictDataStatus\x122.dictionary.service.v1.UpdateDictDataStatusRequest\x1a\x1f.dictionary.service.v1.DictData\"n\xbaGA\n" +
+	"\n" +
+	"Dictionary\x12\x19字典数据-更新状态\x1a\x18更新字典类型状态\x82\xd3\xe4\x93\x02$:\x01*\x1a\x1f/admin/v1/dict-data/{id}/status\x12\xc1\x01\n" +
+	"\x0eDeleteDictData\x12,.dictionary.service.v1.DeleteDictDataRequset\x1a\x16.google.protobuf.Empty\"i\xbaGK\n" +
+	"\n" +
+	"Dictionary\x12\x1b字典数据-删除(批量)\x1a 删除字典类型(支持批量)\x82\xd3\xe4\x93\x02\x15*\x13/admin/v1/dict-dataB\xd2\x01\n" +
 	"\x14com.admin.service.v1B\x10IDictionaryProtoP\x01ZFgithub.com/hypercoze/kratos-admin/api/gen/go/admin/services/v1;adminpb\xa2\x02\x03ASX\xaa\x02\x10Admin.Service.V1\xca\x02\x10Admin\\Service\\V1\xe2\x02\x1cAdmin\\Service\\V1\\GPBMetadata\xea\x02\x12Admin::Service::V1b\x06proto3"
 
 var file_admin_service_v1_i_dictionary_proto_goTypes = []any{
-	(*v1.ListDictTypeRequest)(nil),  // 0: dictionary.service.v1.ListDictTypeRequest
-	(*v1.ListDictTypeResponse)(nil), // 1: dictionary.service.v1.ListDictTypeResponse
+	(*v1.ListDictTypeRequest)(nil),         // 0: dictionary.service.v1.ListDictTypeRequest
+	(*v1.CreateDictTypeRequest)(nil),       // 1: dictionary.service.v1.CreateDictTypeRequest
+	(*v1.UpdateDictTypeRequest)(nil),       // 2: dictionary.service.v1.UpdateDictTypeRequest
+	(*v1.UpdateDictTypeStatusRequest)(nil), // 3: dictionary.service.v1.UpdateDictTypeStatusRequest
+	(*v1.DeleteDictTypeRequset)(nil),       // 4: dictionary.service.v1.DeleteDictTypeRequset
+	(*v1.ListDictDataRequest)(nil),         // 5: dictionary.service.v1.ListDictDataRequest
+	(*v1.CreateDictDataRequest)(nil),       // 6: dictionary.service.v1.CreateDictDataRequest
+	(*v1.UpdateDictDataRequest)(nil),       // 7: dictionary.service.v1.UpdateDictDataRequest
+	(*v1.UpdateDictDataStatusRequest)(nil), // 8: dictionary.service.v1.UpdateDictDataStatusRequest
+	(*v1.DeleteDictDataRequset)(nil),       // 9: dictionary.service.v1.DeleteDictDataRequset
+	(*v1.ListDictTypeResponse)(nil),        // 10: dictionary.service.v1.ListDictTypeResponse
+	(*v1.DictType)(nil),                    // 11: dictionary.service.v1.DictType
+	(*emptypb.Empty)(nil),                  // 12: google.protobuf.Empty
+	(*v1.ListDictDataResponse)(nil),        // 13: dictionary.service.v1.ListDictDataResponse
+	(*v1.DictData)(nil),                    // 14: dictionary.service.v1.DictData
 }
 var file_admin_service_v1_i_dictionary_proto_depIdxs = []int32{
-	0, // 0: admin.service.v1.Dictionary.ListDictType:input_type -> dictionary.service.v1.ListDictTypeRequest
-	1, // 1: admin.service.v1.Dictionary.ListDictType:output_type -> dictionary.service.v1.ListDictTypeResponse
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	0,  // 0: admin.service.v1.Dictionary.ListDictType:input_type -> dictionary.service.v1.ListDictTypeRequest
+	1,  // 1: admin.service.v1.Dictionary.CreateDictType:input_type -> dictionary.service.v1.CreateDictTypeRequest
+	2,  // 2: admin.service.v1.Dictionary.UpdateDictType:input_type -> dictionary.service.v1.UpdateDictTypeRequest
+	3,  // 3: admin.service.v1.Dictionary.UpdateDictTypeStatus:input_type -> dictionary.service.v1.UpdateDictTypeStatusRequest
+	4,  // 4: admin.service.v1.Dictionary.DeleteDictType:input_type -> dictionary.service.v1.DeleteDictTypeRequset
+	5,  // 5: admin.service.v1.Dictionary.ListDictData:input_type -> dictionary.service.v1.ListDictDataRequest
+	6,  // 6: admin.service.v1.Dictionary.CreateDictData:input_type -> dictionary.service.v1.CreateDictDataRequest
+	7,  // 7: admin.service.v1.Dictionary.UpdateDictData:input_type -> dictionary.service.v1.UpdateDictDataRequest
+	8,  // 8: admin.service.v1.Dictionary.UpdateDictDataStatus:input_type -> dictionary.service.v1.UpdateDictDataStatusRequest
+	9,  // 9: admin.service.v1.Dictionary.DeleteDictData:input_type -> dictionary.service.v1.DeleteDictDataRequset
+	10, // 10: admin.service.v1.Dictionary.ListDictType:output_type -> dictionary.service.v1.ListDictTypeResponse
+	11, // 11: admin.service.v1.Dictionary.CreateDictType:output_type -> dictionary.service.v1.DictType
+	11, // 12: admin.service.v1.Dictionary.UpdateDictType:output_type -> dictionary.service.v1.DictType
+	11, // 13: admin.service.v1.Dictionary.UpdateDictTypeStatus:output_type -> dictionary.service.v1.DictType
+	12, // 14: admin.service.v1.Dictionary.DeleteDictType:output_type -> google.protobuf.Empty
+	13, // 15: admin.service.v1.Dictionary.ListDictData:output_type -> dictionary.service.v1.ListDictDataResponse
+	14, // 16: admin.service.v1.Dictionary.CreateDictData:output_type -> dictionary.service.v1.DictData
+	14, // 17: admin.service.v1.Dictionary.UpdateDictData:output_type -> dictionary.service.v1.DictData
+	14, // 18: admin.service.v1.Dictionary.UpdateDictDataStatus:output_type -> dictionary.service.v1.DictData
+	12, // 19: admin.service.v1.Dictionary.DeleteDictData:output_type -> google.protobuf.Empty
+	10, // [10:20] is the sub-list for method output_type
+	0,  // [0:10] is the sub-list for method input_type
+	0,  // [0:0] is the sub-list for extension type_name
+	0,  // [0:0] is the sub-list for extension extendee
+	0,  // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_admin_service_v1_i_dictionary_proto_init() }

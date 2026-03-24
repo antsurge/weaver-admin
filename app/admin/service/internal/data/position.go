@@ -24,8 +24,8 @@ func NewPositionRepo(data *Data, logger log.Logger) biz.PositionRepo {
 	}
 }
 
-func (repo *positionRepo) ListPosition(ctx context.Context, params *biz.ListPositionRequest, opts ...*biz.ListPositionOption) (*biz.ListPositionResponse, error) {
-	query := repo.data.db.Position.Query().
+func (r *positionRepo) ListPosition(ctx context.Context, params *biz.ListPositionRequest, opts ...*biz.ListPositionOption) (*biz.ListPositionResponse, error) {
+	query := r.data.db.Position.Query().
 		Order(ent.Desc(position.FieldCreatedAt))
 
 	opt := &biz.ListPositionOption{}
@@ -84,8 +84,8 @@ func (repo *positionRepo) ListPosition(ctx context.Context, params *biz.ListPosi
 	}, nil
 }
 
-func (repo *positionRepo) GetPosition(ctx context.Context, id string) (*biz.Position, error) {
-	p, err := repo.data.db.Position.Get(ctx, id)
+func (r *positionRepo) GetPosition(ctx context.Context, id string) (*biz.Position, error) {
+	p, err := r.data.db.Position.Get(ctx, id)
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, errors.NotFound("POSITION_NOT_FOUND", "岗位不存在")

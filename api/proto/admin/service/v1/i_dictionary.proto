@@ -2,19 +2,112 @@ syntax = "proto3";
 
 package admin.service.v1;
 
+import "dictionary/service/v1/dict_data.proto";
 import "dictionary/service/v1/dict_type.proto";
 import "gnostic/openapi/v3/annotations.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
-import "organization/service/v1/position.proto";
 
 service Dictionary {
+  // 字典类型模块
   rpc ListDictType(dictionary.service.v1.ListDictTypeRequest) returns (dictionary.service.v1.ListDictTypeResponse) {
     option (google.api.http) = {get: "/admin/v1/dict-type"};
     option (gnostic.openapi.v3.operation) = {
       tags: "Dictionary"
-      summary: "字典类型列表"
+      summary: "字典类型-列表"
       description: "字典类型列表"
+    };
+  }
+  rpc CreateDictType(dictionary.service.v1.CreateDictTypeRequest) returns (dictionary.service.v1.DictType) {
+    option (google.api.http) = {
+      post: "/admin/v1/dict-type"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Dictionary"
+      summary: "字典类型-创建"
+      description: "创建字典类型"
+    };
+  }
+  rpc UpdateDictType(dictionary.service.v1.UpdateDictTypeRequest) returns (dictionary.service.v1.DictType) {
+    option (google.api.http) = {
+      put: "/admin/v1/dict-type/{id}"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Dictionary"
+      summary: "字典类型-修改"
+      description: "创建字典修改"
+    };
+  }
+  rpc UpdateDictTypeStatus(dictionary.service.v1.UpdateDictTypeStatusRequest) returns (dictionary.service.v1.DictType) {
+    option (google.api.http) = {
+      put: "/admin/v1/dict-type/{id}/status"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Dictionary"
+      summary: "字典类型-更新状态"
+      description: "更新字典类型状态"
+    };
+  }
+  rpc DeleteDictType(dictionary.service.v1.DeleteDictTypeRequset) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/admin/v1/dict-type"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Dictionary"
+      summary: "字典类型-删除(批量)"
+      description: "删除字典类型(支持批量)"
+    };
+  }
+
+  // 字典数据模块
+  rpc ListDictData(dictionary.service.v1.ListDictDataRequest) returns (dictionary.service.v1.ListDictDataResponse) {
+    option (google.api.http) = {get: "/admin/v1/dict-data"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Dictionary"
+      summary: "字典数据-列表"
+      description: "字典数据列表"
+    };
+  }
+  rpc CreateDictData(dictionary.service.v1.CreateDictDataRequest) returns (dictionary.service.v1.DictData) {
+    option (google.api.http) = {
+      post: "/admin/v1/dict-data"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Dictionary"
+      summary: "字典数据-创建"
+      description: "创建字典数据"
+    };
+  }
+  rpc UpdateDictData(dictionary.service.v1.UpdateDictDataRequest) returns (dictionary.service.v1.DictData) {
+    option (google.api.http) = {
+      put: "/admin/v1/dict-data/{id}"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Dictionary"
+      summary: "字典数据-修改"
+      description: "字典数据修改"
+    };
+  }
+  rpc UpdateDictDataStatus(dictionary.service.v1.UpdateDictDataStatusRequest) returns (dictionary.service.v1.DictData) {
+    option (google.api.http) = {
+      put: "/admin/v1/dict-data/{id}/status"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Dictionary"
+      summary: "字典数据-更新状态"
+      description: "更新字典类型状态"
+    };
+  }
+  rpc DeleteDictData(dictionary.service.v1.DeleteDictDataRequset) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/admin/v1/dict-data"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Dictionary"
+      summary: "字典数据-删除(批量)"
+      description: "删除字典类型(支持批量)"
     };
   }
 }

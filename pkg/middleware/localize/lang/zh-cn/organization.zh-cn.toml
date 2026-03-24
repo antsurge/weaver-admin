@@ -14,3 +14,26 @@ max_len = "备注不能超过255个字符"
 
 [position.ids]
 not_empty = "Ids不能为空"
+
+[organization.name]
+required = "组织名称不能为空"
+max_len = "组织名称不能超过64个字符"
+
+[organization.code]
+required = "组织编码不能为空"
+max_len = "组织编码不能超过64个字符"
+
+[organization.status]
+invalid = "状态异常"
+
+[organization.leaderName]
+max_len = "负责人姓名不能超过64个字符"
+
+[organization.leaderPhone]
+max_len = "负责人电话不能超过20个字符"
+
+[organization.leaderEmail]
+max_len = "负责人邮箱不能超过20个字符"
+
+[organization.ids]
+not_empty = "Ids不能为空"

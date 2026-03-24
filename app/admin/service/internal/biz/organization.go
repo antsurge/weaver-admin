@@ -10,7 +10,7 @@ import (
 
 type Organization struct {
 	ID          string    `json:"id"`          // 部门ID
-	ParentId    string    `json:"parentId"`    // 父部门ID，空表示根节点
+	ParentID    string    `json:"parentID"`    // 父部门ID，空表示根节点
 	Name        string    `json:"name"`        // 部门名称
 	Code        string    `json:"code"`        // 部门code
 	Weight      int       `json:"weight"`      // 权重
@@ -24,8 +24,14 @@ type Organization struct {
 	Children []*Organization `json:"children"`
 }
 
+type OrganizationListResult struct {
+	Name   string `form:"name" query:"name"`
+	Code   string `form:"code" query:"code"`
+	Status string `form:"status" query:"status"`
+}
+
 type OrganizationRepo interface {
-	ListOrganization(ctx context.Context) ([]*Organization, error)
+	ListOrganization(ctx context.Context, req *OrganizationListResult) ([]*Organization, error)
 	CreateOrganization(ctx context.Context, o *Organization) error
 	UpdateOrganization(ctx context.Context, o *Organization) error
 	DeleteOrganization(ctx context.Context, ids []string) error
@@ -45,8 +51,8 @@ func NewOrganizationUsecase(repo OrganizationRepo, logger log.Logger) *Organizat
 }
 
 // 列表权限的tree
-func (uc *OrganizationUsecase) OrganizationTree(ctx context.Context) ([]*Organization, error) {
-	list, err := uc.repo.ListOrganization(ctx)
+func (uc *OrganizationUsecase) OrganizationTree(ctx context.Context, req *OrganizationListResult) ([]*Organization, error) {
+	list, err := uc.repo.ListOrganization(ctx, req)
 	if err != nil {
 		return nil, err
 	}

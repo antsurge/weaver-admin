@@ -21,7 +21,7 @@ import {
 } from '#/api/system/organization';
 import type { SystemOrganizationApi } from '#/api/system/organization';
 
-import { useColumns } from './data';
+import { useColumns,useFormOptions } from './data';
 import Form from './modules/form/index.vue';
 
 const [FormModel, formModelApi] = useVbenModal({
@@ -32,6 +32,7 @@ const [FormModel, formModelApi] = useVbenModal({
 const selectedRows = ref<SystemOrganizationApi.Organization[]>([]);
 
 const [Grid, gridApi] = useVbenVxeGrid({
+  formOptions: useFormOptions(),
   gridOptions: {
     columns: useColumns(onActionClick, onStatusChange),
     height: 'auto',
@@ -40,25 +41,30 @@ const [Grid, gridApi] = useVbenVxeGrid({
       enabled: false,
     },
     proxyConfig: {
+      autoLoad:true,
       ajax: {
-        query: async (_params) => {
-          const res = await getOrganizationTreeApi();
-          return res?.data ?? [];
+        query: async ({},formValues) => {
+          const res = await getOrganizationTreeApi(formValues);
+          return res?.items ?? [];
         },
       },
     },
     rowConfig: {
       keyField: 'id',
     },
-    checkboxConfig: { range: false, checkStrictly: true },
+    checkboxConfig: { 
+      checkStrictly:true,
+      showHeader:true,
+     },
     toolbarConfig: {
       custom: true,
       export: false,
       refresh: true,
       zoom: true,
+      search: true,
     },
     treeConfig: {
-      parentField: 'parentId',
+      parentField: 'parentID',
       rowField: 'id',
       transform: false,
     },
@@ -66,13 +72,21 @@ const [Grid, gridApi] = useVbenVxeGrid({
   gridEvents: {
     checkboxChange() {
       nextTick(() => {
-        const records =
-          (gridApi.grid as any)?.getCheckboxRecords?.() ?? [];
-        selectedRows.value = records;
-      });
+        onCheckboxChange()
+      })
     },
+    checkboxAll() {
+      nextTick(() => {
+        onCheckboxChange()
+      })
+    }
   },
 });
+
+function onCheckboxChange() {
+  const checkboxRecords = gridApi.grid?.getCheckboxRecords?.() ?? []
+  selectedRows.value = checkboxRecords
+}
 
 function onActionClick({
   code,
@@ -110,7 +124,7 @@ function onCreate() {
 }
 
 function onAppend(row: SystemOrganizationApi.Organization) {
-  formModelApi.setData({ parentId: row.id }).open();
+  formModelApi.setData({ parentID: row.id }).open();
 }
 
 async function onStatusChange(

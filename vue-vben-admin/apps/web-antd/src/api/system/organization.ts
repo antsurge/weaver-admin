@@ -1,4 +1,5 @@
 import { requestClient } from '#/api/request';
+import type { PaginationParams,AllResult } from '#/types/pagination'
 
 export namespace SystemOrganizationApi {
   /** 组织机构 */
@@ -28,14 +29,23 @@ export namespace SystemOrganizationApi {
     /** 子级组织 */
     children?: Organization[];
   }
+
+  export interface OrganizationTreeParams{
+    name?: string;
+    code?: string;
+    status?: 'enabled' | 'disabled';
+  }
 }
 
 /**
  * 获取组织机构树
  */
-async function getOrganizationTreeApi() {
-  return requestClient.get<Array<SystemOrganizationApi.Organization>>(
+async function getOrganizationTreeApi(params?:SystemOrganizationApi.OrganizationTreeParams) {
+  return requestClient.get<AllResult<SystemOrganizationApi.Organization>>(
     '/admin/v1/organization/tree',
+    {
+      params:params
+    }
   );
 }
 

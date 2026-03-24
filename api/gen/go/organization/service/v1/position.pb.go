@@ -597,10 +597,9 @@ const file_organization_service_v1_position_proto_rawDesc = "" +
 	"\x06status\x18\x05 \x01(\tB2\xbaG/\x92\x02,状态（enabled=启用，disabled=禁用）R\x06status\"\x81\x01\n" +
 	"\x14ListPositionResponse\x12E\n" +
 	"\x05items\x18\x01 \x03(\v2!.organization.service.v1.PositionB\f\xbaG\t\x92\x02\x06列表R\x05items\x12\"\n" +
-	"\x05total\x18\x02 \x01(\x03B\f\xbaG\t\x92\x02\x06总数R\x05total\"e\n" +
-	"\x12GetPositionRequest\x12O\n" +
-	"\x02id\x18\x01 \x01(\tB?\xbaG\v\x92\x02\b岗位ID\xbaH.\xba\x01+\n" +
-	"\x18GET_POSITION_ID_REQUIRED\x1a\x0fthis.size() > 0R\x02id\"\xe3\x05\n" +
+	"\x05total\x18\x02 \x01(\x03B\f\xbaG\t\x92\x02\x06总数R\x05total\"4\n" +
+	"\x12GetPositionRequest\x12\x1e\n" +
+	"\x02id\x18\x01 \x01(\tB\x0e\xbaG\v\x92\x02\b岗位IDR\x02id\"\xe3\x05\n" +
 	"\x15CreatePositionRequest\x12\xb3\x01\n" +
 	"\x04name\x18\x01 \x01(\tB\x9e\x01\xbaG\x0f\x92\x02\f岗位名称\xbaH\x88\x01\xba\x01A\n" +
 	"\x16position.name.required\x12\x16position.name.required\x1a\x0fthis.size() > 0\xba\x01A\n" +
@@ -629,10 +628,10 @@ const file_organization_service_v1_position_proto_rawDesc = "" +
 	"\x1bUpdatePositionStatusRequest\x12\x18\n" +
 	"\x02id\x18\x01 \x01(\tB\b\xbaG\x05\x92\x02\x02IDR\x02id\x12\xa9\x01\n" +
 	"\x06status\x18\x02 \x01(\tB\x90\x01\xbaG\x1f\x92\x02\x1c状态（enabled/disabled）\xbaHk\xba\x01S\n" +
-	"\x17position.status.invalid\x12\x17position.status.invalid\x1a\x1fthis in ['enabled', 'disabled']r\x13R\aenabledR\bdisabledR\x06status:\f\xbaG\t\xba\x01\x06status\"\x86\x01\n" +
-	"\x15DeletePositionRequest\x12m\n" +
-	"\x03ids\x18\x01 \x03(\tB[\xbaG\x11\x92\x02\x0e岗位ID列表\xbaHD\xba\x01:\n" +
-	"\x1dDELETE_POSITION_IDS_NOT_EMPTY\x1a\x19this.all(x, x.size() > 0)\x92\x01\x04\b\x01\x10dR\x03idsB\xff\x01\n" +
+	"\x17position.status.invalid\x12\x17position.status.invalid\x1a\x1fthis in ['enabled', 'disabled']r\x13R\aenabledR\bdisabledR\x06status:\f\xbaG\t\xba\x01\x06status\"\xd8\x01\n" +
+	"\x15DeletePositionRequest\x12\xbe\x01\n" +
+	"\x03ids\x18\x01 \x03(\tB\xab\x01\xbaGP\x92\x02M岗位ID列表（必填，至少1个，最多100个，每个ID不能为空）\xbaHU\xba\x01K\n" +
+	"\x16position.ids.not_empty\x12\x16position.ids.not_empty\x1a\x19this.all(x, x.size() > 0)\x92\x01\x04\b\x01\x10dR\x03idsB\xff\x01\n" +
 	"\x1bcom.organization.service.v1B\rPositionProtoP\x01ZSgithub.com/hypercoze/kratos-admin/api/gen/go/organization/service/v1;organizationpb\xa2\x02\x03OSX\xaa\x02\x17Organization.Service.V1\xca\x02\x17Organization\\Service\\V1\xe2\x02#Organization\\Service\\V1\\GPBMetadata\xea\x02\x19Organization::Service::V1b\x06proto3"
 
 var (

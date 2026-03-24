@@ -59,7 +59,7 @@ func (m *Organization) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for ParentId
+	// no validation rules for ParentID
 
 	// no validation rules for Name
 
@@ -266,7 +266,7 @@ func (m *CreateOrganizationRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for ParentId
+	// no validation rules for ParentID
 
 	// no validation rules for Name
 
@@ -384,9 +384,7 @@ func (m *UpdateOrganizationRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
-
-	// no validation rules for ParentId
+	// no validation rules for ParentID
 
 	// no validation rules for Name
 
@@ -401,6 +399,8 @@ func (m *UpdateOrganizationRequest) validate(all bool) error {
 	// no validation rules for LeaderPhone
 
 	// no validation rules for LeaderEmail
+
+	// no validation rules for Id
 
 	if len(errors) > 0 {
 		return UpdateOrganizationRequestMultiError(errors)
@@ -504,6 +504,12 @@ func (m *OrganizationTreeRequest) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for Name
+
+	// no validation rules for Code
+
+	// no validation rules for Status
+
 	if len(errors) > 0 {
 		return OrganizationTreeRequestMultiError(errors)
 	}
@@ -606,7 +612,7 @@ func (m *OrganizationTreeResponse) validate(all bool) error {
 
 	var errors []error
 
-	for idx, item := range m.GetData() {
+	for idx, item := range m.GetItems() {
 		_, _ = idx, item
 
 		if all {
@@ -614,7 +620,7 @@ func (m *OrganizationTreeResponse) validate(all bool) error {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
 					errors = append(errors, OrganizationTreeResponseValidationError{
-						field:  fmt.Sprintf("Data[%v]", idx),
+						field:  fmt.Sprintf("Items[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -622,7 +628,7 @@ func (m *OrganizationTreeResponse) validate(all bool) error {
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
 					errors = append(errors, OrganizationTreeResponseValidationError{
-						field:  fmt.Sprintf("Data[%v]", idx),
+						field:  fmt.Sprintf("Items[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -631,7 +637,7 @@ func (m *OrganizationTreeResponse) validate(all bool) error {
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
 				return OrganizationTreeResponseValidationError{
-					field:  fmt.Sprintf("Data[%v]", idx),
+					field:  fmt.Sprintf("Items[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
 				}

@@ -7,106 +7,98 @@ import "gnostic/openapi/v3/annotations.proto";
 import "google/protobuf/timestamp.proto";
 
 message Organization {
-  // 部门ID
-  string id = 1;
-
+  // ID
+  string id = 1 [(gnostic.openapi.v3.property) = {description: "ID"}];
   // 父部门ID，空表示根节点
-  string parent_id = 2;
-
+  string parentID = 2 [(gnostic.openapi.v3.property) = {description: "父组织ID，空表示根节点"}];
   // 部门名称
-  string name = 3;
-
+  string name = 3 [(gnostic.openapi.v3.property) = {description: "组织名称"}];
   // 部门code
-  string code = 4;
-
+  string code = 4 [(gnostic.openapi.v3.property) = {description: "组织唯一编码"}];
   // 权重
-  int32 weight = 5;
-
+  int32 weight = 5 [(gnostic.openapi.v3.property) = {description: "排序权重，值越大越靠前"}];
   // 状态：enabled=启用 disabled=禁用
-  string status = 6;
-
+  string status = 6 [(gnostic.openapi.v3.property) = {description: "状态：enabled=启用，disabled=禁用"}];
   // 负责人姓名
-  string leader_name = 7;
-
+  string leaderName = 7 [(gnostic.openapi.v3.property) = {description: "负责人姓名"}];
   // 联系电话
-  string leader_phone = 8;
-
+  string leaderPhone = 8 [(gnostic.openapi.v3.property) = {description: "负责人联系电话"}];
   // 邮箱
-  string leader_email = 9;
-
+  string leaderEmail = 9 [(gnostic.openapi.v3.property) = {description: "负责人邮箱"}];
   // 创建时间
-  google.protobuf.Timestamp created_at = 10;
-
+  google.protobuf.Timestamp createdAt = 10 [(gnostic.openapi.v3.property) = {description: "创建时间"}];
   // 更新时间
-  google.protobuf.Timestamp updated_at = 11;
-
-  repeated Organization children = 30;
+  google.protobuf.Timestamp updatedAt = 11 [(gnostic.openapi.v3.property) = {description: "更新时间"}];
+  // 子部门
+  repeated Organization children = 30 [(gnostic.openapi.v3.property) = {description: "子部门列表（树结构）"}];
 }
 
 // 创建组织请求
 message CreateOrganizationRequest {
-  string parent_id = 1 [
-    (buf.validate.field).cel = {
-      id: "CREATE_ORG_PARENTID_MAX"
-      expression: "this.size() <= 36"
-    },
-    (gnostic.openapi.v3.property) = {description: "父部门ID，空表示根节点"}
-  ];
-
+  string parentID = 1 [(gnostic.openapi.v3.property) = {description: "父组织ID，空表示根节点"}];
   string name = 2 [
     (buf.validate.field).cel = {
-      id: "CREATE_ORG_NAME_REQUIRED"
-      message: "部门名称不能为空"
-      expression: "this.size() > 0 && this.size() <= 64"
+      id: "organization.name.required"
+      message: "organization.name.required"
+      expression: "this.size() > 0"
     },
-    (gnostic.openapi.v3.property) = {description: "部门名称"}
+    (buf.validate.field).cel = {
+      id: "organization.name.max_len"
+      message: "organization.name.max_len"
+      expression: "this.size() <= 64"
+    },
+    (gnostic.openapi.v3.property) = {description: "组织名称"}
   ];
-
   string code = 3 [
     (buf.validate.field).cel = {
-      id: "CREATE_ORG_CODE_REQUIRED"
-      message: "部门编码不能为空"
-      expression: "this.size() > 0 && this.size() <= 64"
+      id: "organization.code.required"
+      message: "organization.code.required"
+      expression: "this.size() > 0"
     },
-    (gnostic.openapi.v3.property) = {description: "部门唯一编码"}
-  ];
-
-  int32 weight = 4 [
     (buf.validate.field).cel = {
-      id: "CREATE_ORG_WEIGHT_MIN"
-      expression: "this >= 0"
+      id: "organization.code.max_len"
+      message: "organization.code.max_len"
+      expression: "this.size() <= 64"
     },
-    (gnostic.openapi.v3.property) = {description: "部门权重，越大越靠前"}
+    (gnostic.openapi.v3.property) = {description: "组织编码"}
   ];
-
+  int32 weight = 4 [(gnostic.openapi.v3.property) = {description: "部门权重"}];
   string status = 5 [
-    (buf.validate.field).cel = {
-      id: "CREATE_ORG_STATUS_ALLOWED"
-      expression: "this == 'enabled' || this == 'disabled'"
+    (buf.validate.field).string = {
+      in: [
+        "enabled",
+        "disabled"
+      ]
     },
-    (gnostic.openapi.v3.property) = {description: "状态: enabled / disabled"}
+    (buf.validate.field).cel = {
+      id: "organization.status.invalid"
+      message: "organization.status.invalid"
+      expression: "this in ['enabled', 'disabled']"
+    },
+    (gnostic.openapi.v3.property) = {description: "状态（enabled/disabled）"}
   ];
 
-  string leader_name = 6 [
+  string leaderName = 6 [
     (buf.validate.field).cel = {
-      id: "CREATE_ORG_LEADER_NAME_MAX"
+      id: "organization.leaderName.max_len"
+      message: "organization.leaderName.max_len"
       expression: "this.size() <= 64"
     },
     (gnostic.openapi.v3.property) = {description: "负责人姓名"}
   ];
-
-  string leader_phone = 7 [
+  string leaderPhone = 7 [
     (buf.validate.field).cel = {
-      id: "CREATE_ORG_LEADER_PHONE_MAX"
+      id: "organization.leaderPhone.max_len"
+      message: "organization.leaderPhone.max_len"
       expression: "this.size() <= 20"
     },
     (gnostic.openapi.v3.property) = {description: "负责人联系电话"}
   ];
-
-  string leader_email = 8 [
+  string leaderEmail = 8 [
     (buf.validate.field).cel = {
-      id: "CREATE_ORG_LEADER_EMAIL_MAX"
-      expression: "this.size() <= 128"
+      id: "organization.leaderEmail.max_len"
+      message: "organization.leaderEmail.max_len"
+      expression: "this.size() <= 20"
     },
     (gnostic.openapi.v3.property) = {description: "负责人邮箱"}
   ];
@@ -114,99 +106,125 @@ message CreateOrganizationRequest {
 
 // 编辑组织请求
 message UpdateOrganizationRequest {
-  string id = 1;
-  string parent_id = 2 [
+  string parentID = 1 [(gnostic.openapi.v3.property) = {description: "父组织ID，空表示根节点"}];
+  string name = 2 [
     (buf.validate.field).cel = {
-      id: "CREATE_ORG_PARENTID_MAX"
-      expression: "this.size() <= 36"
+      id: "organization.name.required"
+      message: "organization.name.required"
+      expression: "this.size() > 0"
     },
-    (gnostic.openapi.v3.property) = {description: "父部门ID，空表示根节点"}
+    (buf.validate.field).cel = {
+      id: "organization.name.max_len"
+      message: "organization.name.max_len"
+      expression: "this.size() <= 64"
+    },
+    (gnostic.openapi.v3.property) = {description: "组织名称"}
+  ];
+  string code = 3 [
+    (buf.validate.field).cel = {
+      id: "organization.code.required"
+      message: "organization.code.required"
+      expression: "this.size() > 0"
+    },
+    (buf.validate.field).cel = {
+      id: "organization.code.max_len"
+      message: "organization.code.max_len"
+      expression: "this.size() <= 64"
+    },
+    (gnostic.openapi.v3.property) = {description: "组织编码"}
+  ];
+  int32 weight = 4 [(gnostic.openapi.v3.property) = {description: "部门权重"}];
+  string status = 5 [
+    (buf.validate.field).string = {
+      in: [
+        "enabled",
+        "disabled"
+      ]
+    },
+    (buf.validate.field).cel = {
+      id: "organization.status.invalid"
+      message: "organization.status.invalid"
+      expression: "this in ['enabled', 'disabled']"
+    },
+    (gnostic.openapi.v3.property) = {description: "状态（enabled/disabled）"}
   ];
 
-  string name = 3 [
+  string leaderName = 6 [
     (buf.validate.field).cel = {
-      id: "CREATE_ORG_NAME_REQUIRED"
-      message: "部门名称不能为空"
-      expression: "this.size() > 0 && this.size() <= 64"
-    },
-    (gnostic.openapi.v3.property) = {description: "部门名称"}
-  ];
-
-  string code = 4 [
-    (buf.validate.field).cel = {
-      id: "CREATE_ORG_CODE_REQUIRED"
-      message: "部门编码不能为空"
-      expression: "this.size() > 0 && this.size() <= 64"
-    },
-    (gnostic.openapi.v3.property) = {description: "部门唯一编码"}
-  ];
-
-  int32 weight = 5 [
-    (buf.validate.field).cel = {
-      id: "CREATE_ORG_WEIGHT_MIN"
-      expression: "this >= 0"
-    },
-    (gnostic.openapi.v3.property) = {description: "部门权重，越大越靠前"}
-  ];
-
-  string status = 6 [
-    (buf.validate.field).cel = {
-      id: "CREATE_ORG_STATUS_ALLOWED"
-      expression: "this == 'enabled' || this == 'disabled'"
-    },
-    (gnostic.openapi.v3.property) = {description: "状态: enabled / disabled"}
-  ];
-
-  string leader_name = 7 [
-    (buf.validate.field).cel = {
-      id: "CREATE_ORG_LEADER_NAME_MAX"
+      id: "organization.leaderName.max_len"
+      message: "organization.leaderName.max_len"
       expression: "this.size() <= 64"
     },
     (gnostic.openapi.v3.property) = {description: "负责人姓名"}
   ];
-
-  string leader_phone = 8 [
+  string leaderPhone = 7 [
     (buf.validate.field).cel = {
-      id: "CREATE_ORG_LEADER_PHONE_MAX"
+      id: "organization.leaderPhone.max_len"
+      message: "organization.leaderPhone.max_len"
       expression: "this.size() <= 20"
     },
     (gnostic.openapi.v3.property) = {description: "负责人联系电话"}
   ];
-
-  string leader_email = 9 [
+  string leaderEmail = 8 [
     (buf.validate.field).cel = {
-      id: "CREATE_ORG_LEADER_EMAIL_MAX"
-      expression: "this.size() <= 128"
+      id: "organization.leaderEmail.max_len"
+      message: "organization.leaderEmail.max_len"
+      expression: "this.size() <= 20"
     },
     (gnostic.openapi.v3.property) = {description: "负责人邮箱"}
   ];
+
+  string id = 20;
 }
 
 // 组织tree请求
-message OrganizationTreeRequest {}
+message OrganizationTreeRequest {
+  string name = 3 [(gnostic.openapi.v3.property) = {description: "组织名称（支持模糊查询）"}];
+  string code = 4 [(gnostic.openapi.v3.property) = {description: "组织编码（支持模糊查询）"}];
+  string status = 5 [(gnostic.openapi.v3.property) = {description: "状态（enabled=启用，disabled=禁用）"}];
+}
 
 // 树形权限列表响应
 message OrganizationTreeResponse {
-  repeated Organization data = 1;
+  repeated Organization items = 1;
 }
 
 // 删除组织
 message DeleteOrganizationRequset {
   repeated string ids = 1 [
-    (buf.validate.field).repeated = {min_items: 1},
+    (buf.validate.field).repeated = {
+      min_items: 1
+      max_items: 100
+    },
+    (buf.validate.field).cel = {
+      id: "organization.ids.not_empty"
+      message: "organization.ids.not_empty"
+      expression: "this.all(x, x.size() > 0)"
+    },
     (gnostic.openapi.v3.property) = {description: "组织ID列表，至少一个"}
   ];
 }
 
 // 更新组织状态请求
 message UpdateOrganizationStatusRequest {
-  string id = 1 [
-    (buf.validate.field).cel = {
-      id: "GET_PERMISSION_ID_REQUIRED"
-      message: "权限ID不能为空"
-      expression: "this.size() > 0"
+  option (gnostic.openapi.v3.schema) = {
+    required: ["status"]
+  };
+  // ID
+  string id = 1 [(gnostic.openapi.v3.property) = {description: "ID"}];
+  // 岗位状态
+  string status = 2 [
+    (buf.validate.field).string = {
+      in: [
+        "enabled",
+        "disabled"
+      ]
     },
-    (gnostic.openapi.v3.property) = {description: "权限ID"}
+    (buf.validate.field).cel = {
+      id: "organization.status.invalid"
+      message: "organization.status.invalid"
+      expression: "this in ['enabled', 'disabled']"
+    },
+    (gnostic.openapi.v3.property) = {description: "状态（enabled/disabled）"}
   ];
-  string status = 2 [(gnostic.openapi.v3.property) = {description: "状态: enabled / disabled"}];
 }
