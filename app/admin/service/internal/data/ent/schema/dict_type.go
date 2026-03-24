@@ -45,10 +45,10 @@ func (DictType) Fields() []ent.Field {
 			Default("enabled").
 			Comment("状态"),
 
-		field.String("description").
+		field.String("remark").
 			Optional().
 			MaxLen(256).
-			Comment("描述"),
+			Comment("备注"),
 
 		field.Time("created_at").
 			Immutable().

@@ -97,5 +97,23 @@
     "operation":{
       "appendDictData":"新增字典值"
     }
+  },
+  "dict_data": {
+    "name":"字典值",
+    "fields": {
+      "dictTypeID": "字典类型",
+      "label": "名称",
+      "value":"字典值",
+      "status": "状态",
+      "updatedAt": "更新时间",
+      "remark": "备注",
+      "operation": "操作"
+    },
+    "form_placeholder":{
+      "remark":"请输入备注"
+    },
+    "operation":{
+      "appendDictData":"新增字典值"
+    }
   }
 }

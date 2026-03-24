@@ -74,9 +74,9 @@ func Code(v string) predicate.DictType {
 	return predicate.DictType(sql.FieldEQ(FieldCode, v))
 }
 
-// Description applies equality check predicate on the "description" field. It's identical to DescriptionEQ.
-func Description(v string) predicate.DictType {
-	return predicate.DictType(sql.FieldEQ(FieldDescription, v))
+// Remark applies equality check predicate on the "remark" field. It's identical to RemarkEQ.
+func Remark(v string) predicate.DictType {
+	return predicate.DictType(sql.FieldEQ(FieldRemark, v))
 }
 
 // CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
@@ -244,79 +244,79 @@ func StatusNotIn(vs ...Status) predicate.DictType {
 	return predicate.DictType(sql.FieldNotIn(FieldStatus, vs...))
 }
 
-// DescriptionEQ applies the EQ predicate on the "description" field.
-func DescriptionEQ(v string) predicate.DictType {
-	return predicate.DictType(sql.FieldEQ(FieldDescription, v))
+// RemarkEQ applies the EQ predicate on the "remark" field.
+func RemarkEQ(v string) predicate.DictType {
+	return predicate.DictType(sql.FieldEQ(FieldRemark, v))
 }
 
-// DescriptionNEQ applies the NEQ predicate on the "description" field.
-func DescriptionNEQ(v string) predicate.DictType {
-	return predicate.DictType(sql.FieldNEQ(FieldDescription, v))
+// RemarkNEQ applies the NEQ predicate on the "remark" field.
+func RemarkNEQ(v string) predicate.DictType {
+	return predicate.DictType(sql.FieldNEQ(FieldRemark, v))
 }
 
-// DescriptionIn applies the In predicate on the "description" field.
-func DescriptionIn(vs ...string) predicate.DictType {
-	return predicate.DictType(sql.FieldIn(FieldDescription, vs...))
+// RemarkIn applies the In predicate on the "remark" field.
+func RemarkIn(vs ...string) predicate.DictType {
+	return predicate.DictType(sql.FieldIn(FieldRemark, vs...))
 }
 
-// DescriptionNotIn applies the NotIn predicate on the "description" field.
-func DescriptionNotIn(vs ...string) predicate.DictType {
-	return predicate.DictType(sql.FieldNotIn(FieldDescription, vs...))
+// RemarkNotIn applies the NotIn predicate on the "remark" field.
+func RemarkNotIn(vs ...string) predicate.DictType {
+	return predicate.DictType(sql.FieldNotIn(FieldRemark, vs...))
 }
 
-// DescriptionGT applies the GT predicate on the "description" field.
-func DescriptionGT(v string) predicate.DictType {
-	return predicate.DictType(sql.FieldGT(FieldDescription, v))
+// RemarkGT applies the GT predicate on the "remark" field.
+func RemarkGT(v string) predicate.DictType {
+	return predicate.DictType(sql.FieldGT(FieldRemark, v))
 }
 
-// DescriptionGTE applies the GTE predicate on the "description" field.
-func DescriptionGTE(v string) predicate.DictType {
-	return predicate.DictType(sql.FieldGTE(FieldDescription, v))
+// RemarkGTE applies the GTE predicate on the "remark" field.
+func RemarkGTE(v string) predicate.DictType {
+	return predicate.DictType(sql.FieldGTE(FieldRemark, v))
 }
 
-// DescriptionLT applies the LT predicate on the "description" field.
-func DescriptionLT(v string) predicate.DictType {
-	return predicate.DictType(sql.FieldLT(FieldDescription, v))
+// RemarkLT applies the LT predicate on the "remark" field.
+func RemarkLT(v string) predicate.DictType {
+	return predicate.DictType(sql.FieldLT(FieldRemark, v))
 }
 
-// DescriptionLTE applies the LTE predicate on the "description" field.
-func DescriptionLTE(v string) predicate.DictType {
-	return predicate.DictType(sql.FieldLTE(FieldDescription, v))
+// RemarkLTE applies the LTE predicate on the "remark" field.
+func RemarkLTE(v string) predicate.DictType {
+	return predicate.DictType(sql.FieldLTE(FieldRemark, v))
 }
 
-// DescriptionContains applies the Contains predicate on the "description" field.
-func DescriptionContains(v string) predicate.DictType {
-	return predicate.DictType(sql.FieldContains(FieldDescription, v))
+// RemarkContains applies the Contains predicate on the "remark" field.
+func RemarkContains(v string) predicate.DictType {
+	return predicate.DictType(sql.FieldContains(FieldRemark, v))
 }
 
-// DescriptionHasPrefix applies the HasPrefix predicate on the "description" field.
-func DescriptionHasPrefix(v string) predicate.DictType {
-	return predicate.DictType(sql.FieldHasPrefix(FieldDescription, v))
+// RemarkHasPrefix applies the HasPrefix predicate on the "remark" field.
+func RemarkHasPrefix(v string) predicate.DictType {
+	return predicate.DictType(sql.FieldHasPrefix(FieldRemark, v))
 }
 
-// DescriptionHasSuffix applies the HasSuffix predicate on the "description" field.
-func DescriptionHasSuffix(v string) predicate.DictType {
-	return predicate.DictType(sql.FieldHasSuffix(FieldDescription, v))
+// RemarkHasSuffix applies the HasSuffix predicate on the "remark" field.
+func RemarkHasSuffix(v string) predicate.DictType {
+	return predicate.DictType(sql.FieldHasSuffix(FieldRemark, v))
 }
 
-// DescriptionIsNil applies the IsNil predicate on the "description" field.
-func DescriptionIsNil() predicate.DictType {
-	return predicate.DictType(sql.FieldIsNull(FieldDescription))
+// RemarkIsNil applies the IsNil predicate on the "remark" field.
+func RemarkIsNil() predicate.DictType {
+	return predicate.DictType(sql.FieldIsNull(FieldRemark))
 }
 
-// DescriptionNotNil applies the NotNil predicate on the "description" field.
-func DescriptionNotNil() predicate.DictType {
-	return predicate.DictType(sql.FieldNotNull(FieldDescription))
+// RemarkNotNil applies the NotNil predicate on the "remark" field.
+func RemarkNotNil() predicate.DictType {
+	return predicate.DictType(sql.FieldNotNull(FieldRemark))
 }
 
-// DescriptionEqualFold applies the EqualFold predicate on the "description" field.
-func DescriptionEqualFold(v string) predicate.DictType {
-	return predicate.DictType(sql.FieldEqualFold(FieldDescription, v))
+// RemarkEqualFold applies the EqualFold predicate on the "remark" field.
+func RemarkEqualFold(v string) predicate.DictType {
+	return predicate.DictType(sql.FieldEqualFold(FieldRemark, v))
 }
 
-// DescriptionContainsFold applies the ContainsFold predicate on the "description" field.
-func DescriptionContainsFold(v string) predicate.DictType {
-	return predicate.DictType(sql.FieldContainsFold(FieldDescription, v))
+// RemarkContainsFold applies the ContainsFold predicate on the "remark" field.
+func RemarkContainsFold(v string) predicate.DictType {
+	return predicate.DictType(sql.FieldContainsFold(FieldRemark, v))
 }
 
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.

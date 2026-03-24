@@ -24,8 +24,8 @@ type DictType struct {
 	Code string `json:"code,omitempty"`
 	// 状态
 	Status dicttype.Status `json:"status,omitempty"`
-	// 描述
-	Description string `json:"description,omitempty"`
+	// 备注
+	Remark string `json:"remark,omitempty"`
 	// 创建时间
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// 更新时间
@@ -40,7 +40,7 @@ func (*DictType) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case dicttype.FieldID, dicttype.FieldName, dicttype.FieldCode, dicttype.FieldStatus, dicttype.FieldDescription:
+		case dicttype.FieldID, dicttype.FieldName, dicttype.FieldCode, dicttype.FieldStatus, dicttype.FieldRemark:
 			values[i] = new(sql.NullString)
 		case dicttype.FieldCreatedAt, dicttype.FieldUpdatedAt, dicttype.FieldDeletedAt:
 			values[i] = new(sql.NullTime)
@@ -83,11 +83,11 @@ func (_m *DictType) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.Status = dicttype.Status(value.String)
 			}
-		case dicttype.FieldDescription:
+		case dicttype.FieldRemark:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field description", values[i])
+				return fmt.Errorf("unexpected type %T for field remark", values[i])
 			} else if value.Valid {
-				_m.Description = value.String
+				_m.Remark = value.String
 			}
 		case dicttype.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -153,8 +153,8 @@ func (_m *DictType) String() string {
 	builder.WriteString("status=")
 	builder.WriteString(fmt.Sprintf("%v", _m.Status))
 	builder.WriteString(", ")
-	builder.WriteString("description=")
-	builder.WriteString(_m.Description)
+	builder.WriteString("remark=")
+	builder.WriteString(_m.Remark)
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(_m.CreatedAt.Format(time.ANSIC))

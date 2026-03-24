@@ -72,16 +72,16 @@ func (_c *DictDataCreate) SetExtension(v map[string]interface{}) *DictDataCreate
 	return _c
 }
 
-// SetDescription sets the "description" field.
-func (_c *DictDataCreate) SetDescription(v string) *DictDataCreate {
-	_c.mutation.SetDescription(v)
+// SetRemark sets the "remark" field.
+func (_c *DictDataCreate) SetRemark(v string) *DictDataCreate {
+	_c.mutation.SetRemark(v)
 	return _c
 }
 
-// SetNillableDescription sets the "description" field if the given value is not nil.
-func (_c *DictDataCreate) SetNillableDescription(v *string) *DictDataCreate {
+// SetNillableRemark sets the "remark" field if the given value is not nil.
+func (_c *DictDataCreate) SetNillableRemark(v *string) *DictDataCreate {
 	if v != nil {
-		_c.SetDescription(*v)
+		_c.SetRemark(*v)
 	}
 	return _c
 }
@@ -224,9 +224,9 @@ func (_c *DictDataCreate) check() error {
 			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "DictData.status": %w`, err)}
 		}
 	}
-	if v, ok := _c.mutation.Description(); ok {
-		if err := dictdata.DescriptionValidator(v); err != nil {
-			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "DictData.description": %w`, err)}
+	if v, ok := _c.mutation.Remark(); ok {
+		if err := dictdata.RemarkValidator(v); err != nil {
+			return &ValidationError{Name: "remark", err: fmt.Errorf(`ent: validator failed for field "DictData.remark": %w`, err)}
 		}
 	}
 	if _, ok := _c.mutation.CreatedAt(); !ok {
@@ -299,9 +299,9 @@ func (_c *DictDataCreate) createSpec() (*DictData, *sqlgraph.CreateSpec) {
 		_spec.SetField(dictdata.FieldExtension, field.TypeJSON, value)
 		_node.Extension = value
 	}
-	if value, ok := _c.mutation.Description(); ok {
-		_spec.SetField(dictdata.FieldDescription, field.TypeString, value)
-		_node.Description = value
+	if value, ok := _c.mutation.Remark(); ok {
+		_spec.SetField(dictdata.FieldRemark, field.TypeString, value)
+		_node.Remark = value
 	}
 	if value, ok := _c.mutation.CreatedAt(); ok {
 		_spec.SetField(dictdata.FieldCreatedAt, field.TypeTime, value)

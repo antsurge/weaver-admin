@@ -115,10 +115,10 @@ func init() {
 	dictdataDescWeight := dictdataFields[4].Descriptor()
 	// dictdata.DefaultWeight holds the default value on creation for the weight field.
 	dictdata.DefaultWeight = dictdataDescWeight.Default.(int)
-	// dictdataDescDescription is the schema descriptor for description field.
-	dictdataDescDescription := dictdataFields[7].Descriptor()
-	// dictdata.DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
-	dictdata.DescriptionValidator = dictdataDescDescription.Validators[0].(func(string) error)
+	// dictdataDescRemark is the schema descriptor for remark field.
+	dictdataDescRemark := dictdataFields[7].Descriptor()
+	// dictdata.RemarkValidator is a validator for the "remark" field. It is called by the builders before save.
+	dictdata.RemarkValidator = dictdataDescRemark.Validators[0].(func(string) error)
 	// dictdataDescCreatedAt is the schema descriptor for created_at field.
 	dictdataDescCreatedAt := dictdataFields[8].Descriptor()
 	// dictdata.DefaultCreatedAt holds the default value on creation for the created_at field.
@@ -171,10 +171,10 @@ func init() {
 			return nil
 		}
 	}()
-	// dicttypeDescDescription is the schema descriptor for description field.
-	dicttypeDescDescription := dicttypeFields[4].Descriptor()
-	// dicttype.DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
-	dicttype.DescriptionValidator = dicttypeDescDescription.Validators[0].(func(string) error)
+	// dicttypeDescRemark is the schema descriptor for remark field.
+	dicttypeDescRemark := dicttypeFields[4].Descriptor()
+	// dicttype.RemarkValidator is a validator for the "remark" field. It is called by the builders before save.
+	dicttype.RemarkValidator = dicttypeDescRemark.Validators[0].(func(string) error)
 	// dicttypeDescCreatedAt is the schema descriptor for created_at field.
 	dicttypeDescCreatedAt := dicttypeFields[5].Descriptor()
 	// dicttype.DefaultCreatedAt holds the default value on creation for the created_at field.

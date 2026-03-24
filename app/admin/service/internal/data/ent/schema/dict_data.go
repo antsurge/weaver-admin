@@ -57,10 +57,10 @@ func (DictData) Fields() []ent.Field {
 			Optional().
 			Comment("扩展参数"),
 
-		field.String("description").
+		field.String("remark").
 			Optional().
 			MaxLen(256).
-			Comment("描述"),
+			Comment("备注"),
 
 		field.Time("created_at").
 			Immutable().

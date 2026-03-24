@@ -31,8 +31,8 @@ type DictData struct {
 	Status dictdata.Status `json:"status,omitempty"`
 	// 扩展参数
 	Extension map[string]interface{} `json:"extension,omitempty"`
-	// 描述
-	Description string `json:"description,omitempty"`
+	// 备注
+	Remark string `json:"remark,omitempty"`
 	// 创建时间
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// 更新时间
@@ -51,7 +51,7 @@ func (*DictData) scanValues(columns []string) ([]any, error) {
 			values[i] = new([]byte)
 		case dictdata.FieldWeight:
 			values[i] = new(sql.NullInt64)
-		case dictdata.FieldID, dictdata.FieldDictTypeID, dictdata.FieldLabel, dictdata.FieldValue, dictdata.FieldStatus, dictdata.FieldDescription:
+		case dictdata.FieldID, dictdata.FieldDictTypeID, dictdata.FieldLabel, dictdata.FieldValue, dictdata.FieldStatus, dictdata.FieldRemark:
 			values[i] = new(sql.NullString)
 		case dictdata.FieldCreatedAt, dictdata.FieldUpdatedAt, dictdata.FieldDeletedAt:
 			values[i] = new(sql.NullTime)
@@ -114,11 +114,11 @@ func (_m *DictData) assignValues(columns []string, values []any) error {
 					return fmt.Errorf("unmarshal field extension: %w", err)
 				}
 			}
-		case dictdata.FieldDescription:
+		case dictdata.FieldRemark:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field description", values[i])
+				return fmt.Errorf("unexpected type %T for field remark", values[i])
 			} else if value.Valid {
-				_m.Description = value.String
+				_m.Remark = value.String
 			}
 		case dictdata.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -193,8 +193,8 @@ func (_m *DictData) String() string {
 	builder.WriteString("extension=")
 	builder.WriteString(fmt.Sprintf("%v", _m.Extension))
 	builder.WriteString(", ")
-	builder.WriteString("description=")
-	builder.WriteString(_m.Description)
+	builder.WriteString("remark=")
+	builder.WriteString(_m.Remark)
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(_m.CreatedAt.Format(time.ANSIC))

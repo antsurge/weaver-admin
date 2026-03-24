@@ -70,23 +70,23 @@ func (_u *DictTypeUpdate) SetNillableStatus(v *dicttype.Status) *DictTypeUpdate 
 	return _u
 }
 
-// SetDescription sets the "description" field.
-func (_u *DictTypeUpdate) SetDescription(v string) *DictTypeUpdate {
-	_u.mutation.SetDescription(v)
+// SetRemark sets the "remark" field.
+func (_u *DictTypeUpdate) SetRemark(v string) *DictTypeUpdate {
+	_u.mutation.SetRemark(v)
 	return _u
 }
 
-// SetNillableDescription sets the "description" field if the given value is not nil.
-func (_u *DictTypeUpdate) SetNillableDescription(v *string) *DictTypeUpdate {
+// SetNillableRemark sets the "remark" field if the given value is not nil.
+func (_u *DictTypeUpdate) SetNillableRemark(v *string) *DictTypeUpdate {
 	if v != nil {
-		_u.SetDescription(*v)
+		_u.SetRemark(*v)
 	}
 	return _u
 }
 
-// ClearDescription clears the value of the "description" field.
-func (_u *DictTypeUpdate) ClearDescription() *DictTypeUpdate {
-	_u.mutation.ClearDescription()
+// ClearRemark clears the value of the "remark" field.
+func (_u *DictTypeUpdate) ClearRemark() *DictTypeUpdate {
+	_u.mutation.ClearRemark()
 	return _u
 }
 
@@ -174,9 +174,9 @@ func (_u *DictTypeUpdate) check() error {
 			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "DictType.status": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.Description(); ok {
-		if err := dicttype.DescriptionValidator(v); err != nil {
-			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "DictType.description": %w`, err)}
+	if v, ok := _u.mutation.Remark(); ok {
+		if err := dicttype.RemarkValidator(v); err != nil {
+			return &ValidationError{Name: "remark", err: fmt.Errorf(`ent: validator failed for field "DictType.remark": %w`, err)}
 		}
 	}
 	return nil
@@ -203,11 +203,11 @@ func (_u *DictTypeUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.Status(); ok {
 		_spec.SetField(dicttype.FieldStatus, field.TypeEnum, value)
 	}
-	if value, ok := _u.mutation.Description(); ok {
-		_spec.SetField(dicttype.FieldDescription, field.TypeString, value)
+	if value, ok := _u.mutation.Remark(); ok {
+		_spec.SetField(dicttype.FieldRemark, field.TypeString, value)
 	}
-	if _u.mutation.DescriptionCleared() {
-		_spec.ClearField(dicttype.FieldDescription, field.TypeString)
+	if _u.mutation.RemarkCleared() {
+		_spec.ClearField(dicttype.FieldRemark, field.TypeString)
 	}
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(dicttype.FieldUpdatedAt, field.TypeTime, value)
@@ -280,23 +280,23 @@ func (_u *DictTypeUpdateOne) SetNillableStatus(v *dicttype.Status) *DictTypeUpda
 	return _u
 }
 
-// SetDescription sets the "description" field.
-func (_u *DictTypeUpdateOne) SetDescription(v string) *DictTypeUpdateOne {
-	_u.mutation.SetDescription(v)
+// SetRemark sets the "remark" field.
+func (_u *DictTypeUpdateOne) SetRemark(v string) *DictTypeUpdateOne {
+	_u.mutation.SetRemark(v)
 	return _u
 }
 
-// SetNillableDescription sets the "description" field if the given value is not nil.
-func (_u *DictTypeUpdateOne) SetNillableDescription(v *string) *DictTypeUpdateOne {
+// SetNillableRemark sets the "remark" field if the given value is not nil.
+func (_u *DictTypeUpdateOne) SetNillableRemark(v *string) *DictTypeUpdateOne {
 	if v != nil {
-		_u.SetDescription(*v)
+		_u.SetRemark(*v)
 	}
 	return _u
 }
 
-// ClearDescription clears the value of the "description" field.
-func (_u *DictTypeUpdateOne) ClearDescription() *DictTypeUpdateOne {
-	_u.mutation.ClearDescription()
+// ClearRemark clears the value of the "remark" field.
+func (_u *DictTypeUpdateOne) ClearRemark() *DictTypeUpdateOne {
+	_u.mutation.ClearRemark()
 	return _u
 }
 
@@ -397,9 +397,9 @@ func (_u *DictTypeUpdateOne) check() error {
 			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "DictType.status": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.Description(); ok {
-		if err := dicttype.DescriptionValidator(v); err != nil {
-			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "DictType.description": %w`, err)}
+	if v, ok := _u.mutation.Remark(); ok {
+		if err := dicttype.RemarkValidator(v); err != nil {
+			return &ValidationError{Name: "remark", err: fmt.Errorf(`ent: validator failed for field "DictType.remark": %w`, err)}
 		}
 	}
 	return nil
@@ -443,11 +443,11 @@ func (_u *DictTypeUpdateOne) sqlSave(ctx context.Context) (_node *DictType, err 
 	if value, ok := _u.mutation.Status(); ok {
 		_spec.SetField(dicttype.FieldStatus, field.TypeEnum, value)
 	}
-	if value, ok := _u.mutation.Description(); ok {
-		_spec.SetField(dicttype.FieldDescription, field.TypeString, value)
+	if value, ok := _u.mutation.Remark(); ok {
+		_spec.SetField(dicttype.FieldRemark, field.TypeString, value)
 	}
-	if _u.mutation.DescriptionCleared() {
-		_spec.ClearField(dicttype.FieldDescription, field.TypeString)
+	if _u.mutation.RemarkCleared() {
+		_spec.ClearField(dicttype.FieldRemark, field.TypeString)
 	}
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(dicttype.FieldUpdatedAt, field.TypeTime, value)

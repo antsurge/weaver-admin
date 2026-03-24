@@ -1266,7 +1266,7 @@ type DictDataMutation struct {
 	addweight     *int
 	status        *dictdata.Status
 	extension     *map[string]interface{}
-	description   *string
+	remark        *string
 	created_at    *time.Time
 	updated_at    *time.Time
 	deleted_at    *time.Time
@@ -1629,53 +1629,53 @@ func (m *DictDataMutation) ResetExtension() {
 	delete(m.clearedFields, dictdata.FieldExtension)
 }
 
-// SetDescription sets the "description" field.
-func (m *DictDataMutation) SetDescription(s string) {
-	m.description = &s
+// SetRemark sets the "remark" field.
+func (m *DictDataMutation) SetRemark(s string) {
+	m.remark = &s
 }
 
-// Description returns the value of the "description" field in the mutation.
-func (m *DictDataMutation) Description() (r string, exists bool) {
-	v := m.description
+// Remark returns the value of the "remark" field in the mutation.
+func (m *DictDataMutation) Remark() (r string, exists bool) {
+	v := m.remark
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldDescription returns the old "description" field's value of the DictData entity.
+// OldRemark returns the old "remark" field's value of the DictData entity.
 // If the DictData object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DictDataMutation) OldDescription(ctx context.Context) (v string, err error) {
+func (m *DictDataMutation) OldRemark(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
+		return v, errors.New("OldRemark is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldDescription requires an ID field in the mutation")
+		return v, errors.New("OldRemark requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDescription: %w", err)
+		return v, fmt.Errorf("querying old value for OldRemark: %w", err)
 	}
-	return oldValue.Description, nil
+	return oldValue.Remark, nil
 }
 
-// ClearDescription clears the value of the "description" field.
-func (m *DictDataMutation) ClearDescription() {
-	m.description = nil
-	m.clearedFields[dictdata.FieldDescription] = struct{}{}
+// ClearRemark clears the value of the "remark" field.
+func (m *DictDataMutation) ClearRemark() {
+	m.remark = nil
+	m.clearedFields[dictdata.FieldRemark] = struct{}{}
 }
 
-// DescriptionCleared returns if the "description" field was cleared in this mutation.
-func (m *DictDataMutation) DescriptionCleared() bool {
-	_, ok := m.clearedFields[dictdata.FieldDescription]
+// RemarkCleared returns if the "remark" field was cleared in this mutation.
+func (m *DictDataMutation) RemarkCleared() bool {
+	_, ok := m.clearedFields[dictdata.FieldRemark]
 	return ok
 }
 
-// ResetDescription resets all changes to the "description" field.
-func (m *DictDataMutation) ResetDescription() {
-	m.description = nil
-	delete(m.clearedFields, dictdata.FieldDescription)
+// ResetRemark resets all changes to the "remark" field.
+func (m *DictDataMutation) ResetRemark() {
+	m.remark = nil
+	delete(m.clearedFields, dictdata.FieldRemark)
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -1852,8 +1852,8 @@ func (m *DictDataMutation) Fields() []string {
 	if m.extension != nil {
 		fields = append(fields, dictdata.FieldExtension)
 	}
-	if m.description != nil {
-		fields = append(fields, dictdata.FieldDescription)
+	if m.remark != nil {
+		fields = append(fields, dictdata.FieldRemark)
 	}
 	if m.created_at != nil {
 		fields = append(fields, dictdata.FieldCreatedAt)
@@ -1884,8 +1884,8 @@ func (m *DictDataMutation) Field(name string) (ent.Value, bool) {
 		return m.Status()
 	case dictdata.FieldExtension:
 		return m.Extension()
-	case dictdata.FieldDescription:
-		return m.Description()
+	case dictdata.FieldRemark:
+		return m.Remark()
 	case dictdata.FieldCreatedAt:
 		return m.CreatedAt()
 	case dictdata.FieldUpdatedAt:
@@ -1913,8 +1913,8 @@ func (m *DictDataMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldStatus(ctx)
 	case dictdata.FieldExtension:
 		return m.OldExtension(ctx)
-	case dictdata.FieldDescription:
-		return m.OldDescription(ctx)
+	case dictdata.FieldRemark:
+		return m.OldRemark(ctx)
 	case dictdata.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
 	case dictdata.FieldUpdatedAt:
@@ -1972,12 +1972,12 @@ func (m *DictDataMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetExtension(v)
 		return nil
-	case dictdata.FieldDescription:
+	case dictdata.FieldRemark:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetDescription(v)
+		m.SetRemark(v)
 		return nil
 	case dictdata.FieldCreatedAt:
 		v, ok := value.(time.Time)
@@ -2048,8 +2048,8 @@ func (m *DictDataMutation) ClearedFields() []string {
 	if m.FieldCleared(dictdata.FieldExtension) {
 		fields = append(fields, dictdata.FieldExtension)
 	}
-	if m.FieldCleared(dictdata.FieldDescription) {
-		fields = append(fields, dictdata.FieldDescription)
+	if m.FieldCleared(dictdata.FieldRemark) {
+		fields = append(fields, dictdata.FieldRemark)
 	}
 	if m.FieldCleared(dictdata.FieldDeletedAt) {
 		fields = append(fields, dictdata.FieldDeletedAt)
@@ -2071,8 +2071,8 @@ func (m *DictDataMutation) ClearField(name string) error {
 	case dictdata.FieldExtension:
 		m.ClearExtension()
 		return nil
-	case dictdata.FieldDescription:
-		m.ClearDescription()
+	case dictdata.FieldRemark:
+		m.ClearRemark()
 		return nil
 	case dictdata.FieldDeletedAt:
 		m.ClearDeletedAt()
@@ -2103,8 +2103,8 @@ func (m *DictDataMutation) ResetField(name string) error {
 	case dictdata.FieldExtension:
 		m.ResetExtension()
 		return nil
-	case dictdata.FieldDescription:
-		m.ResetDescription()
+	case dictdata.FieldRemark:
+		m.ResetRemark()
 		return nil
 	case dictdata.FieldCreatedAt:
 		m.ResetCreatedAt()
@@ -2176,7 +2176,7 @@ type DictTypeMutation struct {
 	name          *string
 	code          *string
 	status        *dicttype.Status
-	description   *string
+	remark        *string
 	created_at    *time.Time
 	updated_at    *time.Time
 	deleted_at    *time.Time
@@ -2398,53 +2398,53 @@ func (m *DictTypeMutation) ResetStatus() {
 	m.status = nil
 }
 
-// SetDescription sets the "description" field.
-func (m *DictTypeMutation) SetDescription(s string) {
-	m.description = &s
+// SetRemark sets the "remark" field.
+func (m *DictTypeMutation) SetRemark(s string) {
+	m.remark = &s
 }
 
-// Description returns the value of the "description" field in the mutation.
-func (m *DictTypeMutation) Description() (r string, exists bool) {
-	v := m.description
+// Remark returns the value of the "remark" field in the mutation.
+func (m *DictTypeMutation) Remark() (r string, exists bool) {
+	v := m.remark
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldDescription returns the old "description" field's value of the DictType entity.
+// OldRemark returns the old "remark" field's value of the DictType entity.
 // If the DictType object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DictTypeMutation) OldDescription(ctx context.Context) (v string, err error) {
+func (m *DictTypeMutation) OldRemark(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
+		return v, errors.New("OldRemark is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldDescription requires an ID field in the mutation")
+		return v, errors.New("OldRemark requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDescription: %w", err)
+		return v, fmt.Errorf("querying old value for OldRemark: %w", err)
 	}
-	return oldValue.Description, nil
+	return oldValue.Remark, nil
 }
 
-// ClearDescription clears the value of the "description" field.
-func (m *DictTypeMutation) ClearDescription() {
-	m.description = nil
-	m.clearedFields[dicttype.FieldDescription] = struct{}{}
+// ClearRemark clears the value of the "remark" field.
+func (m *DictTypeMutation) ClearRemark() {
+	m.remark = nil
+	m.clearedFields[dicttype.FieldRemark] = struct{}{}
 }
 
-// DescriptionCleared returns if the "description" field was cleared in this mutation.
-func (m *DictTypeMutation) DescriptionCleared() bool {
-	_, ok := m.clearedFields[dicttype.FieldDescription]
+// RemarkCleared returns if the "remark" field was cleared in this mutation.
+func (m *DictTypeMutation) RemarkCleared() bool {
+	_, ok := m.clearedFields[dicttype.FieldRemark]
 	return ok
 }
 
-// ResetDescription resets all changes to the "description" field.
-func (m *DictTypeMutation) ResetDescription() {
-	m.description = nil
-	delete(m.clearedFields, dicttype.FieldDescription)
+// ResetRemark resets all changes to the "remark" field.
+func (m *DictTypeMutation) ResetRemark() {
+	m.remark = nil
+	delete(m.clearedFields, dicttype.FieldRemark)
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -2612,8 +2612,8 @@ func (m *DictTypeMutation) Fields() []string {
 	if m.status != nil {
 		fields = append(fields, dicttype.FieldStatus)
 	}
-	if m.description != nil {
-		fields = append(fields, dicttype.FieldDescription)
+	if m.remark != nil {
+		fields = append(fields, dicttype.FieldRemark)
 	}
 	if m.created_at != nil {
 		fields = append(fields, dicttype.FieldCreatedAt)
@@ -2638,8 +2638,8 @@ func (m *DictTypeMutation) Field(name string) (ent.Value, bool) {
 		return m.Code()
 	case dicttype.FieldStatus:
 		return m.Status()
-	case dicttype.FieldDescription:
-		return m.Description()
+	case dicttype.FieldRemark:
+		return m.Remark()
 	case dicttype.FieldCreatedAt:
 		return m.CreatedAt()
 	case dicttype.FieldUpdatedAt:
@@ -2661,8 +2661,8 @@ func (m *DictTypeMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldCode(ctx)
 	case dicttype.FieldStatus:
 		return m.OldStatus(ctx)
-	case dicttype.FieldDescription:
-		return m.OldDescription(ctx)
+	case dicttype.FieldRemark:
+		return m.OldRemark(ctx)
 	case dicttype.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
 	case dicttype.FieldUpdatedAt:
@@ -2699,12 +2699,12 @@ func (m *DictTypeMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetStatus(v)
 		return nil
-	case dicttype.FieldDescription:
+	case dicttype.FieldRemark:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetDescription(v)
+		m.SetRemark(v)
 		return nil
 	case dicttype.FieldCreatedAt:
 		v, ok := value.(time.Time)
@@ -2757,8 +2757,8 @@ func (m *DictTypeMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *DictTypeMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(dicttype.FieldDescription) {
-		fields = append(fields, dicttype.FieldDescription)
+	if m.FieldCleared(dicttype.FieldRemark) {
+		fields = append(fields, dicttype.FieldRemark)
 	}
 	if m.FieldCleared(dicttype.FieldDeletedAt) {
 		fields = append(fields, dicttype.FieldDeletedAt)
@@ -2777,8 +2777,8 @@ func (m *DictTypeMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *DictTypeMutation) ClearField(name string) error {
 	switch name {
-	case dicttype.FieldDescription:
-		m.ClearDescription()
+	case dicttype.FieldRemark:
+		m.ClearRemark()
 		return nil
 	case dicttype.FieldDeletedAt:
 		m.ClearDeletedAt()
@@ -2800,8 +2800,8 @@ func (m *DictTypeMutation) ResetField(name string) error {
 	case dicttype.FieldStatus:
 		m.ResetStatus()
 		return nil
-	case dicttype.FieldDescription:
-		m.ResetDescription()
+	case dicttype.FieldRemark:
+		m.ResetRemark()
 		return nil
 	case dicttype.FieldCreatedAt:
 		m.ResetCreatedAt()

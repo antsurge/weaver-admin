@@ -1,4 +1,5 @@
 import { requestClient } from '#/api/request';
+import type { PaginationParams,PaginationResult } from '#/types/pagination'
 
 export namespace SystemDictApi {
   /** 字典类型 */
@@ -11,8 +12,8 @@ export namespace SystemDictApi {
     code: string;
     /** 状态：enabled=启用 disabled=禁用 */
     status: 'enabled' | 'disabled';
-    /** 描述 */
-    description?: string;
+    /** 备注 */
+    remark?: string;
     /** 创建时间 */
     createdAt?: string;
     /** 更新时间 */
@@ -24,27 +25,33 @@ export namespace SystemDictApi {
     /** 数据ID */
     id: string;
     /** 所属字典类型ID */
-    dictTypeId: string;
+    dictTypeID: string;
     /** 显示标签 */
     label: string;
     /** 实际值 */
     value: string;
     /** 状态：enabled=启用 disabled=禁用 */
     status: 'enabled' | 'disabled';
-    /** 描述 */
-    description?: string;
+    /** 备注 */
+    remark?: string;
     /** 创建时间 */
     createdAt?: string;
     /** 更新时间 */
     updatedAt?: string;
+  }
+
+  export interface DictTypeListParams extends PaginationParams{
+
   }
 }
 
 /**
  * 获取字典类型列表
  */
-async function getDictTypeListApi() {
-  return requestClient.get<Array<SystemDictApi.DictType>>('/admin/v1/dict-type');
+async function getDictTypeListApi(params?:SystemDictApi.DictTypeListParams) {
+  return requestClient.get<PaginationResult<SystemDictApi.DictType>>('/admin/v1/dict-type',{
+    params:params
+  });
 }
 
 /**
@@ -53,7 +60,9 @@ async function getDictTypeListApi() {
 async function createDictTypeApi(
   data: Omit<SystemDictApi.DictType, 'id' | 'createdAt' | 'updatedAt'>,
 ) {
-  return requestClient.post('/admin/v1/dict-type', data);
+  return requestClient.post('/admin/v1/dict-type', data,{
+    showSuccessMessage: true,
+  });
 }
 
 /**
@@ -63,7 +72,9 @@ async function updateDictTypeApi(
   id: string,
   data: Omit<SystemDictApi.DictType, 'id' | 'createdAt' | 'updatedAt'>,
 ) {
-  return requestClient.put(`/admin/v1/dict-type/${id}`, data);
+  return requestClient.put(`/admin/v1/dict-type/${id}`, data,{
+    showSuccessMessage: true,
+  });
 }
 
 /**
@@ -94,7 +105,7 @@ async function deleteDictTypeApi(ids: string[]) {
  */
 async function getDictDataListByTypeApi(dictTypeId: string) {
   return requestClient.get<Array<SystemDictApi.DictData>>(
-    '/admin/v1/dict/data',
+    '/admin/v1/dict-da ta',
     {
       params: { dictTypeId },
     },
@@ -107,7 +118,7 @@ async function getDictDataListByTypeApi(dictTypeId: string) {
 async function createDictDataApi(
   data: Omit<SystemDictApi.DictData, 'id' | 'createdAt' | 'updatedAt'>,
 ) {
-  return requestClient.post('/admin/v1/dict/data', data);
+  return requestClient.post('/admin/v1/dict-data', data);
 }
 
 /**
@@ -117,7 +128,7 @@ async function updateDictDataApi(
   id: string,
   data: Omit<SystemDictApi.DictData, 'id' | 'createdAt' | 'updatedAt'>,
 ) {
-  return requestClient.put(`/admin/v1/dict/data/${id}`, data);
+  return requestClient.put(`/admin/v1/dict-data/${id}`, data);
 }
 
 /**
@@ -127,7 +138,7 @@ async function updateDictDataStatusApi(
   id: string,
   status: SystemDictApi.DictData['status'],
 ) {
-  return requestClient.put(`/admin/v1/dict/data/${id}/status`, {
+  return requestClient.put(`/admin/v1/dict-data/${id}/status`, {
     status,
   });
 }
@@ -136,7 +147,7 @@ async function updateDictDataStatusApi(
  * 删除字典数据
  */
 async function deleteDictDataApi(ids: string[]) {
-  return requestClient.delete('/admin/v1/dict/data', {
+  return requestClient.delete('/admin/v1/dict-data', {
     params: {
       ids,
     },

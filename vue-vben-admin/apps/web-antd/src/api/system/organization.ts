@@ -1,5 +1,5 @@
 import { requestClient } from '#/api/request';
-import type { PaginationParams,AllResult } from '#/types/pagination'
+import type { AllResult } from '#/types/pagination'
 
 export namespace SystemOrganizationApi {
   /** 组织机构 */
@@ -30,7 +30,7 @@ export namespace SystemOrganizationApi {
     children?: Organization[];
   }
 
-  export interface OrganizationTreeParams{
+  export interface OrganizationTreeParams {
     name?: string;
     code?: string;
     status?: 'enabled' | 'disabled';
@@ -40,11 +40,11 @@ export namespace SystemOrganizationApi {
 /**
  * 获取组织机构树
  */
-async function getOrganizationTreeApi(params?:SystemOrganizationApi.OrganizationTreeParams) {
+async function getOrganizationTreeApi(params?: SystemOrganizationApi.OrganizationTreeParams) {
   return requestClient.get<AllResult<SystemOrganizationApi.Organization>>(
     '/admin/v1/organization/tree',
     {
-      params:params
+      params: params
     }
   );
 }
@@ -56,7 +56,9 @@ async function getOrganizationTreeApi(params?:SystemOrganizationApi.Organization
 async function createOrganization(
   data: Omit<SystemOrganizationApi.Organization, 'id' | 'children'>,
 ) {
-  return requestClient.post('/admin/v1/organization', data);
+  return requestClient.post('/admin/v1/organization', data, {
+    showSuccessMessage: true,
+  });
 }
 
 /**
@@ -69,7 +71,9 @@ async function updateOrganization(
   id: string,
   data: Omit<SystemOrganizationApi.Organization, 'id' | 'children'>,
 ) {
-  return requestClient.put(`/admin/v1/organization/${id}`, data);
+  return requestClient.put(`/admin/v1/organization/${id}`, data, {
+    showSuccessMessage: true,
+  });
 }
 
 /**
