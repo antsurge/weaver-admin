@@ -8,6 +8,7 @@ import (
 	dictionaryV1 "github.com/hypercoze/kratos-admin/api/gen/go/dictionary/service/v1"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/biz"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data"
+	"github.com/hypercoze/kratos-admin/pkg/utils/copierx"
 	"github.com/jinzhu/copier"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
@@ -50,7 +51,7 @@ func (s *DictionaryService) ListDictType(ctx context.Context, req *dictionaryV1.
 	output := &dictionaryV1.ListDictTypeResponse{}
 	if res != nil {
 		output.Total = int64(res.Total)
-		err = copier.Copy(&output.Items, &res.Data)
+		err = copierx.Copy(&output.Items, &res.Data)
 	}
 
 	return output, err
