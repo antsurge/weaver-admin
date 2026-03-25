@@ -411,52 +411,24 @@ func init() {
 	position.IDValidator = positionDescID.Validators[0].(func(string) error)
 	roleFields := schema.Role{}.Fields()
 	_ = roleFields
-	// roleDescName is the schema descriptor for name field.
-	roleDescName := roleFields[1].Descriptor()
-	// role.NameValidator is a validator for the "name" field. It is called by the builders before save.
-	role.NameValidator = func() func(string) error {
-		validators := roleDescName.Validators
-		fns := [...]func(string) error{
-			validators[0].(func(string) error),
-			validators[1].(func(string) error),
-		}
-		return func(name string) error {
-			for _, fn := range fns {
-				if err := fn(name); err != nil {
-					return err
-				}
-			}
-			return nil
-		}
-	}()
-	// roleDescCode is the schema descriptor for code field.
-	roleDescCode := roleFields[2].Descriptor()
-	// role.CodeValidator is a validator for the "code" field. It is called by the builders before save.
-	role.CodeValidator = func() func(string) error {
-		validators := roleDescCode.Validators
-		fns := [...]func(string) error{
-			validators[0].(func(string) error),
-			validators[1].(func(string) error),
-		}
-		return func(code string) error {
-			for _, fn := range fns {
-				if err := fn(code); err != nil {
-					return err
-				}
-			}
-			return nil
-		}
-	}()
-	// roleDescDescription is the schema descriptor for description field.
-	roleDescDescription := roleFields[3].Descriptor()
-	// role.DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
-	role.DescriptionValidator = roleDescDescription.Validators[0].(func(string) error)
+	// roleDescWeight is the schema descriptor for weight field.
+	roleDescWeight := roleFields[3].Descriptor()
+	// role.DefaultWeight holds the default value on creation for the weight field.
+	role.DefaultWeight = roleDescWeight.Default.(int64)
+	// roleDescIsSystem is the schema descriptor for is_system field.
+	roleDescIsSystem := roleFields[6].Descriptor()
+	// role.DefaultIsSystem holds the default value on creation for the is_system field.
+	role.DefaultIsSystem = roleDescIsSystem.Default.(bool)
+	// roleDescDataScope is the schema descriptor for data_scope field.
+	roleDescDataScope := roleFields[7].Descriptor()
+	// role.DefaultDataScope holds the default value on creation for the data_scope field.
+	role.DefaultDataScope = roleDescDataScope.Default.(string)
 	// roleDescCreatedAt is the schema descriptor for created_at field.
-	roleDescCreatedAt := roleFields[4].Descriptor()
+	roleDescCreatedAt := roleFields[8].Descriptor()
 	// role.DefaultCreatedAt holds the default value on creation for the created_at field.
 	role.DefaultCreatedAt = roleDescCreatedAt.Default.(func() time.Time)
 	// roleDescUpdatedAt is the schema descriptor for updated_at field.
-	roleDescUpdatedAt := roleFields[5].Descriptor()
+	roleDescUpdatedAt := roleFields[9].Descriptor()
 	// role.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	role.DefaultUpdatedAt = roleDescUpdatedAt.Default.(func() time.Time)
 	// role.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.

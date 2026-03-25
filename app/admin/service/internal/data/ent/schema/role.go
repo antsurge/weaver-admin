@@ -1,11 +1,12 @@
 package schema
 
 import (
+	"time"
+
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
-	"time"
 )
 
 type Role struct {
@@ -23,12 +24,40 @@ func (Role) Annotations() []schema.Annotation {
 
 func (Role) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("id").Unique().Immutable().MaxLen(36),
-		field.String("name").NotEmpty().MaxLen(64).Comment("角色名称"),
-		field.String("code").NotEmpty().Unique().MaxLen(64).Comment("角色唯一编码"),
-		field.String("description").Optional().MaxLen(256).Comment("角色描述"),
-		field.Time("created_at").Immutable().Default(time.Now),
-		field.Time("updated_at").Default(time.Now).UpdateDefault(time.Now),
+		field.String("id").
+			NotEmpty().
+			Unique(),
+		field.String("name").
+			Comment("角色名称"),
+		field.String("code").
+			Unique().
+			Comment("角色编码"),
+		field.Int64("weight").
+			Default(0).
+			Comment("排序权重"),
+		field.Enum("status").
+			Values("enabled", "disabled").
+			Default("enabled").
+			Comment("状态"),
+		field.String("remark").
+			Optional().
+			Comment("备注"),
+		field.Bool("is_system").
+			Default(false).
+			Comment("是否系统内置"),
+
+		field.String("data_scope").
+			Default("all").
+			Comment("数据权限范围: all / dept / self"),
+
+		field.Time("created_at").
+			Default(time.Now),
+		field.Time("updated_at").
+			Default(time.Now).
+			UpdateDefault(time.Now),
+		field.Time("deleted_at").
+			Optional().
+			Nillable(),
 	}
 }
 

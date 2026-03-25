@@ -1,3 +1,18 @@
 syntax = "proto3";
 
 package permission.service.v1;
+
+message Role {
+    string id = 1;
+    string name = 2;
+    string code = 3;
+    string remark = 4;
+    int32 weight = 5;
+    string status = 6;
+    // 数据权限范围
+    string dataScope = 7;
+    // 是否系统内置
+    bool isSystem = 8;
+    string createdAt = 10;
+    string updatedAt = 11;
+}

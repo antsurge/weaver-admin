@@ -32,16 +32,72 @@ func (_c *RoleCreate) SetCode(v string) *RoleCreate {
 	return _c
 }
 
-// SetDescription sets the "description" field.
-func (_c *RoleCreate) SetDescription(v string) *RoleCreate {
-	_c.mutation.SetDescription(v)
+// SetWeight sets the "weight" field.
+func (_c *RoleCreate) SetWeight(v int64) *RoleCreate {
+	_c.mutation.SetWeight(v)
 	return _c
 }
 
-// SetNillableDescription sets the "description" field if the given value is not nil.
-func (_c *RoleCreate) SetNillableDescription(v *string) *RoleCreate {
+// SetNillableWeight sets the "weight" field if the given value is not nil.
+func (_c *RoleCreate) SetNillableWeight(v *int64) *RoleCreate {
 	if v != nil {
-		_c.SetDescription(*v)
+		_c.SetWeight(*v)
+	}
+	return _c
+}
+
+// SetStatus sets the "status" field.
+func (_c *RoleCreate) SetStatus(v role.Status) *RoleCreate {
+	_c.mutation.SetStatus(v)
+	return _c
+}
+
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (_c *RoleCreate) SetNillableStatus(v *role.Status) *RoleCreate {
+	if v != nil {
+		_c.SetStatus(*v)
+	}
+	return _c
+}
+
+// SetRemark sets the "remark" field.
+func (_c *RoleCreate) SetRemark(v string) *RoleCreate {
+	_c.mutation.SetRemark(v)
+	return _c
+}
+
+// SetNillableRemark sets the "remark" field if the given value is not nil.
+func (_c *RoleCreate) SetNillableRemark(v *string) *RoleCreate {
+	if v != nil {
+		_c.SetRemark(*v)
+	}
+	return _c
+}
+
+// SetIsSystem sets the "is_system" field.
+func (_c *RoleCreate) SetIsSystem(v bool) *RoleCreate {
+	_c.mutation.SetIsSystem(v)
+	return _c
+}
+
+// SetNillableIsSystem sets the "is_system" field if the given value is not nil.
+func (_c *RoleCreate) SetNillableIsSystem(v *bool) *RoleCreate {
+	if v != nil {
+		_c.SetIsSystem(*v)
+	}
+	return _c
+}
+
+// SetDataScope sets the "data_scope" field.
+func (_c *RoleCreate) SetDataScope(v string) *RoleCreate {
+	_c.mutation.SetDataScope(v)
+	return _c
+}
+
+// SetNillableDataScope sets the "data_scope" field if the given value is not nil.
+func (_c *RoleCreate) SetNillableDataScope(v *string) *RoleCreate {
+	if v != nil {
+		_c.SetDataScope(*v)
 	}
 	return _c
 }
@@ -70,6 +126,20 @@ func (_c *RoleCreate) SetUpdatedAt(v time.Time) *RoleCreate {
 func (_c *RoleCreate) SetNillableUpdatedAt(v *time.Time) *RoleCreate {
 	if v != nil {
 		_c.SetUpdatedAt(*v)
+	}
+	return _c
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (_c *RoleCreate) SetDeletedAt(v time.Time) *RoleCreate {
+	_c.mutation.SetDeletedAt(v)
+	return _c
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (_c *RoleCreate) SetNillableDeletedAt(v *time.Time) *RoleCreate {
+	if v != nil {
+		_c.SetDeletedAt(*v)
 	}
 	return _c
 }
@@ -115,6 +185,22 @@ func (_c *RoleCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (_c *RoleCreate) defaults() {
+	if _, ok := _c.mutation.Weight(); !ok {
+		v := role.DefaultWeight
+		_c.mutation.SetWeight(v)
+	}
+	if _, ok := _c.mutation.Status(); !ok {
+		v := role.DefaultStatus
+		_c.mutation.SetStatus(v)
+	}
+	if _, ok := _c.mutation.IsSystem(); !ok {
+		v := role.DefaultIsSystem
+		_c.mutation.SetIsSystem(v)
+	}
+	if _, ok := _c.mutation.DataScope(); !ok {
+		v := role.DefaultDataScope
+		_c.mutation.SetDataScope(v)
+	}
 	if _, ok := _c.mutation.CreatedAt(); !ok {
 		v := role.DefaultCreatedAt()
 		_c.mutation.SetCreatedAt(v)
@@ -130,23 +216,25 @@ func (_c *RoleCreate) check() error {
 	if _, ok := _c.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Role.name"`)}
 	}
-	if v, ok := _c.mutation.Name(); ok {
-		if err := role.NameValidator(v); err != nil {
-			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Role.name": %w`, err)}
-		}
-	}
 	if _, ok := _c.mutation.Code(); !ok {
 		return &ValidationError{Name: "code", err: errors.New(`ent: missing required field "Role.code"`)}
 	}
-	if v, ok := _c.mutation.Code(); ok {
-		if err := role.CodeValidator(v); err != nil {
-			return &ValidationError{Name: "code", err: fmt.Errorf(`ent: validator failed for field "Role.code": %w`, err)}
+	if _, ok := _c.mutation.Weight(); !ok {
+		return &ValidationError{Name: "weight", err: errors.New(`ent: missing required field "Role.weight"`)}
+	}
+	if _, ok := _c.mutation.Status(); !ok {
+		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Role.status"`)}
+	}
+	if v, ok := _c.mutation.Status(); ok {
+		if err := role.StatusValidator(v); err != nil {
+			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Role.status": %w`, err)}
 		}
 	}
-	if v, ok := _c.mutation.Description(); ok {
-		if err := role.DescriptionValidator(v); err != nil {
-			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Role.description": %w`, err)}
-		}
+	if _, ok := _c.mutation.IsSystem(); !ok {
+		return &ValidationError{Name: "is_system", err: errors.New(`ent: missing required field "Role.is_system"`)}
+	}
+	if _, ok := _c.mutation.DataScope(); !ok {
+		return &ValidationError{Name: "data_scope", err: errors.New(`ent: missing required field "Role.data_scope"`)}
 	}
 	if _, ok := _c.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Role.created_at"`)}
@@ -202,9 +290,25 @@ func (_c *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 		_spec.SetField(role.FieldCode, field.TypeString, value)
 		_node.Code = value
 	}
-	if value, ok := _c.mutation.Description(); ok {
-		_spec.SetField(role.FieldDescription, field.TypeString, value)
-		_node.Description = value
+	if value, ok := _c.mutation.Weight(); ok {
+		_spec.SetField(role.FieldWeight, field.TypeInt64, value)
+		_node.Weight = value
+	}
+	if value, ok := _c.mutation.Status(); ok {
+		_spec.SetField(role.FieldStatus, field.TypeEnum, value)
+		_node.Status = value
+	}
+	if value, ok := _c.mutation.Remark(); ok {
+		_spec.SetField(role.FieldRemark, field.TypeString, value)
+		_node.Remark = value
+	}
+	if value, ok := _c.mutation.IsSystem(); ok {
+		_spec.SetField(role.FieldIsSystem, field.TypeBool, value)
+		_node.IsSystem = value
+	}
+	if value, ok := _c.mutation.DataScope(); ok {
+		_spec.SetField(role.FieldDataScope, field.TypeString, value)
+		_node.DataScope = value
 	}
 	if value, ok := _c.mutation.CreatedAt(); ok {
 		_spec.SetField(role.FieldCreatedAt, field.TypeTime, value)
@@ -213,6 +317,10 @@ func (_c *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.UpdatedAt(); ok {
 		_spec.SetField(role.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
+	}
+	if value, ok := _c.mutation.DeletedAt(); ok {
+		_spec.SetField(role.FieldDeletedAt, field.TypeTime, value)
+		_node.DeletedAt = &value
 	}
 	return _node, _spec
 }

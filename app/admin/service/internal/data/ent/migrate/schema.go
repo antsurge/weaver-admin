@@ -156,12 +156,17 @@ var (
 	}
 	// RoleColumns holds the columns for the "role" table.
 	RoleColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
-		{Name: "name", Type: field.TypeString, Size: 64, Comment: "角色名称"},
-		{Name: "code", Type: field.TypeString, Unique: true, Size: 64, Comment: "角色唯一编码"},
-		{Name: "description", Type: field.TypeString, Nullable: true, Size: 256, Comment: "角色描述"},
+		{Name: "id", Type: field.TypeString, Unique: true},
+		{Name: "name", Type: field.TypeString, Comment: "角色名称"},
+		{Name: "code", Type: field.TypeString, Unique: true, Comment: "角色编码"},
+		{Name: "weight", Type: field.TypeInt64, Comment: "排序权重", Default: 0},
+		{Name: "status", Type: field.TypeEnum, Comment: "状态", Enums: []string{"enabled", "disabled"}, Default: "enabled"},
+		{Name: "remark", Type: field.TypeString, Nullable: true, Comment: "备注"},
+		{Name: "is_system", Type: field.TypeBool, Comment: "是否系统内置", Default: false},
+		{Name: "data_scope", Type: field.TypeString, Comment: "数据权限范围: all / dept / self", Default: "all"},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true},
 	}
 	// RoleTable holds the schema information for the "role" table.
 	RoleTable = &schema.Table{

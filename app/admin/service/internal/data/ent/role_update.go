@@ -56,29 +56,126 @@ func (_u *RoleUpdate) SetNillableCode(v *string) *RoleUpdate {
 	return _u
 }
 
-// SetDescription sets the "description" field.
-func (_u *RoleUpdate) SetDescription(v string) *RoleUpdate {
-	_u.mutation.SetDescription(v)
+// SetWeight sets the "weight" field.
+func (_u *RoleUpdate) SetWeight(v int64) *RoleUpdate {
+	_u.mutation.ResetWeight()
+	_u.mutation.SetWeight(v)
 	return _u
 }
 
-// SetNillableDescription sets the "description" field if the given value is not nil.
-func (_u *RoleUpdate) SetNillableDescription(v *string) *RoleUpdate {
+// SetNillableWeight sets the "weight" field if the given value is not nil.
+func (_u *RoleUpdate) SetNillableWeight(v *int64) *RoleUpdate {
 	if v != nil {
-		_u.SetDescription(*v)
+		_u.SetWeight(*v)
 	}
 	return _u
 }
 
-// ClearDescription clears the value of the "description" field.
-func (_u *RoleUpdate) ClearDescription() *RoleUpdate {
-	_u.mutation.ClearDescription()
+// AddWeight adds value to the "weight" field.
+func (_u *RoleUpdate) AddWeight(v int64) *RoleUpdate {
+	_u.mutation.AddWeight(v)
+	return _u
+}
+
+// SetStatus sets the "status" field.
+func (_u *RoleUpdate) SetStatus(v role.Status) *RoleUpdate {
+	_u.mutation.SetStatus(v)
+	return _u
+}
+
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (_u *RoleUpdate) SetNillableStatus(v *role.Status) *RoleUpdate {
+	if v != nil {
+		_u.SetStatus(*v)
+	}
+	return _u
+}
+
+// SetRemark sets the "remark" field.
+func (_u *RoleUpdate) SetRemark(v string) *RoleUpdate {
+	_u.mutation.SetRemark(v)
+	return _u
+}
+
+// SetNillableRemark sets the "remark" field if the given value is not nil.
+func (_u *RoleUpdate) SetNillableRemark(v *string) *RoleUpdate {
+	if v != nil {
+		_u.SetRemark(*v)
+	}
+	return _u
+}
+
+// ClearRemark clears the value of the "remark" field.
+func (_u *RoleUpdate) ClearRemark() *RoleUpdate {
+	_u.mutation.ClearRemark()
+	return _u
+}
+
+// SetIsSystem sets the "is_system" field.
+func (_u *RoleUpdate) SetIsSystem(v bool) *RoleUpdate {
+	_u.mutation.SetIsSystem(v)
+	return _u
+}
+
+// SetNillableIsSystem sets the "is_system" field if the given value is not nil.
+func (_u *RoleUpdate) SetNillableIsSystem(v *bool) *RoleUpdate {
+	if v != nil {
+		_u.SetIsSystem(*v)
+	}
+	return _u
+}
+
+// SetDataScope sets the "data_scope" field.
+func (_u *RoleUpdate) SetDataScope(v string) *RoleUpdate {
+	_u.mutation.SetDataScope(v)
+	return _u
+}
+
+// SetNillableDataScope sets the "data_scope" field if the given value is not nil.
+func (_u *RoleUpdate) SetNillableDataScope(v *string) *RoleUpdate {
+	if v != nil {
+		_u.SetDataScope(*v)
+	}
+	return _u
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (_u *RoleUpdate) SetCreatedAt(v time.Time) *RoleUpdate {
+	_u.mutation.SetCreatedAt(v)
+	return _u
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (_u *RoleUpdate) SetNillableCreatedAt(v *time.Time) *RoleUpdate {
+	if v != nil {
+		_u.SetCreatedAt(*v)
+	}
 	return _u
 }
 
 // SetUpdatedAt sets the "updated_at" field.
 func (_u *RoleUpdate) SetUpdatedAt(v time.Time) *RoleUpdate {
 	_u.mutation.SetUpdatedAt(v)
+	return _u
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (_u *RoleUpdate) SetDeletedAt(v time.Time) *RoleUpdate {
+	_u.mutation.SetDeletedAt(v)
+	return _u
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (_u *RoleUpdate) SetNillableDeletedAt(v *time.Time) *RoleUpdate {
+	if v != nil {
+		_u.SetDeletedAt(*v)
+	}
+	return _u
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (_u *RoleUpdate) ClearDeletedAt() *RoleUpdate {
+	_u.mutation.ClearDeletedAt()
 	return _u
 }
 
@@ -125,19 +222,9 @@ func (_u *RoleUpdate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (_u *RoleUpdate) check() error {
-	if v, ok := _u.mutation.Name(); ok {
-		if err := role.NameValidator(v); err != nil {
-			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Role.name": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Code(); ok {
-		if err := role.CodeValidator(v); err != nil {
-			return &ValidationError{Name: "code", err: fmt.Errorf(`ent: validator failed for field "Role.code": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Description(); ok {
-		if err := role.DescriptionValidator(v); err != nil {
-			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Role.description": %w`, err)}
+	if v, ok := _u.mutation.Status(); ok {
+		if err := role.StatusValidator(v); err != nil {
+			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Role.status": %w`, err)}
 		}
 	}
 	return nil
@@ -161,14 +248,38 @@ func (_u *RoleUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.Code(); ok {
 		_spec.SetField(role.FieldCode, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Description(); ok {
-		_spec.SetField(role.FieldDescription, field.TypeString, value)
+	if value, ok := _u.mutation.Weight(); ok {
+		_spec.SetField(role.FieldWeight, field.TypeInt64, value)
 	}
-	if _u.mutation.DescriptionCleared() {
-		_spec.ClearField(role.FieldDescription, field.TypeString)
+	if value, ok := _u.mutation.AddedWeight(); ok {
+		_spec.AddField(role.FieldWeight, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.Status(); ok {
+		_spec.SetField(role.FieldStatus, field.TypeEnum, value)
+	}
+	if value, ok := _u.mutation.Remark(); ok {
+		_spec.SetField(role.FieldRemark, field.TypeString, value)
+	}
+	if _u.mutation.RemarkCleared() {
+		_spec.ClearField(role.FieldRemark, field.TypeString)
+	}
+	if value, ok := _u.mutation.IsSystem(); ok {
+		_spec.SetField(role.FieldIsSystem, field.TypeBool, value)
+	}
+	if value, ok := _u.mutation.DataScope(); ok {
+		_spec.SetField(role.FieldDataScope, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.CreatedAt(); ok {
+		_spec.SetField(role.FieldCreatedAt, field.TypeTime, value)
 	}
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(role.FieldUpdatedAt, field.TypeTime, value)
+	}
+	if value, ok := _u.mutation.DeletedAt(); ok {
+		_spec.SetField(role.FieldDeletedAt, field.TypeTime, value)
+	}
+	if _u.mutation.DeletedAtCleared() {
+		_spec.ClearField(role.FieldDeletedAt, field.TypeTime)
 	}
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -218,29 +329,126 @@ func (_u *RoleUpdateOne) SetNillableCode(v *string) *RoleUpdateOne {
 	return _u
 }
 
-// SetDescription sets the "description" field.
-func (_u *RoleUpdateOne) SetDescription(v string) *RoleUpdateOne {
-	_u.mutation.SetDescription(v)
+// SetWeight sets the "weight" field.
+func (_u *RoleUpdateOne) SetWeight(v int64) *RoleUpdateOne {
+	_u.mutation.ResetWeight()
+	_u.mutation.SetWeight(v)
 	return _u
 }
 
-// SetNillableDescription sets the "description" field if the given value is not nil.
-func (_u *RoleUpdateOne) SetNillableDescription(v *string) *RoleUpdateOne {
+// SetNillableWeight sets the "weight" field if the given value is not nil.
+func (_u *RoleUpdateOne) SetNillableWeight(v *int64) *RoleUpdateOne {
 	if v != nil {
-		_u.SetDescription(*v)
+		_u.SetWeight(*v)
 	}
 	return _u
 }
 
-// ClearDescription clears the value of the "description" field.
-func (_u *RoleUpdateOne) ClearDescription() *RoleUpdateOne {
-	_u.mutation.ClearDescription()
+// AddWeight adds value to the "weight" field.
+func (_u *RoleUpdateOne) AddWeight(v int64) *RoleUpdateOne {
+	_u.mutation.AddWeight(v)
+	return _u
+}
+
+// SetStatus sets the "status" field.
+func (_u *RoleUpdateOne) SetStatus(v role.Status) *RoleUpdateOne {
+	_u.mutation.SetStatus(v)
+	return _u
+}
+
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (_u *RoleUpdateOne) SetNillableStatus(v *role.Status) *RoleUpdateOne {
+	if v != nil {
+		_u.SetStatus(*v)
+	}
+	return _u
+}
+
+// SetRemark sets the "remark" field.
+func (_u *RoleUpdateOne) SetRemark(v string) *RoleUpdateOne {
+	_u.mutation.SetRemark(v)
+	return _u
+}
+
+// SetNillableRemark sets the "remark" field if the given value is not nil.
+func (_u *RoleUpdateOne) SetNillableRemark(v *string) *RoleUpdateOne {
+	if v != nil {
+		_u.SetRemark(*v)
+	}
+	return _u
+}
+
+// ClearRemark clears the value of the "remark" field.
+func (_u *RoleUpdateOne) ClearRemark() *RoleUpdateOne {
+	_u.mutation.ClearRemark()
+	return _u
+}
+
+// SetIsSystem sets the "is_system" field.
+func (_u *RoleUpdateOne) SetIsSystem(v bool) *RoleUpdateOne {
+	_u.mutation.SetIsSystem(v)
+	return _u
+}
+
+// SetNillableIsSystem sets the "is_system" field if the given value is not nil.
+func (_u *RoleUpdateOne) SetNillableIsSystem(v *bool) *RoleUpdateOne {
+	if v != nil {
+		_u.SetIsSystem(*v)
+	}
+	return _u
+}
+
+// SetDataScope sets the "data_scope" field.
+func (_u *RoleUpdateOne) SetDataScope(v string) *RoleUpdateOne {
+	_u.mutation.SetDataScope(v)
+	return _u
+}
+
+// SetNillableDataScope sets the "data_scope" field if the given value is not nil.
+func (_u *RoleUpdateOne) SetNillableDataScope(v *string) *RoleUpdateOne {
+	if v != nil {
+		_u.SetDataScope(*v)
+	}
+	return _u
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (_u *RoleUpdateOne) SetCreatedAt(v time.Time) *RoleUpdateOne {
+	_u.mutation.SetCreatedAt(v)
+	return _u
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (_u *RoleUpdateOne) SetNillableCreatedAt(v *time.Time) *RoleUpdateOne {
+	if v != nil {
+		_u.SetCreatedAt(*v)
+	}
 	return _u
 }
 
 // SetUpdatedAt sets the "updated_at" field.
 func (_u *RoleUpdateOne) SetUpdatedAt(v time.Time) *RoleUpdateOne {
 	_u.mutation.SetUpdatedAt(v)
+	return _u
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (_u *RoleUpdateOne) SetDeletedAt(v time.Time) *RoleUpdateOne {
+	_u.mutation.SetDeletedAt(v)
+	return _u
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (_u *RoleUpdateOne) SetNillableDeletedAt(v *time.Time) *RoleUpdateOne {
+	if v != nil {
+		_u.SetDeletedAt(*v)
+	}
+	return _u
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (_u *RoleUpdateOne) ClearDeletedAt() *RoleUpdateOne {
+	_u.mutation.ClearDeletedAt()
 	return _u
 }
 
@@ -300,19 +508,9 @@ func (_u *RoleUpdateOne) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (_u *RoleUpdateOne) check() error {
-	if v, ok := _u.mutation.Name(); ok {
-		if err := role.NameValidator(v); err != nil {
-			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Role.name": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Code(); ok {
-		if err := role.CodeValidator(v); err != nil {
-			return &ValidationError{Name: "code", err: fmt.Errorf(`ent: validator failed for field "Role.code": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Description(); ok {
-		if err := role.DescriptionValidator(v); err != nil {
-			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Role.description": %w`, err)}
+	if v, ok := _u.mutation.Status(); ok {
+		if err := role.StatusValidator(v); err != nil {
+			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Role.status": %w`, err)}
 		}
 	}
 	return nil
@@ -353,14 +551,38 @@ func (_u *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) {
 	if value, ok := _u.mutation.Code(); ok {
 		_spec.SetField(role.FieldCode, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Description(); ok {
-		_spec.SetField(role.FieldDescription, field.TypeString, value)
+	if value, ok := _u.mutation.Weight(); ok {
+		_spec.SetField(role.FieldWeight, field.TypeInt64, value)
 	}
-	if _u.mutation.DescriptionCleared() {
-		_spec.ClearField(role.FieldDescription, field.TypeString)
+	if value, ok := _u.mutation.AddedWeight(); ok {
+		_spec.AddField(role.FieldWeight, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.Status(); ok {
+		_spec.SetField(role.FieldStatus, field.TypeEnum, value)
+	}
+	if value, ok := _u.mutation.Remark(); ok {
+		_spec.SetField(role.FieldRemark, field.TypeString, value)
+	}
+	if _u.mutation.RemarkCleared() {
+		_spec.ClearField(role.FieldRemark, field.TypeString)
+	}
+	if value, ok := _u.mutation.IsSystem(); ok {
+		_spec.SetField(role.FieldIsSystem, field.TypeBool, value)
+	}
+	if value, ok := _u.mutation.DataScope(); ok {
+		_spec.SetField(role.FieldDataScope, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.CreatedAt(); ok {
+		_spec.SetField(role.FieldCreatedAt, field.TypeTime, value)
 	}
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(role.FieldUpdatedAt, field.TypeTime, value)
+	}
+	if value, ok := _u.mutation.DeletedAt(); ok {
+		_spec.SetField(role.FieldDeletedAt, field.TypeTime, value)
+	}
+	if _u.mutation.DeletedAtCleared() {
+		_spec.ClearField(role.FieldDeletedAt, field.TypeTime)
 	}
 	_node = &Role{config: _u.config}
 	_spec.Assign = _node.assignValues

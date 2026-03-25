@@ -3,6 +3,7 @@
 package role
 
 import (
+	"fmt"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -17,12 +18,22 @@ const (
 	FieldName = "name"
 	// FieldCode holds the string denoting the code field in the database.
 	FieldCode = "code"
-	// FieldDescription holds the string denoting the description field in the database.
-	FieldDescription = "description"
+	// FieldWeight holds the string denoting the weight field in the database.
+	FieldWeight = "weight"
+	// FieldStatus holds the string denoting the status field in the database.
+	FieldStatus = "status"
+	// FieldRemark holds the string denoting the remark field in the database.
+	FieldRemark = "remark"
+	// FieldIsSystem holds the string denoting the is_system field in the database.
+	FieldIsSystem = "is_system"
+	// FieldDataScope holds the string denoting the data_scope field in the database.
+	FieldDataScope = "data_scope"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
 	FieldUpdatedAt = "updated_at"
+	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
+	FieldDeletedAt = "deleted_at"
 	// Table holds the table name of the role in the database.
 	Table = "role"
 )
@@ -32,9 +43,14 @@ var Columns = []string{
 	FieldID,
 	FieldName,
 	FieldCode,
-	FieldDescription,
+	FieldWeight,
+	FieldStatus,
+	FieldRemark,
+	FieldIsSystem,
+	FieldDataScope,
 	FieldCreatedAt,
 	FieldUpdatedAt,
+	FieldDeletedAt,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -48,12 +64,12 @@ func ValidColumn(column string) bool {
 }
 
 var (
-	// NameValidator is a validator for the "name" field. It is called by the builders before save.
-	NameValidator func(string) error
-	// CodeValidator is a validator for the "code" field. It is called by the builders before save.
-	CodeValidator func(string) error
-	// DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
-	DescriptionValidator func(string) error
+	// DefaultWeight holds the default value on creation for the "weight" field.
+	DefaultWeight int64
+	// DefaultIsSystem holds the default value on creation for the "is_system" field.
+	DefaultIsSystem bool
+	// DefaultDataScope holds the default value on creation for the "data_scope" field.
+	DefaultDataScope string
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() time.Time
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
@@ -63,6 +79,32 @@ var (
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(string) error
 )
+
+// Status defines the type for the "status" enum field.
+type Status string
+
+// StatusEnabled is the default value of the Status enum.
+const DefaultStatus = StatusEnabled
+
+// Status values.
+const (
+	StatusEnabled  Status = "enabled"
+	StatusDisabled Status = "disabled"
+)
+
+func (s Status) String() string {
+	return string(s)
+}
+
+// StatusValidator is a validator for the "status" field enum values. It is called by the builders before save.
+func StatusValidator(s Status) error {
+	switch s {
+	case StatusEnabled, StatusDisabled:
+		return nil
+	default:
+		return fmt.Errorf("role: invalid enum value for status field: %q", s)
+	}
+}
 
 // OrderOption defines the ordering options for the Role queries.
 type OrderOption func(*sql.Selector)
@@ -82,9 +124,29 @@ func ByCode(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCode, opts...).ToFunc()
 }
 
-// ByDescription orders the results by the description field.
-func ByDescription(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldDescription, opts...).ToFunc()
+// ByWeight orders the results by the weight field.
+func ByWeight(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldWeight, opts...).ToFunc()
+}
+
+// ByStatus orders the results by the status field.
+func ByStatus(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStatus, opts...).ToFunc()
+}
+
+// ByRemark orders the results by the remark field.
+func ByRemark(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldRemark, opts...).ToFunc()
+}
+
+// ByIsSystem orders the results by the is_system field.
+func ByIsSystem(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldIsSystem, opts...).ToFunc()
+}
+
+// ByDataScope orders the results by the data_scope field.
+func ByDataScope(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDataScope, opts...).ToFunc()
 }
 
 // ByCreatedAt orders the results by the created_at field.
@@ -95,4 +157,9 @@ func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 // ByUpdatedAt orders the results by the updated_at field.
 func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUpdatedAt, opts...).ToFunc()
+}
+
+// ByDeletedAt orders the results by the deleted_at field.
+func ByDeletedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDeletedAt, opts...).ToFunc()
 }

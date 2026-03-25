@@ -19,14 +19,24 @@ type Role struct {
 	ID string `json:"id,omitempty"`
 	// 角色名称
 	Name string `json:"name,omitempty"`
-	// 角色唯一编码
+	// 角色编码
 	Code string `json:"code,omitempty"`
-	// 角色描述
-	Description string `json:"description,omitempty"`
+	// 排序权重
+	Weight int64 `json:"weight,omitempty"`
+	// 状态
+	Status role.Status `json:"status,omitempty"`
+	// 备注
+	Remark string `json:"remark,omitempty"`
+	// 是否系统内置
+	IsSystem bool `json:"is_system,omitempty"`
+	// 数据权限范围: all / dept / self
+	DataScope string `json:"data_scope,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
-	UpdatedAt    time.Time `json:"updated_at,omitempty"`
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
+	// DeletedAt holds the value of the "deleted_at" field.
+	DeletedAt    *time.Time `json:"deleted_at,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -35,9 +45,13 @@ func (*Role) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case role.FieldID, role.FieldName, role.FieldCode, role.FieldDescription:
+		case role.FieldIsSystem:
+			values[i] = new(sql.NullBool)
+		case role.FieldWeight:
+			values[i] = new(sql.NullInt64)
+		case role.FieldID, role.FieldName, role.FieldCode, role.FieldStatus, role.FieldRemark, role.FieldDataScope:
 			values[i] = new(sql.NullString)
-		case role.FieldCreatedAt, role.FieldUpdatedAt:
+		case role.FieldCreatedAt, role.FieldUpdatedAt, role.FieldDeletedAt:
 			values[i] = new(sql.NullTime)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -72,11 +86,35 @@ func (_m *Role) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.Code = value.String
 			}
-		case role.FieldDescription:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field description", values[i])
+		case role.FieldWeight:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field weight", values[i])
 			} else if value.Valid {
-				_m.Description = value.String
+				_m.Weight = value.Int64
+			}
+		case role.FieldStatus:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field status", values[i])
+			} else if value.Valid {
+				_m.Status = role.Status(value.String)
+			}
+		case role.FieldRemark:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field remark", values[i])
+			} else if value.Valid {
+				_m.Remark = value.String
+			}
+		case role.FieldIsSystem:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field is_system", values[i])
+			} else if value.Valid {
+				_m.IsSystem = value.Bool
+			}
+		case role.FieldDataScope:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field data_scope", values[i])
+			} else if value.Valid {
+				_m.DataScope = value.String
 			}
 		case role.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -89,6 +127,13 @@ func (_m *Role) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
 			} else if value.Valid {
 				_m.UpdatedAt = value.Time
+			}
+		case role.FieldDeletedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
+			} else if value.Valid {
+				_m.DeletedAt = new(time.Time)
+				*_m.DeletedAt = value.Time
 			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
@@ -132,14 +177,31 @@ func (_m *Role) String() string {
 	builder.WriteString("code=")
 	builder.WriteString(_m.Code)
 	builder.WriteString(", ")
-	builder.WriteString("description=")
-	builder.WriteString(_m.Description)
+	builder.WriteString("weight=")
+	builder.WriteString(fmt.Sprintf("%v", _m.Weight))
+	builder.WriteString(", ")
+	builder.WriteString("status=")
+	builder.WriteString(fmt.Sprintf("%v", _m.Status))
+	builder.WriteString(", ")
+	builder.WriteString("remark=")
+	builder.WriteString(_m.Remark)
+	builder.WriteString(", ")
+	builder.WriteString("is_system=")
+	builder.WriteString(fmt.Sprintf("%v", _m.IsSystem))
+	builder.WriteString(", ")
+	builder.WriteString("data_scope=")
+	builder.WriteString(_m.DataScope)
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(_m.CreatedAt.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("updated_at=")
 	builder.WriteString(_m.UpdatedAt.Format(time.ANSIC))
+	builder.WriteString(", ")
+	if v := _m.DeletedAt; v != nil {
+		builder.WriteString("deleted_at=")
+		builder.WriteString(v.Format(time.ANSIC))
+	}
 	builder.WriteByte(')')
 	return builder.String()
 }
