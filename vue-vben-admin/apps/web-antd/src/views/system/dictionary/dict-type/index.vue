@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
-import type { SystemDictApi } from '#/api/system/dict';
+import type { DictionaryDictTypeApi } from '#/api/system/dictionary/dict-type';
 
 import { nextTick, ref } from 'vue';
 
@@ -12,19 +12,19 @@ import { Button, message, Modal } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { DEFAULT_PAGE_SIZE, PAGE_SIZES } from "#/types/pagination";
-import DictDataTable from "./components/dict-data-table/index.vue"
+
 
 import {
-  deleteDictDataApi,
   deleteDictTypeApi,
   getDictTypeListApi,
-  updateDictDataStatusApi,
   updateDictTypeStatusApi,
-} from '#/api/system/dict';
+} from '#/api/system/dictionary/dict-type';
 
-import { useDictTypeColumns } from './data';
-import DictTypeForm from './modules/type-form/index.vue';
-import DictDataForm from "./components/dict-data-table/modules/data-form/index.vue"
+import { useDictTypeColumns,useFormOptions } from './data';
+
+import DictDataTable from "#/views/system/dictionary/dict-data/index.vue"
+import DictTypeForm from '#/views/system/dictionary/dict-type/modules/form/index.vue';
+import DictDataForm from "#/views/system/dictionary/dict-data/modules/form/index.vue"
 
 const [DictTypeFormModal, dictTypeFormApi] = useVbenModal({
   connectedComponent: DictTypeForm,
@@ -36,15 +36,14 @@ const [DictDataFormModal, dictDataFormApi] = useVbenModal({
   destroyOnClose: true,
 });
 
-const selectedTypes = ref<SystemDictApi.DictType[]>([]);
+const selectedTypes = ref<DictionaryDictTypeApi.DictType[]>([]);
 
 const [Grid, gridApi] = useVbenVxeGrid({
+  formOptions:useFormOptions(),
   gridOptions: {
     columns: useDictTypeColumns(onTypeActionClick, onTypeStatusChange),
     height: 'auto',
-    // keepSource: true,
-
-    // ✅ 核心：控制是否显示展开按钮
+    keepSource: true,
     expandConfig: {
       visibleMethod: ({ row }: any) => {
         return Array.isArray(row.dictData) && row.dictData.length > 0;
@@ -97,9 +96,9 @@ function onCreateType() {
   dictTypeFormApi.setData({}).open();
 }
 
-function onCreateData(dictTypeId?: string) {
+function onCreateData(dictTypeID?: string) {
   dictDataFormApi
-    .setData(dictTypeId ? { dictTypeId } : {})
+    .setData(dictTypeID ? { dictTypeID } : {})
     .open();
 }
 
@@ -108,7 +107,7 @@ function onTypeActionClick({
   row,
 }: {
   code: string;
-  row: SystemDictApi.DictType;
+  row: DictionaryDictTypeApi.DictType;
 }) {
   switch (code) {
     case 'appendDictData':
@@ -123,31 +122,9 @@ function onTypeActionClick({
   }
 }
 
-function onDictDataActionClick({
-  code,
-  row,
-}: {
-  code: string;
-  row: SystemDictApi.DictData;
-}) {
-  switch (code) {
-    case 'edit':
-      dictDataFormApi
-        .setData({
-          ...row,
-          dictTypeId: row.dictTypeID,
-        })
-        .open();
-      break;
-    case 'delete':
-      onDeleteData([row]);
-      break;
-  }
-}
-
 function onTypeStatusChange(
-  newStatus: SystemDictApi.DictType['status'],
-  row: SystemDictApi.DictType,
+  newStatus: DictionaryDictTypeApi.DictType['status'],
+  row: DictionaryDictTypeApi.DictType,
 ): Promise<boolean | undefined> {
   const statusText: Record<string, string> = {
     enabled: '启用',
@@ -173,35 +150,7 @@ function onTypeStatusChange(
   });
 }
 
-function onDictDataStatusChange(
-  newStatus: SystemDictApi.DictData['status'],
-  row: SystemDictApi.DictData,
-): Promise<boolean | undefined> {
-  const statusText: Record<string, string> = {
-    enabled: '启用',
-    disabled: '禁用',
-  };
-
-  return new Promise<boolean | undefined>((resolve) => {
-    Modal.confirm({
-      title: '切换状态',
-      content: `你要将 ${row.label} 的状态切换为 【${statusText[newStatus]}】 吗？`,
-      async onOk() {
-        try {
-          await updateDictDataStatusApi(row.id, newStatus);
-          resolve(true);
-        } catch {
-          resolve(false);
-        }
-      },
-      onCancel() {
-        resolve(false);
-      },
-    });
-  });
-}
-
-async function onDeleteTypes(rows?: SystemDictApi.DictType[]) {
+async function onDeleteTypes(rows?: DictionaryDictTypeApi.DictType[]) {
   const list = rows?.length ? rows : selectedTypes.value;
   if (!list.length) return;
 
@@ -212,33 +161,6 @@ async function onDeleteTypes(rows?: SystemDictApi.DictType[]) {
   message.success($t('ui.actionMessage.deleteSuccess', [names]));
   selectedTypes.value = [];
   onRefresh();
-}
-
-function onDeleteData(rows: SystemDictApi.DictData[]) {
-  if (!rows.length) return;
-
-  const ids = rows.map((item) => item.id);
-  const labels = rows.map((item) => item.label).join('、');
-
-  Modal.confirm({
-    title: $t('ui.actionMessage.confirmDelete'),
-    content: $t('ui.actionMessage.deleteConfirm', [labels]),
-    okType: 'danger',
-    async onOk() {
-      const hideLoading = message.loading({
-        content: $t('ui.actionMessage.deleting', [labels]),
-        duration: 0,
-      });
-      try {
-        await deleteDictDataApi(ids);
-        hideLoading();
-        message.success($t('ui.actionMessage.deleteSuccess', [labels]));
-        onRefresh();
-      } catch {
-        hideLoading();
-      }
-    },
-  });
 }
 </script>
 
@@ -258,8 +180,7 @@ function onDeleteData(rows: SystemDictApi.DictData[]) {
       </template>
 
       <template #expand_dictdata="{ row }">
-        <DictDataTable :data="row.dictData || []" :on-action-click="onDictDataActionClick"
-          :on-status-change="onDictDataStatusChange" />
+        <DictDataTable :data="row.dictData || []"/>
       </template>
     </Grid>
   </Page>

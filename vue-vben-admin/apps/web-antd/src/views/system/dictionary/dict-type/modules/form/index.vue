@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import type { VbenFormSchema } from '#/adapter/form';
-import type { SystemDictApi } from '#/api/system/dict';
+import type { DictionaryDictTypeApi } from '#/api/system/dictionary/dict-type';
+import {createDictTypeApi, updateDictTypeApi} from "#/api/system/dictionary/dict-type"
+
 
 import { computed, ref } from 'vue';
 
@@ -15,7 +17,7 @@ const emit = defineEmits<{
   success: [];
 }>();
 
-const formData = ref<SystemDictApi.DictType>();
+const formData = ref<DictionaryDictTypeApi.DictType>();
 
 const schema: VbenFormSchema[] = [
   {
@@ -98,7 +100,7 @@ const [Modal, modalApi] = useVbenModal({
   onConfirm: onSubmit,
   onOpenChange(isOpen) {
     if (!isOpen) return;
-    const data = modalApi.getData<SystemDictApi.DictType>();
+    const data = modalApi.getData<DictionaryDictTypeApi.DictType>();
     if (data) {
       formData.value = data;
       formApi.setValues(data);
@@ -116,10 +118,6 @@ async function onSubmit() {
   modalApi.lock();
   try {
     const data = await formApi.getValues();
-
-    const { createDictTypeApi, updateDictTypeApi } = await import(
-      '#/api/system/dict'
-    );
 
     if (formData.value?.id) {
       await updateDictTypeApi(formData.value.id, data);

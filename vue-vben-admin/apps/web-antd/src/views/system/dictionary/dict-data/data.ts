@@ -1,13 +1,14 @@
 import type { OnActionClickFn, VxeTableGridOptions } from '#/adapter/vxe-table';
-import type { SystemDictApi } from '#/api/system/dict';
 import { $t } from '#/locales';
+
+import type { DictionaryDictDataApi } from '#/api/system/dictionary/dict-data';
 export function useDictDataColumns(
-  onActionClick: OnActionClickFn<SystemDictApi.DictData>,
+  onActionClick: OnActionClickFn<DictionaryDictDataApi.DictData>,
   onStatusChange?: (
-    newStatus: SystemDictApi.DictData['status'],
-    row: SystemDictApi.DictData,
+    newStatus: DictionaryDictDataApi.DictData['status'],
+    row: DictionaryDictDataApi.DictData,
   ) => PromiseLike<boolean | undefined>,
-): VxeTableGridOptions<SystemDictApi.DictData>['columns'] {
+): VxeTableGridOptions<DictionaryDictDataApi.DictData>['columns'] {
   return [
     {
       field: 'label',

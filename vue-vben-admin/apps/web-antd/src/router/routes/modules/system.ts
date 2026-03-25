@@ -13,6 +13,15 @@ const routes: RouteRecordRaw[] = [
     path: '/system',
     children: [
       {
+        name: 'Dictionary',
+        path: '/dictionary',
+        component: () => import('#/views/system/dictionary/dict-type/index.vue'),
+        meta: {
+          icon: 'lucide:area-chart',
+          title: $t('page.system.dictionary'),
+        },
+      },
+      {
         name: 'Admin',
         path: '/admin',
         component: () => import('#/views/system/admin/index.vue'),
@@ -37,15 +46,6 @@ const routes: RouteRecordRaw[] = [
         meta: {
           icon: 'lucide:area-chart',
           title: $t('page.system.permission'),
-        },
-      },
-      {
-        name: 'Dict',
-        path: '/dict',
-        component: () => import('#/views/system/dict/index.vue'),
-        meta: {
-          icon: 'lucide:area-chart',
-          title: $t('page.system.dict'),
         },
       },
     ],

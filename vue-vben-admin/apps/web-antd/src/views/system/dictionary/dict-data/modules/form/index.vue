@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { VbenFormSchema } from '#/adapter/form';
-import type { SystemDictApi } from '#/api/system/dict';
+import type { DictionaryDictDataApi } from '#/api/system/dictionary/dict-data';
 
 import { computed, ref } from 'vue';
 
@@ -10,14 +10,16 @@ import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
 
 import { useVbenForm } from '#/adapter/form';
 import { $t } from '#/locales';
-import { getDictTypeListApi } from '#/api/system/dict';
+import { getDictTypeListApi } from '#/api/system/dictionary/dict-type';
+import { createDictDataApi, updateDictDataApi} from '#/api/system/dictionary/dict-data';
+
 import { dictDataFormRules } from './rules';
 
 const emit = defineEmits<{
   success: [];
 }>();
 
-const formData = ref<SystemDictApi.DictData>();
+const formData = ref<DictionaryDictDataApi.DictData>();
 
 const schema: VbenFormSchema[] = [
   {
@@ -29,7 +31,7 @@ const schema: VbenFormSchema[] = [
       api: async () => {
         const res = await getDictTypeListApi();
         const list = res?.items || res;
-        return (list || []).map((item: SystemDictApi.DictType) => ({
+        return (list || []).map((item: DictionaryDictDataApi.DictType) => ({
           label: item.name,
           value: item.id,
         }));
@@ -105,7 +107,7 @@ const [Modal, modalApi] = useVbenModal({
   onConfirm: onSubmit,
   onOpenChange(isOpen) {
     if (!isOpen) return;
-    const data = modalApi.getData<SystemDictApi.DictData & {
+    const data = modalApi.getData<DictionaryDictDataApi.DictData & {
       dictTypeId?: string;
     }>();
 
@@ -127,13 +129,9 @@ async function onSubmit() {
   try {
     const data =
       (await formApi.getValues()) as Omit<
-        SystemDictApi.DictData,
+        DictionaryDictDataApi.DictData,
         'id' | 'createdAt' | 'updatedAt'
       >;
-
-    const { createDictDataApi, updateDictDataApi } = await import(
-      '#/api/system/dict'
-    );
 
     if (formData.value?.id) {
       await updateDictDataApi(formData.value.id, data);
