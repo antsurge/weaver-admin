@@ -21,103 +21,78 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationPermissionServiceCreatePermission = "/admin.service.v1.PermissionService/CreatePermission"
-const OperationPermissionServiceDeletePermission = "/admin.service.v1.PermissionService/DeletePermission"
-const OperationPermissionServicePermissionTree = "/admin.service.v1.PermissionService/PermissionTree"
-const OperationPermissionServiceUpdatePermission = "/admin.service.v1.PermissionService/UpdatePermission"
-const OperationPermissionServiceUpdatePermissionStatus = "/admin.service.v1.PermissionService/UpdatePermissionStatus"
+const OperationPermissionServiceCreateMenu = "/admin.service.v1.PermissionService/CreateMenu"
+const OperationPermissionServiceDeleteMenu = "/admin.service.v1.PermissionService/DeleteMenu"
+const OperationPermissionServiceMenuTree = "/admin.service.v1.PermissionService/MenuTree"
+const OperationPermissionServiceUpdateMenu = "/admin.service.v1.PermissionService/UpdateMenu"
+const OperationPermissionServiceUpdateMenuStatus = "/admin.service.v1.PermissionService/UpdateMenuStatus"
 
 type PermissionServiceHTTPServer interface {
-	// CreatePermission 创建权限
-	CreatePermission(context.Context, *v1.CreatePermissionRequest) (*v1.CreatePermissionResponse, error)
-	// DeletePermission 批量删除权限
-	DeletePermission(context.Context, *v1.DeletePermissionRequest) (*emptypb.Empty, error)
-	// PermissionTree 列表的tree
-	PermissionTree(context.Context, *v1.PermissionTreeRequest) (*v1.PermissionTreeResponse, error)
-	// UpdatePermission 更新权限
-	UpdatePermission(context.Context, *v1.UpdatePermissionRequest) (*v1.UpdatePermissionResponse, error)
-	// UpdatePermissionStatus 更新权限状态
-	UpdatePermissionStatus(context.Context, *v1.UpdatePermissionStatusRequest) (*emptypb.Empty, error)
+	// CreateMenu 创建权限
+	CreateMenu(context.Context, *v1.CreateMenuRequest) (*v1.Menu, error)
+	// DeleteMenu 批量删除权限
+	DeleteMenu(context.Context, *v1.DeleteMenuRequest) (*emptypb.Empty, error)
+	// MenuTree 列表的tree
+	MenuTree(context.Context, *v1.MenuTreeRequest) (*v1.MenuTreeResponse, error)
+	// UpdateMenu 更新权限
+	UpdateMenu(context.Context, *v1.UpdateMenuRequest) (*v1.Menu, error)
+	// UpdateMenuStatus 更新权限状态
+	UpdateMenuStatus(context.Context, *v1.UpdateMenuStatusRequest) (*emptypb.Empty, error)
 }
 
 func RegisterPermissionServiceHTTPServer(s *http.Server, srv PermissionServiceHTTPServer) {
 	r := s.Route("/")
-	r.GET("/admin/v1/permission/tree", _PermissionService_PermissionTree0_HTTP_Handler(srv))
-	r.POST("/admin/v1/permission", _PermissionService_CreatePermission0_HTTP_Handler(srv))
-	r.PUT("/admin/v1/permission/{id}", _PermissionService_UpdatePermission0_HTTP_Handler(srv))
-	r.PUT("/admin/v1/permission/{id}/status", _PermissionService_UpdatePermissionStatus0_HTTP_Handler(srv))
-	r.DELETE("/admin/v1/permission", _PermissionService_DeletePermission0_HTTP_Handler(srv))
+	r.GET("/admin/v1/menu/tree", _PermissionService_MenuTree0_HTTP_Handler(srv))
+	r.POST("/admin/v1/menu", _PermissionService_CreateMenu0_HTTP_Handler(srv))
+	r.PUT("/admin/v1/menu/{id}", _PermissionService_UpdateMenu0_HTTP_Handler(srv))
+	r.PUT("/admin/v1/menu/{id}/status", _PermissionService_UpdateMenuStatus0_HTTP_Handler(srv))
+	r.DELETE("/admin/v1/menu", _PermissionService_DeleteMenu0_HTTP_Handler(srv))
 }
 
-func _PermissionService_PermissionTree0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
+func _PermissionService_MenuTree0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in v1.PermissionTreeRequest
+		var in v1.MenuTreeRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationPermissionServicePermissionTree)
+		http.SetOperation(ctx, OperationPermissionServiceMenuTree)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.PermissionTree(ctx, req.(*v1.PermissionTreeRequest))
+			return srv.MenuTree(ctx, req.(*v1.MenuTreeRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*v1.PermissionTreeResponse)
+		reply := out.(*v1.MenuTreeResponse)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _PermissionService_CreatePermission0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
+func _PermissionService_CreateMenu0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in v1.CreatePermissionRequest
+		var in v1.CreateMenuRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationPermissionServiceCreatePermission)
+		http.SetOperation(ctx, OperationPermissionServiceCreateMenu)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.CreatePermission(ctx, req.(*v1.CreatePermissionRequest))
+			return srv.CreateMenu(ctx, req.(*v1.CreateMenuRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*v1.CreatePermissionResponse)
+		reply := out.(*v1.Menu)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _PermissionService_UpdatePermission0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
+func _PermissionService_UpdateMenu0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in v1.UpdatePermissionRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationPermissionServiceUpdatePermission)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UpdatePermission(ctx, req.(*v1.UpdatePermissionRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*v1.UpdatePermissionResponse)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _PermissionService_UpdatePermissionStatus0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in v1.UpdatePermissionStatusRequest
+		var in v1.UpdateMenuRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
@@ -127,9 +102,34 @@ func _PermissionService_UpdatePermissionStatus0_HTTP_Handler(srv PermissionServi
 		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationPermissionServiceUpdatePermissionStatus)
+		http.SetOperation(ctx, OperationPermissionServiceUpdateMenu)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UpdatePermissionStatus(ctx, req.(*v1.UpdatePermissionStatusRequest))
+			return srv.UpdateMenu(ctx, req.(*v1.UpdateMenuRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.Menu)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _PermissionService_UpdateMenuStatus0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.UpdateMenuStatusRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationPermissionServiceUpdateMenuStatus)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateMenuStatus(ctx, req.(*v1.UpdateMenuStatusRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -140,15 +140,15 @@ func _PermissionService_UpdatePermissionStatus0_HTTP_Handler(srv PermissionServi
 	}
 }
 
-func _PermissionService_DeletePermission0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
+func _PermissionService_DeleteMenu0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in v1.DeletePermissionRequest
+		var in v1.DeleteMenuRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationPermissionServiceDeletePermission)
+		http.SetOperation(ctx, OperationPermissionServiceDeleteMenu)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.DeletePermission(ctx, req.(*v1.DeletePermissionRequest))
+			return srv.DeleteMenu(ctx, req.(*v1.DeleteMenuRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -160,16 +160,16 @@ func _PermissionService_DeletePermission0_HTTP_Handler(srv PermissionServiceHTTP
 }
 
 type PermissionServiceHTTPClient interface {
-	// CreatePermission 创建权限
-	CreatePermission(ctx context.Context, req *v1.CreatePermissionRequest, opts ...http.CallOption) (rsp *v1.CreatePermissionResponse, err error)
-	// DeletePermission 批量删除权限
-	DeletePermission(ctx context.Context, req *v1.DeletePermissionRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
-	// PermissionTree 列表的tree
-	PermissionTree(ctx context.Context, req *v1.PermissionTreeRequest, opts ...http.CallOption) (rsp *v1.PermissionTreeResponse, err error)
-	// UpdatePermission 更新权限
-	UpdatePermission(ctx context.Context, req *v1.UpdatePermissionRequest, opts ...http.CallOption) (rsp *v1.UpdatePermissionResponse, err error)
-	// UpdatePermissionStatus 更新权限状态
-	UpdatePermissionStatus(ctx context.Context, req *v1.UpdatePermissionStatusRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	// CreateMenu 创建权限
+	CreateMenu(ctx context.Context, req *v1.CreateMenuRequest, opts ...http.CallOption) (rsp *v1.Menu, err error)
+	// DeleteMenu 批量删除权限
+	DeleteMenu(ctx context.Context, req *v1.DeleteMenuRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	// MenuTree 列表的tree
+	MenuTree(ctx context.Context, req *v1.MenuTreeRequest, opts ...http.CallOption) (rsp *v1.MenuTreeResponse, err error)
+	// UpdateMenu 更新权限
+	UpdateMenu(ctx context.Context, req *v1.UpdateMenuRequest, opts ...http.CallOption) (rsp *v1.Menu, err error)
+	// UpdateMenuStatus 更新权限状态
+	UpdateMenuStatus(ctx context.Context, req *v1.UpdateMenuStatusRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 }
 
 type PermissionServiceHTTPClientImpl struct {
@@ -180,12 +180,12 @@ func NewPermissionServiceHTTPClient(client *http.Client) PermissionServiceHTTPCl
 	return &PermissionServiceHTTPClientImpl{client}
 }
 
-// CreatePermission 创建权限
-func (c *PermissionServiceHTTPClientImpl) CreatePermission(ctx context.Context, in *v1.CreatePermissionRequest, opts ...http.CallOption) (*v1.CreatePermissionResponse, error) {
-	var out v1.CreatePermissionResponse
-	pattern := "/admin/v1/permission"
+// CreateMenu 创建权限
+func (c *PermissionServiceHTTPClientImpl) CreateMenu(ctx context.Context, in *v1.CreateMenuRequest, opts ...http.CallOption) (*v1.Menu, error) {
+	var out v1.Menu
+	pattern := "/admin/v1/menu"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationPermissionServiceCreatePermission))
+	opts = append(opts, http.Operation(OperationPermissionServiceCreateMenu))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -194,12 +194,12 @@ func (c *PermissionServiceHTTPClientImpl) CreatePermission(ctx context.Context, 
 	return &out, nil
 }
 
-// DeletePermission 批量删除权限
-func (c *PermissionServiceHTTPClientImpl) DeletePermission(ctx context.Context, in *v1.DeletePermissionRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+// DeleteMenu 批量删除权限
+func (c *PermissionServiceHTTPClientImpl) DeleteMenu(ctx context.Context, in *v1.DeleteMenuRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
-	pattern := "/admin/v1/permission"
+	pattern := "/admin/v1/menu"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationPermissionServiceDeletePermission))
+	opts = append(opts, http.Operation(OperationPermissionServiceDeleteMenu))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
 	if err != nil {
@@ -208,12 +208,12 @@ func (c *PermissionServiceHTTPClientImpl) DeletePermission(ctx context.Context, 
 	return &out, nil
 }
 
-// PermissionTree 列表的tree
-func (c *PermissionServiceHTTPClientImpl) PermissionTree(ctx context.Context, in *v1.PermissionTreeRequest, opts ...http.CallOption) (*v1.PermissionTreeResponse, error) {
-	var out v1.PermissionTreeResponse
-	pattern := "/admin/v1/permission/tree"
+// MenuTree 列表的tree
+func (c *PermissionServiceHTTPClientImpl) MenuTree(ctx context.Context, in *v1.MenuTreeRequest, opts ...http.CallOption) (*v1.MenuTreeResponse, error) {
+	var out v1.MenuTreeResponse
+	pattern := "/admin/v1/menu/tree"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationPermissionServicePermissionTree))
+	opts = append(opts, http.Operation(OperationPermissionServiceMenuTree))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -222,12 +222,12 @@ func (c *PermissionServiceHTTPClientImpl) PermissionTree(ctx context.Context, in
 	return &out, nil
 }
 
-// UpdatePermission 更新权限
-func (c *PermissionServiceHTTPClientImpl) UpdatePermission(ctx context.Context, in *v1.UpdatePermissionRequest, opts ...http.CallOption) (*v1.UpdatePermissionResponse, error) {
-	var out v1.UpdatePermissionResponse
-	pattern := "/admin/v1/permission/{id}"
+// UpdateMenu 更新权限
+func (c *PermissionServiceHTTPClientImpl) UpdateMenu(ctx context.Context, in *v1.UpdateMenuRequest, opts ...http.CallOption) (*v1.Menu, error) {
+	var out v1.Menu
+	pattern := "/admin/v1/menu/{id}"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationPermissionServiceUpdatePermission))
+	opts = append(opts, http.Operation(OperationPermissionServiceUpdateMenu))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
@@ -236,12 +236,12 @@ func (c *PermissionServiceHTTPClientImpl) UpdatePermission(ctx context.Context, 
 	return &out, nil
 }
 
-// UpdatePermissionStatus 更新权限状态
-func (c *PermissionServiceHTTPClientImpl) UpdatePermissionStatus(ctx context.Context, in *v1.UpdatePermissionStatusRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+// UpdateMenuStatus 更新权限状态
+func (c *PermissionServiceHTTPClientImpl) UpdateMenuStatus(ctx context.Context, in *v1.UpdateMenuStatusRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
-	pattern := "/admin/v1/permission/{id}/status"
+	pattern := "/admin/v1/menu/{id}/status"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationPermissionServiceUpdatePermissionStatus))
+	opts = append(opts, http.Operation(OperationPermissionServiceUpdateMenuStatus))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {

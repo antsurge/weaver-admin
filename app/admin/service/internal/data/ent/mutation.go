@@ -16,7 +16,7 @@ import (
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/department"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/dictdata"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/dicttype"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/permission"
+	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/menu"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/position"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/predicate"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/role"
@@ -37,7 +37,7 @@ const (
 	TypeDepartment     = "Department"
 	TypeDictData       = "DictData"
 	TypeDictType       = "DictType"
-	TypePermission     = "Permission"
+	TypeMenu           = "Menu"
 	TypePosition       = "Position"
 	TypeRole           = "Role"
 	TypeRolePermission = "RolePermission"
@@ -3851,8 +3851,8 @@ func (m *DictTypeMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown DictType edge %s", name)
 }
 
-// PermissionMutation represents an operation that mutates the Permission nodes in the graph.
-type PermissionMutation struct {
+// MenuMutation represents an operation that mutates the Menu nodes in the graph.
+type MenuMutation struct {
 	config
 	op            Op
 	typ           string
@@ -3860,35 +3860,35 @@ type PermissionMutation struct {
 	parent_id     *string
 	name          *string
 	code          *string
-	description   *string
+	remark        *string
 	_path         *string
 	icon          *string
-	_type         *permission.Type
-	menu_type     *permission.MenuType
+	_type         *menu.Type
+	menu_type     *menu.MenuType
 	url           *string
 	component     *string
 	weight        *int
 	addweight     *int
-	status        *permission.Status
+	status        *menu.Status
 	created_at    *time.Time
 	updated_at    *time.Time
 	clearedFields map[string]struct{}
 	done          bool
-	oldValue      func(context.Context) (*Permission, error)
-	predicates    []predicate.Permission
+	oldValue      func(context.Context) (*Menu, error)
+	predicates    []predicate.Menu
 }
 
-var _ ent.Mutation = (*PermissionMutation)(nil)
+var _ ent.Mutation = (*MenuMutation)(nil)
 
-// permissionOption allows management of the mutation configuration using functional options.
-type permissionOption func(*PermissionMutation)
+// menuOption allows management of the mutation configuration using functional options.
+type menuOption func(*MenuMutation)
 
-// newPermissionMutation creates new mutation for the Permission entity.
-func newPermissionMutation(c config, op Op, opts ...permissionOption) *PermissionMutation {
-	m := &PermissionMutation{
+// newMenuMutation creates new mutation for the Menu entity.
+func newMenuMutation(c config, op Op, opts ...menuOption) *MenuMutation {
+	m := &MenuMutation{
 		config:        c,
 		op:            op,
-		typ:           TypePermission,
+		typ:           TypeMenu,
 		clearedFields: make(map[string]struct{}),
 	}
 	for _, opt := range opts {
@@ -3897,20 +3897,20 @@ func newPermissionMutation(c config, op Op, opts ...permissionOption) *Permissio
 	return m
 }
 
-// withPermissionID sets the ID field of the mutation.
-func withPermissionID(id string) permissionOption {
-	return func(m *PermissionMutation) {
+// withMenuID sets the ID field of the mutation.
+func withMenuID(id string) menuOption {
+	return func(m *MenuMutation) {
 		var (
 			err   error
 			once  sync.Once
-			value *Permission
+			value *Menu
 		)
-		m.oldValue = func(ctx context.Context) (*Permission, error) {
+		m.oldValue = func(ctx context.Context) (*Menu, error) {
 			once.Do(func() {
 				if m.done {
 					err = errors.New("querying old values post mutation is not allowed")
 				} else {
-					value, err = m.Client().Permission.Get(ctx, id)
+					value, err = m.Client().Menu.Get(ctx, id)
 				}
 			})
 			return value, err
@@ -3919,10 +3919,10 @@ func withPermissionID(id string) permissionOption {
 	}
 }
 
-// withPermission sets the old Permission of the mutation.
-func withPermission(node *Permission) permissionOption {
-	return func(m *PermissionMutation) {
-		m.oldValue = func(context.Context) (*Permission, error) {
+// withMenu sets the old Menu of the mutation.
+func withMenu(node *Menu) menuOption {
+	return func(m *MenuMutation) {
+		m.oldValue = func(context.Context) (*Menu, error) {
 			return node, nil
 		}
 		m.id = &node.ID
@@ -3931,7 +3931,7 @@ func withPermission(node *Permission) permissionOption {
 
 // Client returns a new `ent.Client` from the mutation. If the mutation was
 // executed in a transaction (ent.Tx), a transactional client is returned.
-func (m PermissionMutation) Client() *Client {
+func (m MenuMutation) Client() *Client {
 	client := &Client{config: m.config}
 	client.init()
 	return client
@@ -3939,7 +3939,7 @@ func (m PermissionMutation) Client() *Client {
 
 // Tx returns an `ent.Tx` for mutations that were executed in transactions;
 // it returns an error otherwise.
-func (m PermissionMutation) Tx() (*Tx, error) {
+func (m MenuMutation) Tx() (*Tx, error) {
 	if _, ok := m.driver.(*txDriver); !ok {
 		return nil, errors.New("ent: mutation is not running in a transaction")
 	}
@@ -3949,14 +3949,14 @@ func (m PermissionMutation) Tx() (*Tx, error) {
 }
 
 // SetID sets the value of the id field. Note that this
-// operation is only accepted on creation of Permission entities.
-func (m *PermissionMutation) SetID(id string) {
+// operation is only accepted on creation of Menu entities.
+func (m *MenuMutation) SetID(id string) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *PermissionMutation) ID() (id string, exists bool) {
+func (m *MenuMutation) ID() (id string, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -3967,7 +3967,7 @@ func (m *PermissionMutation) ID() (id string, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *PermissionMutation) IDs(ctx context.Context) ([]string, error) {
+func (m *MenuMutation) IDs(ctx context.Context) ([]string, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
@@ -3976,19 +3976,19 @@ func (m *PermissionMutation) IDs(ctx context.Context) ([]string, error) {
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
-		return m.Client().Permission.Query().Where(m.predicates...).IDs(ctx)
+		return m.Client().Menu.Query().Where(m.predicates...).IDs(ctx)
 	default:
 		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
 	}
 }
 
 // SetParentID sets the "parent_id" field.
-func (m *PermissionMutation) SetParentID(s string) {
+func (m *MenuMutation) SetParentID(s string) {
 	m.parent_id = &s
 }
 
 // ParentID returns the value of the "parent_id" field in the mutation.
-func (m *PermissionMutation) ParentID() (r string, exists bool) {
+func (m *MenuMutation) ParentID() (r string, exists bool) {
 	v := m.parent_id
 	if v == nil {
 		return
@@ -3996,10 +3996,10 @@ func (m *PermissionMutation) ParentID() (r string, exists bool) {
 	return *v, true
 }
 
-// OldParentID returns the old "parent_id" field's value of the Permission entity.
-// If the Permission object wasn't provided to the builder, the object is fetched from the database.
+// OldParentID returns the old "parent_id" field's value of the Menu entity.
+// If the Menu object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMutation) OldParentID(ctx context.Context) (v string, err error) {
+func (m *MenuMutation) OldParentID(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldParentID is only allowed on UpdateOne operations")
 	}
@@ -4014,17 +4014,17 @@ func (m *PermissionMutation) OldParentID(ctx context.Context) (v string, err err
 }
 
 // ResetParentID resets all changes to the "parent_id" field.
-func (m *PermissionMutation) ResetParentID() {
+func (m *MenuMutation) ResetParentID() {
 	m.parent_id = nil
 }
 
 // SetName sets the "name" field.
-func (m *PermissionMutation) SetName(s string) {
+func (m *MenuMutation) SetName(s string) {
 	m.name = &s
 }
 
 // Name returns the value of the "name" field in the mutation.
-func (m *PermissionMutation) Name() (r string, exists bool) {
+func (m *MenuMutation) Name() (r string, exists bool) {
 	v := m.name
 	if v == nil {
 		return
@@ -4032,10 +4032,10 @@ func (m *PermissionMutation) Name() (r string, exists bool) {
 	return *v, true
 }
 
-// OldName returns the old "name" field's value of the Permission entity.
-// If the Permission object wasn't provided to the builder, the object is fetched from the database.
+// OldName returns the old "name" field's value of the Menu entity.
+// If the Menu object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMutation) OldName(ctx context.Context) (v string, err error) {
+func (m *MenuMutation) OldName(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldName is only allowed on UpdateOne operations")
 	}
@@ -4050,17 +4050,17 @@ func (m *PermissionMutation) OldName(ctx context.Context) (v string, err error) 
 }
 
 // ResetName resets all changes to the "name" field.
-func (m *PermissionMutation) ResetName() {
+func (m *MenuMutation) ResetName() {
 	m.name = nil
 }
 
 // SetCode sets the "code" field.
-func (m *PermissionMutation) SetCode(s string) {
+func (m *MenuMutation) SetCode(s string) {
 	m.code = &s
 }
 
 // Code returns the value of the "code" field in the mutation.
-func (m *PermissionMutation) Code() (r string, exists bool) {
+func (m *MenuMutation) Code() (r string, exists bool) {
 	v := m.code
 	if v == nil {
 		return
@@ -4068,10 +4068,10 @@ func (m *PermissionMutation) Code() (r string, exists bool) {
 	return *v, true
 }
 
-// OldCode returns the old "code" field's value of the Permission entity.
-// If the Permission object wasn't provided to the builder, the object is fetched from the database.
+// OldCode returns the old "code" field's value of the Menu entity.
+// If the Menu object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMutation) OldCode(ctx context.Context) (v string, err error) {
+func (m *MenuMutation) OldCode(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldCode is only allowed on UpdateOne operations")
 	}
@@ -4086,66 +4086,66 @@ func (m *PermissionMutation) OldCode(ctx context.Context) (v string, err error) 
 }
 
 // ResetCode resets all changes to the "code" field.
-func (m *PermissionMutation) ResetCode() {
+func (m *MenuMutation) ResetCode() {
 	m.code = nil
 }
 
-// SetDescription sets the "description" field.
-func (m *PermissionMutation) SetDescription(s string) {
-	m.description = &s
+// SetRemark sets the "remark" field.
+func (m *MenuMutation) SetRemark(s string) {
+	m.remark = &s
 }
 
-// Description returns the value of the "description" field in the mutation.
-func (m *PermissionMutation) Description() (r string, exists bool) {
-	v := m.description
+// Remark returns the value of the "remark" field in the mutation.
+func (m *MenuMutation) Remark() (r string, exists bool) {
+	v := m.remark
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldDescription returns the old "description" field's value of the Permission entity.
-// If the Permission object wasn't provided to the builder, the object is fetched from the database.
+// OldRemark returns the old "remark" field's value of the Menu entity.
+// If the Menu object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMutation) OldDescription(ctx context.Context) (v string, err error) {
+func (m *MenuMutation) OldRemark(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
+		return v, errors.New("OldRemark is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldDescription requires an ID field in the mutation")
+		return v, errors.New("OldRemark requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDescription: %w", err)
+		return v, fmt.Errorf("querying old value for OldRemark: %w", err)
 	}
-	return oldValue.Description, nil
+	return oldValue.Remark, nil
 }
 
-// ClearDescription clears the value of the "description" field.
-func (m *PermissionMutation) ClearDescription() {
-	m.description = nil
-	m.clearedFields[permission.FieldDescription] = struct{}{}
+// ClearRemark clears the value of the "remark" field.
+func (m *MenuMutation) ClearRemark() {
+	m.remark = nil
+	m.clearedFields[menu.FieldRemark] = struct{}{}
 }
 
-// DescriptionCleared returns if the "description" field was cleared in this mutation.
-func (m *PermissionMutation) DescriptionCleared() bool {
-	_, ok := m.clearedFields[permission.FieldDescription]
+// RemarkCleared returns if the "remark" field was cleared in this mutation.
+func (m *MenuMutation) RemarkCleared() bool {
+	_, ok := m.clearedFields[menu.FieldRemark]
 	return ok
 }
 
-// ResetDescription resets all changes to the "description" field.
-func (m *PermissionMutation) ResetDescription() {
-	m.description = nil
-	delete(m.clearedFields, permission.FieldDescription)
+// ResetRemark resets all changes to the "remark" field.
+func (m *MenuMutation) ResetRemark() {
+	m.remark = nil
+	delete(m.clearedFields, menu.FieldRemark)
 }
 
 // SetPath sets the "path" field.
-func (m *PermissionMutation) SetPath(s string) {
+func (m *MenuMutation) SetPath(s string) {
 	m._path = &s
 }
 
 // Path returns the value of the "path" field in the mutation.
-func (m *PermissionMutation) Path() (r string, exists bool) {
+func (m *MenuMutation) Path() (r string, exists bool) {
 	v := m._path
 	if v == nil {
 		return
@@ -4153,10 +4153,10 @@ func (m *PermissionMutation) Path() (r string, exists bool) {
 	return *v, true
 }
 
-// OldPath returns the old "path" field's value of the Permission entity.
-// If the Permission object wasn't provided to the builder, the object is fetched from the database.
+// OldPath returns the old "path" field's value of the Menu entity.
+// If the Menu object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMutation) OldPath(ctx context.Context) (v string, err error) {
+func (m *MenuMutation) OldPath(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldPath is only allowed on UpdateOne operations")
 	}
@@ -4171,17 +4171,17 @@ func (m *PermissionMutation) OldPath(ctx context.Context) (v string, err error) 
 }
 
 // ResetPath resets all changes to the "path" field.
-func (m *PermissionMutation) ResetPath() {
+func (m *MenuMutation) ResetPath() {
 	m._path = nil
 }
 
 // SetIcon sets the "icon" field.
-func (m *PermissionMutation) SetIcon(s string) {
+func (m *MenuMutation) SetIcon(s string) {
 	m.icon = &s
 }
 
 // Icon returns the value of the "icon" field in the mutation.
-func (m *PermissionMutation) Icon() (r string, exists bool) {
+func (m *MenuMutation) Icon() (r string, exists bool) {
 	v := m.icon
 	if v == nil {
 		return
@@ -4189,10 +4189,10 @@ func (m *PermissionMutation) Icon() (r string, exists bool) {
 	return *v, true
 }
 
-// OldIcon returns the old "icon" field's value of the Permission entity.
-// If the Permission object wasn't provided to the builder, the object is fetched from the database.
+// OldIcon returns the old "icon" field's value of the Menu entity.
+// If the Menu object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMutation) OldIcon(ctx context.Context) (v string, err error) {
+func (m *MenuMutation) OldIcon(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldIcon is only allowed on UpdateOne operations")
 	}
@@ -4207,17 +4207,17 @@ func (m *PermissionMutation) OldIcon(ctx context.Context) (v string, err error) 
 }
 
 // ResetIcon resets all changes to the "icon" field.
-func (m *PermissionMutation) ResetIcon() {
+func (m *MenuMutation) ResetIcon() {
 	m.icon = nil
 }
 
 // SetType sets the "type" field.
-func (m *PermissionMutation) SetType(pe permission.Type) {
-	m._type = &pe
+func (m *MenuMutation) SetType(value menu.Type) {
+	m._type = &value
 }
 
 // GetType returns the value of the "type" field in the mutation.
-func (m *PermissionMutation) GetType() (r permission.Type, exists bool) {
+func (m *MenuMutation) GetType() (r menu.Type, exists bool) {
 	v := m._type
 	if v == nil {
 		return
@@ -4225,10 +4225,10 @@ func (m *PermissionMutation) GetType() (r permission.Type, exists bool) {
 	return *v, true
 }
 
-// OldType returns the old "type" field's value of the Permission entity.
-// If the Permission object wasn't provided to the builder, the object is fetched from the database.
+// OldType returns the old "type" field's value of the Menu entity.
+// If the Menu object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMutation) OldType(ctx context.Context) (v permission.Type, err error) {
+func (m *MenuMutation) OldType(ctx context.Context) (v menu.Type, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldType is only allowed on UpdateOne operations")
 	}
@@ -4243,17 +4243,17 @@ func (m *PermissionMutation) OldType(ctx context.Context) (v permission.Type, er
 }
 
 // ResetType resets all changes to the "type" field.
-func (m *PermissionMutation) ResetType() {
+func (m *MenuMutation) ResetType() {
 	m._type = nil
 }
 
 // SetMenuType sets the "menu_type" field.
-func (m *PermissionMutation) SetMenuType(pt permission.MenuType) {
-	m.menu_type = &pt
+func (m *MenuMutation) SetMenuType(mt menu.MenuType) {
+	m.menu_type = &mt
 }
 
 // MenuType returns the value of the "menu_type" field in the mutation.
-func (m *PermissionMutation) MenuType() (r permission.MenuType, exists bool) {
+func (m *MenuMutation) MenuType() (r menu.MenuType, exists bool) {
 	v := m.menu_type
 	if v == nil {
 		return
@@ -4261,10 +4261,10 @@ func (m *PermissionMutation) MenuType() (r permission.MenuType, exists bool) {
 	return *v, true
 }
 
-// OldMenuType returns the old "menu_type" field's value of the Permission entity.
-// If the Permission object wasn't provided to the builder, the object is fetched from the database.
+// OldMenuType returns the old "menu_type" field's value of the Menu entity.
+// If the Menu object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMutation) OldMenuType(ctx context.Context) (v permission.MenuType, err error) {
+func (m *MenuMutation) OldMenuType(ctx context.Context) (v menu.MenuType, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldMenuType is only allowed on UpdateOne operations")
 	}
@@ -4279,17 +4279,17 @@ func (m *PermissionMutation) OldMenuType(ctx context.Context) (v permission.Menu
 }
 
 // ResetMenuType resets all changes to the "menu_type" field.
-func (m *PermissionMutation) ResetMenuType() {
+func (m *MenuMutation) ResetMenuType() {
 	m.menu_type = nil
 }
 
 // SetURL sets the "url" field.
-func (m *PermissionMutation) SetURL(s string) {
+func (m *MenuMutation) SetURL(s string) {
 	m.url = &s
 }
 
 // URL returns the value of the "url" field in the mutation.
-func (m *PermissionMutation) URL() (r string, exists bool) {
+func (m *MenuMutation) URL() (r string, exists bool) {
 	v := m.url
 	if v == nil {
 		return
@@ -4297,10 +4297,10 @@ func (m *PermissionMutation) URL() (r string, exists bool) {
 	return *v, true
 }
 
-// OldURL returns the old "url" field's value of the Permission entity.
-// If the Permission object wasn't provided to the builder, the object is fetched from the database.
+// OldURL returns the old "url" field's value of the Menu entity.
+// If the Menu object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMutation) OldURL(ctx context.Context) (v string, err error) {
+func (m *MenuMutation) OldURL(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldURL is only allowed on UpdateOne operations")
 	}
@@ -4315,17 +4315,17 @@ func (m *PermissionMutation) OldURL(ctx context.Context) (v string, err error) {
 }
 
 // ResetURL resets all changes to the "url" field.
-func (m *PermissionMutation) ResetURL() {
+func (m *MenuMutation) ResetURL() {
 	m.url = nil
 }
 
 // SetComponent sets the "component" field.
-func (m *PermissionMutation) SetComponent(s string) {
+func (m *MenuMutation) SetComponent(s string) {
 	m.component = &s
 }
 
 // Component returns the value of the "component" field in the mutation.
-func (m *PermissionMutation) Component() (r string, exists bool) {
+func (m *MenuMutation) Component() (r string, exists bool) {
 	v := m.component
 	if v == nil {
 		return
@@ -4333,10 +4333,10 @@ func (m *PermissionMutation) Component() (r string, exists bool) {
 	return *v, true
 }
 
-// OldComponent returns the old "component" field's value of the Permission entity.
-// If the Permission object wasn't provided to the builder, the object is fetched from the database.
+// OldComponent returns the old "component" field's value of the Menu entity.
+// If the Menu object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMutation) OldComponent(ctx context.Context) (v string, err error) {
+func (m *MenuMutation) OldComponent(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldComponent is only allowed on UpdateOne operations")
 	}
@@ -4351,18 +4351,18 @@ func (m *PermissionMutation) OldComponent(ctx context.Context) (v string, err er
 }
 
 // ResetComponent resets all changes to the "component" field.
-func (m *PermissionMutation) ResetComponent() {
+func (m *MenuMutation) ResetComponent() {
 	m.component = nil
 }
 
 // SetWeight sets the "weight" field.
-func (m *PermissionMutation) SetWeight(i int) {
+func (m *MenuMutation) SetWeight(i int) {
 	m.weight = &i
 	m.addweight = nil
 }
 
 // Weight returns the value of the "weight" field in the mutation.
-func (m *PermissionMutation) Weight() (r int, exists bool) {
+func (m *MenuMutation) Weight() (r int, exists bool) {
 	v := m.weight
 	if v == nil {
 		return
@@ -4370,10 +4370,10 @@ func (m *PermissionMutation) Weight() (r int, exists bool) {
 	return *v, true
 }
 
-// OldWeight returns the old "weight" field's value of the Permission entity.
-// If the Permission object wasn't provided to the builder, the object is fetched from the database.
+// OldWeight returns the old "weight" field's value of the Menu entity.
+// If the Menu object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMutation) OldWeight(ctx context.Context) (v int, err error) {
+func (m *MenuMutation) OldWeight(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldWeight is only allowed on UpdateOne operations")
 	}
@@ -4388,7 +4388,7 @@ func (m *PermissionMutation) OldWeight(ctx context.Context) (v int, err error) {
 }
 
 // AddWeight adds i to the "weight" field.
-func (m *PermissionMutation) AddWeight(i int) {
+func (m *MenuMutation) AddWeight(i int) {
 	if m.addweight != nil {
 		*m.addweight += i
 	} else {
@@ -4397,7 +4397,7 @@ func (m *PermissionMutation) AddWeight(i int) {
 }
 
 // AddedWeight returns the value that was added to the "weight" field in this mutation.
-func (m *PermissionMutation) AddedWeight() (r int, exists bool) {
+func (m *MenuMutation) AddedWeight() (r int, exists bool) {
 	v := m.addweight
 	if v == nil {
 		return
@@ -4406,18 +4406,18 @@ func (m *PermissionMutation) AddedWeight() (r int, exists bool) {
 }
 
 // ResetWeight resets all changes to the "weight" field.
-func (m *PermissionMutation) ResetWeight() {
+func (m *MenuMutation) ResetWeight() {
 	m.weight = nil
 	m.addweight = nil
 }
 
 // SetStatus sets the "status" field.
-func (m *PermissionMutation) SetStatus(pe permission.Status) {
-	m.status = &pe
+func (m *MenuMutation) SetStatus(value menu.Status) {
+	m.status = &value
 }
 
 // Status returns the value of the "status" field in the mutation.
-func (m *PermissionMutation) Status() (r permission.Status, exists bool) {
+func (m *MenuMutation) Status() (r menu.Status, exists bool) {
 	v := m.status
 	if v == nil {
 		return
@@ -4425,10 +4425,10 @@ func (m *PermissionMutation) Status() (r permission.Status, exists bool) {
 	return *v, true
 }
 
-// OldStatus returns the old "status" field's value of the Permission entity.
-// If the Permission object wasn't provided to the builder, the object is fetched from the database.
+// OldStatus returns the old "status" field's value of the Menu entity.
+// If the Menu object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMutation) OldStatus(ctx context.Context) (v permission.Status, err error) {
+func (m *MenuMutation) OldStatus(ctx context.Context) (v menu.Status, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
 	}
@@ -4443,17 +4443,17 @@ func (m *PermissionMutation) OldStatus(ctx context.Context) (v permission.Status
 }
 
 // ResetStatus resets all changes to the "status" field.
-func (m *PermissionMutation) ResetStatus() {
+func (m *MenuMutation) ResetStatus() {
 	m.status = nil
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (m *PermissionMutation) SetCreatedAt(t time.Time) {
+func (m *MenuMutation) SetCreatedAt(t time.Time) {
 	m.created_at = &t
 }
 
 // CreatedAt returns the value of the "created_at" field in the mutation.
-func (m *PermissionMutation) CreatedAt() (r time.Time, exists bool) {
+func (m *MenuMutation) CreatedAt() (r time.Time, exists bool) {
 	v := m.created_at
 	if v == nil {
 		return
@@ -4461,10 +4461,10 @@ func (m *PermissionMutation) CreatedAt() (r time.Time, exists bool) {
 	return *v, true
 }
 
-// OldCreatedAt returns the old "created_at" field's value of the Permission entity.
-// If the Permission object wasn't provided to the builder, the object is fetched from the database.
+// OldCreatedAt returns the old "created_at" field's value of the Menu entity.
+// If the Menu object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+func (m *MenuMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
 	}
@@ -4479,17 +4479,17 @@ func (m *PermissionMutation) OldCreatedAt(ctx context.Context) (v time.Time, err
 }
 
 // ResetCreatedAt resets all changes to the "created_at" field.
-func (m *PermissionMutation) ResetCreatedAt() {
+func (m *MenuMutation) ResetCreatedAt() {
 	m.created_at = nil
 }
 
 // SetUpdatedAt sets the "updated_at" field.
-func (m *PermissionMutation) SetUpdatedAt(t time.Time) {
+func (m *MenuMutation) SetUpdatedAt(t time.Time) {
 	m.updated_at = &t
 }
 
 // UpdatedAt returns the value of the "updated_at" field in the mutation.
-func (m *PermissionMutation) UpdatedAt() (r time.Time, exists bool) {
+func (m *MenuMutation) UpdatedAt() (r time.Time, exists bool) {
 	v := m.updated_at
 	if v == nil {
 		return
@@ -4497,10 +4497,10 @@ func (m *PermissionMutation) UpdatedAt() (r time.Time, exists bool) {
 	return *v, true
 }
 
-// OldUpdatedAt returns the old "updated_at" field's value of the Permission entity.
-// If the Permission object wasn't provided to the builder, the object is fetched from the database.
+// OldUpdatedAt returns the old "updated_at" field's value of the Menu entity.
+// If the Menu object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMutation) OldUpdatedAt(ctx context.Context) (v time.Time, err error) {
+func (m *MenuMutation) OldUpdatedAt(ctx context.Context) (v time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
 	}
@@ -4515,19 +4515,19 @@ func (m *PermissionMutation) OldUpdatedAt(ctx context.Context) (v time.Time, err
 }
 
 // ResetUpdatedAt resets all changes to the "updated_at" field.
-func (m *PermissionMutation) ResetUpdatedAt() {
+func (m *MenuMutation) ResetUpdatedAt() {
 	m.updated_at = nil
 }
 
-// Where appends a list predicates to the PermissionMutation builder.
-func (m *PermissionMutation) Where(ps ...predicate.Permission) {
+// Where appends a list predicates to the MenuMutation builder.
+func (m *MenuMutation) Where(ps ...predicate.Menu) {
 	m.predicates = append(m.predicates, ps...)
 }
 
-// WhereP appends storage-level predicates to the PermissionMutation builder. Using this method,
+// WhereP appends storage-level predicates to the MenuMutation builder. Using this method,
 // users can use type-assertion to append predicates that do not depend on any generated package.
-func (m *PermissionMutation) WhereP(ps ...func(*sql.Selector)) {
-	p := make([]predicate.Permission, len(ps))
+func (m *MenuMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.Menu, len(ps))
 	for i := range ps {
 		p[i] = ps[i]
 	}
@@ -4535,66 +4535,66 @@ func (m *PermissionMutation) WhereP(ps ...func(*sql.Selector)) {
 }
 
 // Op returns the operation name.
-func (m *PermissionMutation) Op() Op {
+func (m *MenuMutation) Op() Op {
 	return m.op
 }
 
 // SetOp allows setting the mutation operation.
-func (m *PermissionMutation) SetOp(op Op) {
+func (m *MenuMutation) SetOp(op Op) {
 	m.op = op
 }
 
-// Type returns the node type of this mutation (Permission).
-func (m *PermissionMutation) Type() string {
+// Type returns the node type of this mutation (Menu).
+func (m *MenuMutation) Type() string {
 	return m.typ
 }
 
 // Fields returns all fields that were changed during this mutation. Note that in
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
-func (m *PermissionMutation) Fields() []string {
+func (m *MenuMutation) Fields() []string {
 	fields := make([]string, 0, 14)
 	if m.parent_id != nil {
-		fields = append(fields, permission.FieldParentID)
+		fields = append(fields, menu.FieldParentID)
 	}
 	if m.name != nil {
-		fields = append(fields, permission.FieldName)
+		fields = append(fields, menu.FieldName)
 	}
 	if m.code != nil {
-		fields = append(fields, permission.FieldCode)
+		fields = append(fields, menu.FieldCode)
 	}
-	if m.description != nil {
-		fields = append(fields, permission.FieldDescription)
+	if m.remark != nil {
+		fields = append(fields, menu.FieldRemark)
 	}
 	if m._path != nil {
-		fields = append(fields, permission.FieldPath)
+		fields = append(fields, menu.FieldPath)
 	}
 	if m.icon != nil {
-		fields = append(fields, permission.FieldIcon)
+		fields = append(fields, menu.FieldIcon)
 	}
 	if m._type != nil {
-		fields = append(fields, permission.FieldType)
+		fields = append(fields, menu.FieldType)
 	}
 	if m.menu_type != nil {
-		fields = append(fields, permission.FieldMenuType)
+		fields = append(fields, menu.FieldMenuType)
 	}
 	if m.url != nil {
-		fields = append(fields, permission.FieldURL)
+		fields = append(fields, menu.FieldURL)
 	}
 	if m.component != nil {
-		fields = append(fields, permission.FieldComponent)
+		fields = append(fields, menu.FieldComponent)
 	}
 	if m.weight != nil {
-		fields = append(fields, permission.FieldWeight)
+		fields = append(fields, menu.FieldWeight)
 	}
 	if m.status != nil {
-		fields = append(fields, permission.FieldStatus)
+		fields = append(fields, menu.FieldStatus)
 	}
 	if m.created_at != nil {
-		fields = append(fields, permission.FieldCreatedAt)
+		fields = append(fields, menu.FieldCreatedAt)
 	}
 	if m.updated_at != nil {
-		fields = append(fields, permission.FieldUpdatedAt)
+		fields = append(fields, menu.FieldUpdatedAt)
 	}
 	return fields
 }
@@ -4602,35 +4602,35 @@ func (m *PermissionMutation) Fields() []string {
 // Field returns the value of a field with the given name. The second boolean
 // return value indicates that this field was not set, or was not defined in the
 // schema.
-func (m *PermissionMutation) Field(name string) (ent.Value, bool) {
+func (m *MenuMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case permission.FieldParentID:
+	case menu.FieldParentID:
 		return m.ParentID()
-	case permission.FieldName:
+	case menu.FieldName:
 		return m.Name()
-	case permission.FieldCode:
+	case menu.FieldCode:
 		return m.Code()
-	case permission.FieldDescription:
-		return m.Description()
-	case permission.FieldPath:
+	case menu.FieldRemark:
+		return m.Remark()
+	case menu.FieldPath:
 		return m.Path()
-	case permission.FieldIcon:
+	case menu.FieldIcon:
 		return m.Icon()
-	case permission.FieldType:
+	case menu.FieldType:
 		return m.GetType()
-	case permission.FieldMenuType:
+	case menu.FieldMenuType:
 		return m.MenuType()
-	case permission.FieldURL:
+	case menu.FieldURL:
 		return m.URL()
-	case permission.FieldComponent:
+	case menu.FieldComponent:
 		return m.Component()
-	case permission.FieldWeight:
+	case menu.FieldWeight:
 		return m.Weight()
-	case permission.FieldStatus:
+	case menu.FieldStatus:
 		return m.Status()
-	case permission.FieldCreatedAt:
+	case menu.FieldCreatedAt:
 		return m.CreatedAt()
-	case permission.FieldUpdatedAt:
+	case menu.FieldUpdatedAt:
 		return m.UpdatedAt()
 	}
 	return nil, false
@@ -4639,137 +4639,137 @@ func (m *PermissionMutation) Field(name string) (ent.Value, bool) {
 // OldField returns the old value of the field from the database. An error is
 // returned if the mutation operation is not UpdateOne, or the query to the
 // database failed.
-func (m *PermissionMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+func (m *MenuMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case permission.FieldParentID:
+	case menu.FieldParentID:
 		return m.OldParentID(ctx)
-	case permission.FieldName:
+	case menu.FieldName:
 		return m.OldName(ctx)
-	case permission.FieldCode:
+	case menu.FieldCode:
 		return m.OldCode(ctx)
-	case permission.FieldDescription:
-		return m.OldDescription(ctx)
-	case permission.FieldPath:
+	case menu.FieldRemark:
+		return m.OldRemark(ctx)
+	case menu.FieldPath:
 		return m.OldPath(ctx)
-	case permission.FieldIcon:
+	case menu.FieldIcon:
 		return m.OldIcon(ctx)
-	case permission.FieldType:
+	case menu.FieldType:
 		return m.OldType(ctx)
-	case permission.FieldMenuType:
+	case menu.FieldMenuType:
 		return m.OldMenuType(ctx)
-	case permission.FieldURL:
+	case menu.FieldURL:
 		return m.OldURL(ctx)
-	case permission.FieldComponent:
+	case menu.FieldComponent:
 		return m.OldComponent(ctx)
-	case permission.FieldWeight:
+	case menu.FieldWeight:
 		return m.OldWeight(ctx)
-	case permission.FieldStatus:
+	case menu.FieldStatus:
 		return m.OldStatus(ctx)
-	case permission.FieldCreatedAt:
+	case menu.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
-	case permission.FieldUpdatedAt:
+	case menu.FieldUpdatedAt:
 		return m.OldUpdatedAt(ctx)
 	}
-	return nil, fmt.Errorf("unknown Permission field %s", name)
+	return nil, fmt.Errorf("unknown Menu field %s", name)
 }
 
 // SetField sets the value of a field with the given name. It returns an error if
 // the field is not defined in the schema, or if the type mismatched the field
 // type.
-func (m *PermissionMutation) SetField(name string, value ent.Value) error {
+func (m *MenuMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case permission.FieldParentID:
+	case menu.FieldParentID:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetParentID(v)
 		return nil
-	case permission.FieldName:
+	case menu.FieldName:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetName(v)
 		return nil
-	case permission.FieldCode:
+	case menu.FieldCode:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetCode(v)
 		return nil
-	case permission.FieldDescription:
+	case menu.FieldRemark:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetDescription(v)
+		m.SetRemark(v)
 		return nil
-	case permission.FieldPath:
+	case menu.FieldPath:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetPath(v)
 		return nil
-	case permission.FieldIcon:
+	case menu.FieldIcon:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetIcon(v)
 		return nil
-	case permission.FieldType:
-		v, ok := value.(permission.Type)
+	case menu.FieldType:
+		v, ok := value.(menu.Type)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetType(v)
 		return nil
-	case permission.FieldMenuType:
-		v, ok := value.(permission.MenuType)
+	case menu.FieldMenuType:
+		v, ok := value.(menu.MenuType)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetMenuType(v)
 		return nil
-	case permission.FieldURL:
+	case menu.FieldURL:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetURL(v)
 		return nil
-	case permission.FieldComponent:
+	case menu.FieldComponent:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetComponent(v)
 		return nil
-	case permission.FieldWeight:
+	case menu.FieldWeight:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetWeight(v)
 		return nil
-	case permission.FieldStatus:
-		v, ok := value.(permission.Status)
+	case menu.FieldStatus:
+		v, ok := value.(menu.Status)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetStatus(v)
 		return nil
-	case permission.FieldCreatedAt:
+	case menu.FieldCreatedAt:
 		v, ok := value.(time.Time)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetCreatedAt(v)
 		return nil
-	case permission.FieldUpdatedAt:
+	case menu.FieldUpdatedAt:
 		v, ok := value.(time.Time)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
@@ -4777,15 +4777,15 @@ func (m *PermissionMutation) SetField(name string, value ent.Value) error {
 		m.SetUpdatedAt(v)
 		return nil
 	}
-	return fmt.Errorf("unknown Permission field %s", name)
+	return fmt.Errorf("unknown Menu field %s", name)
 }
 
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
-func (m *PermissionMutation) AddedFields() []string {
+func (m *MenuMutation) AddedFields() []string {
 	var fields []string
 	if m.addweight != nil {
-		fields = append(fields, permission.FieldWeight)
+		fields = append(fields, menu.FieldWeight)
 	}
 	return fields
 }
@@ -4793,9 +4793,9 @@ func (m *PermissionMutation) AddedFields() []string {
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
-func (m *PermissionMutation) AddedField(name string) (ent.Value, bool) {
+func (m *MenuMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
-	case permission.FieldWeight:
+	case menu.FieldWeight:
 		return m.AddedWeight()
 	}
 	return nil, false
@@ -4804,9 +4804,9 @@ func (m *PermissionMutation) AddedField(name string) (ent.Value, bool) {
 // AddField adds the value to the field with the given name. It returns an error if
 // the field is not defined in the schema, or if the type mismatched the field
 // type.
-func (m *PermissionMutation) AddField(name string, value ent.Value) error {
+func (m *MenuMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case permission.FieldWeight:
+	case menu.FieldWeight:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
@@ -4814,133 +4814,133 @@ func (m *PermissionMutation) AddField(name string, value ent.Value) error {
 		m.AddWeight(v)
 		return nil
 	}
-	return fmt.Errorf("unknown Permission numeric field %s", name)
+	return fmt.Errorf("unknown Menu numeric field %s", name)
 }
 
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
-func (m *PermissionMutation) ClearedFields() []string {
+func (m *MenuMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(permission.FieldDescription) {
-		fields = append(fields, permission.FieldDescription)
+	if m.FieldCleared(menu.FieldRemark) {
+		fields = append(fields, menu.FieldRemark)
 	}
 	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
 // cleared in this mutation.
-func (m *PermissionMutation) FieldCleared(name string) bool {
+func (m *MenuMutation) FieldCleared(name string) bool {
 	_, ok := m.clearedFields[name]
 	return ok
 }
 
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
-func (m *PermissionMutation) ClearField(name string) error {
+func (m *MenuMutation) ClearField(name string) error {
 	switch name {
-	case permission.FieldDescription:
-		m.ClearDescription()
+	case menu.FieldRemark:
+		m.ClearRemark()
 		return nil
 	}
-	return fmt.Errorf("unknown Permission nullable field %s", name)
+	return fmt.Errorf("unknown Menu nullable field %s", name)
 }
 
 // ResetField resets all changes in the mutation for the field with the given name.
 // It returns an error if the field is not defined in the schema.
-func (m *PermissionMutation) ResetField(name string) error {
+func (m *MenuMutation) ResetField(name string) error {
 	switch name {
-	case permission.FieldParentID:
+	case menu.FieldParentID:
 		m.ResetParentID()
 		return nil
-	case permission.FieldName:
+	case menu.FieldName:
 		m.ResetName()
 		return nil
-	case permission.FieldCode:
+	case menu.FieldCode:
 		m.ResetCode()
 		return nil
-	case permission.FieldDescription:
-		m.ResetDescription()
+	case menu.FieldRemark:
+		m.ResetRemark()
 		return nil
-	case permission.FieldPath:
+	case menu.FieldPath:
 		m.ResetPath()
 		return nil
-	case permission.FieldIcon:
+	case menu.FieldIcon:
 		m.ResetIcon()
 		return nil
-	case permission.FieldType:
+	case menu.FieldType:
 		m.ResetType()
 		return nil
-	case permission.FieldMenuType:
+	case menu.FieldMenuType:
 		m.ResetMenuType()
 		return nil
-	case permission.FieldURL:
+	case menu.FieldURL:
 		m.ResetURL()
 		return nil
-	case permission.FieldComponent:
+	case menu.FieldComponent:
 		m.ResetComponent()
 		return nil
-	case permission.FieldWeight:
+	case menu.FieldWeight:
 		m.ResetWeight()
 		return nil
-	case permission.FieldStatus:
+	case menu.FieldStatus:
 		m.ResetStatus()
 		return nil
-	case permission.FieldCreatedAt:
+	case menu.FieldCreatedAt:
 		m.ResetCreatedAt()
 		return nil
-	case permission.FieldUpdatedAt:
+	case menu.FieldUpdatedAt:
 		m.ResetUpdatedAt()
 		return nil
 	}
-	return fmt.Errorf("unknown Permission field %s", name)
+	return fmt.Errorf("unknown Menu field %s", name)
 }
 
 // AddedEdges returns all edge names that were set/added in this mutation.
-func (m *PermissionMutation) AddedEdges() []string {
+func (m *MenuMutation) AddedEdges() []string {
 	edges := make([]string, 0, 0)
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
-func (m *PermissionMutation) AddedIDs(name string) []ent.Value {
+func (m *MenuMutation) AddedIDs(name string) []ent.Value {
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
-func (m *PermissionMutation) RemovedEdges() []string {
+func (m *MenuMutation) RemovedEdges() []string {
 	edges := make([]string, 0, 0)
 	return edges
 }
 
 // RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
 // the given name in this mutation.
-func (m *PermissionMutation) RemovedIDs(name string) []ent.Value {
+func (m *MenuMutation) RemovedIDs(name string) []ent.Value {
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
-func (m *PermissionMutation) ClearedEdges() []string {
+func (m *MenuMutation) ClearedEdges() []string {
 	edges := make([]string, 0, 0)
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
-func (m *PermissionMutation) EdgeCleared(name string) bool {
+func (m *MenuMutation) EdgeCleared(name string) bool {
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
-func (m *PermissionMutation) ClearEdge(name string) error {
-	return fmt.Errorf("unknown Permission unique edge %s", name)
+func (m *MenuMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown Menu unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
-func (m *PermissionMutation) ResetEdge(name string) error {
-	return fmt.Errorf("unknown Permission edge %s", name)
+func (m *MenuMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown Menu edge %s", name)
 }
 
 // PositionMutation represents an operation that mutates the Position nodes in the graph.

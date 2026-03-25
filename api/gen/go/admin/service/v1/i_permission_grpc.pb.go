@@ -21,11 +21,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	PermissionService_PermissionTree_FullMethodName         = "/admin.service.v1.PermissionService/PermissionTree"
-	PermissionService_CreatePermission_FullMethodName       = "/admin.service.v1.PermissionService/CreatePermission"
-	PermissionService_UpdatePermission_FullMethodName       = "/admin.service.v1.PermissionService/UpdatePermission"
-	PermissionService_UpdatePermissionStatus_FullMethodName = "/admin.service.v1.PermissionService/UpdatePermissionStatus"
-	PermissionService_DeletePermission_FullMethodName       = "/admin.service.v1.PermissionService/DeletePermission"
+	PermissionService_MenuTree_FullMethodName         = "/admin.service.v1.PermissionService/MenuTree"
+	PermissionService_CreateMenu_FullMethodName       = "/admin.service.v1.PermissionService/CreateMenu"
+	PermissionService_UpdateMenu_FullMethodName       = "/admin.service.v1.PermissionService/UpdateMenu"
+	PermissionService_UpdateMenuStatus_FullMethodName = "/admin.service.v1.PermissionService/UpdateMenuStatus"
+	PermissionService_DeleteMenu_FullMethodName       = "/admin.service.v1.PermissionService/DeleteMenu"
 )
 
 // PermissionServiceClient is the client API for PermissionService service.
@@ -33,15 +33,15 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type PermissionServiceClient interface {
 	// 列表的tree
-	PermissionTree(ctx context.Context, in *v1.PermissionTreeRequest, opts ...grpc.CallOption) (*v1.PermissionTreeResponse, error)
+	MenuTree(ctx context.Context, in *v1.MenuTreeRequest, opts ...grpc.CallOption) (*v1.MenuTreeResponse, error)
 	// 创建权限
-	CreatePermission(ctx context.Context, in *v1.CreatePermissionRequest, opts ...grpc.CallOption) (*v1.CreatePermissionResponse, error)
+	CreateMenu(ctx context.Context, in *v1.CreateMenuRequest, opts ...grpc.CallOption) (*v1.Menu, error)
 	// 更新权限
-	UpdatePermission(ctx context.Context, in *v1.UpdatePermissionRequest, opts ...grpc.CallOption) (*v1.UpdatePermissionResponse, error)
+	UpdateMenu(ctx context.Context, in *v1.UpdateMenuRequest, opts ...grpc.CallOption) (*v1.Menu, error)
 	// 更新权限状态
-	UpdatePermissionStatus(ctx context.Context, in *v1.UpdatePermissionStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UpdateMenuStatus(ctx context.Context, in *v1.UpdateMenuStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 批量删除权限
-	DeletePermission(ctx context.Context, in *v1.DeletePermissionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteMenu(ctx context.Context, in *v1.DeleteMenuRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type permissionServiceClient struct {
@@ -52,50 +52,50 @@ func NewPermissionServiceClient(cc grpc.ClientConnInterface) PermissionServiceCl
 	return &permissionServiceClient{cc}
 }
 
-func (c *permissionServiceClient) PermissionTree(ctx context.Context, in *v1.PermissionTreeRequest, opts ...grpc.CallOption) (*v1.PermissionTreeResponse, error) {
+func (c *permissionServiceClient) MenuTree(ctx context.Context, in *v1.MenuTreeRequest, opts ...grpc.CallOption) (*v1.MenuTreeResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v1.PermissionTreeResponse)
-	err := c.cc.Invoke(ctx, PermissionService_PermissionTree_FullMethodName, in, out, cOpts...)
+	out := new(v1.MenuTreeResponse)
+	err := c.cc.Invoke(ctx, PermissionService_MenuTree_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *permissionServiceClient) CreatePermission(ctx context.Context, in *v1.CreatePermissionRequest, opts ...grpc.CallOption) (*v1.CreatePermissionResponse, error) {
+func (c *permissionServiceClient) CreateMenu(ctx context.Context, in *v1.CreateMenuRequest, opts ...grpc.CallOption) (*v1.Menu, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v1.CreatePermissionResponse)
-	err := c.cc.Invoke(ctx, PermissionService_CreatePermission_FullMethodName, in, out, cOpts...)
+	out := new(v1.Menu)
+	err := c.cc.Invoke(ctx, PermissionService_CreateMenu_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *permissionServiceClient) UpdatePermission(ctx context.Context, in *v1.UpdatePermissionRequest, opts ...grpc.CallOption) (*v1.UpdatePermissionResponse, error) {
+func (c *permissionServiceClient) UpdateMenu(ctx context.Context, in *v1.UpdateMenuRequest, opts ...grpc.CallOption) (*v1.Menu, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v1.UpdatePermissionResponse)
-	err := c.cc.Invoke(ctx, PermissionService_UpdatePermission_FullMethodName, in, out, cOpts...)
+	out := new(v1.Menu)
+	err := c.cc.Invoke(ctx, PermissionService_UpdateMenu_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *permissionServiceClient) UpdatePermissionStatus(ctx context.Context, in *v1.UpdatePermissionStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *permissionServiceClient) UpdateMenuStatus(ctx context.Context, in *v1.UpdateMenuStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, PermissionService_UpdatePermissionStatus_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, PermissionService_UpdateMenuStatus_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *permissionServiceClient) DeletePermission(ctx context.Context, in *v1.DeletePermissionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *permissionServiceClient) DeleteMenu(ctx context.Context, in *v1.DeleteMenuRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, PermissionService_DeletePermission_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, PermissionService_DeleteMenu_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -107,15 +107,15 @@ func (c *permissionServiceClient) DeletePermission(ctx context.Context, in *v1.D
 // for forward compatibility.
 type PermissionServiceServer interface {
 	// 列表的tree
-	PermissionTree(context.Context, *v1.PermissionTreeRequest) (*v1.PermissionTreeResponse, error)
+	MenuTree(context.Context, *v1.MenuTreeRequest) (*v1.MenuTreeResponse, error)
 	// 创建权限
-	CreatePermission(context.Context, *v1.CreatePermissionRequest) (*v1.CreatePermissionResponse, error)
+	CreateMenu(context.Context, *v1.CreateMenuRequest) (*v1.Menu, error)
 	// 更新权限
-	UpdatePermission(context.Context, *v1.UpdatePermissionRequest) (*v1.UpdatePermissionResponse, error)
+	UpdateMenu(context.Context, *v1.UpdateMenuRequest) (*v1.Menu, error)
 	// 更新权限状态
-	UpdatePermissionStatus(context.Context, *v1.UpdatePermissionStatusRequest) (*emptypb.Empty, error)
+	UpdateMenuStatus(context.Context, *v1.UpdateMenuStatusRequest) (*emptypb.Empty, error)
 	// 批量删除权限
-	DeletePermission(context.Context, *v1.DeletePermissionRequest) (*emptypb.Empty, error)
+	DeleteMenu(context.Context, *v1.DeleteMenuRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedPermissionServiceServer()
 }
 
@@ -126,20 +126,20 @@ type PermissionServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedPermissionServiceServer struct{}
 
-func (UnimplementedPermissionServiceServer) PermissionTree(context.Context, *v1.PermissionTreeRequest) (*v1.PermissionTreeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PermissionTree not implemented")
+func (UnimplementedPermissionServiceServer) MenuTree(context.Context, *v1.MenuTreeRequest) (*v1.MenuTreeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MenuTree not implemented")
 }
-func (UnimplementedPermissionServiceServer) CreatePermission(context.Context, *v1.CreatePermissionRequest) (*v1.CreatePermissionResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreatePermission not implemented")
+func (UnimplementedPermissionServiceServer) CreateMenu(context.Context, *v1.CreateMenuRequest) (*v1.Menu, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateMenu not implemented")
 }
-func (UnimplementedPermissionServiceServer) UpdatePermission(context.Context, *v1.UpdatePermissionRequest) (*v1.UpdatePermissionResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdatePermission not implemented")
+func (UnimplementedPermissionServiceServer) UpdateMenu(context.Context, *v1.UpdateMenuRequest) (*v1.Menu, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateMenu not implemented")
 }
-func (UnimplementedPermissionServiceServer) UpdatePermissionStatus(context.Context, *v1.UpdatePermissionStatusRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdatePermissionStatus not implemented")
+func (UnimplementedPermissionServiceServer) UpdateMenuStatus(context.Context, *v1.UpdateMenuStatusRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateMenuStatus not implemented")
 }
-func (UnimplementedPermissionServiceServer) DeletePermission(context.Context, *v1.DeletePermissionRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeletePermission not implemented")
+func (UnimplementedPermissionServiceServer) DeleteMenu(context.Context, *v1.DeleteMenuRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteMenu not implemented")
 }
 func (UnimplementedPermissionServiceServer) mustEmbedUnimplementedPermissionServiceServer() {}
 func (UnimplementedPermissionServiceServer) testEmbeddedByValue()                           {}
@@ -162,92 +162,92 @@ func RegisterPermissionServiceServer(s grpc.ServiceRegistrar, srv PermissionServ
 	s.RegisterService(&PermissionService_ServiceDesc, srv)
 }
 
-func _PermissionService_PermissionTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v1.PermissionTreeRequest)
+func _PermissionService_MenuTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.MenuTreeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PermissionServiceServer).PermissionTree(ctx, in)
+		return srv.(PermissionServiceServer).MenuTree(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PermissionService_PermissionTree_FullMethodName,
+		FullMethod: PermissionService_MenuTree_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServiceServer).PermissionTree(ctx, req.(*v1.PermissionTreeRequest))
+		return srv.(PermissionServiceServer).MenuTree(ctx, req.(*v1.MenuTreeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PermissionService_CreatePermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v1.CreatePermissionRequest)
+func _PermissionService_CreateMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.CreateMenuRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PermissionServiceServer).CreatePermission(ctx, in)
+		return srv.(PermissionServiceServer).CreateMenu(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PermissionService_CreatePermission_FullMethodName,
+		FullMethod: PermissionService_CreateMenu_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServiceServer).CreatePermission(ctx, req.(*v1.CreatePermissionRequest))
+		return srv.(PermissionServiceServer).CreateMenu(ctx, req.(*v1.CreateMenuRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PermissionService_UpdatePermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v1.UpdatePermissionRequest)
+func _PermissionService_UpdateMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.UpdateMenuRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PermissionServiceServer).UpdatePermission(ctx, in)
+		return srv.(PermissionServiceServer).UpdateMenu(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PermissionService_UpdatePermission_FullMethodName,
+		FullMethod: PermissionService_UpdateMenu_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServiceServer).UpdatePermission(ctx, req.(*v1.UpdatePermissionRequest))
+		return srv.(PermissionServiceServer).UpdateMenu(ctx, req.(*v1.UpdateMenuRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PermissionService_UpdatePermissionStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v1.UpdatePermissionStatusRequest)
+func _PermissionService_UpdateMenuStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.UpdateMenuStatusRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PermissionServiceServer).UpdatePermissionStatus(ctx, in)
+		return srv.(PermissionServiceServer).UpdateMenuStatus(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PermissionService_UpdatePermissionStatus_FullMethodName,
+		FullMethod: PermissionService_UpdateMenuStatus_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServiceServer).UpdatePermissionStatus(ctx, req.(*v1.UpdatePermissionStatusRequest))
+		return srv.(PermissionServiceServer).UpdateMenuStatus(ctx, req.(*v1.UpdateMenuStatusRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PermissionService_DeletePermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v1.DeletePermissionRequest)
+func _PermissionService_DeleteMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.DeleteMenuRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PermissionServiceServer).DeletePermission(ctx, in)
+		return srv.(PermissionServiceServer).DeleteMenu(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PermissionService_DeletePermission_FullMethodName,
+		FullMethod: PermissionService_DeleteMenu_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PermissionServiceServer).DeletePermission(ctx, req.(*v1.DeletePermissionRequest))
+		return srv.(PermissionServiceServer).DeleteMenu(ctx, req.(*v1.DeleteMenuRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -260,24 +260,24 @@ var PermissionService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*PermissionServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "PermissionTree",
-			Handler:    _PermissionService_PermissionTree_Handler,
+			MethodName: "MenuTree",
+			Handler:    _PermissionService_MenuTree_Handler,
 		},
 		{
-			MethodName: "CreatePermission",
-			Handler:    _PermissionService_CreatePermission_Handler,
+			MethodName: "CreateMenu",
+			Handler:    _PermissionService_CreateMenu_Handler,
 		},
 		{
-			MethodName: "UpdatePermission",
-			Handler:    _PermissionService_UpdatePermission_Handler,
+			MethodName: "UpdateMenu",
+			Handler:    _PermissionService_UpdateMenu_Handler,
 		},
 		{
-			MethodName: "UpdatePermissionStatus",
-			Handler:    _PermissionService_UpdatePermissionStatus_Handler,
+			MethodName: "UpdateMenuStatus",
+			Handler:    _PermissionService_UpdateMenuStatus_Handler,
 		},
 		{
-			MethodName: "DeletePermission",
-			Handler:    _PermissionService_DeletePermission_Handler,
+			MethodName: "DeleteMenu",
+			Handler:    _PermissionService_DeleteMenu_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

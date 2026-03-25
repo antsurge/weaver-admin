@@ -21,8 +21,8 @@ type DictData func(*sql.Selector)
 // DictType is the predicate function for dicttype builders.
 type DictType func(*sql.Selector)
 
-// Permission is the predicate function for permission builders.
-type Permission func(*sql.Selector)
+// Menu is the predicate function for menu builders.
+type Menu func(*sql.Selector)
 
 // Position is the predicate function for position builders.
 type Position func(*sql.Selector)

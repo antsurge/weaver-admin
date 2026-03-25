@@ -10,7 +10,7 @@ import (
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/department"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/dictdata"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/dicttype"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/permission"
+	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/menu"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/position"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/role"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/rolepermission"
@@ -261,17 +261,17 @@ func init() {
 	dicttypeDescID := dicttypeFields[0].Descriptor()
 	// dicttype.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	dicttype.IDValidator = dicttypeDescID.Validators[0].(func(string) error)
-	permissionFields := schema.Permission{}.Fields()
-	_ = permissionFields
-	// permissionDescParentID is the schema descriptor for parent_id field.
-	permissionDescParentID := permissionFields[1].Descriptor()
-	// permission.DefaultParentID holds the default value on creation for the parent_id field.
-	permission.DefaultParentID = permissionDescParentID.Default.(string)
-	// permissionDescName is the schema descriptor for name field.
-	permissionDescName := permissionFields[2].Descriptor()
-	// permission.NameValidator is a validator for the "name" field. It is called by the builders before save.
-	permission.NameValidator = func() func(string) error {
-		validators := permissionDescName.Validators
+	menuFields := schema.Menu{}.Fields()
+	_ = menuFields
+	// menuDescParentID is the schema descriptor for parent_id field.
+	menuDescParentID := menuFields[1].Descriptor()
+	// menu.DefaultParentID holds the default value on creation for the parent_id field.
+	menu.DefaultParentID = menuDescParentID.Default.(string)
+	// menuDescName is the schema descriptor for name field.
+	menuDescName := menuFields[2].Descriptor()
+	// menu.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	menu.NameValidator = func() func(string) error {
+		validators := menuDescName.Validators
 		fns := [...]func(string) error{
 			validators[0].(func(string) error),
 			validators[1].(func(string) error),
@@ -285,11 +285,11 @@ func init() {
 			return nil
 		}
 	}()
-	// permissionDescCode is the schema descriptor for code field.
-	permissionDescCode := permissionFields[3].Descriptor()
-	// permission.CodeValidator is a validator for the "code" field. It is called by the builders before save.
-	permission.CodeValidator = func() func(string) error {
-		validators := permissionDescCode.Validators
+	// menuDescCode is the schema descriptor for code field.
+	menuDescCode := menuFields[3].Descriptor()
+	// menu.CodeValidator is a validator for the "code" field. It is called by the builders before save.
+	menu.CodeValidator = func() func(string) error {
+		validators := menuDescCode.Validators
 		fns := [...]func(string) error{
 			validators[0].(func(string) error),
 			validators[1].(func(string) error),
@@ -303,52 +303,52 @@ func init() {
 			return nil
 		}
 	}()
-	// permissionDescDescription is the schema descriptor for description field.
-	permissionDescDescription := permissionFields[4].Descriptor()
-	// permission.DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
-	permission.DescriptionValidator = permissionDescDescription.Validators[0].(func(string) error)
-	// permissionDescPath is the schema descriptor for path field.
-	permissionDescPath := permissionFields[5].Descriptor()
-	// permission.DefaultPath holds the default value on creation for the path field.
-	permission.DefaultPath = permissionDescPath.Default.(string)
-	// permission.PathValidator is a validator for the "path" field. It is called by the builders before save.
-	permission.PathValidator = permissionDescPath.Validators[0].(func(string) error)
-	// permissionDescIcon is the schema descriptor for icon field.
-	permissionDescIcon := permissionFields[6].Descriptor()
-	// permission.DefaultIcon holds the default value on creation for the icon field.
-	permission.DefaultIcon = permissionDescIcon.Default.(string)
-	// permission.IconValidator is a validator for the "icon" field. It is called by the builders before save.
-	permission.IconValidator = permissionDescIcon.Validators[0].(func(string) error)
-	// permissionDescURL is the schema descriptor for url field.
-	permissionDescURL := permissionFields[9].Descriptor()
-	// permission.DefaultURL holds the default value on creation for the url field.
-	permission.DefaultURL = permissionDescURL.Default.(string)
-	// permission.URLValidator is a validator for the "url" field. It is called by the builders before save.
-	permission.URLValidator = permissionDescURL.Validators[0].(func(string) error)
-	// permissionDescComponent is the schema descriptor for component field.
-	permissionDescComponent := permissionFields[10].Descriptor()
-	// permission.DefaultComponent holds the default value on creation for the component field.
-	permission.DefaultComponent = permissionDescComponent.Default.(string)
-	// permission.ComponentValidator is a validator for the "component" field. It is called by the builders before save.
-	permission.ComponentValidator = permissionDescComponent.Validators[0].(func(string) error)
-	// permissionDescWeight is the schema descriptor for weight field.
-	permissionDescWeight := permissionFields[11].Descriptor()
-	// permission.DefaultWeight holds the default value on creation for the weight field.
-	permission.DefaultWeight = permissionDescWeight.Default.(int)
-	// permissionDescCreatedAt is the schema descriptor for created_at field.
-	permissionDescCreatedAt := permissionFields[13].Descriptor()
-	// permission.DefaultCreatedAt holds the default value on creation for the created_at field.
-	permission.DefaultCreatedAt = permissionDescCreatedAt.Default.(func() time.Time)
-	// permissionDescUpdatedAt is the schema descriptor for updated_at field.
-	permissionDescUpdatedAt := permissionFields[14].Descriptor()
-	// permission.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	permission.DefaultUpdatedAt = permissionDescUpdatedAt.Default.(func() time.Time)
-	// permission.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
-	permission.UpdateDefaultUpdatedAt = permissionDescUpdatedAt.UpdateDefault.(func() time.Time)
-	// permissionDescID is the schema descriptor for id field.
-	permissionDescID := permissionFields[0].Descriptor()
-	// permission.IDValidator is a validator for the "id" field. It is called by the builders before save.
-	permission.IDValidator = permissionDescID.Validators[0].(func(string) error)
+	// menuDescRemark is the schema descriptor for remark field.
+	menuDescRemark := menuFields[4].Descriptor()
+	// menu.RemarkValidator is a validator for the "remark" field. It is called by the builders before save.
+	menu.RemarkValidator = menuDescRemark.Validators[0].(func(string) error)
+	// menuDescPath is the schema descriptor for path field.
+	menuDescPath := menuFields[5].Descriptor()
+	// menu.DefaultPath holds the default value on creation for the path field.
+	menu.DefaultPath = menuDescPath.Default.(string)
+	// menu.PathValidator is a validator for the "path" field. It is called by the builders before save.
+	menu.PathValidator = menuDescPath.Validators[0].(func(string) error)
+	// menuDescIcon is the schema descriptor for icon field.
+	menuDescIcon := menuFields[6].Descriptor()
+	// menu.DefaultIcon holds the default value on creation for the icon field.
+	menu.DefaultIcon = menuDescIcon.Default.(string)
+	// menu.IconValidator is a validator for the "icon" field. It is called by the builders before save.
+	menu.IconValidator = menuDescIcon.Validators[0].(func(string) error)
+	// menuDescURL is the schema descriptor for url field.
+	menuDescURL := menuFields[9].Descriptor()
+	// menu.DefaultURL holds the default value on creation for the url field.
+	menu.DefaultURL = menuDescURL.Default.(string)
+	// menu.URLValidator is a validator for the "url" field. It is called by the builders before save.
+	menu.URLValidator = menuDescURL.Validators[0].(func(string) error)
+	// menuDescComponent is the schema descriptor for component field.
+	menuDescComponent := menuFields[10].Descriptor()
+	// menu.DefaultComponent holds the default value on creation for the component field.
+	menu.DefaultComponent = menuDescComponent.Default.(string)
+	// menu.ComponentValidator is a validator for the "component" field. It is called by the builders before save.
+	menu.ComponentValidator = menuDescComponent.Validators[0].(func(string) error)
+	// menuDescWeight is the schema descriptor for weight field.
+	menuDescWeight := menuFields[11].Descriptor()
+	// menu.DefaultWeight holds the default value on creation for the weight field.
+	menu.DefaultWeight = menuDescWeight.Default.(int)
+	// menuDescCreatedAt is the schema descriptor for created_at field.
+	menuDescCreatedAt := menuFields[13].Descriptor()
+	// menu.DefaultCreatedAt holds the default value on creation for the created_at field.
+	menu.DefaultCreatedAt = menuDescCreatedAt.Default.(func() time.Time)
+	// menuDescUpdatedAt is the schema descriptor for updated_at field.
+	menuDescUpdatedAt := menuFields[14].Descriptor()
+	// menu.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	menu.DefaultUpdatedAt = menuDescUpdatedAt.Default.(func() time.Time)
+	// menu.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	menu.UpdateDefaultUpdatedAt = menuDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// menuDescID is the schema descriptor for id field.
+	menuDescID := menuFields[0].Descriptor()
+	// menu.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	menu.IDValidator = menuDescID.Validators[0].(func(string) error)
 	positionFields := schema.Position{}.Fields()
 	_ = positionFields
 	// positionDescName is the schema descriptor for name field.

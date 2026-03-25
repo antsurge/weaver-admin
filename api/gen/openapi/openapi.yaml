@@ -553,19 +553,19 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /admin/v1/permission:
+    /admin/v1/menu:
         post:
             tags:
                 - PermissionService
                 - Permission
             summary: 创建权限
             description: 创建权限
-            operationId: PermissionService_CreatePermission
+            operationId: PermissionService_CreateMenu
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/CreatePermissionRequest'
+                            $ref: '#/components/schemas/CreateMenuRequest'
                 required: true
             responses:
                 "200":
@@ -573,7 +573,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/CreatePermissionResponse'
+                                $ref: '#/components/schemas/Menu'
                 default:
                     description: Default error response
                     content:
@@ -586,7 +586,7 @@ paths:
                 - Permission
             summary: 删除权限
             description: 批量删除权限
-            operationId: PermissionService_DeletePermission
+            operationId: PermissionService_DeleteMenu
             parameters:
                 - name: ids
                   in: query
@@ -604,16 +604,28 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /admin/v1/permission/tree:
+    /admin/v1/menu/tree:
         get:
             tags:
                 - PermissionService
                 - Permission
             summary: 权限树
             description: 获取权限树
-            operationId: PermissionService_PermissionTree
+            operationId: PermissionService_MenuTree
             parameters:
                 - name: type
+                  in: query
+                  schema:
+                    type: string
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: code
+                  in: query
+                  schema:
+                    type: string
+                - name: status
                   in: query
                   schema:
                     type: string
@@ -623,21 +635,21 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/PermissionTreeResponse'
+                                $ref: '#/components/schemas/MenuTreeResponse'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /admin/v1/permission/{id}:
+    /admin/v1/menu/{id}:
         put:
             tags:
                 - PermissionService
                 - Permission
             summary: 更新权限
             description: 更新权限
-            operationId: PermissionService_UpdatePermission
+            operationId: PermissionService_UpdateMenu
             parameters:
                 - name: id
                   in: path
@@ -648,7 +660,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/UpdatePermissionRequest'
+                            $ref: '#/components/schemas/UpdateMenuRequest'
                 required: true
             responses:
                 "200":
@@ -656,21 +668,21 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/UpdatePermissionResponse'
+                                $ref: '#/components/schemas/Menu'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /admin/v1/permission/{id}/status:
+    /admin/v1/menu/{id}/status:
         put:
             tags:
                 - PermissionService
                 - Permission
             summary: 更新权限
             description: 更新权限
-            operationId: PermissionService_UpdatePermissionStatus
+            operationId: PermissionService_UpdateMenuStatus
             parameters:
                 - name: id
                   in: path
@@ -681,7 +693,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/UpdatePermissionStatusRequest'
+                            $ref: '#/components/schemas/UpdateMenuStatusRequest'
                 required: true
             responses:
                 "200":
@@ -1024,7 +1036,7 @@ components:
                 status:
                     type: string
                     description: 状态（enabled/disabled）
-        CreatePermissionRequest:
+        CreateMenuRequest:
             type: object
             properties:
                 name:
@@ -1036,7 +1048,7 @@ components:
                 description:
                     type: string
                     description: 权限描述
-                parentId:
+                parentID:
                     type: string
                     description: 父权限ID，空表示根节点
                 type:
@@ -1062,12 +1074,6 @@ components:
                     type: string
                     description: '状态: enabled / disabled'
             description: 创建权限请求
-        CreatePermissionResponse:
-            type: object
-            properties:
-                permission:
-                    $ref: '#/components/schemas/Permission'
-            description: 创建权限响应
         CreatePositionRequest:
             required:
                 - name
@@ -1299,12 +1305,12 @@ components:
                     type: string
                 userId:
                     type: string
-        Permission:
+        Menu:
             type: object
             properties:
                 id:
                     type: string
-                parentId:
+                parentID:
                     type: string
                 name:
                     type: string
@@ -1336,15 +1342,15 @@ components:
                 children:
                     type: array
                     items:
-                        $ref: '#/components/schemas/Permission'
-            description: 权限实体
-        PermissionTreeResponse:
+                        $ref: '#/components/schemas/Menu'
+            description: 菜单
+        MenuTreeResponse:
             type: object
             properties:
-                data:
+                items:
                     type: array
                     items:
-                        $ref: '#/components/schemas/Permission'
+                        $ref: '#/components/schemas/Menu'
             description: 树形权限列表响应
         Position:
             type: object
@@ -1516,7 +1522,7 @@ components:
                 status:
                     type: string
                     description: 状态（enabled/disabled）
-        UpdatePermissionRequest:
+        UpdateMenuRequest:
             type: object
             properties:
                 id:
@@ -1531,7 +1537,7 @@ components:
                 description:
                     type: string
                     description: 权限描述
-                parentId:
+                parentID:
                     type: string
                     description: 父权限ID，空表示根节点
                 type:
@@ -1557,12 +1563,7 @@ components:
                     type: string
                     description: '状态: enabled / disabled'
             description: 更新权限
-        UpdatePermissionResponse:
-            type: object
-            properties:
-                permission:
-                    $ref: '#/components/schemas/Permission'
-        UpdatePermissionStatusRequest:
+        UpdateMenuStatusRequest:
             type: object
             properties:
                 id:

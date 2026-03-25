@@ -103,13 +103,13 @@ var (
 		Columns:    DictTypeColumns,
 		PrimaryKey: []*schema.Column{DictTypeColumns[0]},
 	}
-	// PermissionColumns holds the columns for the "permission" table.
-	PermissionColumns = []*schema.Column{
+	// MenuColumns holds the columns for the "menu" table.
+	MenuColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
-		{Name: "parent_id", Type: field.TypeString, Comment: "父权限ID, null表示根节点", Default: ""},
-		{Name: "name", Type: field.TypeString, Size: 64, Comment: "权限名称"},
-		{Name: "code", Type: field.TypeString, Unique: true, Size: 64, Comment: "权限唯一编码"},
-		{Name: "description", Type: field.TypeString, Nullable: true, Size: 256, Comment: "权限描述"},
+		{Name: "parent_id", Type: field.TypeString, Comment: "父菜单ID, null表示根节点", Default: ""},
+		{Name: "name", Type: field.TypeString, Size: 64, Comment: "菜单名称"},
+		{Name: "code", Type: field.TypeString, Unique: true, Size: 64, Comment: "菜单唯一编码"},
+		{Name: "remark", Type: field.TypeString, Nullable: true, Size: 256, Comment: "备注"},
 		{Name: "path", Type: field.TypeString, Size: 256, Comment: "路由路径", Default: ""},
 		{Name: "icon", Type: field.TypeString, Size: 128, Comment: "图标", Default: ""},
 		{Name: "type", Type: field.TypeEnum, Comment: "类型:menu_dir=菜单目录,menu=菜单项,button=页面按钮", Enums: []string{"menu_dir", "menu", "button"}, Default: "menu_dir"},
@@ -121,12 +121,12 @@ var (
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
 	}
-	// PermissionTable holds the schema information for the "permission" table.
-	PermissionTable = &schema.Table{
-		Name:       "permission",
-		Comment:    "权限表",
-		Columns:    PermissionColumns,
-		PrimaryKey: []*schema.Column{PermissionColumns[0]},
+	// MenuTable holds the schema information for the "menu" table.
+	MenuTable = &schema.Table{
+		Name:       "menu",
+		Comment:    "菜单表",
+		Columns:    MenuColumns,
+		PrimaryKey: []*schema.Column{MenuColumns[0]},
 	}
 	// PositionColumns holds the columns for the "position" table.
 	PositionColumns = []*schema.Column{
@@ -191,7 +191,7 @@ var (
 		DepartmentTable,
 		DictDataTable,
 		DictTypeTable,
-		PermissionTable,
+		MenuTable,
 		PositionTable,
 		RoleTable,
 		RolePermissionTable,
@@ -214,8 +214,8 @@ func init() {
 	DictTypeTable.Annotation = &entsql.Annotation{
 		Table: "dict_type",
 	}
-	PermissionTable.Annotation = &entsql.Annotation{
-		Table: "permission",
+	MenuTable.Annotation = &entsql.Annotation{
+		Table: "menu",
 	}
 	PositionTable.Annotation = &entsql.Annotation{
 		Table: "position",

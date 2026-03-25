@@ -25,43 +25,46 @@ var File_permission_service_v1_permission_service_proto protoreflect.FileDescrip
 
 const file_permission_service_v1_permission_service_proto_rawDesc = "" +
 	"\n" +
-	".permission/service/v1/permission_service.proto\x12\x15permission.service.v1\x1a\x1bgoogle/protobuf/empty.proto\x1a&permission/service/v1/permission.proto2\x98\x05\n" +
-	"\x11PermissionService\x12s\n" +
-	"\x10CreatePermission\x12..permission.service.v1.CreatePermissionRequest\x1a/.permission.service.v1.CreatePermissionResponse\x12s\n" +
-	"\x10UpdatePermission\x12..permission.service.v1.UpdatePermissionRequest\x1a/.permission.service.v1.UpdatePermissionResponse\x12_\n" +
-	"\rGetPermission\x12+.permission.service.v1.GetPermissionRequest\x1a!.permission.service.v1.Permission\x12m\n" +
-	"\x0eListPermission\x12,.permission.service.v1.ListPermissionRequest\x1a-.permission.service.v1.ListPermissionResponse\x12m\n" +
-	"\x0ePermissionTree\x12,.permission.service.v1.PermissionTreeRequest\x1a-.permission.service.v1.PermissionTreeResponse\x12Z\n" +
-	"\x10DeletePermission\x12..permission.service.v1.DeletePermissionRequest\x1a\x16.google.protobuf.EmptyB\xfa\x01\n" +
+	".permission/service/v1/permission_service.proto\x12\x15permission.service.v1\x1a\x1bgoogle/protobuf/empty.proto\x1a permission/service/v1/menu.proto2\xb2\x04\n" +
+	"\x11PermissionService\x12a\n" +
+	"\n" +
+	"CreateMenu\x12(.permission.service.v1.CreateMenuRequest\x1a).permission.service.v1.CreateMenuResponse\x12a\n" +
+	"\n" +
+	"UpdateMenu\x12(.permission.service.v1.UpdateMenuRequest\x1a).permission.service.v1.UpdateMenuResponse\x12M\n" +
+	"\aGetMenu\x12%.permission.service.v1.GetMenuRequest\x1a\x1b.permission.service.v1.Menu\x12[\n" +
+	"\bListMenu\x12&.permission.service.v1.ListMenuRequest\x1a'.permission.service.v1.ListMenuResponse\x12[\n" +
+	"\bMenuTree\x12&.permission.service.v1.MenuTreeRequest\x1a'.permission.service.v1.MenuTreeResponse\x12N\n" +
+	"\n" +
+	"DeleteMenu\x12(.permission.service.v1.DeleteMenuRequest\x1a\x16.google.protobuf.EmptyB\xfa\x01\n" +
 	"\x19com.permission.service.v1B\x16PermissionServiceProtoP\x01ZOgithub.com/hypercoze/kratos-admin/api/gen/go/permission/service/v1;permissionpb\xa2\x02\x03PSX\xaa\x02\x15Permission.Service.V1\xca\x02\x15Permission\\Service\\V1\xe2\x02!Permission\\Service\\V1\\GPBMetadata\xea\x02\x17Permission::Service::V1b\x06proto3"
 
 var file_permission_service_v1_permission_service_proto_goTypes = []any{
-	(*CreatePermissionRequest)(nil),  // 0: permission.service.v1.CreatePermissionRequest
-	(*UpdatePermissionRequest)(nil),  // 1: permission.service.v1.UpdatePermissionRequest
-	(*GetPermissionRequest)(nil),     // 2: permission.service.v1.GetPermissionRequest
-	(*ListPermissionRequest)(nil),    // 3: permission.service.v1.ListPermissionRequest
-	(*PermissionTreeRequest)(nil),    // 4: permission.service.v1.PermissionTreeRequest
-	(*DeletePermissionRequest)(nil),  // 5: permission.service.v1.DeletePermissionRequest
-	(*CreatePermissionResponse)(nil), // 6: permission.service.v1.CreatePermissionResponse
-	(*UpdatePermissionResponse)(nil), // 7: permission.service.v1.UpdatePermissionResponse
-	(*Permission)(nil),               // 8: permission.service.v1.Permission
-	(*ListPermissionResponse)(nil),   // 9: permission.service.v1.ListPermissionResponse
-	(*PermissionTreeResponse)(nil),   // 10: permission.service.v1.PermissionTreeResponse
-	(*emptypb.Empty)(nil),            // 11: google.protobuf.Empty
+	(*CreateMenuRequest)(nil),  // 0: permission.service.v1.CreateMenuRequest
+	(*UpdateMenuRequest)(nil),  // 1: permission.service.v1.UpdateMenuRequest
+	(*GetMenuRequest)(nil),     // 2: permission.service.v1.GetMenuRequest
+	(*ListMenuRequest)(nil),    // 3: permission.service.v1.ListMenuRequest
+	(*MenuTreeRequest)(nil),    // 4: permission.service.v1.MenuTreeRequest
+	(*DeleteMenuRequest)(nil),  // 5: permission.service.v1.DeleteMenuRequest
+	(*CreateMenuResponse)(nil), // 6: permission.service.v1.CreateMenuResponse
+	(*UpdateMenuResponse)(nil), // 7: permission.service.v1.UpdateMenuResponse
+	(*Menu)(nil),               // 8: permission.service.v1.Menu
+	(*ListMenuResponse)(nil),   // 9: permission.service.v1.ListMenuResponse
+	(*MenuTreeResponse)(nil),   // 10: permission.service.v1.MenuTreeResponse
+	(*emptypb.Empty)(nil),      // 11: google.protobuf.Empty
 }
 var file_permission_service_v1_permission_service_proto_depIdxs = []int32{
-	0,  // 0: permission.service.v1.PermissionService.CreatePermission:input_type -> permission.service.v1.CreatePermissionRequest
-	1,  // 1: permission.service.v1.PermissionService.UpdatePermission:input_type -> permission.service.v1.UpdatePermissionRequest
-	2,  // 2: permission.service.v1.PermissionService.GetPermission:input_type -> permission.service.v1.GetPermissionRequest
-	3,  // 3: permission.service.v1.PermissionService.ListPermission:input_type -> permission.service.v1.ListPermissionRequest
-	4,  // 4: permission.service.v1.PermissionService.PermissionTree:input_type -> permission.service.v1.PermissionTreeRequest
-	5,  // 5: permission.service.v1.PermissionService.DeletePermission:input_type -> permission.service.v1.DeletePermissionRequest
-	6,  // 6: permission.service.v1.PermissionService.CreatePermission:output_type -> permission.service.v1.CreatePermissionResponse
-	7,  // 7: permission.service.v1.PermissionService.UpdatePermission:output_type -> permission.service.v1.UpdatePermissionResponse
-	8,  // 8: permission.service.v1.PermissionService.GetPermission:output_type -> permission.service.v1.Permission
-	9,  // 9: permission.service.v1.PermissionService.ListPermission:output_type -> permission.service.v1.ListPermissionResponse
-	10, // 10: permission.service.v1.PermissionService.PermissionTree:output_type -> permission.service.v1.PermissionTreeResponse
-	11, // 11: permission.service.v1.PermissionService.DeletePermission:output_type -> google.protobuf.Empty
+	0,  // 0: permission.service.v1.PermissionService.CreateMenu:input_type -> permission.service.v1.CreateMenuRequest
+	1,  // 1: permission.service.v1.PermissionService.UpdateMenu:input_type -> permission.service.v1.UpdateMenuRequest
+	2,  // 2: permission.service.v1.PermissionService.GetMenu:input_type -> permission.service.v1.GetMenuRequest
+	3,  // 3: permission.service.v1.PermissionService.ListMenu:input_type -> permission.service.v1.ListMenuRequest
+	4,  // 4: permission.service.v1.PermissionService.MenuTree:input_type -> permission.service.v1.MenuTreeRequest
+	5,  // 5: permission.service.v1.PermissionService.DeleteMenu:input_type -> permission.service.v1.DeleteMenuRequest
+	6,  // 6: permission.service.v1.PermissionService.CreateMenu:output_type -> permission.service.v1.CreateMenuResponse
+	7,  // 7: permission.service.v1.PermissionService.UpdateMenu:output_type -> permission.service.v1.UpdateMenuResponse
+	8,  // 8: permission.service.v1.PermissionService.GetMenu:output_type -> permission.service.v1.Menu
+	9,  // 9: permission.service.v1.PermissionService.ListMenu:output_type -> permission.service.v1.ListMenuResponse
+	10, // 10: permission.service.v1.PermissionService.MenuTree:output_type -> permission.service.v1.MenuTreeResponse
+	11, // 11: permission.service.v1.PermissionService.DeleteMenu:output_type -> google.protobuf.Empty
 	6,  // [6:12] is the sub-list for method output_type
 	0,  // [0:6] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
@@ -74,7 +77,7 @@ func file_permission_service_v1_permission_service_proto_init() {
 	if File_permission_service_v1_permission_service_proto != nil {
 		return
 	}
-	file_permission_service_v1_permission_proto_init()
+	file_permission_service_v1_menu_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

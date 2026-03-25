@@ -17,7 +17,7 @@ import (
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/department"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/dictdata"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/dicttype"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/permission"
+	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/menu"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/position"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/role"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/rolepermission"
@@ -86,7 +86,7 @@ func checkColumn(t, c string) error {
 			department.Table:     department.ValidColumn,
 			dictdata.Table:       dictdata.ValidColumn,
 			dicttype.Table:       dicttype.ValidColumn,
-			permission.Table:     permission.ValidColumn,
+			menu.Table:           menu.ValidColumn,
 			position.Table:       position.ValidColumn,
 			role.Table:           role.ValidColumn,
 			rolepermission.Table: rolepermission.ValidColumn,

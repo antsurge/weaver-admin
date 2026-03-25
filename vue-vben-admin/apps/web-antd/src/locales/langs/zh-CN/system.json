@@ -1,41 +1,4 @@
 {
-  "permission": {
-    "name": "权限",
-    "fields": {
-      "name": "权限名称",
-      "code": "权限编码",
-      "parentID": "上级菜单",
-      "path": "路由路径",
-      "icon": "图标",
-      "type": "权限类型",
-      "menuType": "菜单类型",
-      "url": "链接地址",
-      "component": "组件路径",
-      "weight": "权重",
-      "status": "状态",
-      "remark": "备注",
-      "operation": "操作"
-    },
-    "operation": {
-      "appendChildren": "新增下级"
-    },
-    "type_options": {
-      "menu_dir": "菜单目录",
-      "menu": "菜单项",
-      "button": "页面按钮"
-    },
-    "menu_type_options": {
-      "tab": "选项卡",
-      "link": "链接(站外)",
-      "iframe": "Iframe"
-    },
-    "form_placeholder": {
-      "parentID": "点击选择",
-      "path": "web端路由路径(path)，无需以`/admin`开头，如:system/permission",
-      "component": "web端组件路径，请以/src开头，如:src/views/system/permission.vue",
-      "url": "请输入链接或Iframe的URL地址"
-    }
-  },
   "dict_type": {
     "name":"字典类型",
     "fields": {

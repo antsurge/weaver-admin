@@ -19,7 +19,7 @@ import (
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/department"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/dictdata"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/dicttype"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/permission"
+	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/menu"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/position"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/role"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/rolepermission"
@@ -40,8 +40,8 @@ type Client struct {
 	DictData *DictDataClient
 	// DictType is the client for interacting with the DictType builders.
 	DictType *DictTypeClient
-	// Permission is the client for interacting with the Permission builders.
-	Permission *PermissionClient
+	// Menu is the client for interacting with the Menu builders.
+	Menu *MenuClient
 	// Position is the client for interacting with the Position builders.
 	Position *PositionClient
 	// Role is the client for interacting with the Role builders.
@@ -64,7 +64,7 @@ func (c *Client) init() {
 	c.Department = NewDepartmentClient(c.config)
 	c.DictData = NewDictDataClient(c.config)
 	c.DictType = NewDictTypeClient(c.config)
-	c.Permission = NewPermissionClient(c.config)
+	c.Menu = NewMenuClient(c.config)
 	c.Position = NewPositionClient(c.config)
 	c.Role = NewRoleClient(c.config)
 	c.RolePermission = NewRolePermissionClient(c.config)
@@ -165,7 +165,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Department:     NewDepartmentClient(cfg),
 		DictData:       NewDictDataClient(cfg),
 		DictType:       NewDictTypeClient(cfg),
-		Permission:     NewPermissionClient(cfg),
+		Menu:           NewMenuClient(cfg),
 		Position:       NewPositionClient(cfg),
 		Role:           NewRoleClient(cfg),
 		RolePermission: NewRolePermissionClient(cfg),
@@ -193,7 +193,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Department:     NewDepartmentClient(cfg),
 		DictData:       NewDictDataClient(cfg),
 		DictType:       NewDictTypeClient(cfg),
-		Permission:     NewPermissionClient(cfg),
+		Menu:           NewMenuClient(cfg),
 		Position:       NewPositionClient(cfg),
 		Role:           NewRoleClient(cfg),
 		RolePermission: NewRolePermissionClient(cfg),
@@ -226,8 +226,8 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
-		c.Admin, c.AdminRole, c.Department, c.DictData, c.DictType, c.Permission,
-		c.Position, c.Role, c.RolePermission,
+		c.Admin, c.AdminRole, c.Department, c.DictData, c.DictType, c.Menu, c.Position,
+		c.Role, c.RolePermission,
 	} {
 		n.Use(hooks...)
 	}
@@ -237,8 +237,8 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.Admin, c.AdminRole, c.Department, c.DictData, c.DictType, c.Permission,
-		c.Position, c.Role, c.RolePermission,
+		c.Admin, c.AdminRole, c.Department, c.DictData, c.DictType, c.Menu, c.Position,
+		c.Role, c.RolePermission,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -257,8 +257,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.DictData.mutate(ctx, m)
 	case *DictTypeMutation:
 		return c.DictType.mutate(ctx, m)
-	case *PermissionMutation:
-		return c.Permission.mutate(ctx, m)
+	case *MenuMutation:
+		return c.Menu.mutate(ctx, m)
 	case *PositionMutation:
 		return c.Position.mutate(ctx, m)
 	case *RoleMutation:
@@ -935,107 +935,107 @@ func (c *DictTypeClient) mutate(ctx context.Context, m *DictTypeMutation) (Value
 	}
 }
 
-// PermissionClient is a client for the Permission schema.
-type PermissionClient struct {
+// MenuClient is a client for the Menu schema.
+type MenuClient struct {
 	config
 }
 
-// NewPermissionClient returns a client for the Permission from the given config.
-func NewPermissionClient(c config) *PermissionClient {
-	return &PermissionClient{config: c}
+// NewMenuClient returns a client for the Menu from the given config.
+func NewMenuClient(c config) *MenuClient {
+	return &MenuClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `permission.Hooks(f(g(h())))`.
-func (c *PermissionClient) Use(hooks ...Hook) {
-	c.hooks.Permission = append(c.hooks.Permission, hooks...)
+// A call to `Use(f, g, h)` equals to `menu.Hooks(f(g(h())))`.
+func (c *MenuClient) Use(hooks ...Hook) {
+	c.hooks.Menu = append(c.hooks.Menu, hooks...)
 }
 
 // Intercept adds a list of query interceptors to the interceptors stack.
-// A call to `Intercept(f, g, h)` equals to `permission.Intercept(f(g(h())))`.
-func (c *PermissionClient) Intercept(interceptors ...Interceptor) {
-	c.inters.Permission = append(c.inters.Permission, interceptors...)
+// A call to `Intercept(f, g, h)` equals to `menu.Intercept(f(g(h())))`.
+func (c *MenuClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Menu = append(c.inters.Menu, interceptors...)
 }
 
-// Create returns a builder for creating a Permission entity.
-func (c *PermissionClient) Create() *PermissionCreate {
-	mutation := newPermissionMutation(c.config, OpCreate)
-	return &PermissionCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Create returns a builder for creating a Menu entity.
+func (c *MenuClient) Create() *MenuCreate {
+	mutation := newMenuMutation(c.config, OpCreate)
+	return &MenuCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// CreateBulk returns a builder for creating a bulk of Permission entities.
-func (c *PermissionClient) CreateBulk(builders ...*PermissionCreate) *PermissionCreateBulk {
-	return &PermissionCreateBulk{config: c.config, builders: builders}
+// CreateBulk returns a builder for creating a bulk of Menu entities.
+func (c *MenuClient) CreateBulk(builders ...*MenuCreate) *MenuCreateBulk {
+	return &MenuCreateBulk{config: c.config, builders: builders}
 }
 
 // MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
 // a builder and applies setFunc on it.
-func (c *PermissionClient) MapCreateBulk(slice any, setFunc func(*PermissionCreate, int)) *PermissionCreateBulk {
+func (c *MenuClient) MapCreateBulk(slice any, setFunc func(*MenuCreate, int)) *MenuCreateBulk {
 	rv := reflect.ValueOf(slice)
 	if rv.Kind() != reflect.Slice {
-		return &PermissionCreateBulk{err: fmt.Errorf("calling to PermissionClient.MapCreateBulk with wrong type %T, need slice", slice)}
+		return &MenuCreateBulk{err: fmt.Errorf("calling to MenuClient.MapCreateBulk with wrong type %T, need slice", slice)}
 	}
-	builders := make([]*PermissionCreate, rv.Len())
+	builders := make([]*MenuCreate, rv.Len())
 	for i := 0; i < rv.Len(); i++ {
 		builders[i] = c.Create()
 		setFunc(builders[i], i)
 	}
-	return &PermissionCreateBulk{config: c.config, builders: builders}
+	return &MenuCreateBulk{config: c.config, builders: builders}
 }
 
-// Update returns an update builder for Permission.
-func (c *PermissionClient) Update() *PermissionUpdate {
-	mutation := newPermissionMutation(c.config, OpUpdate)
-	return &PermissionUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Update returns an update builder for Menu.
+func (c *MenuClient) Update() *MenuUpdate {
+	mutation := newMenuMutation(c.config, OpUpdate)
+	return &MenuUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *PermissionClient) UpdateOne(_m *Permission) *PermissionUpdateOne {
-	mutation := newPermissionMutation(c.config, OpUpdateOne, withPermission(_m))
-	return &PermissionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *MenuClient) UpdateOne(_m *Menu) *MenuUpdateOne {
+	mutation := newMenuMutation(c.config, OpUpdateOne, withMenu(_m))
+	return &MenuUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *PermissionClient) UpdateOneID(id string) *PermissionUpdateOne {
-	mutation := newPermissionMutation(c.config, OpUpdateOne, withPermissionID(id))
-	return &PermissionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *MenuClient) UpdateOneID(id string) *MenuUpdateOne {
+	mutation := newMenuMutation(c.config, OpUpdateOne, withMenuID(id))
+	return &MenuUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for Permission.
-func (c *PermissionClient) Delete() *PermissionDelete {
-	mutation := newPermissionMutation(c.config, OpDelete)
-	return &PermissionDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Delete returns a delete builder for Menu.
+func (c *MenuClient) Delete() *MenuDelete {
+	mutation := newMenuMutation(c.config, OpDelete)
+	return &MenuDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *PermissionClient) DeleteOne(_m *Permission) *PermissionDeleteOne {
+func (c *MenuClient) DeleteOne(_m *Menu) *MenuDeleteOne {
 	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
-func (c *PermissionClient) DeleteOneID(id string) *PermissionDeleteOne {
-	builder := c.Delete().Where(permission.ID(id))
+func (c *MenuClient) DeleteOneID(id string) *MenuDeleteOne {
+	builder := c.Delete().Where(menu.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
-	return &PermissionDeleteOne{builder}
+	return &MenuDeleteOne{builder}
 }
 
-// Query returns a query builder for Permission.
-func (c *PermissionClient) Query() *PermissionQuery {
-	return &PermissionQuery{
+// Query returns a query builder for Menu.
+func (c *MenuClient) Query() *MenuQuery {
+	return &MenuQuery{
 		config: c.config,
-		ctx:    &QueryContext{Type: TypePermission},
+		ctx:    &QueryContext{Type: TypeMenu},
 		inters: c.Interceptors(),
 	}
 }
 
-// Get returns a Permission entity by its id.
-func (c *PermissionClient) Get(ctx context.Context, id string) (*Permission, error) {
-	return c.Query().Where(permission.ID(id)).Only(ctx)
+// Get returns a Menu entity by its id.
+func (c *MenuClient) Get(ctx context.Context, id string) (*Menu, error) {
+	return c.Query().Where(menu.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *PermissionClient) GetX(ctx context.Context, id string) *Permission {
+func (c *MenuClient) GetX(ctx context.Context, id string) *Menu {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
@@ -1044,27 +1044,27 @@ func (c *PermissionClient) GetX(ctx context.Context, id string) *Permission {
 }
 
 // Hooks returns the client hooks.
-func (c *PermissionClient) Hooks() []Hook {
-	return c.hooks.Permission
+func (c *MenuClient) Hooks() []Hook {
+	return c.hooks.Menu
 }
 
 // Interceptors returns the client interceptors.
-func (c *PermissionClient) Interceptors() []Interceptor {
-	return c.inters.Permission
+func (c *MenuClient) Interceptors() []Interceptor {
+	return c.inters.Menu
 }
 
-func (c *PermissionClient) mutate(ctx context.Context, m *PermissionMutation) (Value, error) {
+func (c *MenuClient) mutate(ctx context.Context, m *MenuMutation) (Value, error) {
 	switch m.Op() {
 	case OpCreate:
-		return (&PermissionCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&MenuCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpUpdate:
-		return (&PermissionUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&MenuUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpUpdateOne:
-		return (&PermissionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&MenuUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpDelete, OpDeleteOne:
-		return (&PermissionDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+		return (&MenuDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
-		return nil, fmt.Errorf("ent: unknown Permission mutation op: %q", m.Op())
+		return nil, fmt.Errorf("ent: unknown Menu mutation op: %q", m.Op())
 	}
 }
 
@@ -1470,11 +1470,11 @@ func (c *RolePermissionClient) mutate(ctx context.Context, m *RolePermissionMuta
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Admin, AdminRole, Department, DictData, DictType, Permission, Position, Role,
+		Admin, AdminRole, Department, DictData, DictType, Menu, Position, Role,
 		RolePermission []ent.Hook
 	}
 	inters struct {
-		Admin, AdminRole, Department, DictData, DictType, Permission, Position, Role,
+		Admin, AdminRole, Department, DictData, DictType, Menu, Position, Role,
 		RolePermission []ent.Interceptor
 	}
 )

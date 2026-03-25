@@ -5,12 +5,12 @@ package admin.service.v1;
 import "gnostic/openapi/v3/annotations.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
-import "permission/service/v1/permission.proto";
+import "permission/service/v1/menu.proto";
 
 service PermissionService {
   // 列表的tree
-  rpc PermissionTree(permission.service.v1.PermissionTreeRequest) returns (permission.service.v1.PermissionTreeResponse) {
-    option (google.api.http) = {get: "/admin/v1/permission/tree"};
+  rpc MenuTree(permission.service.v1.MenuTreeRequest) returns (permission.service.v1.MenuTreeResponse) {
+    option (google.api.http) = {get: "/admin/v1/menu/tree"};
     option (gnostic.openapi.v3.operation) = {
       tags: "Permission"
       summary: "权限树"
@@ -18,9 +18,9 @@ service PermissionService {
     };
   }
   // 创建权限
-  rpc CreatePermission(permission.service.v1.CreatePermissionRequest) returns (permission.service.v1.CreatePermissionResponse) {
+  rpc CreateMenu(permission.service.v1.CreateMenuRequest) returns (permission.service.v1.Menu) {
     option (google.api.http) = {
-      post: "/admin/v1/permission"
+      post: "/admin/v1/menu"
       body: "*"
     };
     option (gnostic.openapi.v3.operation) = {
@@ -30,9 +30,9 @@ service PermissionService {
     };
   }
   // 更新权限
-  rpc UpdatePermission(permission.service.v1.UpdatePermissionRequest) returns (permission.service.v1.UpdatePermissionResponse) {
+  rpc UpdateMenu(permission.service.v1.UpdateMenuRequest) returns (permission.service.v1.Menu) {
     option (google.api.http) = {
-      put: "/admin/v1/permission/{id}"
+      put: "/admin/v1/menu/{id}"
       body: "*"
     };
     option (gnostic.openapi.v3.operation) = {
@@ -42,9 +42,9 @@ service PermissionService {
     };
   }
   // 更新权限状态
-  rpc UpdatePermissionStatus(permission.service.v1.UpdatePermissionStatusRequest) returns (google.protobuf.Empty) {
+  rpc UpdateMenuStatus(permission.service.v1.UpdateMenuStatusRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      put: "/admin/v1/permission/{id}/status"
+      put: "/admin/v1/menu/{id}/status"
       body: "*"
     };
     option (gnostic.openapi.v3.operation) = {
@@ -54,8 +54,8 @@ service PermissionService {
     };
   }
   // 批量删除权限
-  rpc DeletePermission(permission.service.v1.DeletePermissionRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {delete: "/admin/v1/permission"};
+  rpc DeleteMenu(permission.service.v1.DeleteMenuRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/admin/v1/menu"};
     option (gnostic.openapi.v3.operation) = {
       tags: "Permission"
       summary: "删除权限"

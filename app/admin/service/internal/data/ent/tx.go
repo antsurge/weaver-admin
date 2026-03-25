@@ -22,8 +22,8 @@ type Tx struct {
 	DictData *DictDataClient
 	// DictType is the client for interacting with the DictType builders.
 	DictType *DictTypeClient
-	// Permission is the client for interacting with the Permission builders.
-	Permission *PermissionClient
+	// Menu is the client for interacting with the Menu builders.
+	Menu *MenuClient
 	// Position is the client for interacting with the Position builders.
 	Position *PositionClient
 	// Role is the client for interacting with the Role builders.
@@ -166,7 +166,7 @@ func (tx *Tx) init() {
 	tx.Department = NewDepartmentClient(tx.config)
 	tx.DictData = NewDictDataClient(tx.config)
 	tx.DictType = NewDictTypeClient(tx.config)
-	tx.Permission = NewPermissionClient(tx.config)
+	tx.Menu = NewMenuClient(tx.config)
 	tx.Position = NewPositionClient(tx.config)
 	tx.Role = NewRoleClient(tx.config)
 	tx.RolePermission = NewRolePermissionClient(tx.config)
