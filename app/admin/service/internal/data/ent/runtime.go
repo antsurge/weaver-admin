@@ -7,9 +7,9 @@ import (
 
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/admin"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/adminrole"
+	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/department"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/dictdata"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/dicttype"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/organization"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/permission"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/position"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/role"
@@ -55,6 +55,78 @@ func init() {
 	adminroleDescID := adminroleFields[0].Descriptor()
 	// adminrole.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	adminrole.IDValidator = adminroleDescID.Validators[0].(func(string) error)
+	departmentFields := schema.Department{}.Fields()
+	_ = departmentFields
+	// departmentDescParentID is the schema descriptor for parent_id field.
+	departmentDescParentID := departmentFields[1].Descriptor()
+	// department.DefaultParentID holds the default value on creation for the parent_id field.
+	department.DefaultParentID = departmentDescParentID.Default.(string)
+	// departmentDescName is the schema descriptor for name field.
+	departmentDescName := departmentFields[2].Descriptor()
+	// department.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	department.NameValidator = func() func(string) error {
+		validators := departmentDescName.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(name string) error {
+			for _, fn := range fns {
+				if err := fn(name); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// departmentDescCode is the schema descriptor for code field.
+	departmentDescCode := departmentFields[3].Descriptor()
+	// department.CodeValidator is a validator for the "code" field. It is called by the builders before save.
+	department.CodeValidator = func() func(string) error {
+		validators := departmentDescCode.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(code string) error {
+			for _, fn := range fns {
+				if err := fn(code); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// departmentDescWeight is the schema descriptor for weight field.
+	departmentDescWeight := departmentFields[4].Descriptor()
+	// department.DefaultWeight holds the default value on creation for the weight field.
+	department.DefaultWeight = departmentDescWeight.Default.(int)
+	// departmentDescLeaderName is the schema descriptor for leader_name field.
+	departmentDescLeaderName := departmentFields[6].Descriptor()
+	// department.LeaderNameValidator is a validator for the "leader_name" field. It is called by the builders before save.
+	department.LeaderNameValidator = departmentDescLeaderName.Validators[0].(func(string) error)
+	// departmentDescLeaderPhone is the schema descriptor for leader_phone field.
+	departmentDescLeaderPhone := departmentFields[7].Descriptor()
+	// department.LeaderPhoneValidator is a validator for the "leader_phone" field. It is called by the builders before save.
+	department.LeaderPhoneValidator = departmentDescLeaderPhone.Validators[0].(func(string) error)
+	// departmentDescLeaderEmail is the schema descriptor for leader_email field.
+	departmentDescLeaderEmail := departmentFields[8].Descriptor()
+	// department.LeaderEmailValidator is a validator for the "leader_email" field. It is called by the builders before save.
+	department.LeaderEmailValidator = departmentDescLeaderEmail.Validators[0].(func(string) error)
+	// departmentDescCreatedAt is the schema descriptor for created_at field.
+	departmentDescCreatedAt := departmentFields[9].Descriptor()
+	// department.DefaultCreatedAt holds the default value on creation for the created_at field.
+	department.DefaultCreatedAt = departmentDescCreatedAt.Default.(func() time.Time)
+	// departmentDescUpdatedAt is the schema descriptor for updated_at field.
+	departmentDescUpdatedAt := departmentFields[10].Descriptor()
+	// department.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	department.DefaultUpdatedAt = departmentDescUpdatedAt.Default.(func() time.Time)
+	// department.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	department.UpdateDefaultUpdatedAt = departmentDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// departmentDescID is the schema descriptor for id field.
+	departmentDescID := departmentFields[0].Descriptor()
+	// department.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	department.IDValidator = departmentDescID.Validators[0].(func(string) error)
 	dictdataFields := schema.DictData{}.Fields()
 	_ = dictdataFields
 	// dictdataDescDictTypeID is the schema descriptor for dict_type_id field.
@@ -189,78 +261,6 @@ func init() {
 	dicttypeDescID := dicttypeFields[0].Descriptor()
 	// dicttype.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	dicttype.IDValidator = dicttypeDescID.Validators[0].(func(string) error)
-	organizationFields := schema.Organization{}.Fields()
-	_ = organizationFields
-	// organizationDescParentID is the schema descriptor for parent_id field.
-	organizationDescParentID := organizationFields[1].Descriptor()
-	// organization.DefaultParentID holds the default value on creation for the parent_id field.
-	organization.DefaultParentID = organizationDescParentID.Default.(string)
-	// organizationDescName is the schema descriptor for name field.
-	organizationDescName := organizationFields[2].Descriptor()
-	// organization.NameValidator is a validator for the "name" field. It is called by the builders before save.
-	organization.NameValidator = func() func(string) error {
-		validators := organizationDescName.Validators
-		fns := [...]func(string) error{
-			validators[0].(func(string) error),
-			validators[1].(func(string) error),
-		}
-		return func(name string) error {
-			for _, fn := range fns {
-				if err := fn(name); err != nil {
-					return err
-				}
-			}
-			return nil
-		}
-	}()
-	// organizationDescCode is the schema descriptor for code field.
-	organizationDescCode := organizationFields[3].Descriptor()
-	// organization.CodeValidator is a validator for the "code" field. It is called by the builders before save.
-	organization.CodeValidator = func() func(string) error {
-		validators := organizationDescCode.Validators
-		fns := [...]func(string) error{
-			validators[0].(func(string) error),
-			validators[1].(func(string) error),
-		}
-		return func(code string) error {
-			for _, fn := range fns {
-				if err := fn(code); err != nil {
-					return err
-				}
-			}
-			return nil
-		}
-	}()
-	// organizationDescWeight is the schema descriptor for weight field.
-	organizationDescWeight := organizationFields[4].Descriptor()
-	// organization.DefaultWeight holds the default value on creation for the weight field.
-	organization.DefaultWeight = organizationDescWeight.Default.(int)
-	// organizationDescLeaderName is the schema descriptor for leader_name field.
-	organizationDescLeaderName := organizationFields[6].Descriptor()
-	// organization.LeaderNameValidator is a validator for the "leader_name" field. It is called by the builders before save.
-	organization.LeaderNameValidator = organizationDescLeaderName.Validators[0].(func(string) error)
-	// organizationDescLeaderPhone is the schema descriptor for leader_phone field.
-	organizationDescLeaderPhone := organizationFields[7].Descriptor()
-	// organization.LeaderPhoneValidator is a validator for the "leader_phone" field. It is called by the builders before save.
-	organization.LeaderPhoneValidator = organizationDescLeaderPhone.Validators[0].(func(string) error)
-	// organizationDescLeaderEmail is the schema descriptor for leader_email field.
-	organizationDescLeaderEmail := organizationFields[8].Descriptor()
-	// organization.LeaderEmailValidator is a validator for the "leader_email" field. It is called by the builders before save.
-	organization.LeaderEmailValidator = organizationDescLeaderEmail.Validators[0].(func(string) error)
-	// organizationDescCreatedAt is the schema descriptor for created_at field.
-	organizationDescCreatedAt := organizationFields[9].Descriptor()
-	// organization.DefaultCreatedAt holds the default value on creation for the created_at field.
-	organization.DefaultCreatedAt = organizationDescCreatedAt.Default.(func() time.Time)
-	// organizationDescUpdatedAt is the schema descriptor for updated_at field.
-	organizationDescUpdatedAt := organizationFields[10].Descriptor()
-	// organization.DefaultUpdatedAt holds the default value on creation for the updated_at field.
-	organization.DefaultUpdatedAt = organizationDescUpdatedAt.Default.(func() time.Time)
-	// organization.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
-	organization.UpdateDefaultUpdatedAt = organizationDescUpdatedAt.UpdateDefault.(func() time.Time)
-	// organizationDescID is the schema descriptor for id field.
-	organizationDescID := organizationFields[0].Descriptor()
-	// organization.IDValidator is a validator for the "id" field. It is called by the builders before save.
-	organization.IDValidator = organizationDescID.Validators[0].(func(string) error)
 	permissionFields := schema.Permission{}.Fields()
 	_ = permissionFields
 	// permissionDescParentID is the schema descriptor for parent_id field.

@@ -35,8 +35,12 @@ type ListDictDataResponse struct {
 	Total int
 }
 
+type ListDictDataOption struct {
+	enthelper.QueryOption
+}
+
 type DictDataRepo interface {
-	List(context.Context, *ListDictDataRequest) (*ListDictDataResponse, error)
+	List(context.Context, *ListDictDataRequest, ...*ListDictDataOption) (*ListDictDataResponse, error)
 	Create(context.Context, *DictData) error
 	Update(context.Context, *DictData) error
 	Delete(context.Context, []string) error

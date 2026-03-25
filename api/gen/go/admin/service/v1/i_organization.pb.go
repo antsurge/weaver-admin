@@ -28,18 +28,20 @@ var File_admin_service_v1_i_organization_proto protoreflect.FileDescriptor
 
 const file_admin_service_v1_i_organization_proto_rawDesc = "" +
 	"\n" +
-	"%admin/service/v1/i_organization.proto\x12\x10admin.service.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a*organization/service/v1/organization.proto\x1a&organization/service/v1/position.proto2\xf5\x10\n" +
-	"\fOrganization\x12\xcb\x01\n" +
-	"\x10OrganizationTree\x120.organization.service.v1.OrganizationTreeRequest\x1a1.organization.service.v1.OrganizationTreeResponse\"R\xbaG,\n" +
-	"\fOrganization\x12\v组织-Tree\x1a\x0f获取组织树\x82\xd3\xe4\x93\x02\x1d\x12\x1b/admin/v1/organization/tree\x12\xc0\x01\n" +
-	"\x12CreateOrganization\x122.organization.service.v1.CreateOrganizationRequest\x1a%.organization.service.v1.Organization\"O\xbaG+\n" +
-	"\fOrganization\x12\r组织-创建\x1a\f创建组织\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/admin/v1/organization\x12\xc5\x01\n" +
-	"\x12UpdateOrganization\x122.organization.service.v1.UpdateOrganizationRequest\x1a%.organization.service.v1.Organization\"T\xbaG+\n" +
-	"\fOrganization\x12\r组织-更新\x1a\f更新组织\x82\xd3\xe4\x93\x02 :\x01*\x1a\x1b/admin/v1/organization/{id}\x12\xe4\x01\n" +
-	"\x18UpdateOrganizationStatus\x128.organization.service.v1.UpdateOrganizationStatusRequest\x1a%.organization.service.v1.Organization\"g\xbaG7\n" +
-	"\fOrganization\x12\x13组织-更新状态\x1a\x12更新组织状态\x82\xd3\xe4\x93\x02':\x01*\x1a\"/admin/v1/organization/{id}/status\x12\xc4\x01\n" +
-	"\x12DeleteOrganization\x122.organization.service.v1.DeleteOrganizationRequset\x1a\x16.google.protobuf.Empty\"b\xbaGA\n" +
-	"\fOrganization\x12\x15组织-删除(批量)\x1a\x1a删除组织(支持批量)\x82\xd3\xe4\x93\x02\x18*\x16/admin/v1/organization\x12\xbb\x01\n" +
+	"%admin/service/v1/i_organization.proto\x12\x10admin.service.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a(organization/service/v1/department.proto\x1a&organization/service/v1/position.proto2\x96\x12\n" +
+	"\fOrganization\x12\xc3\x01\n" +
+	"\x0eDepartmentTree\x12..organization.service.v1.DepartmentTreeRequest\x1a/.organization.service.v1.DepartmentTreeResponse\"P\xbaG,\n" +
+	"\fOrganization\x12\v部门-Tree\x1a\x0f获取部门树\x82\xd3\xe4\x93\x02\x1b\x12\x19/admin/v1/department/tree\x12\xc4\x01\n" +
+	"\rGetDepartment\x12-.organization.service.v1.GetDepartmentRequest\x1a#.organization.service.v1.Department\"_\xbaG;\n" +
+	"\fOrganization\x12\x15部门-通过id获取\x1a\x14通过id获取部门\x82\xd3\xe4\x93\x02\x1b\x12\x19/admin/v1/department/{id}\x12\xb8\x01\n" +
+	"\x10CreateDepartment\x120.organization.service.v1.CreateDepartmentRequest\x1a#.organization.service.v1.Department\"M\xbaG+\n" +
+	"\fOrganization\x12\r部门-创建\x1a\f创建部门\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/admin/v1/department\x12\xbd\x01\n" +
+	"\x10UpdateDepartment\x120.organization.service.v1.UpdateDepartmentRequest\x1a#.organization.service.v1.Department\"R\xbaG+\n" +
+	"\fOrganization\x12\r部门-更新\x1a\f更新部门\x82\xd3\xe4\x93\x02\x1e:\x01*\x1a\x19/admin/v1/department/{id}\x12\xdc\x01\n" +
+	"\x16UpdateDepartmentStatus\x126.organization.service.v1.UpdateDepartmentStatusRequest\x1a#.organization.service.v1.Department\"e\xbaG7\n" +
+	"\fOrganization\x12\x13部门-更新状态\x1a\x12更新部门状态\x82\xd3\xe4\x93\x02%:\x01*\x1a /admin/v1/department/{id}/status\x12\xbe\x01\n" +
+	"\x10DeleteDepartment\x120.organization.service.v1.DeleteDepartmentRequset\x1a\x16.google.protobuf.Empty\"`\xbaGA\n" +
+	"\fOrganization\x12\x15部门-删除(批量)\x1a\x1a删除部门(支持批量)\x82\xd3\xe4\x93\x02\x16*\x14/admin/v1/department\x12\xbb\x01\n" +
 	"\fListPosition\x12,.organization.service.v1.ListPositionRequest\x1a-.organization.service.v1.ListPositionResponse\"N\xbaG1\n" +
 	"\fOrganization\x12\r岗位-列表\x1a\x12获取岗位列表\x82\xd3\xe4\x93\x02\x14\x12\x12/admin/v1/position\x12\xac\x01\n" +
 	"\vGetPosition\x12+.organization.service.v1.GetPositionRequest\x1a!.organization.service.v1.Position\"M\xbaG+\n" +
@@ -55,48 +57,51 @@ const file_admin_service_v1_i_organization_proto_rawDesc = "" +
 	"\x14com.admin.service.v1B\x12IOrganizationProtoP\x01ZFgithub.com/hypercoze/kratos-admin/api/gen/go/admin/services/v1;adminpb\xa2\x02\x03ASX\xaa\x02\x10Admin.Service.V1\xca\x02\x10Admin\\Service\\V1\xe2\x02\x1cAdmin\\Service\\V1\\GPBMetadata\xea\x02\x12Admin::Service::V1b\x06proto3"
 
 var file_admin_service_v1_i_organization_proto_goTypes = []any{
-	(*v1.OrganizationTreeRequest)(nil),         // 0: organization.service.v1.OrganizationTreeRequest
-	(*v1.CreateOrganizationRequest)(nil),       // 1: organization.service.v1.CreateOrganizationRequest
-	(*v1.UpdateOrganizationRequest)(nil),       // 2: organization.service.v1.UpdateOrganizationRequest
-	(*v1.UpdateOrganizationStatusRequest)(nil), // 3: organization.service.v1.UpdateOrganizationStatusRequest
-	(*v1.DeleteOrganizationRequset)(nil),       // 4: organization.service.v1.DeleteOrganizationRequset
-	(*v1.ListPositionRequest)(nil),             // 5: organization.service.v1.ListPositionRequest
-	(*v1.GetPositionRequest)(nil),              // 6: organization.service.v1.GetPositionRequest
-	(*v1.CreatePositionRequest)(nil),           // 7: organization.service.v1.CreatePositionRequest
-	(*v1.UpdatePositionRequest)(nil),           // 8: organization.service.v1.UpdatePositionRequest
-	(*v1.UpdatePositionStatusRequest)(nil),     // 9: organization.service.v1.UpdatePositionStatusRequest
-	(*v1.DeletePositionRequest)(nil),           // 10: organization.service.v1.DeletePositionRequest
-	(*v1.OrganizationTreeResponse)(nil),        // 11: organization.service.v1.OrganizationTreeResponse
-	(*v1.Organization)(nil),                    // 12: organization.service.v1.Organization
-	(*emptypb.Empty)(nil),                      // 13: google.protobuf.Empty
-	(*v1.ListPositionResponse)(nil),            // 14: organization.service.v1.ListPositionResponse
-	(*v1.Position)(nil),                        // 15: organization.service.v1.Position
+	(*v1.DepartmentTreeRequest)(nil),         // 0: organization.service.v1.DepartmentTreeRequest
+	(*v1.GetDepartmentRequest)(nil),          // 1: organization.service.v1.GetDepartmentRequest
+	(*v1.CreateDepartmentRequest)(nil),       // 2: organization.service.v1.CreateDepartmentRequest
+	(*v1.UpdateDepartmentRequest)(nil),       // 3: organization.service.v1.UpdateDepartmentRequest
+	(*v1.UpdateDepartmentStatusRequest)(nil), // 4: organization.service.v1.UpdateDepartmentStatusRequest
+	(*v1.DeleteDepartmentRequset)(nil),       // 5: organization.service.v1.DeleteDepartmentRequset
+	(*v1.ListPositionRequest)(nil),           // 6: organization.service.v1.ListPositionRequest
+	(*v1.GetPositionRequest)(nil),            // 7: organization.service.v1.GetPositionRequest
+	(*v1.CreatePositionRequest)(nil),         // 8: organization.service.v1.CreatePositionRequest
+	(*v1.UpdatePositionRequest)(nil),         // 9: organization.service.v1.UpdatePositionRequest
+	(*v1.UpdatePositionStatusRequest)(nil),   // 10: organization.service.v1.UpdatePositionStatusRequest
+	(*v1.DeletePositionRequest)(nil),         // 11: organization.service.v1.DeletePositionRequest
+	(*v1.DepartmentTreeResponse)(nil),        // 12: organization.service.v1.DepartmentTreeResponse
+	(*v1.Department)(nil),                    // 13: organization.service.v1.Department
+	(*emptypb.Empty)(nil),                    // 14: google.protobuf.Empty
+	(*v1.ListPositionResponse)(nil),          // 15: organization.service.v1.ListPositionResponse
+	(*v1.Position)(nil),                      // 16: organization.service.v1.Position
 }
 var file_admin_service_v1_i_organization_proto_depIdxs = []int32{
-	0,  // 0: admin.service.v1.Organization.OrganizationTree:input_type -> organization.service.v1.OrganizationTreeRequest
-	1,  // 1: admin.service.v1.Organization.CreateOrganization:input_type -> organization.service.v1.CreateOrganizationRequest
-	2,  // 2: admin.service.v1.Organization.UpdateOrganization:input_type -> organization.service.v1.UpdateOrganizationRequest
-	3,  // 3: admin.service.v1.Organization.UpdateOrganizationStatus:input_type -> organization.service.v1.UpdateOrganizationStatusRequest
-	4,  // 4: admin.service.v1.Organization.DeleteOrganization:input_type -> organization.service.v1.DeleteOrganizationRequset
-	5,  // 5: admin.service.v1.Organization.ListPosition:input_type -> organization.service.v1.ListPositionRequest
-	6,  // 6: admin.service.v1.Organization.GetPosition:input_type -> organization.service.v1.GetPositionRequest
-	7,  // 7: admin.service.v1.Organization.CreatePosition:input_type -> organization.service.v1.CreatePositionRequest
-	8,  // 8: admin.service.v1.Organization.UpdatePosition:input_type -> organization.service.v1.UpdatePositionRequest
-	9,  // 9: admin.service.v1.Organization.UpdatePositionStatus:input_type -> organization.service.v1.UpdatePositionStatusRequest
-	10, // 10: admin.service.v1.Organization.DeletePosition:input_type -> organization.service.v1.DeletePositionRequest
-	11, // 11: admin.service.v1.Organization.OrganizationTree:output_type -> organization.service.v1.OrganizationTreeResponse
-	12, // 12: admin.service.v1.Organization.CreateOrganization:output_type -> organization.service.v1.Organization
-	12, // 13: admin.service.v1.Organization.UpdateOrganization:output_type -> organization.service.v1.Organization
-	12, // 14: admin.service.v1.Organization.UpdateOrganizationStatus:output_type -> organization.service.v1.Organization
-	13, // 15: admin.service.v1.Organization.DeleteOrganization:output_type -> google.protobuf.Empty
-	14, // 16: admin.service.v1.Organization.ListPosition:output_type -> organization.service.v1.ListPositionResponse
-	15, // 17: admin.service.v1.Organization.GetPosition:output_type -> organization.service.v1.Position
-	15, // 18: admin.service.v1.Organization.CreatePosition:output_type -> organization.service.v1.Position
-	15, // 19: admin.service.v1.Organization.UpdatePosition:output_type -> organization.service.v1.Position
-	13, // 20: admin.service.v1.Organization.UpdatePositionStatus:output_type -> google.protobuf.Empty
-	13, // 21: admin.service.v1.Organization.DeletePosition:output_type -> google.protobuf.Empty
-	11, // [11:22] is the sub-list for method output_type
-	0,  // [0:11] is the sub-list for method input_type
+	0,  // 0: admin.service.v1.Organization.DepartmentTree:input_type -> organization.service.v1.DepartmentTreeRequest
+	1,  // 1: admin.service.v1.Organization.GetDepartment:input_type -> organization.service.v1.GetDepartmentRequest
+	2,  // 2: admin.service.v1.Organization.CreateDepartment:input_type -> organization.service.v1.CreateDepartmentRequest
+	3,  // 3: admin.service.v1.Organization.UpdateDepartment:input_type -> organization.service.v1.UpdateDepartmentRequest
+	4,  // 4: admin.service.v1.Organization.UpdateDepartmentStatus:input_type -> organization.service.v1.UpdateDepartmentStatusRequest
+	5,  // 5: admin.service.v1.Organization.DeleteDepartment:input_type -> organization.service.v1.DeleteDepartmentRequset
+	6,  // 6: admin.service.v1.Organization.ListPosition:input_type -> organization.service.v1.ListPositionRequest
+	7,  // 7: admin.service.v1.Organization.GetPosition:input_type -> organization.service.v1.GetPositionRequest
+	8,  // 8: admin.service.v1.Organization.CreatePosition:input_type -> organization.service.v1.CreatePositionRequest
+	9,  // 9: admin.service.v1.Organization.UpdatePosition:input_type -> organization.service.v1.UpdatePositionRequest
+	10, // 10: admin.service.v1.Organization.UpdatePositionStatus:input_type -> organization.service.v1.UpdatePositionStatusRequest
+	11, // 11: admin.service.v1.Organization.DeletePosition:input_type -> organization.service.v1.DeletePositionRequest
+	12, // 12: admin.service.v1.Organization.DepartmentTree:output_type -> organization.service.v1.DepartmentTreeResponse
+	13, // 13: admin.service.v1.Organization.GetDepartment:output_type -> organization.service.v1.Department
+	13, // 14: admin.service.v1.Organization.CreateDepartment:output_type -> organization.service.v1.Department
+	13, // 15: admin.service.v1.Organization.UpdateDepartment:output_type -> organization.service.v1.Department
+	13, // 16: admin.service.v1.Organization.UpdateDepartmentStatus:output_type -> organization.service.v1.Department
+	14, // 17: admin.service.v1.Organization.DeleteDepartment:output_type -> google.protobuf.Empty
+	15, // 18: admin.service.v1.Organization.ListPosition:output_type -> organization.service.v1.ListPositionResponse
+	16, // 19: admin.service.v1.Organization.GetPosition:output_type -> organization.service.v1.Position
+	16, // 20: admin.service.v1.Organization.CreatePosition:output_type -> organization.service.v1.Position
+	16, // 21: admin.service.v1.Organization.UpdatePosition:output_type -> organization.service.v1.Position
+	14, // 22: admin.service.v1.Organization.UpdatePositionStatus:output_type -> google.protobuf.Empty
+	14, // 23: admin.service.v1.Organization.DeletePosition:output_type -> google.protobuf.Empty
+	12, // [12:24] is the sub-list for method output_type
+	0,  // [0:12] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

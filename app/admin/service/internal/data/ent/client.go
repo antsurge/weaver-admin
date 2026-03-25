@@ -16,9 +16,9 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/admin"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/adminrole"
+	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/department"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/dictdata"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/dicttype"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/organization"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/permission"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/position"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/role"
@@ -34,12 +34,12 @@ type Client struct {
 	Admin *AdminClient
 	// AdminRole is the client for interacting with the AdminRole builders.
 	AdminRole *AdminRoleClient
+	// Department is the client for interacting with the Department builders.
+	Department *DepartmentClient
 	// DictData is the client for interacting with the DictData builders.
 	DictData *DictDataClient
 	// DictType is the client for interacting with the DictType builders.
 	DictType *DictTypeClient
-	// Organization is the client for interacting with the Organization builders.
-	Organization *OrganizationClient
 	// Permission is the client for interacting with the Permission builders.
 	Permission *PermissionClient
 	// Position is the client for interacting with the Position builders.
@@ -61,9 +61,9 @@ func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.Admin = NewAdminClient(c.config)
 	c.AdminRole = NewAdminRoleClient(c.config)
+	c.Department = NewDepartmentClient(c.config)
 	c.DictData = NewDictDataClient(c.config)
 	c.DictType = NewDictTypeClient(c.config)
-	c.Organization = NewOrganizationClient(c.config)
 	c.Permission = NewPermissionClient(c.config)
 	c.Position = NewPositionClient(c.config)
 	c.Role = NewRoleClient(c.config)
@@ -162,9 +162,9 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		config:         cfg,
 		Admin:          NewAdminClient(cfg),
 		AdminRole:      NewAdminRoleClient(cfg),
+		Department:     NewDepartmentClient(cfg),
 		DictData:       NewDictDataClient(cfg),
 		DictType:       NewDictTypeClient(cfg),
-		Organization:   NewOrganizationClient(cfg),
 		Permission:     NewPermissionClient(cfg),
 		Position:       NewPositionClient(cfg),
 		Role:           NewRoleClient(cfg),
@@ -190,9 +190,9 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		config:         cfg,
 		Admin:          NewAdminClient(cfg),
 		AdminRole:      NewAdminRoleClient(cfg),
+		Department:     NewDepartmentClient(cfg),
 		DictData:       NewDictDataClient(cfg),
 		DictType:       NewDictTypeClient(cfg),
-		Organization:   NewOrganizationClient(cfg),
 		Permission:     NewPermissionClient(cfg),
 		Position:       NewPositionClient(cfg),
 		Role:           NewRoleClient(cfg),
@@ -226,7 +226,7 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
-		c.Admin, c.AdminRole, c.DictData, c.DictType, c.Organization, c.Permission,
+		c.Admin, c.AdminRole, c.Department, c.DictData, c.DictType, c.Permission,
 		c.Position, c.Role, c.RolePermission,
 	} {
 		n.Use(hooks...)
@@ -237,7 +237,7 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.Admin, c.AdminRole, c.DictData, c.DictType, c.Organization, c.Permission,
+		c.Admin, c.AdminRole, c.Department, c.DictData, c.DictType, c.Permission,
 		c.Position, c.Role, c.RolePermission,
 	} {
 		n.Intercept(interceptors...)
@@ -251,12 +251,12 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.Admin.mutate(ctx, m)
 	case *AdminRoleMutation:
 		return c.AdminRole.mutate(ctx, m)
+	case *DepartmentMutation:
+		return c.Department.mutate(ctx, m)
 	case *DictDataMutation:
 		return c.DictData.mutate(ctx, m)
 	case *DictTypeMutation:
 		return c.DictType.mutate(ctx, m)
-	case *OrganizationMutation:
-		return c.Organization.mutate(ctx, m)
 	case *PermissionMutation:
 		return c.Permission.mutate(ctx, m)
 	case *PositionMutation:
@@ -536,6 +536,139 @@ func (c *AdminRoleClient) mutate(ctx context.Context, m *AdminRoleMutation) (Val
 	}
 }
 
+// DepartmentClient is a client for the Department schema.
+type DepartmentClient struct {
+	config
+}
+
+// NewDepartmentClient returns a client for the Department from the given config.
+func NewDepartmentClient(c config) *DepartmentClient {
+	return &DepartmentClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `department.Hooks(f(g(h())))`.
+func (c *DepartmentClient) Use(hooks ...Hook) {
+	c.hooks.Department = append(c.hooks.Department, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `department.Intercept(f(g(h())))`.
+func (c *DepartmentClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Department = append(c.inters.Department, interceptors...)
+}
+
+// Create returns a builder for creating a Department entity.
+func (c *DepartmentClient) Create() *DepartmentCreate {
+	mutation := newDepartmentMutation(c.config, OpCreate)
+	return &DepartmentCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Department entities.
+func (c *DepartmentClient) CreateBulk(builders ...*DepartmentCreate) *DepartmentCreateBulk {
+	return &DepartmentCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *DepartmentClient) MapCreateBulk(slice any, setFunc func(*DepartmentCreate, int)) *DepartmentCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &DepartmentCreateBulk{err: fmt.Errorf("calling to DepartmentClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*DepartmentCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &DepartmentCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Department.
+func (c *DepartmentClient) Update() *DepartmentUpdate {
+	mutation := newDepartmentMutation(c.config, OpUpdate)
+	return &DepartmentUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *DepartmentClient) UpdateOne(_m *Department) *DepartmentUpdateOne {
+	mutation := newDepartmentMutation(c.config, OpUpdateOne, withDepartment(_m))
+	return &DepartmentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *DepartmentClient) UpdateOneID(id string) *DepartmentUpdateOne {
+	mutation := newDepartmentMutation(c.config, OpUpdateOne, withDepartmentID(id))
+	return &DepartmentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Department.
+func (c *DepartmentClient) Delete() *DepartmentDelete {
+	mutation := newDepartmentMutation(c.config, OpDelete)
+	return &DepartmentDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *DepartmentClient) DeleteOne(_m *Department) *DepartmentDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *DepartmentClient) DeleteOneID(id string) *DepartmentDeleteOne {
+	builder := c.Delete().Where(department.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &DepartmentDeleteOne{builder}
+}
+
+// Query returns a query builder for Department.
+func (c *DepartmentClient) Query() *DepartmentQuery {
+	return &DepartmentQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeDepartment},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a Department entity by its id.
+func (c *DepartmentClient) Get(ctx context.Context, id string) (*Department, error) {
+	return c.Query().Where(department.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *DepartmentClient) GetX(ctx context.Context, id string) *Department {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *DepartmentClient) Hooks() []Hook {
+	return c.hooks.Department
+}
+
+// Interceptors returns the client interceptors.
+func (c *DepartmentClient) Interceptors() []Interceptor {
+	return c.inters.Department
+}
+
+func (c *DepartmentClient) mutate(ctx context.Context, m *DepartmentMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&DepartmentCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&DepartmentUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&DepartmentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&DepartmentDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown Department mutation op: %q", m.Op())
+	}
+}
+
 // DictDataClient is a client for the DictData schema.
 type DictDataClient struct {
 	config
@@ -799,139 +932,6 @@ func (c *DictTypeClient) mutate(ctx context.Context, m *DictTypeMutation) (Value
 		return (&DictTypeDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown DictType mutation op: %q", m.Op())
-	}
-}
-
-// OrganizationClient is a client for the Organization schema.
-type OrganizationClient struct {
-	config
-}
-
-// NewOrganizationClient returns a client for the Organization from the given config.
-func NewOrganizationClient(c config) *OrganizationClient {
-	return &OrganizationClient{config: c}
-}
-
-// Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `organization.Hooks(f(g(h())))`.
-func (c *OrganizationClient) Use(hooks ...Hook) {
-	c.hooks.Organization = append(c.hooks.Organization, hooks...)
-}
-
-// Intercept adds a list of query interceptors to the interceptors stack.
-// A call to `Intercept(f, g, h)` equals to `organization.Intercept(f(g(h())))`.
-func (c *OrganizationClient) Intercept(interceptors ...Interceptor) {
-	c.inters.Organization = append(c.inters.Organization, interceptors...)
-}
-
-// Create returns a builder for creating a Organization entity.
-func (c *OrganizationClient) Create() *OrganizationCreate {
-	mutation := newOrganizationMutation(c.config, OpCreate)
-	return &OrganizationCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// CreateBulk returns a builder for creating a bulk of Organization entities.
-func (c *OrganizationClient) CreateBulk(builders ...*OrganizationCreate) *OrganizationCreateBulk {
-	return &OrganizationCreateBulk{config: c.config, builders: builders}
-}
-
-// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
-// a builder and applies setFunc on it.
-func (c *OrganizationClient) MapCreateBulk(slice any, setFunc func(*OrganizationCreate, int)) *OrganizationCreateBulk {
-	rv := reflect.ValueOf(slice)
-	if rv.Kind() != reflect.Slice {
-		return &OrganizationCreateBulk{err: fmt.Errorf("calling to OrganizationClient.MapCreateBulk with wrong type %T, need slice", slice)}
-	}
-	builders := make([]*OrganizationCreate, rv.Len())
-	for i := 0; i < rv.Len(); i++ {
-		builders[i] = c.Create()
-		setFunc(builders[i], i)
-	}
-	return &OrganizationCreateBulk{config: c.config, builders: builders}
-}
-
-// Update returns an update builder for Organization.
-func (c *OrganizationClient) Update() *OrganizationUpdate {
-	mutation := newOrganizationMutation(c.config, OpUpdate)
-	return &OrganizationUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOne returns an update builder for the given entity.
-func (c *OrganizationClient) UpdateOne(_m *Organization) *OrganizationUpdateOne {
-	mutation := newOrganizationMutation(c.config, OpUpdateOne, withOrganization(_m))
-	return &OrganizationUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOneID returns an update builder for the given id.
-func (c *OrganizationClient) UpdateOneID(id string) *OrganizationUpdateOne {
-	mutation := newOrganizationMutation(c.config, OpUpdateOne, withOrganizationID(id))
-	return &OrganizationUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Delete returns a delete builder for Organization.
-func (c *OrganizationClient) Delete() *OrganizationDelete {
-	mutation := newOrganizationMutation(c.config, OpDelete)
-	return &OrganizationDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// DeleteOne returns a builder for deleting the given entity.
-func (c *OrganizationClient) DeleteOne(_m *Organization) *OrganizationDeleteOne {
-	return c.DeleteOneID(_m.ID)
-}
-
-// DeleteOneID returns a builder for deleting the given entity by its id.
-func (c *OrganizationClient) DeleteOneID(id string) *OrganizationDeleteOne {
-	builder := c.Delete().Where(organization.ID(id))
-	builder.mutation.id = &id
-	builder.mutation.op = OpDeleteOne
-	return &OrganizationDeleteOne{builder}
-}
-
-// Query returns a query builder for Organization.
-func (c *OrganizationClient) Query() *OrganizationQuery {
-	return &OrganizationQuery{
-		config: c.config,
-		ctx:    &QueryContext{Type: TypeOrganization},
-		inters: c.Interceptors(),
-	}
-}
-
-// Get returns a Organization entity by its id.
-func (c *OrganizationClient) Get(ctx context.Context, id string) (*Organization, error) {
-	return c.Query().Where(organization.ID(id)).Only(ctx)
-}
-
-// GetX is like Get, but panics if an error occurs.
-func (c *OrganizationClient) GetX(ctx context.Context, id string) *Organization {
-	obj, err := c.Get(ctx, id)
-	if err != nil {
-		panic(err)
-	}
-	return obj
-}
-
-// Hooks returns the client hooks.
-func (c *OrganizationClient) Hooks() []Hook {
-	return c.hooks.Organization
-}
-
-// Interceptors returns the client interceptors.
-func (c *OrganizationClient) Interceptors() []Interceptor {
-	return c.inters.Organization
-}
-
-func (c *OrganizationClient) mutate(ctx context.Context, m *OrganizationMutation) (Value, error) {
-	switch m.Op() {
-	case OpCreate:
-		return (&OrganizationCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpUpdate:
-		return (&OrganizationUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpUpdateOne:
-		return (&OrganizationUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpDelete, OpDeleteOne:
-		return (&OrganizationDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
-	default:
-		return nil, fmt.Errorf("ent: unknown Organization mutation op: %q", m.Op())
 	}
 }
 
@@ -1470,11 +1470,11 @@ func (c *RolePermissionClient) mutate(ctx context.Context, m *RolePermissionMuta
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Admin, AdminRole, DictData, DictType, Organization, Permission, Position, Role,
+		Admin, AdminRole, Department, DictData, DictType, Permission, Position, Role,
 		RolePermission []ent.Hook
 	}
 	inters struct {
-		Admin, AdminRole, DictData, DictType, Organization, Permission, Position, Role,
+		Admin, AdminRole, Department, DictData, DictType, Permission, Position, Role,
 		RolePermission []ent.Interceptor
 	}
 )

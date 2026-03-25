@@ -29,13 +29,17 @@ type ListDictTypeRequest struct {
 	Status string `form:"status" query:"status"`
 }
 
+type ListDictTypeOption struct {
+	enthelper.QueryOption
+}
+
 type ListDictTypeResponse struct {
 	Data  []*DictType
 	Total int
 }
 
 type DictTypeRepo interface {
-	ListDictType(context.Context, *ListDictTypeRequest) (*ListDictTypeResponse, error)
+	ListDictType(context.Context, *ListDictTypeRequest, ...*ListDictTypeOption) (*ListDictTypeResponse, error)
 	CreateDictType(context.Context, *DictType) error
 	UpdateDictType(context.Context, *DictType) error
 	DeleteDictType(context.Context, []string) error

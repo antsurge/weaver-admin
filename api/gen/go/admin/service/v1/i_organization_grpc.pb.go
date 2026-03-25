@@ -21,17 +21,18 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Organization_OrganizationTree_FullMethodName         = "/admin.service.v1.Organization/OrganizationTree"
-	Organization_CreateOrganization_FullMethodName       = "/admin.service.v1.Organization/CreateOrganization"
-	Organization_UpdateOrganization_FullMethodName       = "/admin.service.v1.Organization/UpdateOrganization"
-	Organization_UpdateOrganizationStatus_FullMethodName = "/admin.service.v1.Organization/UpdateOrganizationStatus"
-	Organization_DeleteOrganization_FullMethodName       = "/admin.service.v1.Organization/DeleteOrganization"
-	Organization_ListPosition_FullMethodName             = "/admin.service.v1.Organization/ListPosition"
-	Organization_GetPosition_FullMethodName              = "/admin.service.v1.Organization/GetPosition"
-	Organization_CreatePosition_FullMethodName           = "/admin.service.v1.Organization/CreatePosition"
-	Organization_UpdatePosition_FullMethodName           = "/admin.service.v1.Organization/UpdatePosition"
-	Organization_UpdatePositionStatus_FullMethodName     = "/admin.service.v1.Organization/UpdatePositionStatus"
-	Organization_DeletePosition_FullMethodName           = "/admin.service.v1.Organization/DeletePosition"
+	Organization_DepartmentTree_FullMethodName         = "/admin.service.v1.Organization/DepartmentTree"
+	Organization_GetDepartment_FullMethodName          = "/admin.service.v1.Organization/GetDepartment"
+	Organization_CreateDepartment_FullMethodName       = "/admin.service.v1.Organization/CreateDepartment"
+	Organization_UpdateDepartment_FullMethodName       = "/admin.service.v1.Organization/UpdateDepartment"
+	Organization_UpdateDepartmentStatus_FullMethodName = "/admin.service.v1.Organization/UpdateDepartmentStatus"
+	Organization_DeleteDepartment_FullMethodName       = "/admin.service.v1.Organization/DeleteDepartment"
+	Organization_ListPosition_FullMethodName           = "/admin.service.v1.Organization/ListPosition"
+	Organization_GetPosition_FullMethodName            = "/admin.service.v1.Organization/GetPosition"
+	Organization_CreatePosition_FullMethodName         = "/admin.service.v1.Organization/CreatePosition"
+	Organization_UpdatePosition_FullMethodName         = "/admin.service.v1.Organization/UpdatePosition"
+	Organization_UpdatePositionStatus_FullMethodName   = "/admin.service.v1.Organization/UpdatePositionStatus"
+	Organization_DeletePosition_FullMethodName         = "/admin.service.v1.Organization/DeletePosition"
 )
 
 // OrganizationClient is the client API for Organization service.
@@ -39,15 +40,16 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type OrganizationClient interface {
 	// 列表的tree
-	OrganizationTree(ctx context.Context, in *v1.OrganizationTreeRequest, opts ...grpc.CallOption) (*v1.OrganizationTreeResponse, error)
+	DepartmentTree(ctx context.Context, in *v1.DepartmentTreeRequest, opts ...grpc.CallOption) (*v1.DepartmentTreeResponse, error)
+	GetDepartment(ctx context.Context, in *v1.GetDepartmentRequest, opts ...grpc.CallOption) (*v1.Department, error)
 	// 创建
-	CreateOrganization(ctx context.Context, in *v1.CreateOrganizationRequest, opts ...grpc.CallOption) (*v1.Organization, error)
+	CreateDepartment(ctx context.Context, in *v1.CreateDepartmentRequest, opts ...grpc.CallOption) (*v1.Department, error)
 	// 更新
-	UpdateOrganization(ctx context.Context, in *v1.UpdateOrganizationRequest, opts ...grpc.CallOption) (*v1.Organization, error)
+	UpdateDepartment(ctx context.Context, in *v1.UpdateDepartmentRequest, opts ...grpc.CallOption) (*v1.Department, error)
 	// 更新状态
-	UpdateOrganizationStatus(ctx context.Context, in *v1.UpdateOrganizationStatusRequest, opts ...grpc.CallOption) (*v1.Organization, error)
+	UpdateDepartmentStatus(ctx context.Context, in *v1.UpdateDepartmentStatusRequest, opts ...grpc.CallOption) (*v1.Department, error)
 	// 批量删除
-	DeleteOrganization(ctx context.Context, in *v1.DeleteOrganizationRequset, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteDepartment(ctx context.Context, in *v1.DeleteDepartmentRequset, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 岗位模块
 	// 列表
 	ListPosition(ctx context.Context, in *v1.ListPositionRequest, opts ...grpc.CallOption) (*v1.ListPositionResponse, error)
@@ -70,50 +72,60 @@ func NewOrganizationClient(cc grpc.ClientConnInterface) OrganizationClient {
 	return &organizationClient{cc}
 }
 
-func (c *organizationClient) OrganizationTree(ctx context.Context, in *v1.OrganizationTreeRequest, opts ...grpc.CallOption) (*v1.OrganizationTreeResponse, error) {
+func (c *organizationClient) DepartmentTree(ctx context.Context, in *v1.DepartmentTreeRequest, opts ...grpc.CallOption) (*v1.DepartmentTreeResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v1.OrganizationTreeResponse)
-	err := c.cc.Invoke(ctx, Organization_OrganizationTree_FullMethodName, in, out, cOpts...)
+	out := new(v1.DepartmentTreeResponse)
+	err := c.cc.Invoke(ctx, Organization_DepartmentTree_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *organizationClient) CreateOrganization(ctx context.Context, in *v1.CreateOrganizationRequest, opts ...grpc.CallOption) (*v1.Organization, error) {
+func (c *organizationClient) GetDepartment(ctx context.Context, in *v1.GetDepartmentRequest, opts ...grpc.CallOption) (*v1.Department, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v1.Organization)
-	err := c.cc.Invoke(ctx, Organization_CreateOrganization_FullMethodName, in, out, cOpts...)
+	out := new(v1.Department)
+	err := c.cc.Invoke(ctx, Organization_GetDepartment_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *organizationClient) UpdateOrganization(ctx context.Context, in *v1.UpdateOrganizationRequest, opts ...grpc.CallOption) (*v1.Organization, error) {
+func (c *organizationClient) CreateDepartment(ctx context.Context, in *v1.CreateDepartmentRequest, opts ...grpc.CallOption) (*v1.Department, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v1.Organization)
-	err := c.cc.Invoke(ctx, Organization_UpdateOrganization_FullMethodName, in, out, cOpts...)
+	out := new(v1.Department)
+	err := c.cc.Invoke(ctx, Organization_CreateDepartment_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *organizationClient) UpdateOrganizationStatus(ctx context.Context, in *v1.UpdateOrganizationStatusRequest, opts ...grpc.CallOption) (*v1.Organization, error) {
+func (c *organizationClient) UpdateDepartment(ctx context.Context, in *v1.UpdateDepartmentRequest, opts ...grpc.CallOption) (*v1.Department, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(v1.Organization)
-	err := c.cc.Invoke(ctx, Organization_UpdateOrganizationStatus_FullMethodName, in, out, cOpts...)
+	out := new(v1.Department)
+	err := c.cc.Invoke(ctx, Organization_UpdateDepartment_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *organizationClient) DeleteOrganization(ctx context.Context, in *v1.DeleteOrganizationRequset, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *organizationClient) UpdateDepartmentStatus(ctx context.Context, in *v1.UpdateDepartmentStatusRequest, opts ...grpc.CallOption) (*v1.Department, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v1.Department)
+	err := c.cc.Invoke(ctx, Organization_UpdateDepartmentStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *organizationClient) DeleteDepartment(ctx context.Context, in *v1.DeleteDepartmentRequset, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Organization_DeleteOrganization_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Organization_DeleteDepartment_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -185,15 +197,16 @@ func (c *organizationClient) DeletePosition(ctx context.Context, in *v1.DeletePo
 // for forward compatibility.
 type OrganizationServer interface {
 	// 列表的tree
-	OrganizationTree(context.Context, *v1.OrganizationTreeRequest) (*v1.OrganizationTreeResponse, error)
+	DepartmentTree(context.Context, *v1.DepartmentTreeRequest) (*v1.DepartmentTreeResponse, error)
+	GetDepartment(context.Context, *v1.GetDepartmentRequest) (*v1.Department, error)
 	// 创建
-	CreateOrganization(context.Context, *v1.CreateOrganizationRequest) (*v1.Organization, error)
+	CreateDepartment(context.Context, *v1.CreateDepartmentRequest) (*v1.Department, error)
 	// 更新
-	UpdateOrganization(context.Context, *v1.UpdateOrganizationRequest) (*v1.Organization, error)
+	UpdateDepartment(context.Context, *v1.UpdateDepartmentRequest) (*v1.Department, error)
 	// 更新状态
-	UpdateOrganizationStatus(context.Context, *v1.UpdateOrganizationStatusRequest) (*v1.Organization, error)
+	UpdateDepartmentStatus(context.Context, *v1.UpdateDepartmentStatusRequest) (*v1.Department, error)
 	// 批量删除
-	DeleteOrganization(context.Context, *v1.DeleteOrganizationRequset) (*emptypb.Empty, error)
+	DeleteDepartment(context.Context, *v1.DeleteDepartmentRequset) (*emptypb.Empty, error)
 	// 岗位模块
 	// 列表
 	ListPosition(context.Context, *v1.ListPositionRequest) (*v1.ListPositionResponse, error)
@@ -216,20 +229,23 @@ type OrganizationServer interface {
 // pointer dereference when methods are called.
 type UnimplementedOrganizationServer struct{}
 
-func (UnimplementedOrganizationServer) OrganizationTree(context.Context, *v1.OrganizationTreeRequest) (*v1.OrganizationTreeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method OrganizationTree not implemented")
+func (UnimplementedOrganizationServer) DepartmentTree(context.Context, *v1.DepartmentTreeRequest) (*v1.DepartmentTreeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DepartmentTree not implemented")
 }
-func (UnimplementedOrganizationServer) CreateOrganization(context.Context, *v1.CreateOrganizationRequest) (*v1.Organization, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateOrganization not implemented")
+func (UnimplementedOrganizationServer) GetDepartment(context.Context, *v1.GetDepartmentRequest) (*v1.Department, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDepartment not implemented")
 }
-func (UnimplementedOrganizationServer) UpdateOrganization(context.Context, *v1.UpdateOrganizationRequest) (*v1.Organization, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateOrganization not implemented")
+func (UnimplementedOrganizationServer) CreateDepartment(context.Context, *v1.CreateDepartmentRequest) (*v1.Department, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateDepartment not implemented")
 }
-func (UnimplementedOrganizationServer) UpdateOrganizationStatus(context.Context, *v1.UpdateOrganizationStatusRequest) (*v1.Organization, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateOrganizationStatus not implemented")
+func (UnimplementedOrganizationServer) UpdateDepartment(context.Context, *v1.UpdateDepartmentRequest) (*v1.Department, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateDepartment not implemented")
 }
-func (UnimplementedOrganizationServer) DeleteOrganization(context.Context, *v1.DeleteOrganizationRequset) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteOrganization not implemented")
+func (UnimplementedOrganizationServer) UpdateDepartmentStatus(context.Context, *v1.UpdateDepartmentStatusRequest) (*v1.Department, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateDepartmentStatus not implemented")
+}
+func (UnimplementedOrganizationServer) DeleteDepartment(context.Context, *v1.DeleteDepartmentRequset) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteDepartment not implemented")
 }
 func (UnimplementedOrganizationServer) ListPosition(context.Context, *v1.ListPositionRequest) (*v1.ListPositionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListPosition not implemented")
@@ -270,92 +286,110 @@ func RegisterOrganizationServer(s grpc.ServiceRegistrar, srv OrganizationServer)
 	s.RegisterService(&Organization_ServiceDesc, srv)
 }
 
-func _Organization_OrganizationTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v1.OrganizationTreeRequest)
+func _Organization_DepartmentTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.DepartmentTreeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OrganizationServer).OrganizationTree(ctx, in)
+		return srv.(OrganizationServer).DepartmentTree(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Organization_OrganizationTree_FullMethodName,
+		FullMethod: Organization_DepartmentTree_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServer).OrganizationTree(ctx, req.(*v1.OrganizationTreeRequest))
+		return srv.(OrganizationServer).DepartmentTree(ctx, req.(*v1.DepartmentTreeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Organization_CreateOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v1.CreateOrganizationRequest)
+func _Organization_GetDepartment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.GetDepartmentRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OrganizationServer).CreateOrganization(ctx, in)
+		return srv.(OrganizationServer).GetDepartment(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Organization_CreateOrganization_FullMethodName,
+		FullMethod: Organization_GetDepartment_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServer).CreateOrganization(ctx, req.(*v1.CreateOrganizationRequest))
+		return srv.(OrganizationServer).GetDepartment(ctx, req.(*v1.GetDepartmentRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Organization_UpdateOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v1.UpdateOrganizationRequest)
+func _Organization_CreateDepartment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.CreateDepartmentRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OrganizationServer).UpdateOrganization(ctx, in)
+		return srv.(OrganizationServer).CreateDepartment(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Organization_UpdateOrganization_FullMethodName,
+		FullMethod: Organization_CreateDepartment_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServer).UpdateOrganization(ctx, req.(*v1.UpdateOrganizationRequest))
+		return srv.(OrganizationServer).CreateDepartment(ctx, req.(*v1.CreateDepartmentRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Organization_UpdateOrganizationStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v1.UpdateOrganizationStatusRequest)
+func _Organization_UpdateDepartment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.UpdateDepartmentRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OrganizationServer).UpdateOrganizationStatus(ctx, in)
+		return srv.(OrganizationServer).UpdateDepartment(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Organization_UpdateOrganizationStatus_FullMethodName,
+		FullMethod: Organization_UpdateDepartment_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServer).UpdateOrganizationStatus(ctx, req.(*v1.UpdateOrganizationStatusRequest))
+		return srv.(OrganizationServer).UpdateDepartment(ctx, req.(*v1.UpdateDepartmentRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Organization_DeleteOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v1.DeleteOrganizationRequset)
+func _Organization_UpdateDepartmentStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.UpdateDepartmentStatusRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OrganizationServer).DeleteOrganization(ctx, in)
+		return srv.(OrganizationServer).UpdateDepartmentStatus(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Organization_DeleteOrganization_FullMethodName,
+		FullMethod: Organization_UpdateDepartmentStatus_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServer).DeleteOrganization(ctx, req.(*v1.DeleteOrganizationRequset))
+		return srv.(OrganizationServer).UpdateDepartmentStatus(ctx, req.(*v1.UpdateDepartmentStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Organization_DeleteDepartment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.DeleteDepartmentRequset)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrganizationServer).DeleteDepartment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Organization_DeleteDepartment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrganizationServer).DeleteDepartment(ctx, req.(*v1.DeleteDepartmentRequset))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -476,24 +510,28 @@ var Organization_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*OrganizationServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "OrganizationTree",
-			Handler:    _Organization_OrganizationTree_Handler,
+			MethodName: "DepartmentTree",
+			Handler:    _Organization_DepartmentTree_Handler,
 		},
 		{
-			MethodName: "CreateOrganization",
-			Handler:    _Organization_CreateOrganization_Handler,
+			MethodName: "GetDepartment",
+			Handler:    _Organization_GetDepartment_Handler,
 		},
 		{
-			MethodName: "UpdateOrganization",
-			Handler:    _Organization_UpdateOrganization_Handler,
+			MethodName: "CreateDepartment",
+			Handler:    _Organization_CreateDepartment_Handler,
 		},
 		{
-			MethodName: "UpdateOrganizationStatus",
-			Handler:    _Organization_UpdateOrganizationStatus_Handler,
+			MethodName: "UpdateDepartment",
+			Handler:    _Organization_UpdateDepartment_Handler,
 		},
 		{
-			MethodName: "DeleteOrganization",
-			Handler:    _Organization_DeleteOrganization_Handler,
+			MethodName: "UpdateDepartmentStatus",
+			Handler:    _Organization_UpdateDepartmentStatus_Handler,
+		},
+		{
+			MethodName: "DeleteDepartment",
+			Handler:    _Organization_DeleteDepartment_Handler,
 		},
 		{
 			MethodName: "ListPosition",

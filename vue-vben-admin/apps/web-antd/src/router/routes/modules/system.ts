@@ -40,24 +40,6 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        name: 'Organization',
-        path: '/organization',
-        component: () => import('#/views/system/organization/index.vue'),
-        meta: {
-          icon: 'lucide:area-chart',
-          title: $t('page.system.organization'),
-        },
-      },
-      {
-        name: 'Position',
-        path: '/position',
-        component: () => import('#/views/system/position/index.vue'),
-        meta: {
-          icon: 'lucide:area-chart',
-          title: $t('page.system.position'),
-        },
-      },
-      {
         name: 'Dict',
         path: '/dict',
         component: () => import('#/views/system/dict/index.vue'),

@@ -26,7 +26,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type OrganizationServiceClient interface {
-	CreateOrganization(ctx context.Context, in *CreateOrganizationRequest, opts ...grpc.CallOption) (*Organization, error)
+	CreateOrganization(ctx context.Context, in *CreateDepartmentRequest, opts ...grpc.CallOption) (*Department, error)
 }
 
 type organizationServiceClient struct {
@@ -37,9 +37,9 @@ func NewOrganizationServiceClient(cc grpc.ClientConnInterface) OrganizationServi
 	return &organizationServiceClient{cc}
 }
 
-func (c *organizationServiceClient) CreateOrganization(ctx context.Context, in *CreateOrganizationRequest, opts ...grpc.CallOption) (*Organization, error) {
+func (c *organizationServiceClient) CreateOrganization(ctx context.Context, in *CreateDepartmentRequest, opts ...grpc.CallOption) (*Department, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Organization)
+	out := new(Department)
 	err := c.cc.Invoke(ctx, OrganizationService_CreateOrganization_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -51,7 +51,7 @@ func (c *organizationServiceClient) CreateOrganization(ctx context.Context, in *
 // All implementations must embed UnimplementedOrganizationServiceServer
 // for forward compatibility.
 type OrganizationServiceServer interface {
-	CreateOrganization(context.Context, *CreateOrganizationRequest) (*Organization, error)
+	CreateOrganization(context.Context, *CreateDepartmentRequest) (*Department, error)
 	mustEmbedUnimplementedOrganizationServiceServer()
 }
 
@@ -62,7 +62,7 @@ type OrganizationServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedOrganizationServiceServer struct{}
 
-func (UnimplementedOrganizationServiceServer) CreateOrganization(context.Context, *CreateOrganizationRequest) (*Organization, error) {
+func (UnimplementedOrganizationServiceServer) CreateOrganization(context.Context, *CreateDepartmentRequest) (*Department, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateOrganization not implemented")
 }
 func (UnimplementedOrganizationServiceServer) mustEmbedUnimplementedOrganizationServiceServer() {}
@@ -87,7 +87,7 @@ func RegisterOrganizationServiceServer(s grpc.ServiceRegistrar, srv Organization
 }
 
 func _OrganizationService_CreateOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateOrganizationRequest)
+	in := new(CreateDepartmentRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -99,7 +99,7 @@ func _OrganizationService_CreateOrganization_Handler(srv interface{}, ctx contex
 		FullMethod: OrganizationService_CreateOrganization_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrganizationServiceServer).CreateOrganization(ctx, req.(*CreateOrganizationRequest))
+		return srv.(OrganizationServiceServer).CreateOrganization(ctx, req.(*CreateDepartmentRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

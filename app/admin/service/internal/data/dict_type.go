@@ -27,9 +27,20 @@ func NewDictTypeRepo(data *Data, logger log.Logger) biz.DictTypeRepo {
 }
 
 // 列表（支持分页）
-func (r *dictTypeRepo) ListDictType(ctx context.Context, params *biz.ListDictTypeRequest) (*biz.ListDictTypeResponse, error) {
+func (r *dictTypeRepo) ListDictType(ctx context.Context, params *biz.ListDictTypeRequest, opts ...*biz.ListDictTypeOption) (*biz.ListDictTypeResponse, error) {
 	query := r.data.db.DictType.Query().
 		Order(ent.Desc(dicttype.FieldCreatedAt))
+
+	opt := &biz.ListDictTypeOption{}
+	if len(opts) > 0 {
+		opt = opts[0]
+	}
+
+	if opt.OnlyDeleted {
+		query = query.Where(dicttype.DeletedAtNotNil())
+	} else if !opt.IncludeDeleted {
+		query = query.Where(dicttype.DeletedAtIsNil())
+	}
 
 	if v := params.Name; len(v) > 0 {
 		query = query.Where(dicttype.NameContains(v))

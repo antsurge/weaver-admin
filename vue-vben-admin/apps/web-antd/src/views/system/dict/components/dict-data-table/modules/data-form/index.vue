@@ -21,7 +21,7 @@ const formData = ref<SystemDictApi.DictData>();
 
 const schema: VbenFormSchema[] = [
   {
-    fieldName: 'dictTypeId',
+    fieldName: 'dictTypeID',
     label: $t('system.dict_data.fields.dictTypeID'),
     component: 'ApiSelect',
     componentProps: {

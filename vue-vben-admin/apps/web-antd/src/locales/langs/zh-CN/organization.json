@@ -1,0 +1,47 @@
+{
+  "department": {
+    "name": "部门",
+    "fields": {
+      "name": "部门名称",
+      "parentID": "上级部门",
+      "code": "部门编码",
+      "weight": "权重",
+      "leaderName": "负责人姓名",
+      "leaderPhone": "联系电话",
+      "leaderEmail": "邮箱",
+      "status": "状态",
+      "updatedAt": "更新时间",
+      "operation": "操作"
+    },
+    "actions": {
+      "switchStatus": "切换部门状态",
+      "switchStatusConfirm": "确认将【{0}】状态切换为【{1}】？"
+    },
+    "operation": {
+      "appendChildren": "新增下级"
+    },
+    "form_placeholder": {
+      "parentID": "请选择上级部门",
+      "leaderName": "请输入负责人姓名",
+      "leaderPhone": "请输入联系电话",
+      "leaderEmail": "请输入邮箱"
+    }
+  },
+  "position": {
+    "name": "岗位",
+    "fields": {
+      "name": "岗位名称",
+      "code": "岗位编码",
+      "weight": "权重",
+      "status": "状态",
+      "remark": "备注"
+    },
+    "actions": {
+      "switchStatus": "切换岗位状态",
+      "switchStatusConfirm": "确认将【{0}】状态切换为【{1}】？"
+    },
+    "form_placeholder": {
+      "remark": "请输入备注"
+    }
+  }
+}

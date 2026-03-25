@@ -14,86 +14,97 @@ import (
 type OrganizationService struct {
 	adminV1.UnimplementedOrganizationServer
 
-	organizationUc *biz.OrganizationUsecase
-	positionUc     *biz.PositionUsecase
+	departmentUc *biz.DepartmentUsecase
+	positionUc   *biz.PositionUsecase
 }
 
 func NewOrganizationService(
-	organizationUc *biz.OrganizationUsecase,
+	departmentUc *biz.DepartmentUsecase,
 	positionUc *biz.PositionUsecase,
 ) *OrganizationService {
 	return &OrganizationService{
-		organizationUc: organizationUc,
-		positionUc:     positionUc,
+		departmentUc: departmentUc,
+		positionUc:   positionUc,
 	}
 }
 
-// 组织tree
-func (s *OrganizationService) OrganizationTree(ctx context.Context, req *organizationV1.OrganizationTreeRequest) (*organizationV1.OrganizationTreeResponse, error) {
-	input := biz.OrganizationListResult{}
+// 部门tree
+func (s *OrganizationService) DepartmentTree(ctx context.Context, req *organizationV1.DepartmentTreeRequest) (*organizationV1.DepartmentTreeResponse, error) {
+	input := biz.DepartmentListResult{}
 	var err error
 	err = copier.Copy(&input, req)
 	if err != nil {
 		return nil, err
 	}
 
-	tree, err := s.organizationUc.OrganizationTree(ctx, &input)
+	tree, err := s.departmentUc.DepartmentTree(ctx, &input)
 	if err != nil {
 		return nil, err
 	}
-	output := make([]*organizationV1.Organization, 0)
+	output := make([]*organizationV1.Department, 0)
 	err = copier.Copy(&output, &tree)
 
-	return &organizationV1.OrganizationTreeResponse{Items: output}, nil
+	return &organizationV1.DepartmentTreeResponse{Items: output}, nil
+}
+
+func (s *OrganizationService) GetDepartment(ctx context.Context, req *organizationV1.GetDepartmentRequest) (*organizationV1.Department, error) {
+	department, err := s.departmentUc.GetDepartment(ctx, req.Id)
+	if err != nil {
+		return nil, err
+	}
+	output := &organizationV1.Department{}
+	err = copier.Copy(&output, &department)
+
+	return output, err
 }
 
 // 创建
-func (s *OrganizationService) CreateOrganization(ctx context.Context, req *organizationV1.CreateOrganizationRequest) (*organizationV1.Organization, error) {
-	input := biz.Organization{}
+func (s *OrganizationService) CreateDepartment(ctx context.Context, req *organizationV1.CreateDepartmentRequest) (*organizationV1.Department, error) {
+	input := biz.Department{}
 	var err error
 	err = copier.Copy(&input, req)
 	if err != nil {
 		return nil, err
 	}
-	organization, err := s.organizationUc.CreateOrganization(ctx, &input)
+	departmet, err := s.departmentUc.CreateDepartment(ctx, &input)
 	if err != nil {
 		return nil, err
 	}
 
-	output := &organizationV1.Organization{}
-	err = copier.Copy(output, organization)
+	output := &organizationV1.Department{}
+	err = copier.Copy(output, departmet)
 
 	return output, err
 }
 
 // 编辑
-func (s *OrganizationService) UpdateOrganization(ctx context.Context, req *organizationV1.UpdateOrganizationRequest) (*organizationV1.Organization, error) {
-	input := biz.Organization{}
+func (s *OrganizationService) UpdateDepartment(ctx context.Context, req *organizationV1.UpdateDepartmentRequest) (*organizationV1.Department, error) {
+	input := biz.Department{}
 	var err error
 	err = copier.Copy(&input, req)
 	if err != nil {
 		return nil, err
 	}
-	organization, err := s.organizationUc.UpdateOrganization(ctx, &input)
+	departmet, err := s.departmentUc.UpdateDepartment(ctx, &input)
 	if err != nil {
 		return nil, err
 	}
 
-	output := &organizationV1.Organization{}
-	err = copier.Copy(output, organization)
+	output := &organizationV1.Department{}
+	err = copier.Copy(output, departmet)
 
 	return output, err
 }
 
 // 删除
-func (s *OrganizationService) DeleteOrganization(ctx context.Context, req *organizationV1.DeleteOrganizationRequset) (*emptypb.Empty, error) {
-	err := s.organizationUc.DeleteOrganization(ctx, req.Ids)
+func (s *OrganizationService) DeleteDepartment(ctx context.Context, req *organizationV1.DeleteDepartmentRequset) (*emptypb.Empty, error) {
+	err := s.departmentUc.DeleteDepartment(ctx, req.Ids)
 	return nil, err
 }
 
 // 更新状态
-func (s *OrganizationService) UpdateOrganizationStatus(ctx context.Context, req *organizationV1.UpdateOrganizationStatusRequest) (*organizationV1.Organization, error) {
-	err := s.organizationUc.UpdateOrganizationStatus(ctx, req.Id, req.Status)
+func (s *OrganizationService) UpdateDepartmentStatus(ctx context.Context, req *organizationV1.UpdateDepartmentStatusRequest) (*organizationV1.Department, error) {
+	err := s.departmentUc.UpdateDepartmentStatus(ctx, req.Id, req.Status)
 	return nil, err
 }
 

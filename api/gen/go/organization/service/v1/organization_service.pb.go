@@ -24,18 +24,18 @@ var File_organization_service_v1_organization_service_proto protoreflect.FileDes
 
 const file_organization_service_v1_organization_service_proto_rawDesc = "" +
 	"\n" +
-	"2organization/service/v1/organization_service.proto\x12\x17organization.service.v1\x1a*organization/service/v1/organization.proto2\x86\x01\n" +
-	"\x13OrganizationService\x12o\n" +
-	"\x12CreateOrganization\x122.organization.service.v1.CreateOrganizationRequest\x1a%.organization.service.v1.OrganizationB\x8a\x02\n" +
+	"2organization/service/v1/organization_service.proto\x12\x17organization.service.v1\x1a(organization/service/v1/department.proto2\x82\x01\n" +
+	"\x13OrganizationService\x12k\n" +
+	"\x12CreateOrganization\x120.organization.service.v1.CreateDepartmentRequest\x1a#.organization.service.v1.DepartmentB\x8a\x02\n" +
 	"\x1bcom.organization.service.v1B\x18OrganizationServiceProtoP\x01ZSgithub.com/hypercoze/kratos-admin/api/gen/go/organization/service/v1;organizationpb\xa2\x02\x03OSX\xaa\x02\x17Organization.Service.V1\xca\x02\x17Organization\\Service\\V1\xe2\x02#Organization\\Service\\V1\\GPBMetadata\xea\x02\x19Organization::Service::V1b\x06proto3"
 
 var file_organization_service_v1_organization_service_proto_goTypes = []any{
-	(*CreateOrganizationRequest)(nil), // 0: organization.service.v1.CreateOrganizationRequest
-	(*Organization)(nil),              // 1: organization.service.v1.Organization
+	(*CreateDepartmentRequest)(nil), // 0: organization.service.v1.CreateDepartmentRequest
+	(*Department)(nil),              // 1: organization.service.v1.Department
 }
 var file_organization_service_v1_organization_service_proto_depIdxs = []int32{
-	0, // 0: organization.service.v1.OrganizationService.CreateOrganization:input_type -> organization.service.v1.CreateOrganizationRequest
-	1, // 1: organization.service.v1.OrganizationService.CreateOrganization:output_type -> organization.service.v1.Organization
+	0, // 0: organization.service.v1.OrganizationService.CreateOrganization:input_type -> organization.service.v1.CreateDepartmentRequest
+	1, // 1: organization.service.v1.OrganizationService.CreateOrganization:output_type -> organization.service.v1.Department
 	1, // [1:2] is the sub-list for method output_type
 	0, // [0:1] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -48,7 +48,7 @@ func file_organization_service_v1_organization_service_proto_init() {
 	if File_organization_service_v1_organization_service_proto != nil {
 		return
 	}
-	file_organization_service_v1_organization_proto_init()
+	file_organization_service_v1_department_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

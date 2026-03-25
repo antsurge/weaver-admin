@@ -6,6 +6,7 @@ import "buf/validate/validate.proto";
 import "gnostic/openapi/v3/annotations.proto";
 import "google/protobuf/timestamp.proto";
 
+// 岗位
 message Position {
   // 岗位ID
   string id = 1 [(gnostic.openapi.v3.property) = {description: "ID"}];

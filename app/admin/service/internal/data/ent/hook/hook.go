@@ -33,6 +33,18 @@ func (f AdminRoleFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, e
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AdminRoleMutation", m)
 }
 
+// The DepartmentFunc type is an adapter to allow the use of ordinary
+// function as Department mutator.
+type DepartmentFunc func(context.Context, *ent.DepartmentMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f DepartmentFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.DepartmentMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.DepartmentMutation", m)
+}
+
 // The DictDataFunc type is an adapter to allow the use of ordinary
 // function as DictData mutator.
 type DictDataFunc func(context.Context, *ent.DictDataMutation) (ent.Value, error)
@@ -55,18 +67,6 @@ func (f DictTypeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, er
 		return f(ctx, mv)
 	}
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.DictTypeMutation", m)
-}
-
-// The OrganizationFunc type is an adapter to allow the use of ordinary
-// function as Organization mutator.
-type OrganizationFunc func(context.Context, *ent.OrganizationMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f OrganizationFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	if mv, ok := m.(*ent.OrganizationMutation); ok {
-		return f(ctx, mv)
-	}
-	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.OrganizationMutation", m)
 }
 
 // The PermissionFunc type is an adapter to allow the use of ordinary

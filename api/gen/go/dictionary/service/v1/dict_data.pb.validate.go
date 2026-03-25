@@ -59,7 +59,7 @@ func (m *DictData) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for DictTypeId
+	// no validation rules for DictTypeID
 
 	// no validation rules for Label
 
@@ -509,7 +509,7 @@ func (m *CreateDictDataRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for DictTypeId
+	// no validation rules for DictTypeID
 
 	// no validation rules for Label
 
@@ -625,7 +625,7 @@ func (m *UpdateDictDataRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for DictTypeId
+	// no validation rules for DictTypeID
 
 	// no validation rules for Label
 

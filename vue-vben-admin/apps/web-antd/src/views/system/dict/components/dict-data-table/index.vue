@@ -1,17 +1,28 @@
 <script setup lang="ts">
+import { watch } from 'vue';
+
+import type {
+  OnActionClickFn,
+  VxeTableGridOptions,
+} from '#/adapter/vxe-table';
+import type { SystemDictApi } from '#/api/system/dict';
+
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
+
 import { useDictDataColumns } from './data';
-import type { VxeTableGridOptions } from '#/adapter/vxe-table';
-import type { SystemDictApi } from "#/api/system/dict"
 
 const props = defineProps<{
-  data: SystemDictApi.DictData[]
-}>()
-
+  data: SystemDictApi.DictData[];
+  onActionClick: OnActionClickFn<SystemDictApi.DictData>;
+  onStatusChange: (
+    newStatus: SystemDictApi.DictData['status'],
+    row: SystemDictApi.DictData,
+  ) => PromiseLike<boolean | undefined>;
+}>();
 
 const [Grid, gridApi] = useVbenVxeGrid({
   gridOptions: {
-    columns: useDictDataColumns(),
+    columns: useDictDataColumns(props.onActionClick, props.onStatusChange),
     height: 'auto',
     keepSource: true,
     pagerConfig: {
@@ -23,6 +34,14 @@ const [Grid, gridApi] = useVbenVxeGrid({
     },
   } as VxeTableGridOptions,
 });
+
+watch(
+  () => props.data,
+  (data) => {
+    gridApi.setGridOptions({ data: data ?? [] });
+  },
+  { deep: true },
+);
 </script>
 <template>
   <Grid></Grid>

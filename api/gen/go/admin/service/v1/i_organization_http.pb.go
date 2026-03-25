@@ -21,37 +21,39 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationOrganizationCreateOrganization = "/admin.service.v1.Organization/CreateOrganization"
+const OperationOrganizationCreateDepartment = "/admin.service.v1.Organization/CreateDepartment"
 const OperationOrganizationCreatePosition = "/admin.service.v1.Organization/CreatePosition"
-const OperationOrganizationDeleteOrganization = "/admin.service.v1.Organization/DeleteOrganization"
+const OperationOrganizationDeleteDepartment = "/admin.service.v1.Organization/DeleteDepartment"
 const OperationOrganizationDeletePosition = "/admin.service.v1.Organization/DeletePosition"
+const OperationOrganizationDepartmentTree = "/admin.service.v1.Organization/DepartmentTree"
+const OperationOrganizationGetDepartment = "/admin.service.v1.Organization/GetDepartment"
 const OperationOrganizationGetPosition = "/admin.service.v1.Organization/GetPosition"
 const OperationOrganizationListPosition = "/admin.service.v1.Organization/ListPosition"
-const OperationOrganizationOrganizationTree = "/admin.service.v1.Organization/OrganizationTree"
-const OperationOrganizationUpdateOrganization = "/admin.service.v1.Organization/UpdateOrganization"
-const OperationOrganizationUpdateOrganizationStatus = "/admin.service.v1.Organization/UpdateOrganizationStatus"
+const OperationOrganizationUpdateDepartment = "/admin.service.v1.Organization/UpdateDepartment"
+const OperationOrganizationUpdateDepartmentStatus = "/admin.service.v1.Organization/UpdateDepartmentStatus"
 const OperationOrganizationUpdatePosition = "/admin.service.v1.Organization/UpdatePosition"
 const OperationOrganizationUpdatePositionStatus = "/admin.service.v1.Organization/UpdatePositionStatus"
 
 type OrganizationHTTPServer interface {
-	// CreateOrganization 创建
-	CreateOrganization(context.Context, *v1.CreateOrganizationRequest) (*v1.Organization, error)
+	// CreateDepartment 创建
+	CreateDepartment(context.Context, *v1.CreateDepartmentRequest) (*v1.Department, error)
 	// CreatePosition 创建
 	CreatePosition(context.Context, *v1.CreatePositionRequest) (*v1.Position, error)
-	// DeleteOrganization 批量删除
-	DeleteOrganization(context.Context, *v1.DeleteOrganizationRequset) (*emptypb.Empty, error)
+	// DeleteDepartment 批量删除
+	DeleteDepartment(context.Context, *v1.DeleteDepartmentRequset) (*emptypb.Empty, error)
 	// DeletePosition 删除
 	DeletePosition(context.Context, *v1.DeletePositionRequest) (*emptypb.Empty, error)
+	// DepartmentTree 列表的tree
+	DepartmentTree(context.Context, *v1.DepartmentTreeRequest) (*v1.DepartmentTreeResponse, error)
+	GetDepartment(context.Context, *v1.GetDepartmentRequest) (*v1.Department, error)
 	GetPosition(context.Context, *v1.GetPositionRequest) (*v1.Position, error)
 	// ListPosition 岗位模块
 	// 列表
 	ListPosition(context.Context, *v1.ListPositionRequest) (*v1.ListPositionResponse, error)
-	// OrganizationTree 列表的tree
-	OrganizationTree(context.Context, *v1.OrganizationTreeRequest) (*v1.OrganizationTreeResponse, error)
-	// UpdateOrganization 更新
-	UpdateOrganization(context.Context, *v1.UpdateOrganizationRequest) (*v1.Organization, error)
-	// UpdateOrganizationStatus 更新状态
-	UpdateOrganizationStatus(context.Context, *v1.UpdateOrganizationStatusRequest) (*v1.Organization, error)
+	// UpdateDepartment 更新
+	UpdateDepartment(context.Context, *v1.UpdateDepartmentRequest) (*v1.Department, error)
+	// UpdateDepartmentStatus 更新状态
+	UpdateDepartmentStatus(context.Context, *v1.UpdateDepartmentStatusRequest) (*v1.Department, error)
 	// UpdatePosition 更新
 	UpdatePosition(context.Context, *v1.UpdatePositionRequest) (*v1.Position, error)
 	// UpdatePositionStatus 更新状态
@@ -60,11 +62,12 @@ type OrganizationHTTPServer interface {
 
 func RegisterOrganizationHTTPServer(s *http.Server, srv OrganizationHTTPServer) {
 	r := s.Route("/")
-	r.GET("/admin/v1/organization/tree", _Organization_OrganizationTree0_HTTP_Handler(srv))
-	r.POST("/admin/v1/organization", _Organization_CreateOrganization0_HTTP_Handler(srv))
-	r.PUT("/admin/v1/organization/{id}", _Organization_UpdateOrganization0_HTTP_Handler(srv))
-	r.PUT("/admin/v1/organization/{id}/status", _Organization_UpdateOrganizationStatus0_HTTP_Handler(srv))
-	r.DELETE("/admin/v1/organization", _Organization_DeleteOrganization0_HTTP_Handler(srv))
+	r.GET("/admin/v1/department/tree", _Organization_DepartmentTree0_HTTP_Handler(srv))
+	r.GET("/admin/v1/department/{id}", _Organization_GetDepartment0_HTTP_Handler(srv))
+	r.POST("/admin/v1/department", _Organization_CreateDepartment0_HTTP_Handler(srv))
+	r.PUT("/admin/v1/department/{id}", _Organization_UpdateDepartment0_HTTP_Handler(srv))
+	r.PUT("/admin/v1/department/{id}/status", _Organization_UpdateDepartmentStatus0_HTTP_Handler(srv))
+	r.DELETE("/admin/v1/department", _Organization_DeleteDepartment0_HTTP_Handler(srv))
 	r.GET("/admin/v1/position", _Organization_ListPosition0_HTTP_Handler(srv))
 	r.GET("/admin/v1/position/{id}", _Organization_GetPosition0_HTTP_Handler(srv))
 	r.POST("/admin/v1/position", _Organization_CreatePosition0_HTTP_Handler(srv))
@@ -73,50 +76,72 @@ func RegisterOrganizationHTTPServer(s *http.Server, srv OrganizationHTTPServer) 
 	r.DELETE("/admin/v1/position", _Organization_DeletePosition0_HTTP_Handler(srv))
 }
 
-func _Organization_OrganizationTree0_HTTP_Handler(srv OrganizationHTTPServer) func(ctx http.Context) error {
+func _Organization_DepartmentTree0_HTTP_Handler(srv OrganizationHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in v1.OrganizationTreeRequest
+		var in v1.DepartmentTreeRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationOrganizationOrganizationTree)
+		http.SetOperation(ctx, OperationOrganizationDepartmentTree)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.OrganizationTree(ctx, req.(*v1.OrganizationTreeRequest))
+			return srv.DepartmentTree(ctx, req.(*v1.DepartmentTreeRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*v1.OrganizationTreeResponse)
+		reply := out.(*v1.DepartmentTreeResponse)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Organization_CreateOrganization0_HTTP_Handler(srv OrganizationHTTPServer) func(ctx http.Context) error {
+func _Organization_GetDepartment0_HTTP_Handler(srv OrganizationHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in v1.CreateOrganizationRequest
+		var in v1.GetDepartmentRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationOrganizationGetDepartment)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetDepartment(ctx, req.(*v1.GetDepartmentRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.Department)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Organization_CreateDepartment0_HTTP_Handler(srv OrganizationHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.CreateDepartmentRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationOrganizationCreateOrganization)
+		http.SetOperation(ctx, OperationOrganizationCreateDepartment)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.CreateOrganization(ctx, req.(*v1.CreateOrganizationRequest))
+			return srv.CreateDepartment(ctx, req.(*v1.CreateDepartmentRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*v1.Organization)
+		reply := out.(*v1.Department)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Organization_UpdateOrganization0_HTTP_Handler(srv OrganizationHTTPServer) func(ctx http.Context) error {
+func _Organization_UpdateDepartment0_HTTP_Handler(srv OrganizationHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in v1.UpdateOrganizationRequest
+		var in v1.UpdateDepartmentRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
@@ -126,22 +151,22 @@ func _Organization_UpdateOrganization0_HTTP_Handler(srv OrganizationHTTPServer) 
 		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationOrganizationUpdateOrganization)
+		http.SetOperation(ctx, OperationOrganizationUpdateDepartment)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UpdateOrganization(ctx, req.(*v1.UpdateOrganizationRequest))
+			return srv.UpdateDepartment(ctx, req.(*v1.UpdateDepartmentRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*v1.Organization)
+		reply := out.(*v1.Department)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Organization_UpdateOrganizationStatus0_HTTP_Handler(srv OrganizationHTTPServer) func(ctx http.Context) error {
+func _Organization_UpdateDepartmentStatus0_HTTP_Handler(srv OrganizationHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in v1.UpdateOrganizationStatusRequest
+		var in v1.UpdateDepartmentStatusRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
@@ -151,28 +176,28 @@ func _Organization_UpdateOrganizationStatus0_HTTP_Handler(srv OrganizationHTTPSe
 		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationOrganizationUpdateOrganizationStatus)
+		http.SetOperation(ctx, OperationOrganizationUpdateDepartmentStatus)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UpdateOrganizationStatus(ctx, req.(*v1.UpdateOrganizationStatusRequest))
+			return srv.UpdateDepartmentStatus(ctx, req.(*v1.UpdateDepartmentStatusRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*v1.Organization)
+		reply := out.(*v1.Department)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Organization_DeleteOrganization0_HTTP_Handler(srv OrganizationHTTPServer) func(ctx http.Context) error {
+func _Organization_DeleteDepartment0_HTTP_Handler(srv OrganizationHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in v1.DeleteOrganizationRequset
+		var in v1.DeleteDepartmentRequset
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationOrganizationDeleteOrganization)
+		http.SetOperation(ctx, OperationOrganizationDeleteDepartment)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.DeleteOrganization(ctx, req.(*v1.DeleteOrganizationRequset))
+			return srv.DeleteDepartment(ctx, req.(*v1.DeleteDepartmentRequset))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -316,24 +341,25 @@ func _Organization_DeletePosition0_HTTP_Handler(srv OrganizationHTTPServer) func
 }
 
 type OrganizationHTTPClient interface {
-	// CreateOrganization 创建
-	CreateOrganization(ctx context.Context, req *v1.CreateOrganizationRequest, opts ...http.CallOption) (rsp *v1.Organization, err error)
+	// CreateDepartment 创建
+	CreateDepartment(ctx context.Context, req *v1.CreateDepartmentRequest, opts ...http.CallOption) (rsp *v1.Department, err error)
 	// CreatePosition 创建
 	CreatePosition(ctx context.Context, req *v1.CreatePositionRequest, opts ...http.CallOption) (rsp *v1.Position, err error)
-	// DeleteOrganization 批量删除
-	DeleteOrganization(ctx context.Context, req *v1.DeleteOrganizationRequset, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	// DeleteDepartment 批量删除
+	DeleteDepartment(ctx context.Context, req *v1.DeleteDepartmentRequset, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	// DeletePosition 删除
 	DeletePosition(ctx context.Context, req *v1.DeletePositionRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	// DepartmentTree 列表的tree
+	DepartmentTree(ctx context.Context, req *v1.DepartmentTreeRequest, opts ...http.CallOption) (rsp *v1.DepartmentTreeResponse, err error)
+	GetDepartment(ctx context.Context, req *v1.GetDepartmentRequest, opts ...http.CallOption) (rsp *v1.Department, err error)
 	GetPosition(ctx context.Context, req *v1.GetPositionRequest, opts ...http.CallOption) (rsp *v1.Position, err error)
 	// ListPosition 岗位模块
 	// 列表
 	ListPosition(ctx context.Context, req *v1.ListPositionRequest, opts ...http.CallOption) (rsp *v1.ListPositionResponse, err error)
-	// OrganizationTree 列表的tree
-	OrganizationTree(ctx context.Context, req *v1.OrganizationTreeRequest, opts ...http.CallOption) (rsp *v1.OrganizationTreeResponse, err error)
-	// UpdateOrganization 更新
-	UpdateOrganization(ctx context.Context, req *v1.UpdateOrganizationRequest, opts ...http.CallOption) (rsp *v1.Organization, err error)
-	// UpdateOrganizationStatus 更新状态
-	UpdateOrganizationStatus(ctx context.Context, req *v1.UpdateOrganizationStatusRequest, opts ...http.CallOption) (rsp *v1.Organization, err error)
+	// UpdateDepartment 更新
+	UpdateDepartment(ctx context.Context, req *v1.UpdateDepartmentRequest, opts ...http.CallOption) (rsp *v1.Department, err error)
+	// UpdateDepartmentStatus 更新状态
+	UpdateDepartmentStatus(ctx context.Context, req *v1.UpdateDepartmentStatusRequest, opts ...http.CallOption) (rsp *v1.Department, err error)
 	// UpdatePosition 更新
 	UpdatePosition(ctx context.Context, req *v1.UpdatePositionRequest, opts ...http.CallOption) (rsp *v1.Position, err error)
 	// UpdatePositionStatus 更新状态
@@ -348,12 +374,12 @@ func NewOrganizationHTTPClient(client *http.Client) OrganizationHTTPClient {
 	return &OrganizationHTTPClientImpl{client}
 }
 
-// CreateOrganization 创建
-func (c *OrganizationHTTPClientImpl) CreateOrganization(ctx context.Context, in *v1.CreateOrganizationRequest, opts ...http.CallOption) (*v1.Organization, error) {
-	var out v1.Organization
-	pattern := "/admin/v1/organization"
+// CreateDepartment 创建
+func (c *OrganizationHTTPClientImpl) CreateDepartment(ctx context.Context, in *v1.CreateDepartmentRequest, opts ...http.CallOption) (*v1.Department, error) {
+	var out v1.Department
+	pattern := "/admin/v1/department"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationOrganizationCreateOrganization))
+	opts = append(opts, http.Operation(OperationOrganizationCreateDepartment))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -376,12 +402,12 @@ func (c *OrganizationHTTPClientImpl) CreatePosition(ctx context.Context, in *v1.
 	return &out, nil
 }
 
-// DeleteOrganization 批量删除
-func (c *OrganizationHTTPClientImpl) DeleteOrganization(ctx context.Context, in *v1.DeleteOrganizationRequset, opts ...http.CallOption) (*emptypb.Empty, error) {
+// DeleteDepartment 批量删除
+func (c *OrganizationHTTPClientImpl) DeleteDepartment(ctx context.Context, in *v1.DeleteDepartmentRequset, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
-	pattern := "/admin/v1/organization"
+	pattern := "/admin/v1/department"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationOrganizationDeleteOrganization))
+	opts = append(opts, http.Operation(OperationOrganizationDeleteDepartment))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
 	if err != nil {
@@ -398,6 +424,33 @@ func (c *OrganizationHTTPClientImpl) DeletePosition(ctx context.Context, in *v1.
 	opts = append(opts, http.Operation(OperationOrganizationDeletePosition))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DepartmentTree 列表的tree
+func (c *OrganizationHTTPClientImpl) DepartmentTree(ctx context.Context, in *v1.DepartmentTreeRequest, opts ...http.CallOption) (*v1.DepartmentTreeResponse, error) {
+	var out v1.DepartmentTreeResponse
+	pattern := "/admin/v1/department/tree"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationOrganizationDepartmentTree))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *OrganizationHTTPClientImpl) GetDepartment(ctx context.Context, in *v1.GetDepartmentRequest, opts ...http.CallOption) (*v1.Department, error) {
+	var out v1.Department
+	pattern := "/admin/v1/department/{id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationOrganizationGetDepartment))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -432,26 +485,12 @@ func (c *OrganizationHTTPClientImpl) ListPosition(ctx context.Context, in *v1.Li
 	return &out, nil
 }
 
-// OrganizationTree 列表的tree
-func (c *OrganizationHTTPClientImpl) OrganizationTree(ctx context.Context, in *v1.OrganizationTreeRequest, opts ...http.CallOption) (*v1.OrganizationTreeResponse, error) {
-	var out v1.OrganizationTreeResponse
-	pattern := "/admin/v1/organization/tree"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationOrganizationOrganizationTree))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-// UpdateOrganization 更新
-func (c *OrganizationHTTPClientImpl) UpdateOrganization(ctx context.Context, in *v1.UpdateOrganizationRequest, opts ...http.CallOption) (*v1.Organization, error) {
-	var out v1.Organization
-	pattern := "/admin/v1/organization/{id}"
+// UpdateDepartment 更新
+func (c *OrganizationHTTPClientImpl) UpdateDepartment(ctx context.Context, in *v1.UpdateDepartmentRequest, opts ...http.CallOption) (*v1.Department, error) {
+	var out v1.Department
+	pattern := "/admin/v1/department/{id}"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationOrganizationUpdateOrganization))
+	opts = append(opts, http.Operation(OperationOrganizationUpdateDepartment))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
@@ -460,12 +499,12 @@ func (c *OrganizationHTTPClientImpl) UpdateOrganization(ctx context.Context, in 
 	return &out, nil
 }
 
-// UpdateOrganizationStatus 更新状态
-func (c *OrganizationHTTPClientImpl) UpdateOrganizationStatus(ctx context.Context, in *v1.UpdateOrganizationStatusRequest, opts ...http.CallOption) (*v1.Organization, error) {
-	var out v1.Organization
-	pattern := "/admin/v1/organization/{id}/status"
+// UpdateDepartmentStatus 更新状态
+func (c *OrganizationHTTPClientImpl) UpdateDepartmentStatus(ctx context.Context, in *v1.UpdateDepartmentStatusRequest, opts ...http.CallOption) (*v1.Department, error) {
+	var out v1.Department
+	pattern := "/admin/v1/department/{id}/status"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationOrganizationUpdateOrganizationStatus))
+	opts = append(opts, http.Operation(OperationOrganizationUpdateDepartmentStatus))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {

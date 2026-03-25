@@ -10,7 +10,7 @@ var ProviderSet = wire.NewSet(
 
 	NewPermissionUsecase,
 
-	NewOrganizationUsecase,
+	NewDepartmentUsecase,
 	NewPositionUsecase,
 
 	NewDictTypeUsecase,

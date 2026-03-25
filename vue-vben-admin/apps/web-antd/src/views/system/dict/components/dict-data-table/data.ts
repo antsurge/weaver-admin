@@ -2,11 +2,11 @@ import type { OnActionClickFn, VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { SystemDictApi } from '#/api/system/dict';
 import { $t } from '#/locales';
 export function useDictDataColumns(
-  // onActionClick: OnActionClickFn<SystemDictApi.DictData>,
-  // onStatusChange?: (
-  //   newStatus: SystemDictApi.DictData['status'],
-  //   row: SystemDictApi.DictData,
-  // ) => PromiseLike<boolean | undefined>,
+  onActionClick: OnActionClickFn<SystemDictApi.DictData>,
+  onStatusChange?: (
+    newStatus: SystemDictApi.DictData['status'],
+    row: SystemDictApi.DictData,
+  ) => PromiseLike<boolean | undefined>,
 ): VxeTableGridOptions<SystemDictApi.DictData>['columns'] {
   return [
     {
@@ -26,7 +26,7 @@ export function useDictDataColumns(
       width: 140,
       cellRender: {
         name: 'CellSwitch',
-        // attrs: { beforeChange: onStatusChange },
+        attrs: { beforeChange: onStatusChange },
       },
     },
     {
@@ -46,7 +46,7 @@ export function useDictDataColumns(
         name: 'CellOperation',
         attrs: {
           nameField: 'label',
-          // onClick: onActionClick,
+          onClick: onActionClick,
         },
         options: ['edit', 'delete'],
       },

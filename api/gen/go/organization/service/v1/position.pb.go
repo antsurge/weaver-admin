@@ -24,6 +24,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// 岗位
 type Position struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 岗位ID

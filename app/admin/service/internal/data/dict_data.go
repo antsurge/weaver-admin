@@ -26,9 +26,20 @@ func NewDictDataRepo(data *Data, logger log.Logger) biz.DictDataRepo {
 	}
 }
 
-func (r *dictDataRepo) List(ctx context.Context, params *biz.ListDictDataRequest) (*biz.ListDictDataResponse, error) {
+func (r *dictDataRepo) List(ctx context.Context, params *biz.ListDictDataRequest, opts ...*biz.ListDictDataOption) (*biz.ListDictDataResponse, error) {
 	query := r.data.db.DictData.Query().
 		Order(ent.Desc(dictdata.FieldCreatedAt))
+
+	opt := &biz.ListDictDataOption{}
+	if len(opts) > 0 {
+		opt = opts[0]
+	}
+
+	if opt.OnlyDeleted {
+		query = query.Where(dictdata.DeletedAtNotNil())
+	} else if !opt.IncludeDeleted {
+		query = query.Where(dictdata.DeletedAtIsNil())
+	}
 
 	if v := params.DictTypeIds; len(v) > 0 {
 		query = query.Where(dictdata.DictTypeIDIn(v...))

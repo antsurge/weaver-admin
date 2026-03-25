@@ -10,7 +10,7 @@ message DictData {
   // 字典ID
   string id = 1 [(gnostic.openapi.v3.property) = {description: "ID"}];
   // 字典类型ID
-  string dictTypeId = 2 [(gnostic.openapi.v3.property) = {description: "所属字典类型ID"}];
+  string dictTypeID = 2 [(gnostic.openapi.v3.property) = {description: "所属字典类型ID"}];
   // 标签
   string label = 3 [(gnostic.openapi.v3.property) = {description: "显示标签（给前端展示）"}];
   // 值
@@ -47,22 +47,22 @@ message ListDictDataResponse {
 message CreateDictDataRequest {
   option (gnostic.openapi.v3.schema) = {
     required: [
-      "dictTypeId",
+      "dictTypeID",
       "label",
       "value"
     ]
   };
 
   // 字典类型ID
-  string dictTypeId = 1 [
+  string dictTypeID = 1 [
     (buf.validate.field).cel = {
-      id: "dictData.dictTypeId.required"
-      message: "dictData.dictTypeId.required"
+      id: "dictData.dictTypeID.required"
+      message: "dictData.dictTypeID.required"
       expression: "this.size() > 0"
     },
     (buf.validate.field).cel = {
-      id: "dictData.dictTypeId.max_len"
-      message: "dictData.dictTypeId.max_len"
+      id: "dictData.dictTypeID.max_len"
+      message: "dictData.dictTypeID.max_len"
       expression: "this.size() <= 36"
     },
     (gnostic.openapi.v3.property) = {description: "所属字典类型ID"}
@@ -135,22 +135,22 @@ message CreateDictDataRequest {
 message UpdateDictDataRequest {
   option (gnostic.openapi.v3.schema) = {
     required: [
-      "dictTypeId",
+      "dictTypeID",
       "label",
       "value"
     ]
   };
 
   // 字典类型ID
-  string dictTypeId = 1 [
+  string dictTypeID = 1 [
     (buf.validate.field).cel = {
-      id: "dictData.dictTypeId.required"
-      message: "dictData.dictTypeId.required"
+      id: "dictData.dictTypeID.required"
+      message: "dictData.dictTypeID.required"
       expression: "this.size() > 0"
     },
     (buf.validate.field).cel = {
-      id: "dictData.dictTypeId.max_len"
-      message: "dictData.dictTypeId.max_len"
+      id: "dictData.dictTypeID.max_len"
+      message: "dictData.dictTypeID.max_len"
       expression: "this.size() <= 36"
     },
     (gnostic.openapi.v3.property) = {description: "所属字典类型ID"}

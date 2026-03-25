@@ -40,7 +40,7 @@ const selectedTypes = ref<SystemDictApi.DictType[]>([]);
 
 const [Grid, gridApi] = useVbenVxeGrid({
   gridOptions: {
-    columns: useDictTypeColumns(onTypeActionClick as any, onTypeStatusChange),
+    columns: useDictTypeColumns(onTypeActionClick, onTypeStatusChange),
     height: 'auto',
     // keepSource: true,
 
@@ -123,33 +123,38 @@ function onTypeActionClick({
   }
 }
 
-// function onDictDataActionClick({
-//   code,
-//   row,
-// }: {
-//   code: string;
-//   row: SystemDictApi.DictData;
-// }) {
-//   switch (code) {
-//     case 'edit':
-//       dictDataFormApi.setData(row).open();
-//       break;
-//     case 'delete':
-//       onDeleteData([row]);
-//       break;
-//   }
-// }
+function onDictDataActionClick({
+  code,
+  row,
+}: {
+  code: string;
+  row: SystemDictApi.DictData;
+}) {
+  switch (code) {
+    case 'edit':
+      dictDataFormApi
+        .setData({
+          ...row,
+          dictTypeId: row.dictTypeID,
+        })
+        .open();
+      break;
+    case 'delete':
+      onDeleteData([row]);
+      break;
+  }
+}
 
-async function onTypeStatusChange(
+function onTypeStatusChange(
   newStatus: SystemDictApi.DictType['status'],
   row: SystemDictApi.DictType,
-) {
+): Promise<boolean | undefined> {
   const statusText: Record<string, string> = {
     enabled: '启用',
     disabled: '禁用',
   };
 
-  return new Promise((resolve) => {
+  return new Promise<boolean | undefined>((resolve) => {
     Modal.confirm({
       title: '切换状态',
       content: `你要将 ${row.name} 的状态切换为 【${statusText[newStatus]}】 吗？`,
@@ -168,54 +173,66 @@ async function onTypeStatusChange(
   });
 }
 
-// async function onDictDataStatusChange(
-//   newStatus: SystemDictApi.DictData['status'],
-//   row: SystemDictApi.DictData,
-// ) {
-//   const statusText: Record<string, string> = {
-//     enabled: '启用',
-//     disabled: '禁用',
-//   };
+function onDictDataStatusChange(
+  newStatus: SystemDictApi.DictData['status'],
+  row: SystemDictApi.DictData,
+): Promise<boolean | undefined> {
+  const statusText: Record<string, string> = {
+    enabled: '启用',
+    disabled: '禁用',
+  };
 
-//   return new Promise((resolve) => {
-//     Modal.confirm({
-//       title: '切换状态',
-//       content: `你要将 ${row.label} 的状态切换为 【${statusText[newStatus]}】 吗？`,
-//       async onOk() {
-//         try {
-//           await updateDictDataStatusApi(row.id, newStatus);
-//           resolve(true);
-//         } catch {
-//           resolve(false);
-//         }
-//       },
-//       onCancel() {
-//         resolve(false);
-//       },
-//     });
-//   });
-// }
+  return new Promise<boolean | undefined>((resolve) => {
+    Modal.confirm({
+      title: '切换状态',
+      content: `你要将 ${row.label} 的状态切换为 【${statusText[newStatus]}】 吗？`,
+      async onOk() {
+        try {
+          await updateDictDataStatusApi(row.id, newStatus);
+          resolve(true);
+        } catch {
+          resolve(false);
+        }
+      },
+      onCancel() {
+        resolve(false);
+      },
+    });
+  });
+}
 
-function onDeleteTypes(rows?: SystemDictApi.DictType[]) {
+async function onDeleteTypes(rows?: SystemDictApi.DictType[]) {
   const list = rows?.length ? rows : selectedTypes.value;
   if (!list.length) return;
 
   const ids = list.map((item) => item.id);
   const names = list.map((item) => item.name).join('、');
 
+  await deleteDictTypeApi(ids);
+  message.success($t('ui.actionMessage.deleteSuccess', [names]));
+  selectedTypes.value = [];
+  onRefresh();
+}
+
+function onDeleteData(rows: SystemDictApi.DictData[]) {
+  if (!rows.length) return;
+
+  const ids = rows.map((item) => item.id);
+  const labels = rows.map((item) => item.label).join('、');
+
   Modal.confirm({
     title: $t('ui.actionMessage.confirmDelete'),
-    content: $t('ui.actionMessage.deleteConfirm', [names]),
+    content: $t('ui.actionMessage.deleteConfirm', [labels]),
     okType: 'danger',
     async onOk() {
       const hideLoading = message.loading({
-        content: $t('ui.actionMessage.deleting', [names]),
+        content: $t('ui.actionMessage.deleting', [labels]),
         duration: 0,
       });
       try {
-        await deleteDictTypeApi(ids);
-        message.success($t('ui.actionMessage.deleteSuccess', [names]));
-        selectedTypes.value = [];
+        await deleteDictDataApi(ids);
+        hideLoading();
+        message.success($t('ui.actionMessage.deleteSuccess', [labels]));
         onRefresh();
       } catch {
         hideLoading();
@@ -223,38 +240,12 @@ function onDeleteTypes(rows?: SystemDictApi.DictType[]) {
     },
   });
 }
-
-// function onDeleteData(rows: SystemDictApi.DictData[]) {
-//   if (!rows.length) return;
-
-//   const ids = rows.map((item) => item.id);
-//   const labels = rows.map((item) => item.label).join('、');
-
-//   Modal.confirm({
-//     title: $t('ui.actionMessage.confirmDelete'),
-//     content: $t('ui.actionMessage.deleteConfirm', [labels]),
-//     okType: 'danger',
-//     async onOk() {
-//       const hideLoading = message.loading({
-//         content: $t('ui.actionMessage.deleting', [labels]),
-//         duration: 0,
-//       });
-//       try {
-//         await deleteDictDataApi(ids);
-//         message.success($t('ui.actionMessage.deleteSuccess', [labels]));
-//         onRefresh();
-//       } catch {
-//         hideLoading();
-//       }
-//     },
-//   });
-// }
 </script>
 
 <template>
   <Page auto-content-height>
     <DictTypeFormModal @success="onRefresh" />
-    <DictDataFormModal @success="onRefresh"/>
+    <DictDataFormModal @success="onRefresh" />
 
     <Grid>
       <template #toolbar-tools>
@@ -267,7 +258,8 @@ function onDeleteTypes(rows?: SystemDictApi.DictType[]) {
       </template>
 
       <template #expand_dictdata="{ row }">
-        <DictDataTable :data="row.dictData || []"/>
+        <DictDataTable :data="row.dictData || []" :on-action-click="onDictDataActionClick"
+          :on-status-change="onDictDataStatusChange" />
       </template>
     </Grid>
   </Page>

@@ -14,9 +14,9 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/admin"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/adminrole"
+	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/department"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/dictdata"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/dicttype"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/organization"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/permission"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/position"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/role"
@@ -83,9 +83,9 @@ func checkColumn(t, c string) error {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
 			admin.Table:          admin.ValidColumn,
 			adminrole.Table:      adminrole.ValidColumn,
+			department.Table:     department.ValidColumn,
 			dictdata.Table:       dictdata.ValidColumn,
 			dicttype.Table:       dicttype.ValidColumn,
-			organization.Table:   organization.ValidColumn,
 			permission.Table:     permission.ValidColumn,
 			position.Table:       position.ValidColumn,
 			role.Table:           role.ValidColumn,

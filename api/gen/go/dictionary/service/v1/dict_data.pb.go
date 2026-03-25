@@ -29,7 +29,7 @@ type DictData struct {
 	// 字典ID
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	// 字典类型ID
-	DictTypeId string `protobuf:"bytes,2,opt,name=dictTypeId,proto3" json:"dictTypeId,omitempty"`
+	DictTypeID string `protobuf:"bytes,2,opt,name=dictTypeID,proto3" json:"dictTypeID,omitempty"`
 	// 标签
 	Label string `protobuf:"bytes,3,opt,name=label,proto3" json:"label,omitempty"`
 	// 值
@@ -89,9 +89,9 @@ func (x *DictData) GetId() string {
 	return ""
 }
 
-func (x *DictData) GetDictTypeId() string {
+func (x *DictData) GetDictTypeID() string {
 	if x != nil {
-		return x.DictTypeId
+		return x.DictTypeID
 	}
 	return ""
 }
@@ -290,7 +290,7 @@ func (x *ListDictDataResponse) GetTotal() int64 {
 type CreateDictDataRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 字典类型ID
-	DictTypeId string `protobuf:"bytes,1,opt,name=dictTypeId,proto3" json:"dictTypeId,omitempty"`
+	DictTypeID string `protobuf:"bytes,1,opt,name=dictTypeID,proto3" json:"dictTypeID,omitempty"`
 	// 标签
 	Label string `protobuf:"bytes,2,opt,name=label,proto3" json:"label,omitempty"`
 	// 值
@@ -337,9 +337,9 @@ func (*CreateDictDataRequest) Descriptor() ([]byte, []int) {
 	return file_dictionary_service_v1_dict_data_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *CreateDictDataRequest) GetDictTypeId() string {
+func (x *CreateDictDataRequest) GetDictTypeID() string {
 	if x != nil {
-		return x.DictTypeId
+		return x.DictTypeID
 	}
 	return ""
 }
@@ -389,7 +389,7 @@ func (x *CreateDictDataRequest) GetRemark() string {
 type UpdateDictDataRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 字典类型ID
-	DictTypeId string `protobuf:"bytes,1,opt,name=dictTypeId,proto3" json:"dictTypeId,omitempty"`
+	DictTypeID string `protobuf:"bytes,1,opt,name=dictTypeID,proto3" json:"dictTypeID,omitempty"`
 	// 标签
 	Label string `protobuf:"bytes,2,opt,name=label,proto3" json:"label,omitempty"`
 	// 值
@@ -437,9 +437,9 @@ func (*UpdateDictDataRequest) Descriptor() ([]byte, []int) {
 	return file_dictionary_service_v1_dict_data_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *UpdateDictDataRequest) GetDictTypeId() string {
+func (x *UpdateDictDataRequest) GetDictTypeID() string {
 	if x != nil {
-		return x.DictTypeId
+		return x.DictTypeID
 	}
 	return ""
 }
@@ -599,8 +599,8 @@ const file_dictionary_service_v1_dict_data_proto_rawDesc = "" +
 	"\bDictData\x12\x18\n" +
 	"\x02id\x18\x01 \x01(\tB\b\xbaG\x05\x92\x02\x02IDR\x02id\x12:\n" +
 	"\n" +
-	"dictTypeId\x18\x02 \x01(\tB\x1a\xbaG\x17\x92\x02\x14所属字典类型IDR\n" +
-	"dictTypeId\x12=\n" +
+	"dictTypeID\x18\x02 \x01(\tB\x1a\xbaG\x17\x92\x02\x14所属字典类型IDR\n" +
+	"dictTypeID\x12=\n" +
 	"\x05label\x18\x03 \x01(\tB'\xbaG$\x92\x02!显示标签（给前端展示）R\x05label\x12:\n" +
 	"\x05value\x18\x04 \x01(\tB$\xbaG!\x92\x02\x1e字典值（实际存储值）R\x05value\x12?\n" +
 	"\x06weight\x18\x05 \x01(\x05B'\xbaG$\x92\x02!排序权重，值越大越靠前R\x06weight\x12G\n" +
@@ -622,10 +622,10 @@ const file_dictionary_service_v1_dict_data_proto_rawDesc = "" +
 	"\x05total\x18\x02 \x01(\x03R\x05total\"\xe4\t\n" +
 	"\x15CreateDictDataRequest\x12\xdf\x01\n" +
 	"\n" +
-	"dictTypeId\x18\x01 \x01(\tB\xbe\x01\xbaG\x17\x92\x02\x14所属字典类型ID\xbaH\xa0\x01\xba\x01M\n" +
-	"\x1cdictData.dictTypeId.required\x12\x1cdictData.dictTypeId.required\x1a\x0fthis.size() > 0\xba\x01M\n" +
-	"\x1bdictData.dictTypeId.max_len\x12\x1bdictData.dictTypeId.max_len\x1a\x11this.size() <= 36R\n" +
-	"dictTypeId\x12\xce\x01\n" +
+	"dictTypeID\x18\x01 \x01(\tB\xbe\x01\xbaG\x17\x92\x02\x14所属字典类型ID\xbaH\xa0\x01\xba\x01M\n" +
+	"\x1cdictData.dictTypeID.required\x12\x1cdictData.dictTypeID.required\x1a\x0fthis.size() > 0\xba\x01M\n" +
+	"\x1bdictData.dictTypeID.max_len\x12\x1bdictData.dictTypeID.max_len\x1a\x11this.size() <= 36R\n" +
+	"dictTypeID\x12\xce\x01\n" +
 	"\x05label\x18\x02 \x01(\tB\xb7\x01\xbaG$\x92\x02!显示标签（给前端展示）\xbaH\x8c\x01\xba\x01C\n" +
 	"\x17dictData.label.required\x12\x17dictData.label.required\x1a\x0fthis.size() > 0\xba\x01C\n" +
 	"\x16dictData.label.max_len\x12\x16dictData.label.max_len\x1a\x11this.size() <= 64R\x05label\x12\xcb\x01\n" +
@@ -639,13 +639,13 @@ const file_dictionary_service_v1_dict_data_proto_rawDesc = "" +
 	"\x1adictData.extension.max_len\x12\x1adictData.extension.max_len\x1a\x13this.size() <= 1024R\textension\x12v\n" +
 	"\x06remark\x18\a \x01(\tB^\xbaG\x0f\x92\x02\f备注说明\xbaHI\xba\x01F\n" +
 	"\x17dictData.remark.max_len\x12\x17dictData.remark.max_len\x1a\x12this.size() <= 255R\x06remark: \xbaG\x1d\xba\x01\n" +
-	"dictTypeId\xba\x01\x05label\xba\x01\x05value\"\xf4\t\n" +
+	"dictTypeID\xba\x01\x05label\xba\x01\x05value\"\xf4\t\n" +
 	"\x15UpdateDictDataRequest\x12\xdf\x01\n" +
 	"\n" +
-	"dictTypeId\x18\x01 \x01(\tB\xbe\x01\xbaG\x17\x92\x02\x14所属字典类型ID\xbaH\xa0\x01\xba\x01M\n" +
-	"\x1cdictData.dictTypeId.required\x12\x1cdictData.dictTypeId.required\x1a\x0fthis.size() > 0\xba\x01M\n" +
-	"\x1bdictData.dictTypeId.max_len\x12\x1bdictData.dictTypeId.max_len\x1a\x11this.size() <= 36R\n" +
-	"dictTypeId\x12\xce\x01\n" +
+	"dictTypeID\x18\x01 \x01(\tB\xbe\x01\xbaG\x17\x92\x02\x14所属字典类型ID\xbaH\xa0\x01\xba\x01M\n" +
+	"\x1cdictData.dictTypeID.required\x12\x1cdictData.dictTypeID.required\x1a\x0fthis.size() > 0\xba\x01M\n" +
+	"\x1bdictData.dictTypeID.max_len\x12\x1bdictData.dictTypeID.max_len\x1a\x11this.size() <= 36R\n" +
+	"dictTypeID\x12\xce\x01\n" +
 	"\x05label\x18\x02 \x01(\tB\xb7\x01\xbaG$\x92\x02!显示标签（给前端展示）\xbaH\x8c\x01\xba\x01C\n" +
 	"\x17dictData.label.required\x12\x17dictData.label.required\x1a\x0fthis.size() > 0\xba\x01C\n" +
 	"\x16dictData.label.max_len\x12\x16dictData.label.max_len\x1a\x11this.size() <= 64R\x05label\x12\xcb\x01\n" +
@@ -661,7 +661,7 @@ const file_dictionary_service_v1_dict_data_proto_rawDesc = "" +
 	"\x17dictData.remark.max_len\x12\x17dictData.remark.max_len\x1a\x12this.size() <= 255R\x06remark\x12\x0e\n" +
 	"\x02id\x18\n" +
 	" \x01(\tR\x02id: \xbaG\x1d\xba\x01\n" +
-	"dictTypeId\xba\x01\x05label\xba\x01\x05value\"\xf1\x01\n" +
+	"dictTypeID\xba\x01\x05label\xba\x01\x05value\"\xf1\x01\n" +
 	"\x1bUpdateDictDataStatusRequest\x12\x18\n" +
 	"\x02id\x18\x01 \x01(\tB\b\xbaG\x05\x92\x02\x02IDR\x02id\x12\xa9\x01\n" +
 	"\x06status\x18\x02 \x01(\tB\x90\x01\xbaG\x1f\x92\x02\x1c状态（enabled/disabled）\xbaHk\xba\x01S\n" +
