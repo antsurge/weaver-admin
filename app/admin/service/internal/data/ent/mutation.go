@@ -5738,8 +5738,8 @@ type RoleMutation struct {
 	id            *string
 	name          *string
 	code          *string
-	weight        *int64
-	addweight     *int64
+	weight        *int
+	addweight     *int
 	status        *role.Status
 	remark        *string
 	is_system     *bool
@@ -5930,13 +5930,13 @@ func (m *RoleMutation) ResetCode() {
 }
 
 // SetWeight sets the "weight" field.
-func (m *RoleMutation) SetWeight(i int64) {
+func (m *RoleMutation) SetWeight(i int) {
 	m.weight = &i
 	m.addweight = nil
 }
 
 // Weight returns the value of the "weight" field in the mutation.
-func (m *RoleMutation) Weight() (r int64, exists bool) {
+func (m *RoleMutation) Weight() (r int, exists bool) {
 	v := m.weight
 	if v == nil {
 		return
@@ -5947,7 +5947,7 @@ func (m *RoleMutation) Weight() (r int64, exists bool) {
 // OldWeight returns the old "weight" field's value of the Role entity.
 // If the Role object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *RoleMutation) OldWeight(ctx context.Context) (v int64, err error) {
+func (m *RoleMutation) OldWeight(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldWeight is only allowed on UpdateOne operations")
 	}
@@ -5962,7 +5962,7 @@ func (m *RoleMutation) OldWeight(ctx context.Context) (v int64, err error) {
 }
 
 // AddWeight adds i to the "weight" field.
-func (m *RoleMutation) AddWeight(i int64) {
+func (m *RoleMutation) AddWeight(i int) {
 	if m.addweight != nil {
 		*m.addweight += i
 	} else {
@@ -5971,7 +5971,7 @@ func (m *RoleMutation) AddWeight(i int64) {
 }
 
 // AddedWeight returns the value that was added to the "weight" field in this mutation.
-func (m *RoleMutation) AddedWeight() (r int64, exists bool) {
+func (m *RoleMutation) AddedWeight() (r int, exists bool) {
 	v := m.addweight
 	if v == nil {
 		return
@@ -6409,7 +6409,7 @@ func (m *RoleMutation) SetField(name string, value ent.Value) error {
 		m.SetCode(v)
 		return nil
 	case role.FieldWeight:
-		v, ok := value.(int64)
+		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -6495,7 +6495,7 @@ func (m *RoleMutation) AddedField(name string) (ent.Value, bool) {
 func (m *RoleMutation) AddField(name string, value ent.Value) error {
 	switch name {
 	case role.FieldWeight:
-		v, ok := value.(int64)
+		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}

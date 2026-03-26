@@ -33,13 +33,13 @@ func (_c *RoleCreate) SetCode(v string) *RoleCreate {
 }
 
 // SetWeight sets the "weight" field.
-func (_c *RoleCreate) SetWeight(v int64) *RoleCreate {
+func (_c *RoleCreate) SetWeight(v int) *RoleCreate {
 	_c.mutation.SetWeight(v)
 	return _c
 }
 
 // SetNillableWeight sets the "weight" field if the given value is not nil.
-func (_c *RoleCreate) SetNillableWeight(v *int64) *RoleCreate {
+func (_c *RoleCreate) SetNillableWeight(v *int) *RoleCreate {
 	if v != nil {
 		_c.SetWeight(*v)
 	}
@@ -291,7 +291,7 @@ func (_c *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 		_node.Code = value
 	}
 	if value, ok := _c.mutation.Weight(); ok {
-		_spec.SetField(role.FieldWeight, field.TypeInt64, value)
+		_spec.SetField(role.FieldWeight, field.TypeInt, value)
 		_node.Weight = value
 	}
 	if value, ok := _c.mutation.Status(); ok {

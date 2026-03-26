@@ -35,5 +35,22 @@
       "component": "web端组件路径，请以/src开头，如:src/views/system/permission.vue",
       "url": "请输入链接或Iframe的URL地址"
     }
+  },
+  "role": {
+    "name": "角色",
+    "fields": {
+      "name": "角色名称",
+      "code": "角色编码",
+      "weight": "权重",
+      "status": "状态",
+      "remark": "备注"
+    },
+    "actions": {
+      "switchStatus": "切换角色状态",
+      "switchStatusConfirm": "确认将【{0}】状态切换为【{1}】？"
+    },
+    "form_placeholder": {
+      "remark": "请输入备注"
+    }
   }
 }

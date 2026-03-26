@@ -915,6 +915,181 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /admin/v1/role:
+        get:
+            tags:
+                - PermissionService
+                - Permission
+            summary: 角色-列表
+            description: 获取角色列表
+            operationId: PermissionService_ListRole
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: code
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListRoleResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - PermissionService
+                - Permission
+            summary: 角色-修改
+            description: 修改角色
+            operationId: PermissionService_UpdateRole
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateRoleRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Role'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - PermissionService
+                - Permission
+            summary: 角色-创建
+            description: 创建角色
+            operationId: PermissionService_CreateRole
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateRoleRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Role'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - PermissionService
+                - Permission
+            summary: 角色-删除
+            description: 删除角色
+            operationId: PermissionService_DeleteRole
+            parameters:
+                - name: ids
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/role/{id}:
+        get:
+            tags:
+                - PermissionService
+                - Permission
+            summary: 角色-通过ID获取
+            description: 通过ID获取角色
+            operationId: PermissionService_GetRole
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Role'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/role/{id}/status:
+        get:
+            tags:
+                - PermissionService
+                - Permission
+            summary: 角色-修改状态
+            description: 修改状态
+            operationId: PermissionService_UpdateRoleStatus
+            parameters:
+                - name: id
+                  in: path
+                  description: ID
+                  required: true
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  description: 岗位状态
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     admin/v1/current-user:
         get:
             tags:
@@ -1096,6 +1271,35 @@ components:
                 remark:
                     type: string
                     description: 备注
+        CreateRoleRequest:
+            required:
+                - name
+                - code
+                - status
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: 角色名称
+                code:
+                    type: string
+                    description: 角色编码
+                remark:
+                    type: string
+                    description: 备注说明
+                weight:
+                    type: integer
+                    description: 权重（排序用）
+                    format: int32
+                status:
+                    type: string
+                    description: 状态（enabled/disabled）
+                dataScope:
+                    type: string
+                    description: 数据权限范围（如：ALL、DEPT、SELF）
+                isSystem:
+                    type: boolean
+                    description: 是否系统内置角色
         CurrentUserInfoResponse:
             type: object
             properties:
@@ -1275,6 +1479,17 @@ components:
                 total:
                     type: string
                     description: 总数
+        ListRoleResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Role'
+                    description: 列表
+                total:
+                    type: string
+                    description: 总数
         LoginRequest:
             type: object
             properties:
@@ -1389,6 +1604,43 @@ components:
                     type: string
                 accessToken:
                     type: string
+        Role:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 角色ID
+                name:
+                    type: string
+                    description: 角色名称
+                code:
+                    type: string
+                    description: 角色编码
+                remark:
+                    type: string
+                    description: 备注说明
+                weight:
+                    type: integer
+                    description: 权重（排序用）
+                    format: int32
+                status:
+                    type: string
+                    description: 状态（enabled/disabled）
+                dataScope:
+                    type: string
+                    description: 数据权限范围（如：ALL、DEPT、SELF）
+                isSystem:
+                    type: boolean
+                    description: 是否系统内置角色
+                createdAt:
+                    type: string
+                    description: 创建时间
+                    format: date-time
+                updatedAt:
+                    type: string
+                    description: 更新时间
+                    format: date-time
+            description: 角色信息
         Status:
             type: object
             properties:
@@ -1608,6 +1860,38 @@ components:
                 status:
                     type: string
                     description: 状态（enabled/disabled）
+        UpdateRoleRequest:
+            required:
+                - name
+                - code
+                - status
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: ID
+                name:
+                    type: string
+                    description: 角色名称
+                code:
+                    type: string
+                    description: 角色编码
+                remark:
+                    type: string
+                    description: 备注说明
+                weight:
+                    type: integer
+                    description: 权重（排序用）
+                    format: int32
+                status:
+                    type: string
+                    description: 状态（enabled/disabled）
+                dataScope:
+                    type: string
+                    description: 数据权限范围（如：ALL、DEPT、SELF）
+                isSystem:
+                    type: boolean
+                    description: 是否系统内置角色
 tags:
     - name: AuthenticationService
       description: 用户后台登录认证服务

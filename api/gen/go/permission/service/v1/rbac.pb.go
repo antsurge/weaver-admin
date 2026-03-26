@@ -10,7 +10,6 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
-	sync "sync"
 	unsafe "unsafe"
 )
 
@@ -21,159 +20,14 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type Role struct {
-	state  protoimpl.MessageState `protogen:"open.v1"`
-	Id     string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name   string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Code   string                 `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
-	Remark string                 `protobuf:"bytes,4,opt,name=remark,proto3" json:"remark,omitempty"`
-	Weight int32                  `protobuf:"varint,5,opt,name=weight,proto3" json:"weight,omitempty"`
-	Status string                 `protobuf:"bytes,6,opt,name=status,proto3" json:"status,omitempty"`
-	// 数据权限范围
-	DataScope string `protobuf:"bytes,7,opt,name=dataScope,proto3" json:"dataScope,omitempty"`
-	// 是否系统内置
-	IsSystem      bool   `protobuf:"varint,8,opt,name=isSystem,proto3" json:"isSystem,omitempty"`
-	CreatedAt     string `protobuf:"bytes,10,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
-	UpdatedAt     string `protobuf:"bytes,11,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Role) Reset() {
-	*x = Role{}
-	mi := &file_permission_service_v1_rbac_proto_msgTypes[0]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Role) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Role) ProtoMessage() {}
-
-func (x *Role) ProtoReflect() protoreflect.Message {
-	mi := &file_permission_service_v1_rbac_proto_msgTypes[0]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Role.ProtoReflect.Descriptor instead.
-func (*Role) Descriptor() ([]byte, []int) {
-	return file_permission_service_v1_rbac_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *Role) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-func (x *Role) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *Role) GetCode() string {
-	if x != nil {
-		return x.Code
-	}
-	return ""
-}
-
-func (x *Role) GetRemark() string {
-	if x != nil {
-		return x.Remark
-	}
-	return ""
-}
-
-func (x *Role) GetWeight() int32 {
-	if x != nil {
-		return x.Weight
-	}
-	return 0
-}
-
-func (x *Role) GetStatus() string {
-	if x != nil {
-		return x.Status
-	}
-	return ""
-}
-
-func (x *Role) GetDataScope() string {
-	if x != nil {
-		return x.DataScope
-	}
-	return ""
-}
-
-func (x *Role) GetIsSystem() bool {
-	if x != nil {
-		return x.IsSystem
-	}
-	return false
-}
-
-func (x *Role) GetCreatedAt() string {
-	if x != nil {
-		return x.CreatedAt
-	}
-	return ""
-}
-
-func (x *Role) GetUpdatedAt() string {
-	if x != nil {
-		return x.UpdatedAt
-	}
-	return ""
-}
-
 var File_permission_service_v1_rbac_proto protoreflect.FileDescriptor
 
 const file_permission_service_v1_rbac_proto_rawDesc = "" +
 	"\n" +
-	" permission/service/v1/rbac.proto\x12\x15permission.service.v1\"\xfc\x01\n" +
-	"\x04Role\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x12\n" +
-	"\x04code\x18\x03 \x01(\tR\x04code\x12\x16\n" +
-	"\x06remark\x18\x04 \x01(\tR\x06remark\x12\x16\n" +
-	"\x06weight\x18\x05 \x01(\x05R\x06weight\x12\x16\n" +
-	"\x06status\x18\x06 \x01(\tR\x06status\x12\x1c\n" +
-	"\tdataScope\x18\a \x01(\tR\tdataScope\x12\x1a\n" +
-	"\bisSystem\x18\b \x01(\bR\bisSystem\x12\x1c\n" +
-	"\tcreatedAt\x18\n" +
-	" \x01(\tR\tcreatedAt\x12\x1c\n" +
-	"\tupdatedAt\x18\v \x01(\tR\tupdatedAtB\xed\x01\n" +
+	" permission/service/v1/rbac.proto\x12\x15permission.service.v1B\xed\x01\n" +
 	"\x19com.permission.service.v1B\tRbacProtoP\x01ZOgithub.com/hypercoze/kratos-admin/api/gen/go/permission/service/v1;permissionpb\xa2\x02\x03PSX\xaa\x02\x15Permission.Service.V1\xca\x02\x15Permission\\Service\\V1\xe2\x02!Permission\\Service\\V1\\GPBMetadata\xea\x02\x17Permission::Service::V1b\x06proto3"
 
-var (
-	file_permission_service_v1_rbac_proto_rawDescOnce sync.Once
-	file_permission_service_v1_rbac_proto_rawDescData []byte
-)
-
-func file_permission_service_v1_rbac_proto_rawDescGZIP() []byte {
-	file_permission_service_v1_rbac_proto_rawDescOnce.Do(func() {
-		file_permission_service_v1_rbac_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_permission_service_v1_rbac_proto_rawDesc), len(file_permission_service_v1_rbac_proto_rawDesc)))
-	})
-	return file_permission_service_v1_rbac_proto_rawDescData
-}
-
-var file_permission_service_v1_rbac_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_permission_service_v1_rbac_proto_goTypes = []any{
-	(*Role)(nil), // 0: permission.service.v1.Role
-}
+var file_permission_service_v1_rbac_proto_goTypes = []any{}
 var file_permission_service_v1_rbac_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
 	0, // [0:0] is the sub-list for method input_type
@@ -193,13 +47,12 @@ func file_permission_service_v1_rbac_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_permission_service_v1_rbac_proto_rawDesc), len(file_permission_service_v1_rbac_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   0,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_permission_service_v1_rbac_proto_goTypes,
 		DependencyIndexes: file_permission_service_v1_rbac_proto_depIdxs,
-		MessageInfos:      file_permission_service_v1_rbac_proto_msgTypes,
 	}.Build()
 	File_permission_service_v1_rbac_proto = out.File
 	file_permission_service_v1_rbac_proto_goTypes = nil

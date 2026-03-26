@@ -132,8 +132,8 @@ function onStatusChange(
 
   return new Promise<boolean | undefined>((resolve) => {
     Modal.confirm({
-      title: $t('system.position.actions.switchStatus'),
-      content: $t('system.position.actions.switchStatusConfirm', [
+      title: $t('organization.position.actions.switchStatus'),
+      content: $t('organization.position.actions.switchStatusConfirm', [
         row.name,
         statusText[newStatus],
       ]),

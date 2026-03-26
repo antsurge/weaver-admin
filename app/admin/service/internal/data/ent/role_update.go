@@ -57,14 +57,14 @@ func (_u *RoleUpdate) SetNillableCode(v *string) *RoleUpdate {
 }
 
 // SetWeight sets the "weight" field.
-func (_u *RoleUpdate) SetWeight(v int64) *RoleUpdate {
+func (_u *RoleUpdate) SetWeight(v int) *RoleUpdate {
 	_u.mutation.ResetWeight()
 	_u.mutation.SetWeight(v)
 	return _u
 }
 
 // SetNillableWeight sets the "weight" field if the given value is not nil.
-func (_u *RoleUpdate) SetNillableWeight(v *int64) *RoleUpdate {
+func (_u *RoleUpdate) SetNillableWeight(v *int) *RoleUpdate {
 	if v != nil {
 		_u.SetWeight(*v)
 	}
@@ -72,7 +72,7 @@ func (_u *RoleUpdate) SetNillableWeight(v *int64) *RoleUpdate {
 }
 
 // AddWeight adds value to the "weight" field.
-func (_u *RoleUpdate) AddWeight(v int64) *RoleUpdate {
+func (_u *RoleUpdate) AddWeight(v int) *RoleUpdate {
 	_u.mutation.AddWeight(v)
 	return _u
 }
@@ -249,10 +249,10 @@ func (_u *RoleUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 		_spec.SetField(role.FieldCode, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Weight(); ok {
-		_spec.SetField(role.FieldWeight, field.TypeInt64, value)
+		_spec.SetField(role.FieldWeight, field.TypeInt, value)
 	}
 	if value, ok := _u.mutation.AddedWeight(); ok {
-		_spec.AddField(role.FieldWeight, field.TypeInt64, value)
+		_spec.AddField(role.FieldWeight, field.TypeInt, value)
 	}
 	if value, ok := _u.mutation.Status(); ok {
 		_spec.SetField(role.FieldStatus, field.TypeEnum, value)
@@ -330,14 +330,14 @@ func (_u *RoleUpdateOne) SetNillableCode(v *string) *RoleUpdateOne {
 }
 
 // SetWeight sets the "weight" field.
-func (_u *RoleUpdateOne) SetWeight(v int64) *RoleUpdateOne {
+func (_u *RoleUpdateOne) SetWeight(v int) *RoleUpdateOne {
 	_u.mutation.ResetWeight()
 	_u.mutation.SetWeight(v)
 	return _u
 }
 
 // SetNillableWeight sets the "weight" field if the given value is not nil.
-func (_u *RoleUpdateOne) SetNillableWeight(v *int64) *RoleUpdateOne {
+func (_u *RoleUpdateOne) SetNillableWeight(v *int) *RoleUpdateOne {
 	if v != nil {
 		_u.SetWeight(*v)
 	}
@@ -345,7 +345,7 @@ func (_u *RoleUpdateOne) SetNillableWeight(v *int64) *RoleUpdateOne {
 }
 
 // AddWeight adds value to the "weight" field.
-func (_u *RoleUpdateOne) AddWeight(v int64) *RoleUpdateOne {
+func (_u *RoleUpdateOne) AddWeight(v int) *RoleUpdateOne {
 	_u.mutation.AddWeight(v)
 	return _u
 }
@@ -552,10 +552,10 @@ func (_u *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) {
 		_spec.SetField(role.FieldCode, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Weight(); ok {
-		_spec.SetField(role.FieldWeight, field.TypeInt64, value)
+		_spec.SetField(role.FieldWeight, field.TypeInt, value)
 	}
 	if value, ok := _u.mutation.AddedWeight(); ok {
-		_spec.AddField(role.FieldWeight, field.TypeInt64, value)
+		_spec.AddField(role.FieldWeight, field.TypeInt, value)
 	}
 	if value, ok := _u.mutation.Status(); ok {
 		_spec.SetField(role.FieldStatus, field.TypeEnum, value)

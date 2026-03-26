@@ -32,7 +32,7 @@ func (Role) Fields() []ent.Field {
 		field.String("code").
 			Unique().
 			Comment("角色编码"),
-		field.Int64("weight").
+		field.Int("weight").
 			Default(0).
 			Comment("排序权重"),
 		field.Enum("status").

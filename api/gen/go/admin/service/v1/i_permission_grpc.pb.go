@@ -26,12 +26,19 @@ const (
 	PermissionService_UpdateMenu_FullMethodName       = "/admin.service.v1.PermissionService/UpdateMenu"
 	PermissionService_UpdateMenuStatus_FullMethodName = "/admin.service.v1.PermissionService/UpdateMenuStatus"
 	PermissionService_DeleteMenu_FullMethodName       = "/admin.service.v1.PermissionService/DeleteMenu"
+	PermissionService_ListRole_FullMethodName         = "/admin.service.v1.PermissionService/ListRole"
+	PermissionService_GetRole_FullMethodName          = "/admin.service.v1.PermissionService/GetRole"
+	PermissionService_CreateRole_FullMethodName       = "/admin.service.v1.PermissionService/CreateRole"
+	PermissionService_UpdateRole_FullMethodName       = "/admin.service.v1.PermissionService/UpdateRole"
+	PermissionService_UpdateRoleStatus_FullMethodName = "/admin.service.v1.PermissionService/UpdateRoleStatus"
+	PermissionService_DeleteRole_FullMethodName       = "/admin.service.v1.PermissionService/DeleteRole"
 )
 
 // PermissionServiceClient is the client API for PermissionService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type PermissionServiceClient interface {
+	// 菜单
 	// 列表的tree
 	MenuTree(ctx context.Context, in *v1.MenuTreeRequest, opts ...grpc.CallOption) (*v1.MenuTreeResponse, error)
 	// 创建权限
@@ -42,6 +49,13 @@ type PermissionServiceClient interface {
 	UpdateMenuStatus(ctx context.Context, in *v1.UpdateMenuStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 批量删除权限
 	DeleteMenu(ctx context.Context, in *v1.DeleteMenuRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 角色
+	ListRole(ctx context.Context, in *v1.ListRoleRequest, opts ...grpc.CallOption) (*v1.ListRoleResponse, error)
+	GetRole(ctx context.Context, in *v1.GetRoleRequest, opts ...grpc.CallOption) (*v1.Role, error)
+	CreateRole(ctx context.Context, in *v1.CreateRoleRequest, opts ...grpc.CallOption) (*v1.Role, error)
+	UpdateRole(ctx context.Context, in *v1.UpdateRoleRequest, opts ...grpc.CallOption) (*v1.Role, error)
+	UpdateRoleStatus(ctx context.Context, in *v1.UpdateRoleStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteRole(ctx context.Context, in *v1.DeleteRoleRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type permissionServiceClient struct {
@@ -102,10 +116,71 @@ func (c *permissionServiceClient) DeleteMenu(ctx context.Context, in *v1.DeleteM
 	return out, nil
 }
 
+func (c *permissionServiceClient) ListRole(ctx context.Context, in *v1.ListRoleRequest, opts ...grpc.CallOption) (*v1.ListRoleResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v1.ListRoleResponse)
+	err := c.cc.Invoke(ctx, PermissionService_ListRole_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *permissionServiceClient) GetRole(ctx context.Context, in *v1.GetRoleRequest, opts ...grpc.CallOption) (*v1.Role, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v1.Role)
+	err := c.cc.Invoke(ctx, PermissionService_GetRole_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *permissionServiceClient) CreateRole(ctx context.Context, in *v1.CreateRoleRequest, opts ...grpc.CallOption) (*v1.Role, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v1.Role)
+	err := c.cc.Invoke(ctx, PermissionService_CreateRole_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *permissionServiceClient) UpdateRole(ctx context.Context, in *v1.UpdateRoleRequest, opts ...grpc.CallOption) (*v1.Role, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v1.Role)
+	err := c.cc.Invoke(ctx, PermissionService_UpdateRole_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *permissionServiceClient) UpdateRoleStatus(ctx context.Context, in *v1.UpdateRoleStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, PermissionService_UpdateRoleStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *permissionServiceClient) DeleteRole(ctx context.Context, in *v1.DeleteRoleRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, PermissionService_DeleteRole_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PermissionServiceServer is the server API for PermissionService service.
 // All implementations must embed UnimplementedPermissionServiceServer
 // for forward compatibility.
 type PermissionServiceServer interface {
+	// 菜单
 	// 列表的tree
 	MenuTree(context.Context, *v1.MenuTreeRequest) (*v1.MenuTreeResponse, error)
 	// 创建权限
@@ -116,6 +191,13 @@ type PermissionServiceServer interface {
 	UpdateMenuStatus(context.Context, *v1.UpdateMenuStatusRequest) (*emptypb.Empty, error)
 	// 批量删除权限
 	DeleteMenu(context.Context, *v1.DeleteMenuRequest) (*emptypb.Empty, error)
+	// 角色
+	ListRole(context.Context, *v1.ListRoleRequest) (*v1.ListRoleResponse, error)
+	GetRole(context.Context, *v1.GetRoleRequest) (*v1.Role, error)
+	CreateRole(context.Context, *v1.CreateRoleRequest) (*v1.Role, error)
+	UpdateRole(context.Context, *v1.UpdateRoleRequest) (*v1.Role, error)
+	UpdateRoleStatus(context.Context, *v1.UpdateRoleStatusRequest) (*emptypb.Empty, error)
+	DeleteRole(context.Context, *v1.DeleteRoleRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedPermissionServiceServer()
 }
 
@@ -140,6 +222,24 @@ func (UnimplementedPermissionServiceServer) UpdateMenuStatus(context.Context, *v
 }
 func (UnimplementedPermissionServiceServer) DeleteMenu(context.Context, *v1.DeleteMenuRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteMenu not implemented")
+}
+func (UnimplementedPermissionServiceServer) ListRole(context.Context, *v1.ListRoleRequest) (*v1.ListRoleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListRole not implemented")
+}
+func (UnimplementedPermissionServiceServer) GetRole(context.Context, *v1.GetRoleRequest) (*v1.Role, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRole not implemented")
+}
+func (UnimplementedPermissionServiceServer) CreateRole(context.Context, *v1.CreateRoleRequest) (*v1.Role, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateRole not implemented")
+}
+func (UnimplementedPermissionServiceServer) UpdateRole(context.Context, *v1.UpdateRoleRequest) (*v1.Role, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateRole not implemented")
+}
+func (UnimplementedPermissionServiceServer) UpdateRoleStatus(context.Context, *v1.UpdateRoleStatusRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateRoleStatus not implemented")
+}
+func (UnimplementedPermissionServiceServer) DeleteRole(context.Context, *v1.DeleteRoleRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteRole not implemented")
 }
 func (UnimplementedPermissionServiceServer) mustEmbedUnimplementedPermissionServiceServer() {}
 func (UnimplementedPermissionServiceServer) testEmbeddedByValue()                           {}
@@ -252,6 +352,114 @@ func _PermissionService_DeleteMenu_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PermissionService_ListRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.ListRoleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PermissionServiceServer).ListRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PermissionService_ListRole_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PermissionServiceServer).ListRole(ctx, req.(*v1.ListRoleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PermissionService_GetRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.GetRoleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PermissionServiceServer).GetRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PermissionService_GetRole_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PermissionServiceServer).GetRole(ctx, req.(*v1.GetRoleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PermissionService_CreateRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.CreateRoleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PermissionServiceServer).CreateRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PermissionService_CreateRole_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PermissionServiceServer).CreateRole(ctx, req.(*v1.CreateRoleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PermissionService_UpdateRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.UpdateRoleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PermissionServiceServer).UpdateRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PermissionService_UpdateRole_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PermissionServiceServer).UpdateRole(ctx, req.(*v1.UpdateRoleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PermissionService_UpdateRoleStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.UpdateRoleStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PermissionServiceServer).UpdateRoleStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PermissionService_UpdateRoleStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PermissionServiceServer).UpdateRoleStatus(ctx, req.(*v1.UpdateRoleStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PermissionService_DeleteRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.DeleteRoleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PermissionServiceServer).DeleteRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PermissionService_DeleteRole_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PermissionServiceServer).DeleteRole(ctx, req.(*v1.DeleteRoleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PermissionService_ServiceDesc is the grpc.ServiceDesc for PermissionService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -278,6 +486,30 @@ var PermissionService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteMenu",
 			Handler:    _PermissionService_DeleteMenu_Handler,
+		},
+		{
+			MethodName: "ListRole",
+			Handler:    _PermissionService_ListRole_Handler,
+		},
+		{
+			MethodName: "GetRole",
+			Handler:    _PermissionService_GetRole_Handler,
+		},
+		{
+			MethodName: "CreateRole",
+			Handler:    _PermissionService_CreateRole_Handler,
+		},
+		{
+			MethodName: "UpdateRole",
+			Handler:    _PermissionService_UpdateRole_Handler,
+		},
+		{
+			MethodName: "UpdateRoleStatus",
+			Handler:    _PermissionService_UpdateRoleStatus_Handler,
+		},
+		{
+			MethodName: "DeleteRole",
+			Handler:    _PermissionService_DeleteRole_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -22,7 +22,7 @@ type Role struct {
 	// 角色编码
 	Code string `json:"code,omitempty"`
 	// 排序权重
-	Weight int64 `json:"weight,omitempty"`
+	Weight int `json:"weight,omitempty"`
 	// 状态
 	Status role.Status `json:"status,omitempty"`
 	// 备注
@@ -90,7 +90,7 @@ func (_m *Role) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field weight", values[i])
 			} else if value.Valid {
-				_m.Weight = value.Int64
+				_m.Weight = int(value.Int64)
 			}
 		case role.FieldStatus:
 			if value, ok := values[i].(*sql.NullString); !ok {

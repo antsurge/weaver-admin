@@ -7,9 +7,13 @@
 package permissionpb
 
 import (
+	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	_ "github.com/google/gnostic/openapiv3"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
+	sync "sync"
 	unsafe "unsafe"
 )
 
@@ -20,20 +24,677 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type Role struct {
+	state  protoimpl.MessageState `protogen:"open.v1"`
+	Id     string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name   string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Code   string                 `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
+	Remark string                 `protobuf:"bytes,4,opt,name=remark,proto3" json:"remark,omitempty"`
+	Weight int32                  `protobuf:"varint,5,opt,name=weight,proto3" json:"weight,omitempty"`
+	Status string                 `protobuf:"bytes,6,opt,name=status,proto3" json:"status,omitempty"`
+	// 数据权限范围
+	DataScope string `protobuf:"bytes,7,opt,name=dataScope,proto3" json:"dataScope,omitempty"`
+	// 是否系统内置
+	IsSystem      bool                   `protobuf:"varint,8,opt,name=isSystem,proto3" json:"isSystem,omitempty"`
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
+	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Role) Reset() {
+	*x = Role{}
+	mi := &file_permission_service_v1_role_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Role) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Role) ProtoMessage() {}
+
+func (x *Role) ProtoReflect() protoreflect.Message {
+	mi := &file_permission_service_v1_role_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Role.ProtoReflect.Descriptor instead.
+func (*Role) Descriptor() ([]byte, []int) {
+	return file_permission_service_v1_role_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *Role) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *Role) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *Role) GetCode() string {
+	if x != nil {
+		return x.Code
+	}
+	return ""
+}
+
+func (x *Role) GetRemark() string {
+	if x != nil {
+		return x.Remark
+	}
+	return ""
+}
+
+func (x *Role) GetWeight() int32 {
+	if x != nil {
+		return x.Weight
+	}
+	return 0
+}
+
+func (x *Role) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *Role) GetDataScope() string {
+	if x != nil {
+		return x.DataScope
+	}
+	return ""
+}
+
+func (x *Role) GetIsSystem() bool {
+	if x != nil {
+		return x.IsSystem
+	}
+	return false
+}
+
+func (x *Role) GetCreatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return nil
+}
+
+func (x *Role) GetUpdatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.UpdatedAt
+	}
+	return nil
+}
+
+type ListRoleRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	CurrentPage   int64                  `protobuf:"varint,1,opt,name=currentPage,proto3" json:"currentPage,omitempty"`
+	PageSize      int64                  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
+	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Code          string                 `protobuf:"bytes,4,opt,name=code,proto3" json:"code,omitempty"`
+	Status        string                 `protobuf:"bytes,5,opt,name=status,proto3" json:"status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListRoleRequest) Reset() {
+	*x = ListRoleRequest{}
+	mi := &file_permission_service_v1_role_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListRoleRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListRoleRequest) ProtoMessage() {}
+
+func (x *ListRoleRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_permission_service_v1_role_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListRoleRequest.ProtoReflect.Descriptor instead.
+func (*ListRoleRequest) Descriptor() ([]byte, []int) {
+	return file_permission_service_v1_role_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *ListRoleRequest) GetCurrentPage() int64 {
+	if x != nil {
+		return x.CurrentPage
+	}
+	return 0
+}
+
+func (x *ListRoleRequest) GetPageSize() int64 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListRoleRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *ListRoleRequest) GetCode() string {
+	if x != nil {
+		return x.Code
+	}
+	return ""
+}
+
+func (x *ListRoleRequest) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+type ListRoleResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Items         []*Role                `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	Total         int64                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListRoleResponse) Reset() {
+	*x = ListRoleResponse{}
+	mi := &file_permission_service_v1_role_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListRoleResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListRoleResponse) ProtoMessage() {}
+
+func (x *ListRoleResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_permission_service_v1_role_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListRoleResponse.ProtoReflect.Descriptor instead.
+func (*ListRoleResponse) Descriptor() ([]byte, []int) {
+	return file_permission_service_v1_role_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *ListRoleResponse) GetItems() []*Role {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+func (x *ListRoleResponse) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+type GetRoleRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetRoleRequest) Reset() {
+	*x = GetRoleRequest{}
+	mi := &file_permission_service_v1_role_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetRoleRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetRoleRequest) ProtoMessage() {}
+
+func (x *GetRoleRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_permission_service_v1_role_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetRoleRequest.ProtoReflect.Descriptor instead.
+func (*GetRoleRequest) Descriptor() ([]byte, []int) {
+	return file_permission_service_v1_role_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *GetRoleRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type CreateRoleRequest struct {
+	state  protoimpl.MessageState `protogen:"open.v1"`
+	Name   string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Code   string                 `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
+	Remark string                 `protobuf:"bytes,4,opt,name=remark,proto3" json:"remark,omitempty"`
+	Weight int32                  `protobuf:"varint,5,opt,name=weight,proto3" json:"weight,omitempty"`
+	Status string                 `protobuf:"bytes,6,opt,name=status,proto3" json:"status,omitempty"`
+	// 数据权限范围
+	DataScope string `protobuf:"bytes,7,opt,name=dataScope,proto3" json:"dataScope,omitempty"`
+	// 是否系统内置
+	IsSystem      bool `protobuf:"varint,8,opt,name=isSystem,proto3" json:"isSystem,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateRoleRequest) Reset() {
+	*x = CreateRoleRequest{}
+	mi := &file_permission_service_v1_role_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateRoleRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateRoleRequest) ProtoMessage() {}
+
+func (x *CreateRoleRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_permission_service_v1_role_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateRoleRequest.ProtoReflect.Descriptor instead.
+func (*CreateRoleRequest) Descriptor() ([]byte, []int) {
+	return file_permission_service_v1_role_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *CreateRoleRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *CreateRoleRequest) GetCode() string {
+	if x != nil {
+		return x.Code
+	}
+	return ""
+}
+
+func (x *CreateRoleRequest) GetRemark() string {
+	if x != nil {
+		return x.Remark
+	}
+	return ""
+}
+
+func (x *CreateRoleRequest) GetWeight() int32 {
+	if x != nil {
+		return x.Weight
+	}
+	return 0
+}
+
+func (x *CreateRoleRequest) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *CreateRoleRequest) GetDataScope() string {
+	if x != nil {
+		return x.DataScope
+	}
+	return ""
+}
+
+func (x *CreateRoleRequest) GetIsSystem() bool {
+	if x != nil {
+		return x.IsSystem
+	}
+	return false
+}
+
+type UpdateRoleRequest struct {
+	state  protoimpl.MessageState `protogen:"open.v1"`
+	Id     string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name   string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Code   string                 `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
+	Remark string                 `protobuf:"bytes,4,opt,name=remark,proto3" json:"remark,omitempty"`
+	Weight int32                  `protobuf:"varint,5,opt,name=weight,proto3" json:"weight,omitempty"`
+	Status string                 `protobuf:"bytes,6,opt,name=status,proto3" json:"status,omitempty"`
+	// 数据权限范围
+	DataScope string `protobuf:"bytes,7,opt,name=dataScope,proto3" json:"dataScope,omitempty"`
+	// 是否系统内置
+	IsSystem      bool `protobuf:"varint,8,opt,name=isSystem,proto3" json:"isSystem,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateRoleRequest) Reset() {
+	*x = UpdateRoleRequest{}
+	mi := &file_permission_service_v1_role_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateRoleRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateRoleRequest) ProtoMessage() {}
+
+func (x *UpdateRoleRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_permission_service_v1_role_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateRoleRequest.ProtoReflect.Descriptor instead.
+func (*UpdateRoleRequest) Descriptor() ([]byte, []int) {
+	return file_permission_service_v1_role_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *UpdateRoleRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *UpdateRoleRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *UpdateRoleRequest) GetCode() string {
+	if x != nil {
+		return x.Code
+	}
+	return ""
+}
+
+func (x *UpdateRoleRequest) GetRemark() string {
+	if x != nil {
+		return x.Remark
+	}
+	return ""
+}
+
+func (x *UpdateRoleRequest) GetWeight() int32 {
+	if x != nil {
+		return x.Weight
+	}
+	return 0
+}
+
+func (x *UpdateRoleRequest) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *UpdateRoleRequest) GetDataScope() string {
+	if x != nil {
+		return x.DataScope
+	}
+	return ""
+}
+
+func (x *UpdateRoleRequest) GetIsSystem() bool {
+	if x != nil {
+		return x.IsSystem
+	}
+	return false
+}
+
+type UpdateRoleStatusRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// ID
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// 岗位状态
+	Status        string `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateRoleStatusRequest) Reset() {
+	*x = UpdateRoleStatusRequest{}
+	mi := &file_permission_service_v1_role_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateRoleStatusRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateRoleStatusRequest) ProtoMessage() {}
+
+func (x *UpdateRoleStatusRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_permission_service_v1_role_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateRoleStatusRequest.ProtoReflect.Descriptor instead.
+func (*UpdateRoleStatusRequest) Descriptor() ([]byte, []int) {
+	return file_permission_service_v1_role_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *UpdateRoleStatusRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *UpdateRoleStatusRequest) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+type DeleteRoleRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Ids           []string               `protobuf:"bytes,1,rep,name=ids,proto3" json:"ids,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteRoleRequest) Reset() {
+	*x = DeleteRoleRequest{}
+	mi := &file_permission_service_v1_role_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteRoleRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteRoleRequest) ProtoMessage() {}
+
+func (x *DeleteRoleRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_permission_service_v1_role_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteRoleRequest.ProtoReflect.Descriptor instead.
+func (*DeleteRoleRequest) Descriptor() ([]byte, []int) {
+	return file_permission_service_v1_role_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *DeleteRoleRequest) GetIds() []string {
+	if x != nil {
+		return x.Ids
+	}
+	return nil
+}
+
 var File_permission_service_v1_role_proto protoreflect.FileDescriptor
 
 const file_permission_service_v1_role_proto_rawDesc = "" +
 	"\n" +
-	" permission/service/v1/role.proto\x12\x15permission.service.v1B\xed\x01\n" +
+	" permission/service/v1/role.proto\x12\x15permission.service.v1\x1a\x1bbuf/validate/validate.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xd4\x04\n" +
+	"\x04Role\x12\x1e\n" +
+	"\x02id\x18\x01 \x01(\tB\x0e\xbaG\v\x92\x02\b角色IDR\x02id\x12&\n" +
+	"\x04name\x18\x02 \x01(\tB\x12\xbaG\x0f\x92\x02\f角色名称R\x04name\x12&\n" +
+	"\x04code\x18\x03 \x01(\tB\x12\xbaG\x0f\x92\x02\f角色编码R\x04code\x12*\n" +
+	"\x06remark\x18\x04 \x01(\tB\x12\xbaG\x0f\x92\x02\f备注说明R\x06remark\x123\n" +
+	"\x06weight\x18\x05 \x01(\x05B\x1b\xbaG\x18\x92\x02\x15权重（排序用）R\x06weight\x12:\n" +
+	"\x06status\x18\x06 \x01(\tB\"\xbaG\x1f\x92\x02\x1c状态（enabled/disabled）R\x06status\x12S\n" +
+	"\tdataScope\x18\a \x01(\tB5\xbaG2\x92\x02/数据权限范围（如：ALL、DEPT、SELF）R\tdataScope\x12:\n" +
+	"\bisSystem\x18\b \x01(\bB\x1e\xbaG\x1b\x92\x02\x18是否系统内置角色R\bisSystem\x12L\n" +
+	"\tcreatedAt\x18\n" +
+	" \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间R\tcreatedAt\x12L\n" +
+	"\tupdatedAt\x18\v \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间R\tupdatedAt:\x12\xbaG\x0f\x92\x02\f角色信息\"\xe6\x02\n" +
+	"\x0fListRoleRequest\x12D\n" +
+	"\vcurrentPage\x18\x01 \x01(\x03B\"\xbaG\x1f\x92\x02\x1c当前页码（从1开始）R\vcurrentPage\x12A\n" +
+	"\bpageSize\x18\x02 \x01(\x03B%\xbaG\"\x92\x02\x1f每页条数（传0为全部）R\bpageSize\x12>\n" +
+	"\x04name\x18\x03 \x01(\tB*\xbaG'\x92\x02$角色名称（支持模糊查询）R\x04name\x12>\n" +
+	"\x04code\x18\x04 \x01(\tB*\xbaG'\x92\x02$角色编码（支持模糊查询）R\x04code\x12J\n" +
+	"\x06status\x18\x05 \x01(\tB2\xbaG/\x92\x02,状态（enabled=启用，disabled=禁用）R\x06status\"w\n" +
+	"\x10ListRoleResponse\x12?\n" +
+	"\x05items\x18\x01 \x03(\v2\x1b.permission.service.v1.RoleB\f\xbaG\t\x92\x02\x06列表R\x05items\x12\"\n" +
+	"\x05total\x18\x02 \x01(\x03B\f\xbaG\t\x92\x02\x06总数R\x05total\"*\n" +
+	"\x0eGetRoleRequest\x12\x18\n" +
+	"\x02id\x18\x01 \x01(\tB\b\xbaG\x05\x92\x02\x02IDR\x02id\"\xad\x03\n" +
+	"\x11CreateRoleRequest\x12&\n" +
+	"\x04name\x18\x02 \x01(\tB\x12\xbaG\x0f\x92\x02\f角色名称R\x04name\x12&\n" +
+	"\x04code\x18\x03 \x01(\tB\x12\xbaG\x0f\x92\x02\f角色编码R\x04code\x12*\n" +
+	"\x06remark\x18\x04 \x01(\tB\x12\xbaG\x0f\x92\x02\f备注说明R\x06remark\x123\n" +
+	"\x06weight\x18\x05 \x01(\x05B\x1b\xbaG\x18\x92\x02\x15权重（排序用）R\x06weight\x12:\n" +
+	"\x06status\x18\x06 \x01(\tB\"\xbaG\x1f\x92\x02\x1c状态（enabled/disabled）R\x06status\x12S\n" +
+	"\tdataScope\x18\a \x01(\tB5\xbaG2\x92\x02/数据权限范围（如：ALL、DEPT、SELF）R\tdataScope\x12:\n" +
+	"\bisSystem\x18\b \x01(\bB\x1e\xbaG\x1b\x92\x02\x18是否系统内置角色R\bisSystem:\x1a\xbaG\x17\xba\x01\x04name\xba\x01\x04code\xba\x01\x06status\"\xc7\x03\n" +
+	"\x11UpdateRoleRequest\x12\x18\n" +
+	"\x02id\x18\x01 \x01(\tB\b\xbaG\x05\x92\x02\x02IDR\x02id\x12&\n" +
+	"\x04name\x18\x02 \x01(\tB\x12\xbaG\x0f\x92\x02\f角色名称R\x04name\x12&\n" +
+	"\x04code\x18\x03 \x01(\tB\x12\xbaG\x0f\x92\x02\f角色编码R\x04code\x12*\n" +
+	"\x06remark\x18\x04 \x01(\tB\x12\xbaG\x0f\x92\x02\f备注说明R\x06remark\x123\n" +
+	"\x06weight\x18\x05 \x01(\x05B\x1b\xbaG\x18\x92\x02\x15权重（排序用）R\x06weight\x12:\n" +
+	"\x06status\x18\x06 \x01(\tB\"\xbaG\x1f\x92\x02\x1c状态（enabled/disabled）R\x06status\x12S\n" +
+	"\tdataScope\x18\a \x01(\tB5\xbaG2\x92\x02/数据权限范围（如：ALL、DEPT、SELF）R\tdataScope\x12:\n" +
+	"\bisSystem\x18\b \x01(\bB\x1e\xbaG\x1b\x92\x02\x18是否系统内置角色R\bisSystem:\x1a\xbaG\x17\xba\x01\x04name\xba\x01\x04code\xba\x01\x06status\"\xe5\x01\n" +
+	"\x17UpdateRoleStatusRequest\x12\x18\n" +
+	"\x02id\x18\x01 \x01(\tB\b\xbaG\x05\x92\x02\x02IDR\x02id\x12\xa1\x01\n" +
+	"\x06status\x18\x02 \x01(\tB\x88\x01\xbaG\x1f\x92\x02\x1c状态（enabled/disabled）\xbaHc\xba\x01K\n" +
+	"\x13role.status.invalid\x12\x13role.status.invalid\x1a\x1fthis in ['enabled', 'disabled']r\x13R\aenabledR\bdisabledR\x06status:\f\xbaG\t\xba\x01\x06status\"\xc6\x01\n" +
+	"\x11DeleteRoleRequest\x12\xb0\x01\n" +
+	"\x03ids\x18\x01 \x03(\tB\x9d\x01\xbaGJ\x92\x02GID列表（必填，至少1个，最多100个，每个ID不能为空）\xbaHM\xba\x01C\n" +
+	"\x12role.ids.not_empty\x12\x12role.ids.not_empty\x1a\x19this.all(x, x.size() > 0)\x92\x01\x04\b\x01\x10dR\x03idsB\xed\x01\n" +
 	"\x19com.permission.service.v1B\tRoleProtoP\x01ZOgithub.com/hypercoze/kratos-admin/api/gen/go/permission/service/v1;permissionpb\xa2\x02\x03PSX\xaa\x02\x15Permission.Service.V1\xca\x02\x15Permission\\Service\\V1\xe2\x02!Permission\\Service\\V1\\GPBMetadata\xea\x02\x17Permission::Service::V1b\x06proto3"
 
-var file_permission_service_v1_role_proto_goTypes = []any{}
+var (
+	file_permission_service_v1_role_proto_rawDescOnce sync.Once
+	file_permission_service_v1_role_proto_rawDescData []byte
+)
+
+func file_permission_service_v1_role_proto_rawDescGZIP() []byte {
+	file_permission_service_v1_role_proto_rawDescOnce.Do(func() {
+		file_permission_service_v1_role_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_permission_service_v1_role_proto_rawDesc), len(file_permission_service_v1_role_proto_rawDesc)))
+	})
+	return file_permission_service_v1_role_proto_rawDescData
+}
+
+var file_permission_service_v1_role_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_permission_service_v1_role_proto_goTypes = []any{
+	(*Role)(nil),                    // 0: permission.service.v1.Role
+	(*ListRoleRequest)(nil),         // 1: permission.service.v1.ListRoleRequest
+	(*ListRoleResponse)(nil),        // 2: permission.service.v1.ListRoleResponse
+	(*GetRoleRequest)(nil),          // 3: permission.service.v1.GetRoleRequest
+	(*CreateRoleRequest)(nil),       // 4: permission.service.v1.CreateRoleRequest
+	(*UpdateRoleRequest)(nil),       // 5: permission.service.v1.UpdateRoleRequest
+	(*UpdateRoleStatusRequest)(nil), // 6: permission.service.v1.UpdateRoleStatusRequest
+	(*DeleteRoleRequest)(nil),       // 7: permission.service.v1.DeleteRoleRequest
+	(*timestamppb.Timestamp)(nil),   // 8: google.protobuf.Timestamp
+}
 var file_permission_service_v1_role_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	8, // 0: permission.service.v1.Role.createdAt:type_name -> google.protobuf.Timestamp
+	8, // 1: permission.service.v1.Role.updatedAt:type_name -> google.protobuf.Timestamp
+	0, // 2: permission.service.v1.ListRoleResponse.items:type_name -> permission.service.v1.Role
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_permission_service_v1_role_proto_init() }
@@ -47,12 +708,13 @@ func file_permission_service_v1_role_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_permission_service_v1_role_proto_rawDesc), len(file_permission_service_v1_role_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   0,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_permission_service_v1_role_proto_goTypes,
 		DependencyIndexes: file_permission_service_v1_role_proto_depIdxs,
+		MessageInfos:      file_permission_service_v1_role_proto_msgTypes,
 	}.Build()
 	File_permission_service_v1_role_proto = out.File
 	file_permission_service_v1_role_proto_goTypes = nil

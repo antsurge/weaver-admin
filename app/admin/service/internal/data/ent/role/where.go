@@ -75,7 +75,7 @@ func Code(v string) predicate.Role {
 }
 
 // Weight applies equality check predicate on the "weight" field. It's identical to WeightEQ.
-func Weight(v int64) predicate.Role {
+func Weight(v int) predicate.Role {
 	return predicate.Role(sql.FieldEQ(FieldWeight, v))
 }
 
@@ -240,42 +240,42 @@ func CodeContainsFold(v string) predicate.Role {
 }
 
 // WeightEQ applies the EQ predicate on the "weight" field.
-func WeightEQ(v int64) predicate.Role {
+func WeightEQ(v int) predicate.Role {
 	return predicate.Role(sql.FieldEQ(FieldWeight, v))
 }
 
 // WeightNEQ applies the NEQ predicate on the "weight" field.
-func WeightNEQ(v int64) predicate.Role {
+func WeightNEQ(v int) predicate.Role {
 	return predicate.Role(sql.FieldNEQ(FieldWeight, v))
 }
 
 // WeightIn applies the In predicate on the "weight" field.
-func WeightIn(vs ...int64) predicate.Role {
+func WeightIn(vs ...int) predicate.Role {
 	return predicate.Role(sql.FieldIn(FieldWeight, vs...))
 }
 
 // WeightNotIn applies the NotIn predicate on the "weight" field.
-func WeightNotIn(vs ...int64) predicate.Role {
+func WeightNotIn(vs ...int) predicate.Role {
 	return predicate.Role(sql.FieldNotIn(FieldWeight, vs...))
 }
 
 // WeightGT applies the GT predicate on the "weight" field.
-func WeightGT(v int64) predicate.Role {
+func WeightGT(v int) predicate.Role {
 	return predicate.Role(sql.FieldGT(FieldWeight, v))
 }
 
 // WeightGTE applies the GTE predicate on the "weight" field.
-func WeightGTE(v int64) predicate.Role {
+func WeightGTE(v int) predicate.Role {
 	return predicate.Role(sql.FieldGTE(FieldWeight, v))
 }
 
 // WeightLT applies the LT predicate on the "weight" field.
-func WeightLT(v int64) predicate.Role {
+func WeightLT(v int) predicate.Role {
 	return predicate.Role(sql.FieldLT(FieldWeight, v))
 }
 
 // WeightLTE applies the LTE predicate on the "weight" field.
-func WeightLTE(v int64) predicate.Role {
+func WeightLTE(v int) predicate.Role {
 	return predicate.Role(sql.FieldLTE(FieldWeight, v))
 }
 

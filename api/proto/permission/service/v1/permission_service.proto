@@ -9,11 +9,11 @@ import "permission/service/v1/menu.proto";
 
 service PermissionService {
   // ----- 角色 -----
-  //    rpc CreateRole(CreateRoleRequest) returns (CreateRoleResponse);
-  //    rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleResponse);
-  //    rpc GetRole(GetRoleRequest) returns (Role);
-  //    rpc ListRole(ListRoleRequest) returns (ListRoleResponse);
-  //    rpc DeleteRole(DeleteRoleRequest) returns (google.protobuf.Empty);
+  //      rpc CreateRole(CreateRoleRequest) returns (CreateRoleResponse);
+  //      rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleResponse);
+  //      rpc GetRole(GetRoleRequest) returns (Role);
+  //      rpc ListRole(ListRoleRequest) returns (ListRoleResponse);
+  //      rpc DeleteRole(DeleteRoleRequest) returns (google.protobuf.Empty);
 
   // ----- 权限 -----
   rpc CreateMenu(CreateMenuRequest) returns (CreateMenuResponse);

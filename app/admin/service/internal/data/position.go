@@ -58,7 +58,6 @@ func (r *positionRepo) ListPosition(ctx context.Context, params *biz.ListPositio
 		*ent.Position,
 		*ent.PositionQuery,
 	](ctx, query, params.PaginationParams)
-
 	if err != nil {
 		return nil, err
 	}

@@ -5,9 +5,12 @@ package admin.service.v1;
 import "gnostic/openapi/v3/annotations.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
+import "organization/service/v1/department.proto";
 import "permission/service/v1/menu.proto";
+import "permission/service/v1/role.proto";
 
 service PermissionService {
+  // 菜单
   // 列表的tree
   rpc MenuTree(permission.service.v1.MenuTreeRequest) returns (permission.service.v1.MenuTreeResponse) {
     option (google.api.http) = {get: "/admin/v1/menu/tree"};
@@ -60,6 +63,62 @@ service PermissionService {
       tags: "Permission"
       summary: "删除权限"
       description: "批量删除权限"
+    };
+  }
+
+  // 角色
+  rpc ListRole(permission.service.v1.ListRoleRequest) returns (permission.service.v1.ListRoleResponse) {
+    option (google.api.http) = {get: "/admin/v1/role"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Permission"
+      summary: "角色-列表"
+      description: "获取角色列表"
+    };
+  }
+  rpc GetRole(permission.service.v1.GetRoleRequest) returns (permission.service.v1.Role) {
+    option (google.api.http) = {get: "/admin/v1/role/{id}"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Permission"
+      summary: "角色-通过ID获取"
+      description: "通过ID获取角色"
+    };
+  }
+  rpc CreateRole(permission.service.v1.CreateRoleRequest) returns (permission.service.v1.Role) {
+    option (google.api.http) = {
+      post: "/admin/v1/role"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Permission"
+      summary: "角色-创建"
+      description: "创建角色"
+    };
+  }
+  rpc UpdateRole(permission.service.v1.UpdateRoleRequest) returns (permission.service.v1.Role) {
+    option (google.api.http) = {
+      put: "/admin/v1/role"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Permission"
+      summary: "角色-修改"
+      description: "修改角色"
+    };
+  }
+  rpc UpdateRoleStatus(permission.service.v1.UpdateRoleStatusRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {get: "/admin/v1/role/{id}/status"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Permission"
+      summary: "角色-修改状态"
+      description: "修改状态"
+    };
+  }
+  rpc DeleteRole(permission.service.v1.DeleteRoleRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/admin/v1/role"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Permission"
+      summary: "角色-删除"
+      description: "删除角色"
     };
   }
 }

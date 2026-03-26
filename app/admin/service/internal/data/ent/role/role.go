@@ -65,7 +65,7 @@ func ValidColumn(column string) bool {
 
 var (
 	// DefaultWeight holds the default value on creation for the "weight" field.
-	DefaultWeight int64
+	DefaultWeight int
 	// DefaultIsSystem holds the default value on creation for the "is_system" field.
 	DefaultIsSystem bool
 	// DefaultDataScope holds the default value on creation for the "data_scope" field.

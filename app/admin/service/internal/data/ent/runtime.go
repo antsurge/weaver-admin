@@ -414,7 +414,7 @@ func init() {
 	// roleDescWeight is the schema descriptor for weight field.
 	roleDescWeight := roleFields[3].Descriptor()
 	// role.DefaultWeight holds the default value on creation for the weight field.
-	role.DefaultWeight = roleDescWeight.Default.(int64)
+	role.DefaultWeight = roleDescWeight.Default.(int)
 	// roleDescIsSystem is the schema descriptor for is_system field.
 	roleDescIsSystem := roleFields[6].Descriptor()
 	// role.DefaultIsSystem holds the default value on creation for the is_system field.

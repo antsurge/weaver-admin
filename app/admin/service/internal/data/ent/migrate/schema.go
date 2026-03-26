@@ -159,7 +159,7 @@ var (
 		{Name: "id", Type: field.TypeString, Unique: true},
 		{Name: "name", Type: field.TypeString, Comment: "角色名称"},
 		{Name: "code", Type: field.TypeString, Unique: true, Comment: "角色编码"},
-		{Name: "weight", Type: field.TypeInt64, Comment: "排序权重", Default: 0},
+		{Name: "weight", Type: field.TypeInt, Comment: "排序权重", Default: 0},
 		{Name: "status", Type: field.TypeEnum, Comment: "状态", Enums: []string{"enabled", "disabled"}, Default: "enabled"},
 		{Name: "remark", Type: field.TypeString, Nullable: true, Comment: "备注"},
 		{Name: "is_system", Type: field.TypeBool, Comment: "是否系统内置", Default: false},
