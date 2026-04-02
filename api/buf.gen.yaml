@@ -20,6 +20,9 @@ managed:
       path: dictionary/service/v1
       value: github.com/hypercoze/kratos-admin/api/gen/go/dictionary/service/v1;dictionarypb
     - file_option: go_package
+      path: identity/service/v1
+      value: github.com/hypercoze/kratos-admin/api/gen/go/identity/service/v1;identityypb
+    - file_option: go_package
       path: common/v1
       value: github.com/hypercoze/kratos-admin/api/gen/go/common/v1;commonpb
   disable:

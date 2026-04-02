@@ -1,16 +1,16 @@
 import { requestClient } from '#/api/request';
-import type { PaginationParams,PaginationResult } from '#/types/pagination'
+import type { PaginationParams, PaginationResult } from '#/types/pagination'
 
 export namespace OrganizationPositionApi {
-  /** 岗位 */
+  /** 职务 */
   export interface Position {
-    /** 岗位ID */
+    /** 职务ID */
     id: string;
-    /** 岗位名称 */
+    /** 职务名称 */
     name: string;
-    /** 岗位编码 */
+    /** 职务编码 */
     code: string;
-    /** 权重 */
+    /** 权重/职务级别（越小职务越高） */
     weight: number;
     /** 状态：enabled=启用 disabled=禁用 */
     status: 'enabled' | 'disabled';
@@ -18,31 +18,47 @@ export namespace OrganizationPositionApi {
     remark: string;
     /** 创建时间 */
     createdAt?: string;
+    /** 创建人 */
+    createdBy?: string;
+    /** 创建人姓名 */
+    createdByName?: string;
     /** 更新时间 */
     updatedAt?: string;
+    /** 更新人 */
+    updatedBy?: string;
+    /** 更新人姓名 */
+    updatedByName?: string;
   }
 
-  export interface PositionListParams extends PaginationParams{
+  /** 列表筛选参数 */
+  export interface PositionListParams extends PaginationParams {
+    /** 职务名称 */
     name?: string;
+    /** 职务编码 */
     code?: string;
+    /** 状态 */
     status?: 'enabled' | 'disabled';
+  }
+
+  export interface isExists {
+    exists: boolean
   }
 }
 
 /**
- * 获取岗位列表
+ * 获取职务列表
  */
-async function getPositionListApi(params?:OrganizationPositionApi.PositionListParams) {
+async function getPositionListApi(params?: OrganizationPositionApi.PositionListParams) {
   return requestClient.get<PaginationResult<OrganizationPositionApi.Position>>(
     '/admin/v1/position',
     {
-      params:params
+      params: params
     }
   );
 }
 
 /**
- * 获取岗位
+ * 获取职务
  */
 async function getPositionApi(id: string, params: object = {}) {
   return requestClient.get<OrganizationPositionApi.Position>(
@@ -51,8 +67,8 @@ async function getPositionApi(id: string, params: object = {}) {
 }
 
 /**
- * 创建岗位
- * @param data 岗位数据
+ * 创建职务
+ * @param data 职务数据
  */
 async function createPositionApi(
   data: Omit<OrganizationPositionApi.Position, 'id' | 'createdAt' | 'updatedAt'>,
@@ -63,9 +79,9 @@ async function createPositionApi(
 }
 
 /**
- * 更新岗位
- * @param id 岗位 ID
- * @param data 岗位数据
+ * 更新职务
+ * @param id 职务 ID
+ * @param data 职务数据
  */
 async function updatePositionApi(
   id: string,
@@ -77,8 +93,8 @@ async function updatePositionApi(
 }
 
 /**
- * 更新岗位状态
- * @param id 岗位 ID
+ * 更新职务状态
+ * @param id 职务 ID
  * @param status 状态
  */
 async function updatePositionStatusApi(
@@ -91,8 +107,8 @@ async function updatePositionStatusApi(
 }
 
 /**
- * 删除岗位
- * @param ids 岗位 ID 集合
+ * 删除职务
+ * @param ids 职务 ID 集合
  */
 async function deletePositionApi(ids: string[]) {
   return requestClient.delete('/admin/v1/position', {
@@ -103,6 +119,54 @@ async function deletePositionApi(ids: string[]) {
   });
 }
 
+/**
+ * 职位名称是否存在
+ */
+async function isPositionNameExistsApi(
+  name: string,
+  id?: OrganizationPositionApi.Position['id'],
+) {
+  return requestClient.get<OrganizationPositionApi.isExists>('/admin/v1/position:name-exists', {
+    params: { id, name },
+  });
+}
+
+/**
+ * 职位编码是否存在
+ */
+async function isPositionCodeExistsApi(
+  code: string,
+  id?: OrganizationPositionApi.Position['id'],
+) {
+  return requestClient.get<OrganizationPositionApi.isExists>('/admin/v1/position:code-exists', {
+    params: { id, code },
+  });
+}
+
+/** 导出 */
+async function exportPositionApi(params?: OrganizationPositionApi.PositionListParams) {
+  return requestClient.post(
+    '/admin/v1/position:export',
+    params,
+    {
+      responseType: 'blob',
+      responseReturn:"raw",
+      showFailMessage:false
+    },
+  );
+}
+
+/** 导入 */
+async function importPositionApi(data: FormData) {
+  return requestClient.post('/admin/v1/position:import',data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+}
+
+
+
 export {
   getPositionListApi,
   getPositionApi,
@@ -110,4 +174,8 @@ export {
   updatePositionApi,
   updatePositionStatusApi,
   deletePositionApi,
+  isPositionNameExistsApi,
+  isPositionCodeExistsApi,
+  exportPositionApi,
+  importPositionApi,
 };

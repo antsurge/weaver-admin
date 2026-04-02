@@ -187,3 +187,19 @@ func (s *OrganizationService) DeletePosition(ctx context.Context, req *organizat
 	err := s.positionUc.DeletePosition(ctx, req.Ids)
 	return nil, err
 }
+
+func (s *OrganizationService) IsPositionNameExists(ctx context.Context, req *organizationV1.IsPositionNameExistsRequest) (*organizationV1.IsPositionFieldExistsResponse, error) {
+	exists, err := s.positionUc.IsPositionNameExists(ctx, req.Name, req.Id)
+	if err != nil {
+		return nil, err
+	}
+	return &organizationV1.IsPositionFieldExistsResponse{Exists: exists}, nil
+}
+
+func (s *OrganizationService) IsPositionCodeExists(ctx context.Context, req *organizationV1.IsPositionCodeExistsRequest) (*organizationV1.IsPositionFieldExistsResponse, error) {
+	exists, err := s.positionUc.IsPositionCodeExists(ctx, req.Code, req.Id)
+	if err != nil {
+		return nil, err
+	}
+	return &organizationV1.IsPositionFieldExistsResponse{Exists: exists}, nil
+}

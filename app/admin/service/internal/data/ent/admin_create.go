@@ -88,30 +88,30 @@ func (_c *AdminCreate) SetPassword(v string) *AdminCreate {
 	return _c
 }
 
-// SetCreateTime sets the "create_time" field.
-func (_c *AdminCreate) SetCreateTime(v time.Time) *AdminCreate {
-	_c.mutation.SetCreateTime(v)
+// SetCreatedAt sets the "created_at" field.
+func (_c *AdminCreate) SetCreatedAt(v time.Time) *AdminCreate {
+	_c.mutation.SetCreatedAt(v)
 	return _c
 }
 
-// SetNillableCreateTime sets the "create_time" field if the given value is not nil.
-func (_c *AdminCreate) SetNillableCreateTime(v *time.Time) *AdminCreate {
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (_c *AdminCreate) SetNillableCreatedAt(v *time.Time) *AdminCreate {
 	if v != nil {
-		_c.SetCreateTime(*v)
+		_c.SetCreatedAt(*v)
 	}
 	return _c
 }
 
-// SetUpdateTime sets the "update_time" field.
-func (_c *AdminCreate) SetUpdateTime(v time.Time) *AdminCreate {
-	_c.mutation.SetUpdateTime(v)
+// SetUpdatedAt sets the "updated_at" field.
+func (_c *AdminCreate) SetUpdatedAt(v time.Time) *AdminCreate {
+	_c.mutation.SetUpdatedAt(v)
 	return _c
 }
 
-// SetNillableUpdateTime sets the "update_time" field if the given value is not nil.
-func (_c *AdminCreate) SetNillableUpdateTime(v *time.Time) *AdminCreate {
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (_c *AdminCreate) SetNillableUpdatedAt(v *time.Time) *AdminCreate {
 	if v != nil {
-		_c.SetUpdateTime(*v)
+		_c.SetUpdatedAt(*v)
 	}
 	return _c
 }
@@ -161,13 +161,13 @@ func (_c *AdminCreate) defaults() {
 		v := admin.DefaultRealName
 		_c.mutation.SetRealName(v)
 	}
-	if _, ok := _c.mutation.CreateTime(); !ok {
-		v := admin.DefaultCreateTime()
-		_c.mutation.SetCreateTime(v)
+	if _, ok := _c.mutation.CreatedAt(); !ok {
+		v := admin.DefaultCreatedAt()
+		_c.mutation.SetCreatedAt(v)
 	}
-	if _, ok := _c.mutation.UpdateTime(); !ok {
-		v := admin.DefaultUpdateTime()
-		_c.mutation.SetUpdateTime(v)
+	if _, ok := _c.mutation.UpdatedAt(); !ok {
+		v := admin.DefaultUpdatedAt()
+		_c.mutation.SetUpdatedAt(v)
 	}
 }
 
@@ -182,11 +182,11 @@ func (_c *AdminCreate) check() error {
 	if _, ok := _c.mutation.Password(); !ok {
 		return &ValidationError{Name: "password", err: errors.New(`ent: missing required field "Admin.password"`)}
 	}
-	if _, ok := _c.mutation.CreateTime(); !ok {
-		return &ValidationError{Name: "create_time", err: errors.New(`ent: missing required field "Admin.create_time"`)}
+	if _, ok := _c.mutation.CreatedAt(); !ok {
+		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Admin.created_at"`)}
 	}
-	if _, ok := _c.mutation.UpdateTime(); !ok {
-		return &ValidationError{Name: "update_time", err: errors.New(`ent: missing required field "Admin.update_time"`)}
+	if _, ok := _c.mutation.UpdatedAt(); !ok {
+		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "Admin.updated_at"`)}
 	}
 	return nil
 }
@@ -247,13 +247,13 @@ func (_c *AdminCreate) createSpec() (*Admin, *sqlgraph.CreateSpec) {
 		_spec.SetField(admin.FieldPassword, field.TypeString, value)
 		_node.Password = value
 	}
-	if value, ok := _c.mutation.CreateTime(); ok {
-		_spec.SetField(admin.FieldCreateTime, field.TypeTime, value)
-		_node.CreateTime = value
+	if value, ok := _c.mutation.CreatedAt(); ok {
+		_spec.SetField(admin.FieldCreatedAt, field.TypeTime, value)
+		_node.CreatedAt = value
 	}
-	if value, ok := _c.mutation.UpdateTime(); ok {
-		_spec.SetField(admin.FieldUpdateTime, field.TypeTime, value)
-		_node.UpdateTime = value
+	if value, ok := _c.mutation.UpdatedAt(); ok {
+		_spec.SetField(admin.FieldUpdatedAt, field.TypeTime, value)
+		_node.UpdatedAt = value
 	}
 	return _node, _spec
 }

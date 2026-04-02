@@ -18,7 +18,6 @@ service AuthenticationService {
       description: "获取验证码"
     };
   }
-
   // 登录
   rpc Login(authentication.service.v1.LoginRequest) returns (authentication.service.v1.LoginResponse) {
     option (google.api.http) = {
@@ -31,7 +30,6 @@ service AuthenticationService {
       description: "用户登录"
     };
   }
-
   // 用户退出
   rpc Logout(authentication.service.v1.RefreshTokenRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
@@ -44,7 +42,6 @@ service AuthenticationService {
       description: "用户登出"
     };
   }
-
   // 刷新认证令牌
   rpc RefreshToken(authentication.service.v1.RefreshTokenRequest) returns (authentication.service.v1.LoginResponse) {
     option (google.api.http) = {
@@ -57,7 +54,6 @@ service AuthenticationService {
       description: "刷新认证令牌"
     };
   }
-
   // 当前用户
   rpc CurrentUserInfo(google.protobuf.Empty) returns (authentication.service.v1.CurrentUserInfoResponse) {
     option (google.api.http) = {get: "admin/v1/current-user"};

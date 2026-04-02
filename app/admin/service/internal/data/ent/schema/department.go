@@ -7,6 +7,7 @@ import (
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
+	"entgo.io/ent/schema/index"
 )
 
 type Department struct {
@@ -36,6 +37,9 @@ func (Department) Fields() []ent.Field {
 			Unique().
 			MaxLen(64).
 			Comment("部门code"),
+		field.Enum("type").
+			Values("company", "subsidiary", "department", "position").
+			Comment("类型：company=公司 subsidiary=子公司 department=部门 position=岗位"),
 		field.Int("weight").
 			Default(0).
 			Comment("权重"),
@@ -68,6 +72,13 @@ func (Department) Fields() []ent.Field {
 			Optional().
 			Nillable().
 			Comment("删除时间"),
+	}
+}
+
+func (Department) Indexes() []ent.Index {
+	return []ent.Index{
+		index.Fields("parent_id"),
+		index.Fields("type"),
 	}
 }
 

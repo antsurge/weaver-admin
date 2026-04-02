@@ -49,6 +49,13 @@ func (r *positionRepo) ListPosition(ctx context.Context, params *biz.ListPositio
 		query = query.Where(position.CodeContains(v))
 	}
 
+	if v := params.Names; len(v) > 0 {
+		query = query.Where(position.NameIn(v...))
+	}
+	if v := params.Codes; len(v) > 0 {
+		query = query.Where(position.CodeIn(v...))
+	}
+
 	// 状态
 	if v := params.Status; len(v) > 0 {
 		query = query.Where(position.StatusEQ(position.Status(v)))
@@ -119,6 +126,30 @@ func (r *positionRepo) CreatePosition(ctx context.Context, req *biz.Position) er
 	return err
 }
 
+func (r *positionRepo) BatchCreatePosition(ctx context.Context, list []*biz.Position) error {
+	if len(list) == 0 {
+		return nil
+	}
+
+	builders := make([]*ent.PositionCreate, 0, len(list))
+
+	for _, item := range list {
+		builder := r.data.db.Position.Create().
+			SetID(item.ID).
+			SetName(item.Name).
+			SetCode(item.Code).
+			SetWeight(item.Weight).
+			SetStatus(position.Status(item.Status)).
+			SetRemark(item.Remark).
+			SetCreatedAt(item.CreatedAt).
+			SetUpdatedAt(item.UpdatedAt)
+
+		builders = append(builders, builder)
+	}
+
+	return r.data.db.Position.CreateBulk(builders...).Exec(ctx)
+}
+
 func (r *positionRepo) UpdatePosition(ctx context.Context, req *biz.Position) error {
 	_, err := r.data.db.Position.
 		UpdateOneID(req.ID).
@@ -148,4 +179,32 @@ func (r *positionRepo) UpdatePositionStatus(ctx context.Context, id, status stri
 		SetUpdatedAt(time.Now()).
 		Save(ctx)
 	return err
+}
+
+func (r *positionRepo) IsPositionCodeExists(ctx context.Context, code, id string) (bool, error) {
+	query := r.data.db.Position.
+		Query().
+		Where(position.CodeEQ(code))
+
+	// 如果是编辑，排除当前记录
+	if id != "" {
+		query = query.Where(position.IDNEQ(id))
+	}
+
+	// 判断是否存在
+	return query.Exist(ctx)
+}
+
+func (r *positionRepo) IsPositionNameExists(ctx context.Context, name, id string) (bool, error) {
+	query := r.data.db.Position.
+		Query().
+		Where(position.Name(name))
+
+	// 如果是编辑，排除当前记录
+	if id != "" {
+		query = query.Where(position.IDNEQ(id))
+	}
+
+	// 判断是否存在
+	return query.Exist(ctx)
 }

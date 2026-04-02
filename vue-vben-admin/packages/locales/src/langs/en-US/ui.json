@@ -16,11 +16,10 @@
     "create": "Create {0}",
     "delete": "Delete {0}",
     "view": "View {0}",
-    "confirm": "OK",
-    "cancel": "Cancel"
+    "export":"Export {0}",
+    "import":"Import {0}"
   },
   "actionMessage": {
-    "confirmDelete": "Confirm Delete",
     "deleteConfirm": "Are you sure to delete {0}?",
     "deleting": "Deleting {0} ...",
     "deleteSuccess": "{0} deleted successfully",

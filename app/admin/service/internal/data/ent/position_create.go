@@ -88,6 +88,20 @@ func (_c *PositionCreate) SetNillableCreatedAt(v *time.Time) *PositionCreate {
 	return _c
 }
 
+// SetCreatedBy sets the "created_by" field.
+func (_c *PositionCreate) SetCreatedBy(v string) *PositionCreate {
+	_c.mutation.SetCreatedBy(v)
+	return _c
+}
+
+// SetNillableCreatedBy sets the "created_by" field if the given value is not nil.
+func (_c *PositionCreate) SetNillableCreatedBy(v *string) *PositionCreate {
+	if v != nil {
+		_c.SetCreatedBy(*v)
+	}
+	return _c
+}
+
 // SetUpdatedAt sets the "updated_at" field.
 func (_c *PositionCreate) SetUpdatedAt(v time.Time) *PositionCreate {
 	_c.mutation.SetUpdatedAt(v)
@@ -102,6 +116,20 @@ func (_c *PositionCreate) SetNillableUpdatedAt(v *time.Time) *PositionCreate {
 	return _c
 }
 
+// SetUpdatedBy sets the "updated_by" field.
+func (_c *PositionCreate) SetUpdatedBy(v string) *PositionCreate {
+	_c.mutation.SetUpdatedBy(v)
+	return _c
+}
+
+// SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
+func (_c *PositionCreate) SetNillableUpdatedBy(v *string) *PositionCreate {
+	if v != nil {
+		_c.SetUpdatedBy(*v)
+	}
+	return _c
+}
+
 // SetDeletedAt sets the "deleted_at" field.
 func (_c *PositionCreate) SetDeletedAt(v time.Time) *PositionCreate {
 	_c.mutation.SetDeletedAt(v)
@@ -112,6 +140,20 @@ func (_c *PositionCreate) SetDeletedAt(v time.Time) *PositionCreate {
 func (_c *PositionCreate) SetNillableDeletedAt(v *time.Time) *PositionCreate {
 	if v != nil {
 		_c.SetDeletedAt(*v)
+	}
+	return _c
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (_c *PositionCreate) SetDeletedBy(v string) *PositionCreate {
+	_c.mutation.SetDeletedBy(v)
+	return _c
+}
+
+// SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
+func (_c *PositionCreate) SetNillableDeletedBy(v *string) *PositionCreate {
+	if v != nil {
+		_c.SetDeletedBy(*v)
 	}
 	return _c
 }
@@ -169,9 +211,17 @@ func (_c *PositionCreate) defaults() {
 		v := position.DefaultCreatedAt()
 		_c.mutation.SetCreatedAt(v)
 	}
+	if _, ok := _c.mutation.CreatedBy(); !ok {
+		v := position.DefaultCreatedBy
+		_c.mutation.SetCreatedBy(v)
+	}
 	if _, ok := _c.mutation.UpdatedAt(); !ok {
 		v := position.DefaultUpdatedAt()
 		_c.mutation.SetUpdatedAt(v)
+	}
+	if _, ok := _c.mutation.UpdatedBy(); !ok {
+		v := position.DefaultUpdatedBy
+		_c.mutation.SetUpdatedBy(v)
 	}
 }
 
@@ -212,8 +262,14 @@ func (_c *PositionCreate) check() error {
 	if _, ok := _c.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Position.created_at"`)}
 	}
+	if _, ok := _c.mutation.CreatedBy(); !ok {
+		return &ValidationError{Name: "created_by", err: errors.New(`ent: missing required field "Position.created_by"`)}
+	}
 	if _, ok := _c.mutation.UpdatedAt(); !ok {
 		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "Position.updated_at"`)}
+	}
+	if _, ok := _c.mutation.UpdatedBy(); !ok {
+		return &ValidationError{Name: "updated_by", err: errors.New(`ent: missing required field "Position.updated_by"`)}
 	}
 	if v, ok := _c.mutation.ID(); ok {
 		if err := position.IDValidator(v); err != nil {
@@ -279,13 +335,25 @@ func (_c *PositionCreate) createSpec() (*Position, *sqlgraph.CreateSpec) {
 		_spec.SetField(position.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
 	}
+	if value, ok := _c.mutation.CreatedBy(); ok {
+		_spec.SetField(position.FieldCreatedBy, field.TypeString, value)
+		_node.CreatedBy = value
+	}
 	if value, ok := _c.mutation.UpdatedAt(); ok {
 		_spec.SetField(position.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
 	}
+	if value, ok := _c.mutation.UpdatedBy(); ok {
+		_spec.SetField(position.FieldUpdatedBy, field.TypeString, value)
+		_node.UpdatedBy = value
+	}
 	if value, ok := _c.mutation.DeletedAt(); ok {
 		_spec.SetField(position.FieldDeletedAt, field.TypeTime, value)
 		_node.DeletedAt = &value
+	}
+	if value, ok := _c.mutation.DeletedBy(); ok {
+		_spec.SetField(position.FieldDeletedBy, field.TypeString, value)
+		_node.DeletedBy = &value
 	}
 	return _node, _spec
 }

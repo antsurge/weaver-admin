@@ -70,6 +70,20 @@ func (_u *DepartmentUpdate) SetNillableCode(v *string) *DepartmentUpdate {
 	return _u
 }
 
+// SetType sets the "type" field.
+func (_u *DepartmentUpdate) SetType(v department.Type) *DepartmentUpdate {
+	_u.mutation.SetType(v)
+	return _u
+}
+
+// SetNillableType sets the "type" field if the given value is not nil.
+func (_u *DepartmentUpdate) SetNillableType(v *department.Type) *DepartmentUpdate {
+	if v != nil {
+		_u.SetType(*v)
+	}
+	return _u
+}
+
 // SetWeight sets the "weight" field.
 func (_u *DepartmentUpdate) SetWeight(v int) *DepartmentUpdate {
 	_u.mutation.ResetWeight()
@@ -244,6 +258,11 @@ func (_u *DepartmentUpdate) check() error {
 			return &ValidationError{Name: "code", err: fmt.Errorf(`ent: validator failed for field "Department.code": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.GetType(); ok {
+		if err := department.TypeValidator(v); err != nil {
+			return &ValidationError{Name: "type", err: fmt.Errorf(`ent: validator failed for field "Department.type": %w`, err)}
+		}
+	}
 	if v, ok := _u.mutation.Status(); ok {
 		if err := department.StatusValidator(v); err != nil {
 			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Department.status": %w`, err)}
@@ -287,6 +306,9 @@ func (_u *DepartmentUpdate) sqlSave(ctx context.Context) (_node int, err error) 
 	}
 	if value, ok := _u.mutation.Code(); ok {
 		_spec.SetField(department.FieldCode, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.GetType(); ok {
+		_spec.SetField(department.FieldType, field.TypeEnum, value)
 	}
 	if value, ok := _u.mutation.Weight(); ok {
 		_spec.SetField(department.FieldWeight, field.TypeInt, value)
@@ -382,6 +404,20 @@ func (_u *DepartmentUpdateOne) SetCode(v string) *DepartmentUpdateOne {
 func (_u *DepartmentUpdateOne) SetNillableCode(v *string) *DepartmentUpdateOne {
 	if v != nil {
 		_u.SetCode(*v)
+	}
+	return _u
+}
+
+// SetType sets the "type" field.
+func (_u *DepartmentUpdateOne) SetType(v department.Type) *DepartmentUpdateOne {
+	_u.mutation.SetType(v)
+	return _u
+}
+
+// SetNillableType sets the "type" field if the given value is not nil.
+func (_u *DepartmentUpdateOne) SetNillableType(v *department.Type) *DepartmentUpdateOne {
+	if v != nil {
+		_u.SetType(*v)
 	}
 	return _u
 }
@@ -573,6 +609,11 @@ func (_u *DepartmentUpdateOne) check() error {
 			return &ValidationError{Name: "code", err: fmt.Errorf(`ent: validator failed for field "Department.code": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.GetType(); ok {
+		if err := department.TypeValidator(v); err != nil {
+			return &ValidationError{Name: "type", err: fmt.Errorf(`ent: validator failed for field "Department.type": %w`, err)}
+		}
+	}
 	if v, ok := _u.mutation.Status(); ok {
 		if err := department.StatusValidator(v); err != nil {
 			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Department.status": %w`, err)}
@@ -633,6 +674,9 @@ func (_u *DepartmentUpdateOne) sqlSave(ctx context.Context) (_node *Department, 
 	}
 	if value, ok := _u.mutation.Code(); ok {
 		_spec.SetField(department.FieldCode, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.GetType(); ok {
+		_spec.SetField(department.FieldType, field.TypeEnum, value)
 	}
 	if value, ok := _u.mutation.Weight(); ok {
 		_spec.SetField(department.FieldWeight, field.TypeInt, value)

@@ -21,15 +21,6 @@ const routes: RouteRecordRaw[] = [
           title: $t('page.system.dictionary'),
         },
       },
-      {
-        name: 'Admin',
-        path: '/admin',
-        component: () => import('#/views/system/admin/index.vue'),
-        meta: {
-          icon: 'lucide:area-chart',
-          title: $t('page.system.admin'),
-        },
-      },
     ],
   },
 ];

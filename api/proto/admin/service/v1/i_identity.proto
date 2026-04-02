@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package admin.service.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "identity/service/v1/admin.proto";
+
+service Identity {
+  rpc ListAdmin(identity.service.v1.ListAdminRequest) returns (identity.service.v1.ListAdminResponse) {
+    option (google.api.http) = {get: "/admin/v1/admin"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Authentication"
+      summary: "后台用户-列表"
+      description: "后台用户列表"
+    };
+  }
+  rpc CreateAdmin(identity.service.v1.CreateAdminRequest) returns (identity.service.v1.Admin) {
+    option (google.api.http) = {
+      post: "/admin/v1/admin"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Authentication"
+      summary: "后台用户-创建"
+      description: "创建后台用户"
+    };
+  }
+  rpc UpdateAdmin(identity.service.v1.UpdateAdminRequest) returns (identity.service.v1.Admin) {
+    option (google.api.http) = {
+      put: "/admin/v1/admin/{id}"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Authentication"
+      summary: "后台用户-修改"
+      description: "修改后台用户"
+    };
+  }
+  rpc GetAdmin(identity.service.v1.GetAdminRequest) returns (identity.service.v1.Admin) {
+    option (google.api.http) = {get: "/admin/v1/admin/{id}"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Authentication"
+      summary: "后台用户-通过id获取"
+      description: "通过id获取后台用户"
+    };
+  }
+}

@@ -13,6 +13,7 @@ type Department struct {
 	ParentID    string    `json:"parentID"`    // 父部门ID，空表示根节点
 	Name        string    `json:"name"`        // 部门名称
 	Code        string    `json:"code"`        // 部门code
+	Type        string    `json:"type"`        // 类型（company=公司 subsidiary=子公司 department=部门 position=岗位）
 	Weight      int       `json:"weight"`      // 权重
 	Status      string    `json:"status"`      // 状态：enabled=启用 disabled=禁用
 	LeaderName  string    `json:"leaderName"`  // 负责人姓名

@@ -2,7 +2,7 @@ import { z } from '#/adapter/form';
 import { $t } from '#/locales';
 
 /**
- * 岗位名称
+ * 职务名称
  */
 export const nameRule = z
   .string()
@@ -16,7 +16,7 @@ export const nameRule = z
   );
 
 /**
- * 岗位编码
+ * 职务编码
  */
 export const codeRule = z
   .string()

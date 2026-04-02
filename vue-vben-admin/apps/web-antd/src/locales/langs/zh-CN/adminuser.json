@@ -1,0 +1,21 @@
+{
+  "admin": {
+    "name": "用户",
+    "fields": {
+      "username": "用户名",
+      "realName": "用户昵称",
+      "email":"邮箱",
+      "phone": "手机号",
+      "avatar":"头像",
+      "status": "状态",
+      "remark": "备注"
+    },
+    "actions": {
+      "switchStatus": "切换用户状态",
+      "switchStatusConfirm": "确认将【{0}】状态切换为【{1}】？"
+    },
+    "form_placeholder": {
+      "remark": "请输入备注"
+    }
+  }
+}

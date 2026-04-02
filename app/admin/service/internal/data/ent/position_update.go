@@ -117,6 +117,20 @@ func (_u *PositionUpdate) SetUpdatedAt(v time.Time) *PositionUpdate {
 	return _u
 }
 
+// SetUpdatedBy sets the "updated_by" field.
+func (_u *PositionUpdate) SetUpdatedBy(v string) *PositionUpdate {
+	_u.mutation.SetUpdatedBy(v)
+	return _u
+}
+
+// SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
+func (_u *PositionUpdate) SetNillableUpdatedBy(v *string) *PositionUpdate {
+	if v != nil {
+		_u.SetUpdatedBy(*v)
+	}
+	return _u
+}
+
 // SetDeletedAt sets the "deleted_at" field.
 func (_u *PositionUpdate) SetDeletedAt(v time.Time) *PositionUpdate {
 	_u.mutation.SetDeletedAt(v)
@@ -134,6 +148,26 @@ func (_u *PositionUpdate) SetNillableDeletedAt(v *time.Time) *PositionUpdate {
 // ClearDeletedAt clears the value of the "deleted_at" field.
 func (_u *PositionUpdate) ClearDeletedAt() *PositionUpdate {
 	_u.mutation.ClearDeletedAt()
+	return _u
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (_u *PositionUpdate) SetDeletedBy(v string) *PositionUpdate {
+	_u.mutation.SetDeletedBy(v)
+	return _u
+}
+
+// SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
+func (_u *PositionUpdate) SetNillableDeletedBy(v *string) *PositionUpdate {
+	if v != nil {
+		_u.SetDeletedBy(*v)
+	}
+	return _u
+}
+
+// ClearDeletedBy clears the value of the "deleted_by" field.
+func (_u *PositionUpdate) ClearDeletedBy() *PositionUpdate {
+	_u.mutation.ClearDeletedBy()
 	return _u
 }
 
@@ -239,11 +273,20 @@ func (_u *PositionUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(position.FieldUpdatedAt, field.TypeTime, value)
 	}
+	if value, ok := _u.mutation.UpdatedBy(); ok {
+		_spec.SetField(position.FieldUpdatedBy, field.TypeString, value)
+	}
 	if value, ok := _u.mutation.DeletedAt(); ok {
 		_spec.SetField(position.FieldDeletedAt, field.TypeTime, value)
 	}
 	if _u.mutation.DeletedAtCleared() {
 		_spec.ClearField(position.FieldDeletedAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.DeletedBy(); ok {
+		_spec.SetField(position.FieldDeletedBy, field.TypeString, value)
+	}
+	if _u.mutation.DeletedByCleared() {
+		_spec.ClearField(position.FieldDeletedBy, field.TypeString)
 	}
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -354,6 +397,20 @@ func (_u *PositionUpdateOne) SetUpdatedAt(v time.Time) *PositionUpdateOne {
 	return _u
 }
 
+// SetUpdatedBy sets the "updated_by" field.
+func (_u *PositionUpdateOne) SetUpdatedBy(v string) *PositionUpdateOne {
+	_u.mutation.SetUpdatedBy(v)
+	return _u
+}
+
+// SetNillableUpdatedBy sets the "updated_by" field if the given value is not nil.
+func (_u *PositionUpdateOne) SetNillableUpdatedBy(v *string) *PositionUpdateOne {
+	if v != nil {
+		_u.SetUpdatedBy(*v)
+	}
+	return _u
+}
+
 // SetDeletedAt sets the "deleted_at" field.
 func (_u *PositionUpdateOne) SetDeletedAt(v time.Time) *PositionUpdateOne {
 	_u.mutation.SetDeletedAt(v)
@@ -371,6 +428,26 @@ func (_u *PositionUpdateOne) SetNillableDeletedAt(v *time.Time) *PositionUpdateO
 // ClearDeletedAt clears the value of the "deleted_at" field.
 func (_u *PositionUpdateOne) ClearDeletedAt() *PositionUpdateOne {
 	_u.mutation.ClearDeletedAt()
+	return _u
+}
+
+// SetDeletedBy sets the "deleted_by" field.
+func (_u *PositionUpdateOne) SetDeletedBy(v string) *PositionUpdateOne {
+	_u.mutation.SetDeletedBy(v)
+	return _u
+}
+
+// SetNillableDeletedBy sets the "deleted_by" field if the given value is not nil.
+func (_u *PositionUpdateOne) SetNillableDeletedBy(v *string) *PositionUpdateOne {
+	if v != nil {
+		_u.SetDeletedBy(*v)
+	}
+	return _u
+}
+
+// ClearDeletedBy clears the value of the "deleted_by" field.
+func (_u *PositionUpdateOne) ClearDeletedBy() *PositionUpdateOne {
+	_u.mutation.ClearDeletedBy()
 	return _u
 }
 
@@ -506,11 +583,20 @@ func (_u *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err 
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(position.FieldUpdatedAt, field.TypeTime, value)
 	}
+	if value, ok := _u.mutation.UpdatedBy(); ok {
+		_spec.SetField(position.FieldUpdatedBy, field.TypeString, value)
+	}
 	if value, ok := _u.mutation.DeletedAt(); ok {
 		_spec.SetField(position.FieldDeletedAt, field.TypeTime, value)
 	}
 	if _u.mutation.DeletedAtCleared() {
 		_spec.ClearField(position.FieldDeletedAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.DeletedBy(); ok {
+		_spec.SetField(position.FieldDeletedBy, field.TypeString, value)
+	}
+	if _u.mutation.DeletedByCleared() {
+		_spec.ClearField(position.FieldDeletedBy, field.TypeString)
 	}
 	_node = &Position{config: _u.config}
 	_spec.Assign = _node.assignValues

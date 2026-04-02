@@ -12,6 +12,7 @@ import (
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/biz"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/conf"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data"
+	"github.com/hypercoze/kratos-admin/app/admin/service/internal/handler"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/server"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/service"
 )
@@ -23,7 +24,7 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(confServer *conf.Server, confData *conf.Data, jwt *conf.JWT, logger log.Logger) (*kratos.App, func(), error) {
+func wireApp(confServer *conf.Server, confData *conf.Data, jwt *conf.JWT, mq *conf.MQ, logger log.Logger) (*kratos.App, func(), error) {
 	client := data.NewEntClient(confData, logger)
 	redisClient := data.NewRedisClient(confData, logger)
 	dataData, cleanup, err := data.NewData(confData, logger, client, redisClient)
@@ -51,8 +52,11 @@ func wireApp(confServer *conf.Server, confData *conf.Data, jwt *conf.JWT, logger
 	dictTypeUsecase := biz.NewDictTypeUsecase(dictTypeRepo, dictDataRepo, logger)
 	dictDataUsecase := biz.NewDictDataUsecase(dictDataRepo, logger)
 	dictionaryService := service.NewDictionaryService(dictTypeUsecase, dictDataUsecase)
-	grpcServer := server.NewGRPCServer(confServer, authenticationService, permissionService, organizationService, dictionaryService, logger)
-	httpServer := server.NewHTTPServer(confServer, jwt, authenticationService, permissionService, organizationService, dictionaryService, logger)
+	adminUseCase := biz.NewAdminUseCase(adminRepo, logger)
+	identityService := service.NewIdentityService(adminUseCase)
+	grpcServer := server.NewGRPCServer(confServer, authenticationService, permissionService, organizationService, dictionaryService, identityService, logger)
+	organizationHandler := handler.NewOrganizationHandler(positionUsecase)
+	httpServer := server.NewHTTPServer(confServer, jwt, authenticationService, permissionService, organizationService, dictionaryService, identityService, organizationHandler, logger)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()

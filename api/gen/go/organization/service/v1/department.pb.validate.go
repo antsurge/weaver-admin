@@ -133,6 +133,8 @@ func (m *Department) validate(all bool) error {
 		}
 	}
 
+	// no validation rules for Type
+
 	for idx, item := range m.GetChildren() {
 		_, _ = idx, item
 
@@ -281,6 +283,8 @@ func (m *CreateDepartmentRequest) validate(all bool) error {
 	// no validation rules for LeaderPhone
 
 	// no validation rules for LeaderEmail
+
+	// no validation rules for Type
 
 	if len(errors) > 0 {
 		return CreateDepartmentRequestMultiError(errors)

@@ -18,4 +18,21 @@ jwt:
   refresh_secret: "kratos-admin-access-refresh"
   issuer: "kratos-admin"
   access_ttl: 7200s
-  refresh_ttl: 604800s # 7 天
+  refresh_ttl: 604800s # 7
+mq:
+  driver: rabbitmq # kafka/rabbitmq
+
+  rabbitmq:
+    url: "amqp://guest:guest@127.0.0.1:5672/"
+    exchange: "" # 默认交换机
+    queue: ""
+    routing_key: ""
+    prefetch: 10 # 消费限流
+    pool_size: 2
+    durable: true
+
+  kafka:
+    brokers:
+      - 127.0.0.1:9092
+    group_id: "kratos-group"
+    async: false

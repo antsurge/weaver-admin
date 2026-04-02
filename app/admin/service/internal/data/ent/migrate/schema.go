@@ -18,8 +18,8 @@ var (
 		{Name: "phone", Type: field.TypeString, Nullable: true},
 		{Name: "avatar", Type: field.TypeString, Nullable: true},
 		{Name: "password", Type: field.TypeString},
-		{Name: "create_time", Type: field.TypeTime},
-		{Name: "update_time", Type: field.TypeTime},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
 	}
 	// AdminTable holds the schema information for the "admin" table.
 	AdminTable = &schema.Table{
@@ -48,6 +48,7 @@ var (
 		{Name: "parent_id", Type: field.TypeString, Comment: "父部门ID，空表示根节点", Default: ""},
 		{Name: "name", Type: field.TypeString, Size: 64, Comment: "部门名称"},
 		{Name: "code", Type: field.TypeString, Unique: true, Size: 64, Comment: "部门code"},
+		{Name: "type", Type: field.TypeEnum, Comment: "类型：company=公司 subsidiary=子公司 department=部门 position=岗位", Enums: []string{"company", "subsidiary", "department", "position"}},
 		{Name: "weight", Type: field.TypeInt, Comment: "权重", Default: 0},
 		{Name: "status", Type: field.TypeEnum, Comment: "状态：enabled=启用 disabled=禁用", Enums: []string{"enabled", "disabled"}, Default: "enabled"},
 		{Name: "leader_name", Type: field.TypeString, Nullable: true, Size: 64, Comment: "负责人姓名"},
@@ -63,6 +64,18 @@ var (
 		Comment:    "部门表",
 		Columns:    DepartmentColumns,
 		PrimaryKey: []*schema.Column{DepartmentColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "department_parent_id",
+				Unique:  false,
+				Columns: []*schema.Column{DepartmentColumns[1]},
+			},
+			{
+				Name:    "department_type",
+				Unique:  false,
+				Columns: []*schema.Column{DepartmentColumns[4]},
+			},
+		},
 	}
 	// DictDataColumns holds the columns for the "dict_data" table.
 	DictDataColumns = []*schema.Column{
@@ -131,26 +144,29 @@ var (
 	// PositionColumns holds the columns for the "position" table.
 	PositionColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true, Size: 36, Comment: "ID"},
-		{Name: "name", Type: field.TypeString, Size: 64, Comment: "岗位名称"},
-		{Name: "code", Type: field.TypeString, Size: 64, Comment: "岗位编码"},
-		{Name: "weight", Type: field.TypeInt, Comment: "权重", Default: 0},
+		{Name: "name", Type: field.TypeString, Size: 64, Comment: "职务名称"},
+		{Name: "code", Type: field.TypeString, Size: 64, Comment: "职务编码"},
+		{Name: "weight", Type: field.TypeInt, Comment: "权重/职务级别（越小职务越高）", Default: 0},
 		{Name: "status", Type: field.TypeEnum, Comment: "状态：enabled=启用 disabled=禁用", Enums: []string{"enabled", "disabled"}, Default: "enabled"},
 		{Name: "remark", Type: field.TypeString, Nullable: true, Size: 256, Comment: "备注"},
 		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间"},
+		{Name: "created_by", Type: field.TypeString, Comment: "创建人", Default: ""},
 		{Name: "updated_at", Type: field.TypeTime, Comment: "更新时间"},
+		{Name: "updated_by", Type: field.TypeString, Comment: "更新人", Default: ""},
 		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
+		{Name: "deleted_by", Type: field.TypeString, Nullable: true, Comment: "删除人"},
 	}
 	// PositionTable holds the schema information for the "position" table.
 	PositionTable = &schema.Table{
 		Name:       "position",
-		Comment:    "岗位表",
+		Comment:    "职务表",
 		Columns:    PositionColumns,
 		PrimaryKey: []*schema.Column{PositionColumns[0]},
 		Indexes: []*schema.Index{
 			{
 				Name:    "position_code_deleted_at",
 				Unique:  true,
-				Columns: []*schema.Column{PositionColumns[2], PositionColumns[8]},
+				Columns: []*schema.Column{PositionColumns[2], PositionColumns[10]},
 			},
 		},
 	}

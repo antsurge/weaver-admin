@@ -135,13 +135,12 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
    */
   client.addResponseInterceptor(
     errorMessageResponseInterceptor((msg: string, error) => {
-      const config = error?.config as CustomRequestOptions;
+      const config = error?.config;
 
       if (config?.showFailMessage === false) return;
 
 
       const responseData = error?.response?.data ?? {};
-
       const errorMessage =
         config?.failMessage ||
         responseData?.message ||

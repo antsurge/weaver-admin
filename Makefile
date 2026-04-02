@@ -30,3 +30,7 @@ ent:
     	go generate ./ent
 	@echo "✅ Ent code generated successfully!"
 
+conf:
+	@protoc --proto_path=./app/admin/service/internal \
+       --go_out=paths=source_relative:./app/admin/service/internal \
+       app/admin/service/internal/conf/conf.proto

@@ -29,10 +29,10 @@ type Admin struct {
 	Avatar string `json:"avatar,omitempty"`
 	// Password holds the value of the "password" field.
 	Password string `json:"-"`
-	// CreateTime holds the value of the "create_time" field.
-	CreateTime time.Time `json:"create_time,omitempty"`
-	// UpdateTime holds the value of the "update_time" field.
-	UpdateTime   time.Time `json:"update_time,omitempty"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt time.Time `json:"created_at,omitempty"`
+	// UpdatedAt holds the value of the "updated_at" field.
+	UpdatedAt    time.Time `json:"updated_at,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -43,7 +43,7 @@ func (*Admin) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case admin.FieldID, admin.FieldRealName, admin.FieldUsername, admin.FieldEmail, admin.FieldPhone, admin.FieldAvatar, admin.FieldPassword:
 			values[i] = new(sql.NullString)
-		case admin.FieldCreateTime, admin.FieldUpdateTime:
+		case admin.FieldCreatedAt, admin.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -102,17 +102,17 @@ func (_m *Admin) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.Password = value.String
 			}
-		case admin.FieldCreateTime:
+		case admin.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field create_time", values[i])
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
 			} else if value.Valid {
-				_m.CreateTime = value.Time
+				_m.CreatedAt = value.Time
 			}
-		case admin.FieldUpdateTime:
+		case admin.FieldUpdatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field update_time", values[i])
+				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
 			} else if value.Valid {
-				_m.UpdateTime = value.Time
+				_m.UpdatedAt = value.Time
 			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
@@ -167,11 +167,11 @@ func (_m *Admin) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("password=<sensitive>")
 	builder.WriteString(", ")
-	builder.WriteString("create_time=")
-	builder.WriteString(_m.CreateTime.Format(time.ANSIC))
+	builder.WriteString("created_at=")
+	builder.WriteString(_m.CreatedAt.Format(time.ANSIC))
 	builder.WriteString(", ")
-	builder.WriteString("update_time=")
-	builder.WriteString(_m.UpdateTime.Format(time.ANSIC))
+	builder.WriteString("updated_at=")
+	builder.WriteString(_m.UpdatedAt.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

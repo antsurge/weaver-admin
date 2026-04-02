@@ -425,7 +425,7 @@ type UpdateDictTypeStatusRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// ID
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	// 岗位状态
+	// 职务状态
 	Status        string `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache

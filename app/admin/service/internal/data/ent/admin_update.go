@@ -130,9 +130,9 @@ func (_u *AdminUpdate) SetNillablePassword(v *string) *AdminUpdate {
 	return _u
 }
 
-// SetUpdateTime sets the "update_time" field.
-func (_u *AdminUpdate) SetUpdateTime(v time.Time) *AdminUpdate {
-	_u.mutation.SetUpdateTime(v)
+// SetUpdatedAt sets the "updated_at" field.
+func (_u *AdminUpdate) SetUpdatedAt(v time.Time) *AdminUpdate {
+	_u.mutation.SetUpdatedAt(v)
 	return _u
 }
 
@@ -171,9 +171,9 @@ func (_u *AdminUpdate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (_u *AdminUpdate) defaults() {
-	if _, ok := _u.mutation.UpdateTime(); !ok {
-		v := admin.UpdateDefaultUpdateTime()
-		_u.mutation.SetUpdateTime(v)
+	if _, ok := _u.mutation.UpdatedAt(); !ok {
+		v := admin.UpdateDefaultUpdatedAt()
+		_u.mutation.SetUpdatedAt(v)
 	}
 }
 
@@ -213,8 +213,8 @@ func (_u *AdminUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.Password(); ok {
 		_spec.SetField(admin.FieldPassword, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.UpdateTime(); ok {
-		_spec.SetField(admin.FieldUpdateTime, field.TypeTime, value)
+	if value, ok := _u.mutation.UpdatedAt(); ok {
+		_spec.SetField(admin.FieldUpdatedAt, field.TypeTime, value)
 	}
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -338,9 +338,9 @@ func (_u *AdminUpdateOne) SetNillablePassword(v *string) *AdminUpdateOne {
 	return _u
 }
 
-// SetUpdateTime sets the "update_time" field.
-func (_u *AdminUpdateOne) SetUpdateTime(v time.Time) *AdminUpdateOne {
-	_u.mutation.SetUpdateTime(v)
+// SetUpdatedAt sets the "updated_at" field.
+func (_u *AdminUpdateOne) SetUpdatedAt(v time.Time) *AdminUpdateOne {
+	_u.mutation.SetUpdatedAt(v)
 	return _u
 }
 
@@ -392,9 +392,9 @@ func (_u *AdminUpdateOne) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (_u *AdminUpdateOne) defaults() {
-	if _, ok := _u.mutation.UpdateTime(); !ok {
-		v := admin.UpdateDefaultUpdateTime()
-		_u.mutation.SetUpdateTime(v)
+	if _, ok := _u.mutation.UpdatedAt(); !ok {
+		v := admin.UpdateDefaultUpdatedAt()
+		_u.mutation.SetUpdatedAt(v)
 	}
 }
 
@@ -451,8 +451,8 @@ func (_u *AdminUpdateOne) sqlSave(ctx context.Context) (_node *Admin, err error)
 	if value, ok := _u.mutation.Password(); ok {
 		_spec.SetField(admin.FieldPassword, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.UpdateTime(); ok {
-		_spec.SetField(admin.FieldUpdateTime, field.TypeTime, value)
+	if value, ok := _u.mutation.UpdatedAt(); ok {
+		_spec.SetField(admin.FieldUpdatedAt, field.TypeTime, value)
 	}
 	_node = &Admin{config: _u.config}
 	_spec.Assign = _node.assignValues

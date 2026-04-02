@@ -72,22 +72,22 @@ service Organization {
     };
   }
 
-  // 岗位模块
+  // 职务模块
   // 列表
   rpc ListPosition(organization.service.v1.ListPositionRequest) returns (organization.service.v1.ListPositionResponse) {
     option (google.api.http) = {get: "/admin/v1/position"};
     option (gnostic.openapi.v3.operation) = {
       tags: "Organization"
-      summary: "岗位-列表"
-      description: "获取岗位列表"
+      summary: "职务-列表"
+      description: "获取职务列表"
     };
   }
   rpc GetPosition(organization.service.v1.GetPositionRequest) returns (organization.service.v1.Position) {
     option (google.api.http) = {get: "/admin/v1/position/{id}"};
     option (gnostic.openapi.v3.operation) = {
       tags: "Organization"
-      summary: "岗位-详情"
-      description: "岗位详情"
+      summary: "职务-详情"
+      description: "职务详情"
     };
   }
   // 创建
@@ -98,8 +98,8 @@ service Organization {
     };
     option (gnostic.openapi.v3.operation) = {
       tags: "Organization"
-      summary: "岗位-创建"
-      description: "岗位创建"
+      summary: "职务-创建"
+      description: "职务创建"
     };
   }
   // 更新
@@ -110,8 +110,8 @@ service Organization {
     };
     option (gnostic.openapi.v3.operation) = {
       tags: "Organization"
-      summary: "岗位-修改"
-      description: "岗位修改"
+      summary: "职务-修改"
+      description: "职务修改"
     };
   }
   // 更新状态
@@ -122,7 +122,7 @@ service Organization {
     };
     option (gnostic.openapi.v3.operation) = {
       tags: "Organization"
-      summary: "岗位-修改状态"
+      summary: "职务-修改状态"
       description: "修改状态"
     };
   }
@@ -131,8 +131,24 @@ service Organization {
     option (google.api.http) = {delete: "/admin/v1/position"};
     option (gnostic.openapi.v3.operation) = {
       tags: "Organization"
-      summary: "岗位-删除(批量)"
-      description: "岗位删除，支持批量删除"
+      summary: "职务-删除(批量)"
+      description: "职务删除，支持批量删除"
+    };
+  }
+  rpc IsPositionNameExists(organization.service.v1.IsPositionNameExistsRequest) returns (organization.service.v1.IsPositionFieldExistsResponse) {
+    option (google.api.http) = {get: "/admin/v1/position:name-exists"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Organization"
+      summary: "职务-职务名称是否存在"
+      description: "职务名称是否存在"
+    };
+  }
+  rpc IsPositionCodeExists(organization.service.v1.IsPositionCodeExistsRequest) returns (organization.service.v1.IsPositionFieldExistsResponse) {
+    option (google.api.http) = {get: "/admin/v1/position:code-exists"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Organization"
+      summary: "职务-职务名称是否存在"
+      description: "职务编码是否存在"
     };
   }
 }

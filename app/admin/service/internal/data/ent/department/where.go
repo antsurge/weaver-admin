@@ -309,6 +309,26 @@ func CodeContainsFold(v string) predicate.Department {
 	return predicate.Department(sql.FieldContainsFold(FieldCode, v))
 }
 
+// TypeEQ applies the EQ predicate on the "type" field.
+func TypeEQ(v Type) predicate.Department {
+	return predicate.Department(sql.FieldEQ(FieldType, v))
+}
+
+// TypeNEQ applies the NEQ predicate on the "type" field.
+func TypeNEQ(v Type) predicate.Department {
+	return predicate.Department(sql.FieldNEQ(FieldType, v))
+}
+
+// TypeIn applies the In predicate on the "type" field.
+func TypeIn(vs ...Type) predicate.Department {
+	return predicate.Department(sql.FieldIn(FieldType, vs...))
+}
+
+// TypeNotIn applies the NotIn predicate on the "type" field.
+func TypeNotIn(vs ...Type) predicate.Department {
+	return predicate.Department(sql.FieldNotIn(FieldType, vs...))
+}
+
 // WeightEQ applies the EQ predicate on the "weight" field.
 func WeightEQ(v int) predicate.Department {
 	return predicate.Department(sql.FieldEQ(FieldWeight, v))

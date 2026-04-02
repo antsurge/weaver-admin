@@ -46,6 +46,12 @@ func (_c *DepartmentCreate) SetCode(v string) *DepartmentCreate {
 	return _c
 }
 
+// SetType sets the "type" field.
+func (_c *DepartmentCreate) SetType(v department.Type) *DepartmentCreate {
+	_c.mutation.SetType(v)
+	return _c
+}
+
 // SetWeight sets the "weight" field.
 func (_c *DepartmentCreate) SetWeight(v int) *DepartmentCreate {
 	_c.mutation.SetWeight(v)
@@ -242,6 +248,14 @@ func (_c *DepartmentCreate) check() error {
 			return &ValidationError{Name: "code", err: fmt.Errorf(`ent: validator failed for field "Department.code": %w`, err)}
 		}
 	}
+	if _, ok := _c.mutation.GetType(); !ok {
+		return &ValidationError{Name: "type", err: errors.New(`ent: missing required field "Department.type"`)}
+	}
+	if v, ok := _c.mutation.GetType(); ok {
+		if err := department.TypeValidator(v); err != nil {
+			return &ValidationError{Name: "type", err: fmt.Errorf(`ent: validator failed for field "Department.type": %w`, err)}
+		}
+	}
 	if _, ok := _c.mutation.Weight(); !ok {
 		return &ValidationError{Name: "weight", err: errors.New(`ent: missing required field "Department.weight"`)}
 	}
@@ -325,6 +339,10 @@ func (_c *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.Code(); ok {
 		_spec.SetField(department.FieldCode, field.TypeString, value)
 		_node.Code = value
+	}
+	if value, ok := _c.mutation.GetType(); ok {
+		_spec.SetField(department.FieldType, field.TypeEnum, value)
+		_node.Type = value
 	}
 	if value, ok := _c.mutation.Weight(); ok {
 		_spec.SetField(department.FieldWeight, field.TypeInt, value)

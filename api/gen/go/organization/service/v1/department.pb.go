@@ -49,6 +49,7 @@ type Department struct {
 	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
 	// 更新时间
 	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`
+	Type      string                 `protobuf:"bytes,12,opt,name=type,proto3" json:"type,omitempty"`
 	// 子部门
 	Children      []*Department `protobuf:"bytes,30,rep,name=children,proto3" json:"children,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -162,6 +163,13 @@ func (x *Department) GetUpdatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
+func (x *Department) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
 func (x *Department) GetChildren() []*Department {
 	if x != nil {
 		return x.Children
@@ -180,6 +188,7 @@ type CreateDepartmentRequest struct {
 	LeaderName    string                 `protobuf:"bytes,6,opt,name=leaderName,proto3" json:"leaderName,omitempty"`
 	LeaderPhone   string                 `protobuf:"bytes,7,opt,name=leaderPhone,proto3" json:"leaderPhone,omitempty"`
 	LeaderEmail   string                 `protobuf:"bytes,8,opt,name=leaderEmail,proto3" json:"leaderEmail,omitempty"`
+	Type          string                 `protobuf:"bytes,9,opt,name=type,proto3" json:"type,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -266,6 +275,13 @@ func (x *CreateDepartmentRequest) GetLeaderPhone() string {
 func (x *CreateDepartmentRequest) GetLeaderEmail() string {
 	if x != nil {
 		return x.LeaderEmail
+	}
+	return ""
+}
+
+func (x *CreateDepartmentRequest) GetType() string {
+	if x != nil {
+		return x.Type
 	}
 	return ""
 }
@@ -535,7 +551,7 @@ type UpdateDepartmentStatusRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// ID
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	// 岗位状态
+	// 职务状态
 	Status        string `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -633,7 +649,7 @@ var File_organization_service_v1_department_proto protoreflect.FileDescriptor
 
 const file_organization_service_v1_department_proto_rawDesc = "" +
 	"\n" +
-	"(organization/service/v1/department.proto\x12\x17organization.service.v1\x1a\x1bbuf/validate/validate.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xfc\x05\n" +
+	"(organization/service/v1/department.proto\x12\x17organization.service.v1\x1a\x1bbuf/validate/validate.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xe9\x06\n" +
 	"\n" +
 	"Department\x12\x18\n" +
 	"\x02id\x18\x01 \x01(\tB\b\xbaG\x05\x92\x02\x02IDR\x02id\x12B\n" +
@@ -649,8 +665,10 @@ const file_organization_service_v1_department_proto_rawDesc = "" +
 	"\vleaderEmail\x18\t \x01(\tB\x15\xbaG\x12\x92\x02\x0f负责人邮箱R\vleaderEmail\x12L\n" +
 	"\tcreatedAt\x18\n" +
 	" \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间R\tcreatedAt\x12L\n" +
-	"\tupdatedAt\x18\v \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间R\tupdatedAt\x12e\n" +
-	"\bchildren\x18\x1e \x03(\v2#.organization.service.v1.DepartmentB$\xbaG!\x92\x02\x1e子部门列表（树结构）R\bchildren\"\xf0\b\n" +
+	"\tupdatedAt\x18\v \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间R\tupdatedAt\x12k\n" +
+	"\x04type\x18\f \x01(\tBW\xbaGT\x92\x02Q类型（company=公司 subsidiary=子公司 department=部门 position=岗位）R\x04type\x12e\n" +
+	"\bchildren\x18\x1e \x03(\v2#.organization.service.v1.DepartmentB$\xbaG!\x92\x02\x1e子部门列表（树结构）R\bchildren\"\xe8\n" +
+	"\n" +
 	"\x17CreateDepartmentRequest\x12B\n" +
 	"\bparentID\x18\x01 \x01(\tB&\xbaG#\x92\x02 父组织ID，空表示根节点R\bparentID\x12\xbb\x01\n" +
 	"\x04name\x18\x02 \x01(\tB\xa6\x01\xbaG\x0f\x92\x02\f组织名称\xbaH\x90\x01\xba\x01E\n" +
@@ -669,7 +687,9 @@ const file_organization_service_v1_department_proto_rawDesc = "" +
 	"\vleaderPhone\x18\a \x01(\tBt\xbaG\x18\x92\x02\x15负责人联系电话\xbaHV\xba\x01S\n" +
 	"\x1edepartment.leaderPhone.max_len\x12\x1edepartment.leaderPhone.max_len\x1a\x11this.size() <= 20R\vleaderPhone\x12\x90\x01\n" +
 	"\vleaderEmail\x18\b \x01(\tBn\xbaG\x12\x92\x02\x0f负责人邮箱\xbaHV\xba\x01S\n" +
-	"\x1edepartment.leaderEmail.max_len\x12\x1edepartment.leaderEmail.max_len\x1a\x11this.size() <= 20R\vleaderEmail\"\x80\t\n" +
+	"\x1edepartment.leaderEmail.max_len\x12\x1edepartment.leaderEmail.max_len\x1a\x11this.size() <= 20R\vleaderEmail\x12\xf5\x01\n" +
+	"\x04type\x18\t \x01(\tB\xe0\x01\xbaGT\x92\x02Q类型（company=公司 subsidiary=子公司 department=部门 position=岗位）\xbaH\x85\x01\xba\x01m\n" +
+	"\x17department.type.invalid\x12\x17department.type.invalid\x1a9this in ['company', 'subsidiary','department','position']r\x13R\aenabledR\bdisabledR\x04type\"\x80\t\n" +
 	"\x17UpdateDepartmentRequest\x12B\n" +
 	"\bparentID\x18\x01 \x01(\tB&\xbaG#\x92\x02 父组织ID，空表示根节点R\bparentID\x12\xbb\x01\n" +
 	"\x04name\x18\x02 \x01(\tB\xa6\x01\xbaG\x0f\x92\x02\f组织名称\xbaH\x90\x01\xba\x01E\n" +

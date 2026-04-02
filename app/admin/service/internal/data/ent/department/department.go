@@ -20,6 +20,8 @@ const (
 	FieldName = "name"
 	// FieldCode holds the string denoting the code field in the database.
 	FieldCode = "code"
+	// FieldType holds the string denoting the type field in the database.
+	FieldType = "type"
 	// FieldWeight holds the string denoting the weight field in the database.
 	FieldWeight = "weight"
 	// FieldStatus holds the string denoting the status field in the database.
@@ -46,6 +48,7 @@ var Columns = []string{
 	FieldParentID,
 	FieldName,
 	FieldCode,
+	FieldType,
 	FieldWeight,
 	FieldStatus,
 	FieldLeaderName,
@@ -90,6 +93,31 @@ var (
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(string) error
 )
+
+// Type defines the type for the "type" enum field.
+type Type string
+
+// Type values.
+const (
+	TypeCompany    Type = "company"
+	TypeSubsidiary Type = "subsidiary"
+	TypeDepartment Type = "department"
+	TypePosition   Type = "position"
+)
+
+func (_type Type) String() string {
+	return string(_type)
+}
+
+// TypeValidator is a validator for the "type" field enum values. It is called by the builders before save.
+func TypeValidator(_type Type) error {
+	switch _type {
+	case TypeCompany, TypeSubsidiary, TypeDepartment, TypePosition:
+		return nil
+	default:
+		return fmt.Errorf("department: invalid enum value for type field: %q", _type)
+	}
+}
 
 // Status defines the type for the "status" enum field.
 type Status string
@@ -138,6 +166,11 @@ func ByName(opts ...sql.OrderTermOption) OrderOption {
 // ByCode orders the results by the code field.
 func ByCode(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCode, opts...).ToFunc()
+}
+
+// ByType orders the results by the type field.
+func ByType(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldType, opts...).ToFunc()
 }
 
 // ByWeight orders the results by the weight field.

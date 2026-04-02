@@ -24,14 +24,14 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// 岗位
+// 职务
 type Position struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 岗位ID
+	// 职务ID
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	// 岗位名称
+	// 职务名称
 	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	// 岗位code
+	// 职务code
 	Code string `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
 	// 权重
 	Weight int64 `protobuf:"varint,4,opt,name=weight,proto3" json:"weight,omitempty"`
@@ -40,9 +40,9 @@ type Position struct {
 	// 备注
 	Remark string `protobuf:"bytes,6,opt,name=remark,proto3" json:"remark,omitempty"`
 	// 创建时间
-	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
 	// 更新时间
-	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -307,9 +307,9 @@ func (x *GetPositionRequest) GetId() string {
 
 type CreatePositionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 岗位名称
+	// 职务名称
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	// 岗位编码
+	// 职务编码
 	Code string `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"`
 	// 权重
 	Weight int64 `protobuf:"varint,3,opt,name=weight,proto3" json:"weight,omitempty"`
@@ -388,9 +388,9 @@ func (x *CreatePositionRequest) GetRemark() string {
 
 type UpdatePositionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 岗位名称
+	// 职务名称
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	// 岗位编码
+	// 职务编码
 	Code string `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"`
 	// 权重
 	Weight int64 `protobuf:"varint,3,opt,name=weight,proto3" json:"weight,omitempty"`
@@ -398,7 +398,7 @@ type UpdatePositionRequest struct {
 	Status string `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`
 	// 备注
 	Remark string `protobuf:"bytes,5,opt,name=remark,proto3" json:"remark,omitempty"`
-	// 岗位ID
+	// 职务ID
 	Id            string `protobuf:"bytes,6,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -480,7 +480,7 @@ type UpdatePositionStatusRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// ID
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	// 岗位状态
+	// 职务状态
 	Status        string `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -574,38 +574,184 @@ func (x *DeletePositionRequest) GetIds() []string {
 	return nil
 }
 
+type IsPositionNameExistsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Id            string                 `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *IsPositionNameExistsRequest) Reset() {
+	*x = IsPositionNameExistsRequest{}
+	mi := &file_organization_service_v1_position_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *IsPositionNameExistsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*IsPositionNameExistsRequest) ProtoMessage() {}
+
+func (x *IsPositionNameExistsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_organization_service_v1_position_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use IsPositionNameExistsRequest.ProtoReflect.Descriptor instead.
+func (*IsPositionNameExistsRequest) Descriptor() ([]byte, []int) {
+	return file_organization_service_v1_position_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *IsPositionNameExistsRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *IsPositionNameExistsRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type IsPositionCodeExistsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
+	Id            string                 `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *IsPositionCodeExistsRequest) Reset() {
+	*x = IsPositionCodeExistsRequest{}
+	mi := &file_organization_service_v1_position_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *IsPositionCodeExistsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*IsPositionCodeExistsRequest) ProtoMessage() {}
+
+func (x *IsPositionCodeExistsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_organization_service_v1_position_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use IsPositionCodeExistsRequest.ProtoReflect.Descriptor instead.
+func (*IsPositionCodeExistsRequest) Descriptor() ([]byte, []int) {
+	return file_organization_service_v1_position_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *IsPositionCodeExistsRequest) GetCode() string {
+	if x != nil {
+		return x.Code
+	}
+	return ""
+}
+
+func (x *IsPositionCodeExistsRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type IsPositionFieldExistsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Exists        bool                   `protobuf:"varint,1,opt,name=exists,proto3" json:"exists,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *IsPositionFieldExistsResponse) Reset() {
+	*x = IsPositionFieldExistsResponse{}
+	mi := &file_organization_service_v1_position_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *IsPositionFieldExistsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*IsPositionFieldExistsResponse) ProtoMessage() {}
+
+func (x *IsPositionFieldExistsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_organization_service_v1_position_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use IsPositionFieldExistsResponse.ProtoReflect.Descriptor instead.
+func (*IsPositionFieldExistsResponse) Descriptor() ([]byte, []int) {
+	return file_organization_service_v1_position_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *IsPositionFieldExistsResponse) GetExists() bool {
+	if x != nil {
+		return x.Exists
+	}
+	return false
+}
+
 var File_organization_service_v1_position_proto protoreflect.FileDescriptor
 
 const file_organization_service_v1_position_proto_rawDesc = "" +
 	"\n" +
-	"&organization/service/v1/position.proto\x12\x17organization.service.v1\x1a\x1bbuf/validate/validate.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xd1\x03\n" +
+	"&organization/service/v1/position.proto\x12\x17organization.service.v1\x1a\x1bbuf/validate/validate.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xd3\x03\n" +
 	"\bPosition\x12\x18\n" +
 	"\x02id\x18\x01 \x01(\tB\b\xbaG\x05\x92\x02\x02IDR\x02id\x12&\n" +
-	"\x04name\x18\x02 \x01(\tB\x12\xbaG\x0f\x92\x02\f岗位名称R\x04name\x12&\n" +
-	"\x04code\x18\x03 \x01(\tB\x12\xbaG\x0f\x92\x02\f岗位编码R\x04code\x12E\n" +
-	"\x06weight\x18\x04 \x01(\x03B-\xbaG*\x92\x02'权重（数值越大排序越靠前）R\x06weight\x12J\n" +
+	"\x04name\x18\x02 \x01(\tB\x12\xbaG\x0f\x92\x02\f职务名称R\x04name\x12&\n" +
+	"\x04code\x18\x03 \x01(\tB\x12\xbaG\x0f\x92\x02\f职务编码R\x04code\x12I\n" +
+	"\x06weight\x18\x04 \x01(\x03B1\xbaG.\x92\x02+权重/职务级别（越小职务越高）R\x06weight\x12J\n" +
 	"\x06status\x18\x05 \x01(\tB2\xbaG/\x92\x02,状态（enabled=启用，disabled=禁用）R\x06status\x12*\n" +
-	"\x06remark\x18\x06 \x01(\tB\x12\xbaG\x0f\x92\x02\f备注说明R\x06remark\x12M\n" +
-	"\n" +
-	"created_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间R\tcreatedAt\x12M\n" +
-	"\n" +
-	"updated_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间R\tupdatedAt\"\xea\x02\n" +
+	"\x06remark\x18\x06 \x01(\tB\x12\xbaG\x0f\x92\x02\f备注说明R\x06remark\x12L\n" +
+	"\tcreatedAt\x18\a \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间R\tcreatedAt\x12L\n" +
+	"\tupdatedAt\x18\b \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间R\tupdatedAt\"\xea\x02\n" +
 	"\x13ListPositionRequest\x12D\n" +
 	"\vcurrentPage\x18\x01 \x01(\x03B\"\xbaG\x1f\x92\x02\x1c当前页码（从1开始）R\vcurrentPage\x12A\n" +
 	"\bpageSize\x18\x02 \x01(\x03B%\xbaG\"\x92\x02\x1f每页条数（传0为全部）R\bpageSize\x12>\n" +
-	"\x04name\x18\x03 \x01(\tB*\xbaG'\x92\x02$岗位名称（支持模糊查询）R\x04name\x12>\n" +
-	"\x04code\x18\x04 \x01(\tB*\xbaG'\x92\x02$岗位编码（支持模糊查询）R\x04code\x12J\n" +
+	"\x04name\x18\x03 \x01(\tB*\xbaG'\x92\x02$职务名称（支持模糊查询）R\x04name\x12>\n" +
+	"\x04code\x18\x04 \x01(\tB*\xbaG'\x92\x02$职务编码（支持模糊查询）R\x04code\x12J\n" +
 	"\x06status\x18\x05 \x01(\tB2\xbaG/\x92\x02,状态（enabled=启用，disabled=禁用）R\x06status\"\x81\x01\n" +
 	"\x14ListPositionResponse\x12E\n" +
 	"\x05items\x18\x01 \x03(\v2!.organization.service.v1.PositionB\f\xbaG\t\x92\x02\x06列表R\x05items\x12\"\n" +
 	"\x05total\x18\x02 \x01(\x03B\f\xbaG\t\x92\x02\x06总数R\x05total\"4\n" +
 	"\x12GetPositionRequest\x12\x1e\n" +
-	"\x02id\x18\x01 \x01(\tB\x0e\xbaG\v\x92\x02\b岗位IDR\x02id\"\xe3\x05\n" +
+	"\x02id\x18\x01 \x01(\tB\x0e\xbaG\v\x92\x02\b职务IDR\x02id\"\xe3\x05\n" +
 	"\x15CreatePositionRequest\x12\xb3\x01\n" +
-	"\x04name\x18\x01 \x01(\tB\x9e\x01\xbaG\x0f\x92\x02\f岗位名称\xbaH\x88\x01\xba\x01A\n" +
+	"\x04name\x18\x01 \x01(\tB\x9e\x01\xbaG\x0f\x92\x02\f职务名称\xbaH\x88\x01\xba\x01A\n" +
 	"\x16position.name.required\x12\x16position.name.required\x1a\x0fthis.size() > 0\xba\x01A\n" +
 	"\x15position.name.max_len\x12\x15position.name.max_len\x1a\x11this.size() <= 64R\x04name\x12\xb3\x01\n" +
-	"\x04code\x18\x02 \x01(\tB\x9e\x01\xbaG\x0f\x92\x02\f岗位编码\xbaH\x88\x01\xba\x01A\n" +
+	"\x04code\x18\x02 \x01(\tB\x9e\x01\xbaG\x0f\x92\x02\f职务编码\xbaH\x88\x01\xba\x01A\n" +
 	"\x16position.code.required\x12\x16position.code.required\x1a\x0fthis.size() > 0\xba\x01A\n" +
 	"\x15position.code.max_len\x12\x15position.code.max_len\x1a\x11this.size() <= 64R\x04code\x12$\n" +
 	"\x06weight\x18\x03 \x01(\x03B\f\xbaG\t\x92\x02\x06权重R\x06weight\x12\xa9\x01\n" +
@@ -614,10 +760,10 @@ const file_organization_service_v1_position_proto_rawDesc = "" +
 	"\x06remark\x18\x05 \x01(\tBX\xbaG\t\x92\x02\x06备注\xbaHI\xba\x01F\n" +
 	"\x17position.remark.max_len\x12\x17position.remark.max_len\x1a\x12this.size() <= 255R\x06remark:\x1a\xbaG\x17\xba\x01\x04name\xba\x01\x04code\xba\x01\x06status\"\xf3\x05\n" +
 	"\x15UpdatePositionRequest\x12\xb3\x01\n" +
-	"\x04name\x18\x01 \x01(\tB\x9e\x01\xbaG\x0f\x92\x02\f岗位名称\xbaH\x88\x01\xba\x01A\n" +
+	"\x04name\x18\x01 \x01(\tB\x9e\x01\xbaG\x0f\x92\x02\f职务名称\xbaH\x88\x01\xba\x01A\n" +
 	"\x16position.name.required\x12\x16position.name.required\x1a\x0fthis.size() > 0\xba\x01A\n" +
 	"\x15position.name.max_len\x12\x15position.name.max_len\x1a\x11this.size() <= 64R\x04name\x12\xb3\x01\n" +
-	"\x04code\x18\x02 \x01(\tB\x9e\x01\xbaG\x0f\x92\x02\f岗位编码\xbaH\x88\x01\xba\x01A\n" +
+	"\x04code\x18\x02 \x01(\tB\x9e\x01\xbaG\x0f\x92\x02\f职务编码\xbaH\x88\x01\xba\x01A\n" +
 	"\x16position.code.required\x12\x16position.code.required\x1a\x0fthis.size() > 0\xba\x01A\n" +
 	"\x15position.code.max_len\x12\x15position.code.max_len\x1a\x11this.size() <= 64R\x04code\x12$\n" +
 	"\x06weight\x18\x03 \x01(\x03B\f\xbaG\t\x92\x02\x06权重R\x06weight\x12\xa9\x01\n" +
@@ -631,8 +777,16 @@ const file_organization_service_v1_position_proto_rawDesc = "" +
 	"\x06status\x18\x02 \x01(\tB\x90\x01\xbaG\x1f\x92\x02\x1c状态（enabled/disabled）\xbaHk\xba\x01S\n" +
 	"\x17position.status.invalid\x12\x17position.status.invalid\x1a\x1fthis in ['enabled', 'disabled']r\x13R\aenabledR\bdisabledR\x06status:\f\xbaG\t\xba\x01\x06status\"\xd8\x01\n" +
 	"\x15DeletePositionRequest\x12\xbe\x01\n" +
-	"\x03ids\x18\x01 \x03(\tB\xab\x01\xbaGP\x92\x02M岗位ID列表（必填，至少1个，最多100个，每个ID不能为空）\xbaHU\xba\x01K\n" +
-	"\x16position.ids.not_empty\x12\x16position.ids.not_empty\x1a\x19this.all(x, x.size() > 0)\x92\x01\x04\b\x01\x10dR\x03idsB\xff\x01\n" +
+	"\x03ids\x18\x01 \x03(\tB\xab\x01\xbaGP\x92\x02M职务ID列表（必填，至少1个，最多100个，每个ID不能为空）\xbaHU\xba\x01K\n" +
+	"\x16position.ids.not_empty\x12\x16position.ids.not_empty\x1a\x19this.all(x, x.size() > 0)\x92\x01\x04\b\x01\x10dR\x03ids\"A\n" +
+	"\x1bIsPositionNameExistsRequest\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\x0e\n" +
+	"\x02id\x18\x02 \x01(\tR\x02id\"A\n" +
+	"\x1bIsPositionCodeExistsRequest\x12\x12\n" +
+	"\x04code\x18\x01 \x01(\tR\x04code\x12\x0e\n" +
+	"\x02id\x18\x02 \x01(\tR\x02id\"7\n" +
+	"\x1dIsPositionFieldExistsResponse\x12\x16\n" +
+	"\x06exists\x18\x01 \x01(\bR\x06existsB\xff\x01\n" +
 	"\x1bcom.organization.service.v1B\rPositionProtoP\x01ZSgithub.com/hypercoze/kratos-admin/api/gen/go/organization/service/v1;organizationpb\xa2\x02\x03OSX\xaa\x02\x17Organization.Service.V1\xca\x02\x17Organization\\Service\\V1\xe2\x02#Organization\\Service\\V1\\GPBMetadata\xea\x02\x19Organization::Service::V1b\x06proto3"
 
 var (
@@ -647,27 +801,30 @@ func file_organization_service_v1_position_proto_rawDescGZIP() []byte {
 	return file_organization_service_v1_position_proto_rawDescData
 }
 
-var file_organization_service_v1_position_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_organization_service_v1_position_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_organization_service_v1_position_proto_goTypes = []any{
-	(*Position)(nil),                    // 0: organization.service.v1.Position
-	(*ListPositionRequest)(nil),         // 1: organization.service.v1.ListPositionRequest
-	(*ListPositionResponse)(nil),        // 2: organization.service.v1.ListPositionResponse
-	(*GetPositionRequest)(nil),          // 3: organization.service.v1.GetPositionRequest
-	(*CreatePositionRequest)(nil),       // 4: organization.service.v1.CreatePositionRequest
-	(*UpdatePositionRequest)(nil),       // 5: organization.service.v1.UpdatePositionRequest
-	(*UpdatePositionStatusRequest)(nil), // 6: organization.service.v1.UpdatePositionStatusRequest
-	(*DeletePositionRequest)(nil),       // 7: organization.service.v1.DeletePositionRequest
-	(*timestamppb.Timestamp)(nil),       // 8: google.protobuf.Timestamp
+	(*Position)(nil),                      // 0: organization.service.v1.Position
+	(*ListPositionRequest)(nil),           // 1: organization.service.v1.ListPositionRequest
+	(*ListPositionResponse)(nil),          // 2: organization.service.v1.ListPositionResponse
+	(*GetPositionRequest)(nil),            // 3: organization.service.v1.GetPositionRequest
+	(*CreatePositionRequest)(nil),         // 4: organization.service.v1.CreatePositionRequest
+	(*UpdatePositionRequest)(nil),         // 5: organization.service.v1.UpdatePositionRequest
+	(*UpdatePositionStatusRequest)(nil),   // 6: organization.service.v1.UpdatePositionStatusRequest
+	(*DeletePositionRequest)(nil),         // 7: organization.service.v1.DeletePositionRequest
+	(*IsPositionNameExistsRequest)(nil),   // 8: organization.service.v1.IsPositionNameExistsRequest
+	(*IsPositionCodeExistsRequest)(nil),   // 9: organization.service.v1.IsPositionCodeExistsRequest
+	(*IsPositionFieldExistsResponse)(nil), // 10: organization.service.v1.IsPositionFieldExistsResponse
+	(*timestamppb.Timestamp)(nil),         // 11: google.protobuf.Timestamp
 }
 var file_organization_service_v1_position_proto_depIdxs = []int32{
-	8, // 0: organization.service.v1.Position.created_at:type_name -> google.protobuf.Timestamp
-	8, // 1: organization.service.v1.Position.updated_at:type_name -> google.protobuf.Timestamp
-	0, // 2: organization.service.v1.ListPositionResponse.items:type_name -> organization.service.v1.Position
-	3, // [3:3] is the sub-list for method output_type
-	3, // [3:3] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	11, // 0: organization.service.v1.Position.createdAt:type_name -> google.protobuf.Timestamp
+	11, // 1: organization.service.v1.Position.updatedAt:type_name -> google.protobuf.Timestamp
+	0,  // 2: organization.service.v1.ListPositionResponse.items:type_name -> organization.service.v1.Position
+	3,  // [3:3] is the sub-list for method output_type
+	3,  // [3:3] is the sub-list for method input_type
+	3,  // [3:3] is the sub-list for extension type_name
+	3,  // [3:3] is the sub-list for extension extendee
+	0,  // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_organization_service_v1_position_proto_init() }
@@ -681,7 +838,7 @@ func file_organization_service_v1_position_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_organization_service_v1_position_proto_rawDesc), len(file_organization_service_v1_position_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

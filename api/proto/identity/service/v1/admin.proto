@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+package identity.service.v1;
+
+import "buf/validate/validate.proto";
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+message Admin {
+  option (gnostic.openapi.v3.schema) = {description: "后台用户信息"};
+  string id = 1 [(gnostic.openapi.v3.property) = {description: "用户ID"}];
+  string realName = 2 [(gnostic.openapi.v3.property) = {description: "真实姓名"}];
+  string username = 3 [(gnostic.openapi.v3.property) = {description: "用户名"}];
+  string email = 4 [(gnostic.openapi.v3.property) = {description: "邮箱"}];
+  string phone = 5 [(gnostic.openapi.v3.property) = {description: "手机号"}];
+  string avatar = 6 [(gnostic.openapi.v3.property) = {description: "头像"}];
+  string status = 7 [(gnostic.openapi.v3.property) = {description: "状态(enabled/disabled)"}];
+  google.protobuf.Timestamp createTime = 8 [(gnostic.openapi.v3.property) = {description: "创建时间"}];
+  google.protobuf.Timestamp updateTime = 9 [(gnostic.openapi.v3.property) = {description: "更新时间"}];
+}
+
+message CreateAdminRequest {
+  option (gnostic.openapi.v3.schema) = {
+    description: "创建后台用户请求"
+    required: [
+      "username",
+      "password"
+    ]
+  };
+  string realName = 1 [(gnostic.openapi.v3.property) = {description: "真实姓名"}];
+  string username = 2 [(gnostic.openapi.v3.property) = {description: "用户名"}];
+  string email = 3 [(gnostic.openapi.v3.property) = {description: "邮箱"}];
+  string phone = 4 [(gnostic.openapi.v3.property) = {description: "手机号"}];
+  string avatar = 5 [(gnostic.openapi.v3.property) = {description: "头像"}];
+  string password = 6 [(gnostic.openapi.v3.property) = {description: "密码"}];
+}
+
+message UpdateAdminRequest {
+  option (gnostic.openapi.v3.schema) = {
+    description: "更新后台用户请求"
+    required: ["id"]
+  };
+  string id = 1 [(gnostic.openapi.v3.property) = {description: "用户ID"}];
+  string realName = 2 [(gnostic.openapi.v3.property) = {description: "真实姓名"}];
+  string email = 3 [(gnostic.openapi.v3.property) = {description: "邮箱"}];
+  string phone = 4 [(gnostic.openapi.v3.property) = {description: "手机号"}];
+  string avatar = 5 [(gnostic.openapi.v3.property) = {description: "头像"}];
+  string status = 6 [(gnostic.openapi.v3.property) = {description: "状态(enabled/disabled)"}];
+}
+
+message GetAdminRequest {
+  option (gnostic.openapi.v3.schema) = {
+    description: "获取后台用户详情请求"
+    required: ["id"]
+  };
+  string id = 1 [(gnostic.openapi.v3.property) = {description: "用户ID"}];
+}
+
+message ListAdminRequest {
+  option (gnostic.openapi.v3.schema) = {description: "后台用户分页查询"};
+  int32 page = 1 [(gnostic.openapi.v3.property) = {description: "页码"}];
+  int32 pageSize = 2 [(gnostic.openapi.v3.property) = {description: "每页数量"}];
+  string username = 3 [(gnostic.openapi.v3.property) = {description: "用户名"}];
+  string phone = 4 [(gnostic.openapi.v3.property) = {description: "手机号"}];
+  string status = 5 [(gnostic.openapi.v3.property) = {description: "状态"}];
+}
+
+message ListAdminResponse {
+  option (gnostic.openapi.v3.schema) = {description: "后台用户分页结果"};
+  int64 total = 1 [(gnostic.openapi.v3.property) = {description: "总数"}];
+  repeated Admin items = 2 [(gnostic.openapi.v3.property) = {description: "列表"}];
+}
+
+message ResetPasswordRequest {
+  option (gnostic.openapi.v3.schema) = {
+    description: "重置密码请求"
+    required: [
+      "id",
+      "password"
+    ]
+  };
+  string id = 1 [(gnostic.openapi.v3.property) = {description: "用户ID"}];
+  string password = 2 [(gnostic.openapi.v3.property) = {description: "新密码"}];
+}

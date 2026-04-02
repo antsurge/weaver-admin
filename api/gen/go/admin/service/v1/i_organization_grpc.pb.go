@@ -33,6 +33,8 @@ const (
 	Organization_UpdatePosition_FullMethodName         = "/admin.service.v1.Organization/UpdatePosition"
 	Organization_UpdatePositionStatus_FullMethodName   = "/admin.service.v1.Organization/UpdatePositionStatus"
 	Organization_DeletePosition_FullMethodName         = "/admin.service.v1.Organization/DeletePosition"
+	Organization_IsPositionNameExists_FullMethodName   = "/admin.service.v1.Organization/IsPositionNameExists"
+	Organization_IsPositionCodeExists_FullMethodName   = "/admin.service.v1.Organization/IsPositionCodeExists"
 )
 
 // OrganizationClient is the client API for Organization service.
@@ -50,7 +52,7 @@ type OrganizationClient interface {
 	UpdateDepartmentStatus(ctx context.Context, in *v1.UpdateDepartmentStatusRequest, opts ...grpc.CallOption) (*v1.Department, error)
 	// 批量删除
 	DeleteDepartment(ctx context.Context, in *v1.DeleteDepartmentRequset, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// 岗位模块
+	// 职务模块
 	// 列表
 	ListPosition(ctx context.Context, in *v1.ListPositionRequest, opts ...grpc.CallOption) (*v1.ListPositionResponse, error)
 	GetPosition(ctx context.Context, in *v1.GetPositionRequest, opts ...grpc.CallOption) (*v1.Position, error)
@@ -62,6 +64,8 @@ type OrganizationClient interface {
 	UpdatePositionStatus(ctx context.Context, in *v1.UpdatePositionStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 删除
 	DeletePosition(ctx context.Context, in *v1.DeletePositionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	IsPositionNameExists(ctx context.Context, in *v1.IsPositionNameExistsRequest, opts ...grpc.CallOption) (*v1.IsPositionFieldExistsResponse, error)
+	IsPositionCodeExists(ctx context.Context, in *v1.IsPositionCodeExistsRequest, opts ...grpc.CallOption) (*v1.IsPositionFieldExistsResponse, error)
 }
 
 type organizationClient struct {
@@ -192,6 +196,26 @@ func (c *organizationClient) DeletePosition(ctx context.Context, in *v1.DeletePo
 	return out, nil
 }
 
+func (c *organizationClient) IsPositionNameExists(ctx context.Context, in *v1.IsPositionNameExistsRequest, opts ...grpc.CallOption) (*v1.IsPositionFieldExistsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v1.IsPositionFieldExistsResponse)
+	err := c.cc.Invoke(ctx, Organization_IsPositionNameExists_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *organizationClient) IsPositionCodeExists(ctx context.Context, in *v1.IsPositionCodeExistsRequest, opts ...grpc.CallOption) (*v1.IsPositionFieldExistsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v1.IsPositionFieldExistsResponse)
+	err := c.cc.Invoke(ctx, Organization_IsPositionCodeExists_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // OrganizationServer is the server API for Organization service.
 // All implementations must embed UnimplementedOrganizationServer
 // for forward compatibility.
@@ -207,7 +231,7 @@ type OrganizationServer interface {
 	UpdateDepartmentStatus(context.Context, *v1.UpdateDepartmentStatusRequest) (*v1.Department, error)
 	// 批量删除
 	DeleteDepartment(context.Context, *v1.DeleteDepartmentRequset) (*emptypb.Empty, error)
-	// 岗位模块
+	// 职务模块
 	// 列表
 	ListPosition(context.Context, *v1.ListPositionRequest) (*v1.ListPositionResponse, error)
 	GetPosition(context.Context, *v1.GetPositionRequest) (*v1.Position, error)
@@ -219,6 +243,8 @@ type OrganizationServer interface {
 	UpdatePositionStatus(context.Context, *v1.UpdatePositionStatusRequest) (*emptypb.Empty, error)
 	// 删除
 	DeletePosition(context.Context, *v1.DeletePositionRequest) (*emptypb.Empty, error)
+	IsPositionNameExists(context.Context, *v1.IsPositionNameExistsRequest) (*v1.IsPositionFieldExistsResponse, error)
+	IsPositionCodeExists(context.Context, *v1.IsPositionCodeExistsRequest) (*v1.IsPositionFieldExistsResponse, error)
 	mustEmbedUnimplementedOrganizationServer()
 }
 
@@ -264,6 +290,12 @@ func (UnimplementedOrganizationServer) UpdatePositionStatus(context.Context, *v1
 }
 func (UnimplementedOrganizationServer) DeletePosition(context.Context, *v1.DeletePositionRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeletePosition not implemented")
+}
+func (UnimplementedOrganizationServer) IsPositionNameExists(context.Context, *v1.IsPositionNameExistsRequest) (*v1.IsPositionFieldExistsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IsPositionNameExists not implemented")
+}
+func (UnimplementedOrganizationServer) IsPositionCodeExists(context.Context, *v1.IsPositionCodeExistsRequest) (*v1.IsPositionFieldExistsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IsPositionCodeExists not implemented")
 }
 func (UnimplementedOrganizationServer) mustEmbedUnimplementedOrganizationServer() {}
 func (UnimplementedOrganizationServer) testEmbeddedByValue()                      {}
@@ -502,6 +534,42 @@ func _Organization_DeletePosition_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Organization_IsPositionNameExists_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.IsPositionNameExistsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrganizationServer).IsPositionNameExists(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Organization_IsPositionNameExists_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrganizationServer).IsPositionNameExists(ctx, req.(*v1.IsPositionNameExistsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Organization_IsPositionCodeExists_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.IsPositionCodeExistsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrganizationServer).IsPositionCodeExists(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Organization_IsPositionCodeExists_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrganizationServer).IsPositionCodeExists(ctx, req.(*v1.IsPositionCodeExistsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Organization_ServiceDesc is the grpc.ServiceDesc for Organization service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -556,6 +624,14 @@ var Organization_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeletePosition",
 			Handler:    _Organization_DeletePosition_Handler,
+		},
+		{
+			MethodName: "IsPositionNameExists",
+			Handler:    _Organization_IsPositionNameExists_Handler,
+		},
+		{
+			MethodName: "IsPositionCodeExists",
+			Handler:    _Organization_IsPositionCodeExists_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

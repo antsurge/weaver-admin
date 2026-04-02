@@ -174,7 +174,7 @@ message UpdateDictTypeStatusRequest {
   };
   // ID
   string id = 1 [(gnostic.openapi.v3.property) = {description: "ID"}];
-  // 岗位状态
+  // 职务状态
   string status = 2 [
     (buf.validate.field).string = {
       in: [

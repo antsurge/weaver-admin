@@ -1,8 +1,60 @@
 import type { OnActionClickFn, VxeTableGridOptions } from '#/adapter/vxe-table';
-import type { VbenFormProps } from '#/adapter/form';
+import type { VbenFormProps, VbenFormSchema } from '#/adapter/form';
 import type { OrganizationPositionApi } from '#/api/organization/position';
-
+import { z } from '#/adapter/form';
 import { $t } from '#/locales';
+
+export const rules = {
+  /**
+   * 职务名称
+   */
+  nameRule: z
+    .string()
+    .min(
+      2,
+      $t('ui.formRules.minLength', [
+        $t('organization.position.fields.name'),
+        2,
+      ]),
+    )
+    .max(
+      30,
+      $t('ui.formRules.maxLength', [
+        $t('organization.position.fields.name'),
+        30,
+      ]),
+    ).refine(
+      async (value: string) => {
+        return !(await isMenuNameExists(value, formData.value?.id));
+      },
+      (value) => ({
+        message: $t('ui.formRules.alreadyExists', [
+          $t('system.menu.menuName'),
+          value,
+        ]),
+      }),
+    ),
+
+  /**
+   * 职务编码
+   */
+  codeRule: z
+    .string()
+    .min(
+      2,
+      $t('ui.formRules.minLength', [
+        $t('organization.position.fields.code'),
+        2,
+      ]),
+    )
+    .max(
+      30,
+      $t('ui.formRules.maxLength', [
+        $t('organization.position.fields.code'),
+        30,
+      ]),
+    ),
+};
 
 export function useColumns(
   onActionClick: OnActionClickFn<OrganizationPositionApi.Position>,
@@ -22,7 +74,7 @@ export function useColumns(
       type: 'seq',
       title: $t('common.fields.seq'),
       width: 80,
-      align: 'center', 
+      align: 'center',
     },
     {
       field: 'name',
@@ -77,7 +129,7 @@ export function useColumns(
   ];
 }
 
-export function useFormOptions(): VbenFormProps {
+export function useGridFormOptions(): VbenFormProps {
   return {
     collapsed: false,
     schema: [

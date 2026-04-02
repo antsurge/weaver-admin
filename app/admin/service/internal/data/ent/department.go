@@ -23,6 +23,8 @@ type Department struct {
 	Name string `json:"name,omitempty"`
 	// 部门code
 	Code string `json:"code,omitempty"`
+	// 类型：company=公司 subsidiary=子公司 department=部门 position=岗位
+	Type department.Type `json:"type,omitempty"`
 	// 权重
 	Weight int `json:"weight,omitempty"`
 	// 状态：enabled=启用 disabled=禁用
@@ -49,7 +51,7 @@ func (*Department) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case department.FieldWeight:
 			values[i] = new(sql.NullInt64)
-		case department.FieldID, department.FieldParentID, department.FieldName, department.FieldCode, department.FieldStatus, department.FieldLeaderName, department.FieldLeaderPhone, department.FieldLeaderEmail:
+		case department.FieldID, department.FieldParentID, department.FieldName, department.FieldCode, department.FieldType, department.FieldStatus, department.FieldLeaderName, department.FieldLeaderPhone, department.FieldLeaderEmail:
 			values[i] = new(sql.NullString)
 		case department.FieldCreatedAt, department.FieldUpdatedAt, department.FieldDeletedAt:
 			values[i] = new(sql.NullTime)
@@ -91,6 +93,12 @@ func (_m *Department) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field code", values[i])
 			} else if value.Valid {
 				_m.Code = value.String
+			}
+		case department.FieldType:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field type", values[i])
+			} else if value.Valid {
+				_m.Type = department.Type(value.String)
 			}
 		case department.FieldWeight:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -185,6 +193,9 @@ func (_m *Department) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("code=")
 	builder.WriteString(_m.Code)
+	builder.WriteString(", ")
+	builder.WriteString("type=")
+	builder.WriteString(fmt.Sprintf("%v", _m.Type))
 	builder.WriteString(", ")
 	builder.WriteString("weight=")
 	builder.WriteString(fmt.Sprintf("%v", _m.Weight))

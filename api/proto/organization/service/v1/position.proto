@@ -6,31 +6,31 @@ import "buf/validate/validate.proto";
 import "gnostic/openapi/v3/annotations.proto";
 import "google/protobuf/timestamp.proto";
 
-// 岗位
+// 职务
 message Position {
-  // 岗位ID
+  // 职务ID
   string id = 1 [(gnostic.openapi.v3.property) = {description: "ID"}];
-  // 岗位名称
-  string name = 2 [(gnostic.openapi.v3.property) = {description: "岗位名称"}];
-  // 岗位code
-  string code = 3 [(gnostic.openapi.v3.property) = {description: "岗位编码"}];
+  // 职务名称
+  string name = 2 [(gnostic.openapi.v3.property) = {description: "职务名称"}];
+  // 职务code
+  string code = 3 [(gnostic.openapi.v3.property) = {description: "职务编码"}];
   // 权重
-  int64 weight = 4 [(gnostic.openapi.v3.property) = {description: "权重（数值越大排序越靠前）"}];
+  int64 weight = 4 [(gnostic.openapi.v3.property) = {description: "权重/职务级别（越小职务越高）"}];
   // 状态：enabled=启用 disabled=禁用
   string status = 5 [(gnostic.openapi.v3.property) = {description: "状态（enabled=启用，disabled=禁用）"}];
   // 备注
   string remark = 6 [(gnostic.openapi.v3.property) = {description: "备注说明"}];
   // 创建时间
-  google.protobuf.Timestamp created_at = 7 [(gnostic.openapi.v3.property) = {description: "创建时间"}];
+  google.protobuf.Timestamp createdAt = 7 [(gnostic.openapi.v3.property) = {description: "创建时间"}];
   // 更新时间
-  google.protobuf.Timestamp updated_at = 8 [(gnostic.openapi.v3.property) = {description: "更新时间"}];
+  google.protobuf.Timestamp updatedAt = 8 [(gnostic.openapi.v3.property) = {description: "更新时间"}];
 }
 
 message ListPositionRequest {
   int64 currentPage = 1 [(gnostic.openapi.v3.property) = {description: "当前页码（从1开始）"}];
   int64 pageSize = 2 [(gnostic.openapi.v3.property) = {description: "每页条数（传0为全部）"}];
-  string name = 3 [(gnostic.openapi.v3.property) = {description: "岗位名称（支持模糊查询）"}];
-  string code = 4 [(gnostic.openapi.v3.property) = {description: "岗位编码（支持模糊查询）"}];
+  string name = 3 [(gnostic.openapi.v3.property) = {description: "职务名称（支持模糊查询）"}];
+  string code = 4 [(gnostic.openapi.v3.property) = {description: "职务编码（支持模糊查询）"}];
   string status = 5 [(gnostic.openapi.v3.property) = {description: "状态（enabled=启用，disabled=禁用）"}];
 }
 
@@ -40,7 +40,7 @@ message ListPositionResponse {
 }
 
 message GetPositionRequest {
-  string id = 1 [(gnostic.openapi.v3.property) = {description: "岗位ID"}];
+  string id = 1 [(gnostic.openapi.v3.property) = {description: "职务ID"}];
 }
 
 message CreatePositionRequest {
@@ -52,7 +52,7 @@ message CreatePositionRequest {
     ]
   };
 
-  // 岗位名称
+  // 职务名称
   string name = 1 [
     (buf.validate.field).cel = {
       id: "position.name.required"
@@ -64,9 +64,9 @@ message CreatePositionRequest {
       message: "position.name.max_len"
       expression: "this.size() <= 64"
     },
-    (gnostic.openapi.v3.property) = {description: "岗位名称"}
+    (gnostic.openapi.v3.property) = {description: "职务名称"}
   ];
-  // 岗位编码
+  // 职务编码
   string code = 2 [
     (buf.validate.field).cel = {
       id: "position.code.required"
@@ -78,7 +78,7 @@ message CreatePositionRequest {
       message: "position.code.max_len"
       expression: "this.size() <= 64"
     },
-    (gnostic.openapi.v3.property) = {description: "岗位编码"}
+    (gnostic.openapi.v3.property) = {description: "职务编码"}
   ];
   // 权重
   int64 weight = 3 [(gnostic.openapi.v3.property) = {description: "权重"}];
@@ -117,7 +117,7 @@ message UpdatePositionRequest {
     ]
   };
 
-  // 岗位名称
+  // 职务名称
   string name = 1 [
     (buf.validate.field).cel = {
       id: "position.name.required"
@@ -129,9 +129,9 @@ message UpdatePositionRequest {
       message: "position.name.max_len"
       expression: "this.size() <= 64"
     },
-    (gnostic.openapi.v3.property) = {description: "岗位名称"}
+    (gnostic.openapi.v3.property) = {description: "职务名称"}
   ];
-  // 岗位编码
+  // 职务编码
   string code = 2 [
     (buf.validate.field).cel = {
       id: "position.code.required"
@@ -143,7 +143,7 @@ message UpdatePositionRequest {
       message: "position.code.max_len"
       expression: "this.size() <= 64"
     },
-    (gnostic.openapi.v3.property) = {description: "岗位编码"}
+    (gnostic.openapi.v3.property) = {description: "职务编码"}
   ];
   // 权重
   int64 weight = 3 [(gnostic.openapi.v3.property) = {description: "权重"}];
@@ -171,7 +171,7 @@ message UpdatePositionRequest {
     },
     (gnostic.openapi.v3.property) = {description: "备注"}
   ];
-  // 岗位ID
+  // 职务ID
   string id = 6;
 }
 
@@ -181,7 +181,7 @@ message UpdatePositionStatusRequest {
   };
   // ID
   string id = 1 [(gnostic.openapi.v3.property) = {description: "ID"}];
-  // 岗位状态
+  // 职务状态
   string status = 2 [
     (buf.validate.field).string = {
       in: [
@@ -209,6 +209,20 @@ message DeletePositionRequest {
       message: "position.ids.not_empty"
       expression: "this.all(x, x.size() > 0)"
     },
-    (gnostic.openapi.v3.property) = {description: "岗位ID列表（必填，至少1个，最多100个，每个ID不能为空）"}
+    (gnostic.openapi.v3.property) = {description: "职务ID列表（必填，至少1个，最多100个，每个ID不能为空）"}
   ];
+}
+
+message IsPositionNameExistsRequest {
+  string name = 1;
+  string id = 2;
+}
+
+message IsPositionCodeExistsRequest {
+  string code = 1;
+  string id = 2;
+}
+
+message IsPositionFieldExistsResponse {
+  bool exists = 1;
 }

@@ -1,29 +1,43 @@
 <script lang="ts" setup>
+// ==================== types ====================
 import type { Recordable } from '@vben/types';
 import type {
   OnActionClickParams,
   VxeTableGridOptions,
 } from '#/adapter/vxe-table';
+import type { OrganizationPositionApi } from '#/api/organization/position';
 
+// ==================== vue ====================
 import { nextTick, ref } from 'vue';
 
+// ==================== vben ====================
 import { Page, useVbenModal } from '@vben/common-ui';
 import { IconifyIcon, Plus } from '@vben/icons';
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { $t } from '@vben/locales';
 
-import { Button, message, Modal } from 'ant-design-vue';
+// ==================== third-party ====================
+import { Button, message, Modal, Upload } from 'ant-design-vue';
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
+// ==================== constants ====================
+import { DEFAULT_PAGE_SIZE, PAGE_SIZES } from '#/types/pagination';
+
+// ==================== business ====================
+import { useGridFormOptions, useColumns } from './data';
+import { downloadFile, handleBlobResponseError, getFileNameFromDisposition } from "#/utils/download"
+
+// ==================== api ====================
 import {
   deletePositionApi,
   getPositionListApi,
   updatePositionStatusApi,
+  exportPositionApi,
+  importPositionApi,
 } from '#/api/organization/position';
-import type { OrganizationPositionApi } from '#/api/organization/position';
 
-import { useFormOptions, useColumns } from './data';
+// ==================== components ====================
 import Form from './modules/form/index.vue';
-import { DEFAULT_PAGE_SIZE, PAGE_SIZES } from "#/types/pagination"
+
 
 const [FormModel, formModelApi] = useVbenModal({
   connectedComponent: Form,
@@ -33,7 +47,7 @@ const [FormModel, formModelApi] = useVbenModal({
 const selectedRows = ref<OrganizationPositionApi.Position[]>([]);
 
 const [Grid, gridApi] = useVbenVxeGrid({
-  formOptions: useFormOptions(),
+  formOptions: useGridFormOptions(),
   gridOptions: {
     columns: useColumns(onActionClick, onStatusChange),
     height: 'auto',
@@ -84,10 +98,15 @@ const [Grid, gridApi] = useVbenVxeGrid({
   },
 });
 
+
 function onCheckboxChange() {
-  const checkboxRecords = gridApi.grid?.getCheckboxRecords?.() ?? []
-  const checkboxReserveRecords = gridApi.grid?.getCheckboxReserveRecords?.() ?? []
-  selectedRows.value = [...checkboxRecords, ...checkboxReserveRecords]
+  const grid = gridApi.grid;
+  if (!grid) return;
+
+  selectedRows.value = [
+    ...(grid.getCheckboxRecords?.() ?? []),
+    ...(grid.getCheckboxReserveRecords?.() ?? []),
+  ];
 }
 
 function onActionClick({
@@ -196,6 +215,62 @@ function onBatchDelete() {
     },
   });
 }
+
+async function onExport() {
+  try {
+    // ⭐ 获取当前查询条件（重点！）
+    const formValues = await gridApi.formApi?.getValues?.();
+
+    const params = {
+      ...formValues,
+      currentPage: 1,
+      pageSize: 0
+    };
+
+    const res = await exportPositionApi(params);
+    const blobData = res.data
+    const filename = getFileNameFromDisposition(res.headers['content-disposition'])
+    // 下载
+    downloadFile(blobData, filename);
+  } catch (e: any) {
+    handleBlobResponseError(e)
+  }
+}
+
+
+function beforeUpload(file: File) {
+  const isExcel =
+    file.type.includes('sheet') ||
+    file.name.endsWith('.xlsx') ||
+    file.name.endsWith('.xls');
+
+  if (!isExcel) {
+    message.error('只能上传 Excel 文件');
+    return Upload.LIST_IGNORE;
+  }
+
+  handleImport(file);
+  return false; // 阻止默认上传
+}
+
+async function handleImport(file: File) {
+  const hide = message.loading('导入中...', 0);
+
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    await importPositionApi(formData);
+
+    message.success('导入成功');
+    onRefresh();
+  } catch (e: any) {
+    message.error(e?.message || '导入失败');
+  } finally {
+    hide();
+  }
+}
+
 </script>
 
 <template>
@@ -204,13 +279,26 @@ function onBatchDelete() {
     <Grid>
       <template #toolbar-tools>
         <div class="flex gap-2">
-          <Button type="primary" danger :disabled="!selectedRows.length" @click="onBatchDelete">
-            <IconifyIcon icon="ant-design:delete-outlined" class="size-5" />
-            {{ $t('ui.actionTitle.delete') }}
-          </Button>
           <Button type="primary" @click="onCreate">
             <Plus class="size-5" />
             {{ $t('ui.actionTitle.create') }}
+          </Button>
+
+          <Upload :before-upload="beforeUpload" :show-upload-list="false" accept=".xlsx,.xls">
+            <Button>
+              <IconifyIcon icon="ant-design:upload-outlined" class="size-5" />
+              {{ $t('ui.actionTitle.import') }}
+            </Button>
+          </Upload>
+
+          <Button @click="onExport">
+            <IconifyIcon icon="ant-design:download-outlined" class="size-5" />
+            {{ $t('ui.actionTitle.export') }}
+          </Button>
+
+          <Button type="primary" danger :disabled="!selectedRows.length" @click="onBatchDelete">
+            <IconifyIcon icon="ant-design:delete-outlined" class="size-5" />
+            {{ $t('ui.actionTitle.delete') }}
           </Button>
         </div>
       </template>

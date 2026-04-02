@@ -6,13 +6,13 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql/schema"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/conf"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent"
-
 	"github.com/go-kratos/kratos/v2/log"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/wire"
+	"github.com/hypercoze/kratos-admin/app/admin/service/internal/conf"
+	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent"
 	_ "github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/runtime"
+	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/mq/rabbitmq"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -34,6 +34,8 @@ var ProviderSet = wire.NewSet(
 
 	NewDictTypeRepo,
 	NewDictDataRepo,
+
+	rabbitmq.ProviderSet,
 )
 
 // NewEntClient 初始化 Ent 客户端
@@ -122,11 +124,18 @@ type Data struct {
 }
 
 // NewData .
-func NewData(c *conf.Data, logger log.Logger, entClient *ent.Client, redisClient *redis.Client) (*Data, func(), error) {
+func NewData(
+	c *conf.Data,
+	logger log.Logger,
+	entClient *ent.Client,
+	redisClient *redis.Client,
+	// rabbitmq *rabbitmq.RabbitMQ,
+) (*Data, func(), error) {
 	l := log.NewHelper(logger)
 	d := &Data{
 		db:    entClient,
 		redis: redisClient,
+		//rabbitmq: rabbitmq,
 	}
 	return d, func() {
 		l.Info("message", "closing the data resources")

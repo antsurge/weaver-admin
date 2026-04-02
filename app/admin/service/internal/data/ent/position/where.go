@@ -89,14 +89,29 @@ func CreatedAt(v time.Time) predicate.Position {
 	return predicate.Position(sql.FieldEQ(FieldCreatedAt, v))
 }
 
+// CreatedBy applies equality check predicate on the "created_by" field. It's identical to CreatedByEQ.
+func CreatedBy(v string) predicate.Position {
+	return predicate.Position(sql.FieldEQ(FieldCreatedBy, v))
+}
+
 // UpdatedAt applies equality check predicate on the "updated_at" field. It's identical to UpdatedAtEQ.
 func UpdatedAt(v time.Time) predicate.Position {
 	return predicate.Position(sql.FieldEQ(FieldUpdatedAt, v))
 }
 
+// UpdatedBy applies equality check predicate on the "updated_by" field. It's identical to UpdatedByEQ.
+func UpdatedBy(v string) predicate.Position {
+	return predicate.Position(sql.FieldEQ(FieldUpdatedBy, v))
+}
+
 // DeletedAt applies equality check predicate on the "deleted_at" field. It's identical to DeletedAtEQ.
 func DeletedAt(v time.Time) predicate.Position {
 	return predicate.Position(sql.FieldEQ(FieldDeletedAt, v))
+}
+
+// DeletedBy applies equality check predicate on the "deleted_by" field. It's identical to DeletedByEQ.
+func DeletedBy(v string) predicate.Position {
+	return predicate.Position(sql.FieldEQ(FieldDeletedBy, v))
 }
 
 // NameEQ applies the EQ predicate on the "name" field.
@@ -404,6 +419,71 @@ func CreatedAtLTE(v time.Time) predicate.Position {
 	return predicate.Position(sql.FieldLTE(FieldCreatedAt, v))
 }
 
+// CreatedByEQ applies the EQ predicate on the "created_by" field.
+func CreatedByEQ(v string) predicate.Position {
+	return predicate.Position(sql.FieldEQ(FieldCreatedBy, v))
+}
+
+// CreatedByNEQ applies the NEQ predicate on the "created_by" field.
+func CreatedByNEQ(v string) predicate.Position {
+	return predicate.Position(sql.FieldNEQ(FieldCreatedBy, v))
+}
+
+// CreatedByIn applies the In predicate on the "created_by" field.
+func CreatedByIn(vs ...string) predicate.Position {
+	return predicate.Position(sql.FieldIn(FieldCreatedBy, vs...))
+}
+
+// CreatedByNotIn applies the NotIn predicate on the "created_by" field.
+func CreatedByNotIn(vs ...string) predicate.Position {
+	return predicate.Position(sql.FieldNotIn(FieldCreatedBy, vs...))
+}
+
+// CreatedByGT applies the GT predicate on the "created_by" field.
+func CreatedByGT(v string) predicate.Position {
+	return predicate.Position(sql.FieldGT(FieldCreatedBy, v))
+}
+
+// CreatedByGTE applies the GTE predicate on the "created_by" field.
+func CreatedByGTE(v string) predicate.Position {
+	return predicate.Position(sql.FieldGTE(FieldCreatedBy, v))
+}
+
+// CreatedByLT applies the LT predicate on the "created_by" field.
+func CreatedByLT(v string) predicate.Position {
+	return predicate.Position(sql.FieldLT(FieldCreatedBy, v))
+}
+
+// CreatedByLTE applies the LTE predicate on the "created_by" field.
+func CreatedByLTE(v string) predicate.Position {
+	return predicate.Position(sql.FieldLTE(FieldCreatedBy, v))
+}
+
+// CreatedByContains applies the Contains predicate on the "created_by" field.
+func CreatedByContains(v string) predicate.Position {
+	return predicate.Position(sql.FieldContains(FieldCreatedBy, v))
+}
+
+// CreatedByHasPrefix applies the HasPrefix predicate on the "created_by" field.
+func CreatedByHasPrefix(v string) predicate.Position {
+	return predicate.Position(sql.FieldHasPrefix(FieldCreatedBy, v))
+}
+
+// CreatedByHasSuffix applies the HasSuffix predicate on the "created_by" field.
+func CreatedByHasSuffix(v string) predicate.Position {
+	return predicate.Position(sql.FieldHasSuffix(FieldCreatedBy, v))
+}
+
+// CreatedByEqualFold applies the EqualFold predicate on the "created_by" field.
+func CreatedByEqualFold(v string) predicate.Position {
+	return predicate.Position(sql.FieldEqualFold(FieldCreatedBy, v))
+}
+
+// CreatedByContainsFold applies the ContainsFold predicate on the "created_by" field.
+func CreatedByContainsFold(v string) predicate.Position {
+	return predicate.Position(sql.FieldContainsFold(FieldCreatedBy, v))
+}
+
 // UpdatedAtEQ applies the EQ predicate on the "updated_at" field.
 func UpdatedAtEQ(v time.Time) predicate.Position {
 	return predicate.Position(sql.FieldEQ(FieldUpdatedAt, v))
@@ -442,6 +522,71 @@ func UpdatedAtLT(v time.Time) predicate.Position {
 // UpdatedAtLTE applies the LTE predicate on the "updated_at" field.
 func UpdatedAtLTE(v time.Time) predicate.Position {
 	return predicate.Position(sql.FieldLTE(FieldUpdatedAt, v))
+}
+
+// UpdatedByEQ applies the EQ predicate on the "updated_by" field.
+func UpdatedByEQ(v string) predicate.Position {
+	return predicate.Position(sql.FieldEQ(FieldUpdatedBy, v))
+}
+
+// UpdatedByNEQ applies the NEQ predicate on the "updated_by" field.
+func UpdatedByNEQ(v string) predicate.Position {
+	return predicate.Position(sql.FieldNEQ(FieldUpdatedBy, v))
+}
+
+// UpdatedByIn applies the In predicate on the "updated_by" field.
+func UpdatedByIn(vs ...string) predicate.Position {
+	return predicate.Position(sql.FieldIn(FieldUpdatedBy, vs...))
+}
+
+// UpdatedByNotIn applies the NotIn predicate on the "updated_by" field.
+func UpdatedByNotIn(vs ...string) predicate.Position {
+	return predicate.Position(sql.FieldNotIn(FieldUpdatedBy, vs...))
+}
+
+// UpdatedByGT applies the GT predicate on the "updated_by" field.
+func UpdatedByGT(v string) predicate.Position {
+	return predicate.Position(sql.FieldGT(FieldUpdatedBy, v))
+}
+
+// UpdatedByGTE applies the GTE predicate on the "updated_by" field.
+func UpdatedByGTE(v string) predicate.Position {
+	return predicate.Position(sql.FieldGTE(FieldUpdatedBy, v))
+}
+
+// UpdatedByLT applies the LT predicate on the "updated_by" field.
+func UpdatedByLT(v string) predicate.Position {
+	return predicate.Position(sql.FieldLT(FieldUpdatedBy, v))
+}
+
+// UpdatedByLTE applies the LTE predicate on the "updated_by" field.
+func UpdatedByLTE(v string) predicate.Position {
+	return predicate.Position(sql.FieldLTE(FieldUpdatedBy, v))
+}
+
+// UpdatedByContains applies the Contains predicate on the "updated_by" field.
+func UpdatedByContains(v string) predicate.Position {
+	return predicate.Position(sql.FieldContains(FieldUpdatedBy, v))
+}
+
+// UpdatedByHasPrefix applies the HasPrefix predicate on the "updated_by" field.
+func UpdatedByHasPrefix(v string) predicate.Position {
+	return predicate.Position(sql.FieldHasPrefix(FieldUpdatedBy, v))
+}
+
+// UpdatedByHasSuffix applies the HasSuffix predicate on the "updated_by" field.
+func UpdatedByHasSuffix(v string) predicate.Position {
+	return predicate.Position(sql.FieldHasSuffix(FieldUpdatedBy, v))
+}
+
+// UpdatedByEqualFold applies the EqualFold predicate on the "updated_by" field.
+func UpdatedByEqualFold(v string) predicate.Position {
+	return predicate.Position(sql.FieldEqualFold(FieldUpdatedBy, v))
+}
+
+// UpdatedByContainsFold applies the ContainsFold predicate on the "updated_by" field.
+func UpdatedByContainsFold(v string) predicate.Position {
+	return predicate.Position(sql.FieldContainsFold(FieldUpdatedBy, v))
 }
 
 // DeletedAtEQ applies the EQ predicate on the "deleted_at" field.
@@ -492,6 +637,81 @@ func DeletedAtIsNil() predicate.Position {
 // DeletedAtNotNil applies the NotNil predicate on the "deleted_at" field.
 func DeletedAtNotNil() predicate.Position {
 	return predicate.Position(sql.FieldNotNull(FieldDeletedAt))
+}
+
+// DeletedByEQ applies the EQ predicate on the "deleted_by" field.
+func DeletedByEQ(v string) predicate.Position {
+	return predicate.Position(sql.FieldEQ(FieldDeletedBy, v))
+}
+
+// DeletedByNEQ applies the NEQ predicate on the "deleted_by" field.
+func DeletedByNEQ(v string) predicate.Position {
+	return predicate.Position(sql.FieldNEQ(FieldDeletedBy, v))
+}
+
+// DeletedByIn applies the In predicate on the "deleted_by" field.
+func DeletedByIn(vs ...string) predicate.Position {
+	return predicate.Position(sql.FieldIn(FieldDeletedBy, vs...))
+}
+
+// DeletedByNotIn applies the NotIn predicate on the "deleted_by" field.
+func DeletedByNotIn(vs ...string) predicate.Position {
+	return predicate.Position(sql.FieldNotIn(FieldDeletedBy, vs...))
+}
+
+// DeletedByGT applies the GT predicate on the "deleted_by" field.
+func DeletedByGT(v string) predicate.Position {
+	return predicate.Position(sql.FieldGT(FieldDeletedBy, v))
+}
+
+// DeletedByGTE applies the GTE predicate on the "deleted_by" field.
+func DeletedByGTE(v string) predicate.Position {
+	return predicate.Position(sql.FieldGTE(FieldDeletedBy, v))
+}
+
+// DeletedByLT applies the LT predicate on the "deleted_by" field.
+func DeletedByLT(v string) predicate.Position {
+	return predicate.Position(sql.FieldLT(FieldDeletedBy, v))
+}
+
+// DeletedByLTE applies the LTE predicate on the "deleted_by" field.
+func DeletedByLTE(v string) predicate.Position {
+	return predicate.Position(sql.FieldLTE(FieldDeletedBy, v))
+}
+
+// DeletedByContains applies the Contains predicate on the "deleted_by" field.
+func DeletedByContains(v string) predicate.Position {
+	return predicate.Position(sql.FieldContains(FieldDeletedBy, v))
+}
+
+// DeletedByHasPrefix applies the HasPrefix predicate on the "deleted_by" field.
+func DeletedByHasPrefix(v string) predicate.Position {
+	return predicate.Position(sql.FieldHasPrefix(FieldDeletedBy, v))
+}
+
+// DeletedByHasSuffix applies the HasSuffix predicate on the "deleted_by" field.
+func DeletedByHasSuffix(v string) predicate.Position {
+	return predicate.Position(sql.FieldHasSuffix(FieldDeletedBy, v))
+}
+
+// DeletedByIsNil applies the IsNil predicate on the "deleted_by" field.
+func DeletedByIsNil() predicate.Position {
+	return predicate.Position(sql.FieldIsNull(FieldDeletedBy))
+}
+
+// DeletedByNotNil applies the NotNil predicate on the "deleted_by" field.
+func DeletedByNotNil() predicate.Position {
+	return predicate.Position(sql.FieldNotNull(FieldDeletedBy))
+}
+
+// DeletedByEqualFold applies the EqualFold predicate on the "deleted_by" field.
+func DeletedByEqualFold(v string) predicate.Position {
+	return predicate.Position(sql.FieldEqualFold(FieldDeletedBy, v))
+}
+
+// DeletedByContainsFold applies the ContainsFold predicate on the "deleted_by" field.
+func DeletedByContainsFold(v string) predicate.Position {
+	return predicate.Position(sql.FieldContainsFold(FieldDeletedBy, v))
 }
 
 // And groups predicates with the AND operator between them.

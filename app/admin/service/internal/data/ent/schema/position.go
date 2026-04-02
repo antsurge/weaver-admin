@@ -18,7 +18,7 @@ func (Position) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Annotation{Table: "position"},
 		entsql.WithComments(true),
-		schema.Comment("岗位表"),
+		schema.Comment("职务表"),
 	}
 }
 
@@ -32,14 +32,14 @@ func (Position) Fields() []ent.Field {
 		field.String("name").
 			NotEmpty().
 			MaxLen(64).
-			Comment("岗位名称"),
+			Comment("职务名称"),
 		field.String("code").
 			NotEmpty().
 			MaxLen(64).
-			Comment("岗位编码"),
+			Comment("职务编码"),
 		field.Int("weight").
 			Default(0).
-			Comment("权重"),
+			Comment("权重/职务级别（越小职务越高）"),
 		field.Enum("status").
 			Values("enabled", "disabled").
 			Default("enabled").
@@ -52,14 +52,25 @@ func (Position) Fields() []ent.Field {
 			Immutable().
 			Default(time.Now).
 			Comment("创建时间"),
+		field.String("created_by").
+			Immutable().
+			Default("").
+			Comment("创建人"),
 		field.Time("updated_at").
 			Default(time.Now).
 			UpdateDefault(time.Now).
 			Comment("更新时间"),
+		field.String("updated_by").
+			Default("").
+			Comment("更新人"),
 		field.Time("deleted_at").
 			Optional().
 			Nillable().
 			Comment("删除时间"),
+		field.String("deleted_by").
+			Optional().
+			Nillable().
+			Comment("删除人"),
 	}
 }
 

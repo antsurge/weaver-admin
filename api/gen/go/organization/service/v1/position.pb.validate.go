@@ -992,3 +992,322 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = DeletePositionRequestValidationError{}
+
+// Validate checks the field values on IsPositionNameExistsRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *IsPositionNameExistsRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on IsPositionNameExistsRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// IsPositionNameExistsRequestMultiError, or nil if none found.
+func (m *IsPositionNameExistsRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *IsPositionNameExistsRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Name
+
+	// no validation rules for Id
+
+	if len(errors) > 0 {
+		return IsPositionNameExistsRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// IsPositionNameExistsRequestMultiError is an error wrapping multiple
+// validation errors returned by IsPositionNameExistsRequest.ValidateAll() if
+// the designated constraints aren't met.
+type IsPositionNameExistsRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m IsPositionNameExistsRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m IsPositionNameExistsRequestMultiError) AllErrors() []error { return m }
+
+// IsPositionNameExistsRequestValidationError is the validation error returned
+// by IsPositionNameExistsRequest.Validate if the designated constraints
+// aren't met.
+type IsPositionNameExistsRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e IsPositionNameExistsRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e IsPositionNameExistsRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e IsPositionNameExistsRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e IsPositionNameExistsRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e IsPositionNameExistsRequestValidationError) ErrorName() string {
+	return "IsPositionNameExistsRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e IsPositionNameExistsRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sIsPositionNameExistsRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = IsPositionNameExistsRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = IsPositionNameExistsRequestValidationError{}
+
+// Validate checks the field values on IsPositionCodeExistsRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *IsPositionCodeExistsRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on IsPositionCodeExistsRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// IsPositionCodeExistsRequestMultiError, or nil if none found.
+func (m *IsPositionCodeExistsRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *IsPositionCodeExistsRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Code
+
+	// no validation rules for Id
+
+	if len(errors) > 0 {
+		return IsPositionCodeExistsRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// IsPositionCodeExistsRequestMultiError is an error wrapping multiple
+// validation errors returned by IsPositionCodeExistsRequest.ValidateAll() if
+// the designated constraints aren't met.
+type IsPositionCodeExistsRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m IsPositionCodeExistsRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m IsPositionCodeExistsRequestMultiError) AllErrors() []error { return m }
+
+// IsPositionCodeExistsRequestValidationError is the validation error returned
+// by IsPositionCodeExistsRequest.Validate if the designated constraints
+// aren't met.
+type IsPositionCodeExistsRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e IsPositionCodeExistsRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e IsPositionCodeExistsRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e IsPositionCodeExistsRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e IsPositionCodeExistsRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e IsPositionCodeExistsRequestValidationError) ErrorName() string {
+	return "IsPositionCodeExistsRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e IsPositionCodeExistsRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sIsPositionCodeExistsRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = IsPositionCodeExistsRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = IsPositionCodeExistsRequestValidationError{}
+
+// Validate checks the field values on IsPositionFieldExistsResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *IsPositionFieldExistsResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on IsPositionFieldExistsResponse with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// IsPositionFieldExistsResponseMultiError, or nil if none found.
+func (m *IsPositionFieldExistsResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *IsPositionFieldExistsResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Exists
+
+	if len(errors) > 0 {
+		return IsPositionFieldExistsResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// IsPositionFieldExistsResponseMultiError is an error wrapping multiple
+// validation errors returned by IsPositionFieldExistsResponse.ValidateAll()
+// if the designated constraints aren't met.
+type IsPositionFieldExistsResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m IsPositionFieldExistsResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m IsPositionFieldExistsResponseMultiError) AllErrors() []error { return m }
+
+// IsPositionFieldExistsResponseValidationError is the validation error
+// returned by IsPositionFieldExistsResponse.Validate if the designated
+// constraints aren't met.
+type IsPositionFieldExistsResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e IsPositionFieldExistsResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e IsPositionFieldExistsResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e IsPositionFieldExistsResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e IsPositionFieldExistsResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e IsPositionFieldExistsResponseValidationError) ErrorName() string {
+	return "IsPositionFieldExistsResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e IsPositionFieldExistsResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sIsPositionFieldExistsResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = IsPositionFieldExistsResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = IsPositionFieldExistsResponseValidationError{}

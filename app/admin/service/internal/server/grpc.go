@@ -17,6 +17,7 @@ func NewGRPCServer(
 	permissionService *service.PermissionService,
 	organizationService *service.OrganizationService,
 	dictionaryService *service.DictionaryService,
+	identityService *service.IdentityService,
 
 	logger log.Logger,
 ) *grpc.Server {
@@ -40,5 +41,7 @@ func NewGRPCServer(
 	adminV1.RegisterPermissionServiceServer(srv, permissionService)
 	adminV1.RegisterOrganizationServer(srv, organizationService)
 	adminV1.RegisterDictionaryServer(srv, dictionaryService)
+	adminV1.RegisterIdentityServer(srv, identityService)
+
 	return srv
 }

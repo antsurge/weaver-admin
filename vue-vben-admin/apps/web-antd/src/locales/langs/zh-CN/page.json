@@ -18,17 +18,21 @@
     "role": "角色管理",
     "permission": "权限管理",
     "organization": "组织管理",
-    "position": "岗位管理",
+    "position": "职务管理",
     "dictionary": "字典管理"
   },
   "organization": {
     "title": "组织管理",
     "department": "部门管理",
-    "position": "岗位管理"
+    "position": "职务管理"
   },
   "permission": {
     "title": "权限管理",
     "menu": "菜单管理",
-    "role":"角色管理"
+    "role": "角色管理"
+  },
+  "adminuser": {
+    "title": "后台用户",
+    "admin": "用户管理"
   }
 }

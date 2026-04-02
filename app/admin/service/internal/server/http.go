@@ -4,12 +4,15 @@ import (
 	"context"
 
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/middleware/selector"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/golang-jwt/jwt/v5"
 	adminV1 "github.com/hypercoze/kratos-admin/api/gen/go/admin/service/v1"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/conf"
+	"github.com/hypercoze/kratos-admin/app/admin/service/internal/handler"
+	"github.com/hypercoze/kratos-admin/app/admin/service/internal/handler/pb"
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/service"
 	"github.com/hypercoze/kratos-admin/pkg/middleware/auth"
 	"github.com/hypercoze/kratos-admin/pkg/middleware/bufvalidate"
@@ -38,9 +41,14 @@ func NewHTTPServer(
 	permissionService *service.PermissionService,
 	organizationService *service.OrganizationService,
 	dictionaryService *service.DictionaryService,
+	identityService *service.IdentityService,
+
+	organizationHandler *handler.OrganizationHandler,
 
 	logger log.Logger,
 ) *http.Server {
+	//middlewares := serverMiddleware(jwtConf)
+
 	var opts = []http.ServerOption{
 		http.Middleware(
 			localize.I18N(),
@@ -66,5 +74,22 @@ func NewHTTPServer(
 	adminV1.RegisterPermissionServiceHTTPServer(srv, permissionService)
 	adminV1.RegisterOrganizationHTTPServer(srv, organizationService)
 	adminV1.RegisterDictionaryHTTPServer(srv, dictionaryService)
+	adminV1.RegisterIdentityHTTPServer(srv, identityService)
+
+	pb.RegisterOrganizationHandlerServer(srv, organizationHandler)
+
 	return srv
+}
+
+// 抽出来
+func serverMiddleware(jwtConf *conf.JWT) []middleware.Middleware {
+	return []middleware.Middleware{
+		localize.I18N(),
+		selector.Server(auth.Server(
+			authUtils.WithSecret([]byte(jwtConf.AccessSecret)),
+			authUtils.WithSigningMethod(jwt.SigningMethodHS256),
+		)).Match(NewWhiteListMatcher()).Build(),
+		recovery.Recovery(),
+		bufvalidate.BufValidator(),
+	}
 }

@@ -12,17 +12,17 @@ import (
 	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/position"
 )
 
-// 岗位表
+// 职务表
 type Position struct {
 	config `json:"-"`
 	// ID of the ent.
 	// ID
 	ID string `json:"id,omitempty"`
-	// 岗位名称
+	// 职务名称
 	Name string `json:"name,omitempty"`
-	// 岗位编码
+	// 职务编码
 	Code string `json:"code,omitempty"`
-	// 权重
+	// 权重/职务级别（越小职务越高）
 	Weight int `json:"weight,omitempty"`
 	// 状态：enabled=启用 disabled=禁用
 	Status position.Status `json:"status,omitempty"`
@@ -30,10 +30,16 @@ type Position struct {
 	Remark string `json:"remark,omitempty"`
 	// 创建时间
 	CreatedAt time.Time `json:"created_at,omitempty"`
+	// 创建人
+	CreatedBy string `json:"created_by,omitempty"`
 	// 更新时间
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
+	// 更新人
+	UpdatedBy string `json:"updated_by,omitempty"`
 	// 删除时间
-	DeletedAt    *time.Time `json:"deleted_at,omitempty"`
+	DeletedAt *time.Time `json:"deleted_at,omitempty"`
+	// 删除人
+	DeletedBy    *string `json:"deleted_by,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -44,7 +50,7 @@ func (*Position) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case position.FieldWeight:
 			values[i] = new(sql.NullInt64)
-		case position.FieldID, position.FieldName, position.FieldCode, position.FieldStatus, position.FieldRemark:
+		case position.FieldID, position.FieldName, position.FieldCode, position.FieldStatus, position.FieldRemark, position.FieldCreatedBy, position.FieldUpdatedBy, position.FieldDeletedBy:
 			values[i] = new(sql.NullString)
 		case position.FieldCreatedAt, position.FieldUpdatedAt, position.FieldDeletedAt:
 			values[i] = new(sql.NullTime)
@@ -105,11 +111,23 @@ func (_m *Position) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.CreatedAt = value.Time
 			}
+		case position.FieldCreatedBy:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field created_by", values[i])
+			} else if value.Valid {
+				_m.CreatedBy = value.String
+			}
 		case position.FieldUpdatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
 			} else if value.Valid {
 				_m.UpdatedAt = value.Time
+			}
+		case position.FieldUpdatedBy:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field updated_by", values[i])
+			} else if value.Valid {
+				_m.UpdatedBy = value.String
 			}
 		case position.FieldDeletedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -117,6 +135,13 @@ func (_m *Position) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.DeletedAt = new(time.Time)
 				*_m.DeletedAt = value.Time
+			}
+		case position.FieldDeletedBy:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field deleted_by", values[i])
+			} else if value.Valid {
+				_m.DeletedBy = new(string)
+				*_m.DeletedBy = value.String
 			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
@@ -172,12 +197,23 @@ func (_m *Position) String() string {
 	builder.WriteString("created_at=")
 	builder.WriteString(_m.CreatedAt.Format(time.ANSIC))
 	builder.WriteString(", ")
+	builder.WriteString("created_by=")
+	builder.WriteString(_m.CreatedBy)
+	builder.WriteString(", ")
 	builder.WriteString("updated_at=")
 	builder.WriteString(_m.UpdatedAt.Format(time.ANSIC))
+	builder.WriteString(", ")
+	builder.WriteString("updated_by=")
+	builder.WriteString(_m.UpdatedBy)
 	builder.WriteString(", ")
 	if v := _m.DeletedAt; v != nil {
 		builder.WriteString("deleted_at=")
 		builder.WriteString(v.Format(time.ANSIC))
+	}
+	builder.WriteString(", ")
+	if v := _m.DeletedBy; v != nil {
+		builder.WriteString("deleted_by=")
+		builder.WriteString(*v)
 	}
 	builder.WriteByte(')')
 	return builder.String()

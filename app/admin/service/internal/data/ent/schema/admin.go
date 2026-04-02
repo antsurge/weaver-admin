@@ -33,9 +33,9 @@ func (Admin) Fields() []ent.Field {
 		field.String("phone").Optional(),      // 对应 Proto phone
 		field.String("avatar").Optional(),     // 对应 Proto avatar
 		field.String("password").Sensitive(),  // 对应 Proto password (Sensitive 不会被 JSON 序列化)
-		field.Time("create_time").
+		field.Time("created_at").
 			Default(time.Now).Immutable(), // 对应 Proto createTime
-		field.Time("update_time").
+		field.Time("updated_at").
 			Default(time.Now).UpdateDefault(time.Now), // 对应 Proto updateTime
 	}
 }

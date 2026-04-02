@@ -1,35 +1,58 @@
 <script lang="ts" setup>
+// ==================== types ====================
 import type { VbenFormSchema } from '#/adapter/form';
+import type { OrganizationPositionApi } from '#/api/organization/position';
 
+// ==================== vue ====================
 import { computed, ref } from 'vue';
 
+// ==================== vben ====================
+import { useVbenForm, z } from '#/adapter/form';
 import { useVbenModal } from '@vben/common-ui';
+import { $t } from '#/locales';
+
+// ==================== third-party ====================
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
 
-import { useVbenForm } from '#/adapter/form';
+// ==================== api ====================
 import {
   getPositionApi,
   createPositionApi,
   updatePositionApi,
+  isPositionNameExistsApi,
+  isPositionCodeExistsApi,
 } from '#/api/organization/position';
-import type { SystemPositionApi } from '#/api/organization/position';
 
-import { $t } from '#/locales';
-
-import { nameRule, codeRule } from './rules';
 
 const emit = defineEmits<{
   success: [];
 }>();
 
-const formData = ref<SystemPositionApi.Position>();
-
+const formData = ref<OrganizationPositionApi.Position>();
 const schema: VbenFormSchema[] = [
   {
     fieldName: 'name',
     label: $t('organization.position.fields.name'),
     component: 'Input',
-    rules: nameRule,
+    rules: z
+      .string()
+      .min(2, $t('ui.formRules.minLength', [$t('organization.position.fields.name'), 2]))
+      .max(30, $t('ui.formRules.maxLength', [$t('organization.position.fields.name'), 30]))
+      .refine(
+        async (value: string) => {
+          if (!value) {
+            return false
+          }
+          let res = await isPositionNameExistsApi(value, formData.value?.id)
+          return !res?.exists;
+        },
+        (value) => ({
+          message: $t('ui.formRules.alreadyExists', [
+            $t('organization.position.fields.name'),
+            value,
+          ]),
+        }),
+      ),
     componentProps: {
       placeholder: $t('ui.formRules.required', [
         $t('organization.position.fields.name'),
@@ -40,7 +63,25 @@ const schema: VbenFormSchema[] = [
     fieldName: 'code',
     label: $t('organization.position.fields.code'),
     component: 'Input',
-    rules: codeRule,
+    rules: z
+      .string()
+      .min(2, $t('ui.formRules.minLength', [$t('organization.position.fields.code'), 2]))
+      .max(30, $t('ui.formRules.maxLength', [$t('organization.position.fields.code'), 30]))
+      .refine(
+        async (value: string) => {
+          if (!value) {
+            return false
+          }
+          let res = await isPositionCodeExistsApi(value, formData.value?.id)
+          return !res?.exists;
+        },
+        (value) => ({
+          message: $t('ui.formRules.alreadyExists', [
+            $t('organization.position.fields.code'),
+            value,
+          ]),
+        }),
+      ),
     componentProps: {
       placeholder: $t('ui.formRules.required', [
         $t('organization.position.fields.code'),
@@ -95,17 +136,17 @@ const [Form, formApi] = useVbenForm({
     formItemClass: 'col-span-2 md:col-span-2',
     labelWidth: 90,
   },
-  schema,
+  schema: schema,
   showDefaultActions: false,
   wrapperClass: 'grid-cols-2 gap-x-4',
 });
 
 const [Modal, modalApi] = useVbenModal({
   onConfirm: onSubmit,
-  onOpenChange:async (isOpen) => {
+  onOpenChange: async (isOpen) => {
     if (!isOpen) return;
 
-    const data = modalApi.getData<SystemPositionApi.Position>();
+    const data = modalApi.getData<OrganizationPositionApi.Position>();
     // 编辑
     if (data?.id) {
       modalApi.lock();
@@ -117,7 +158,6 @@ const [Modal, modalApi] = useVbenModal({
         modalApi.unlock();
       }
     } else {
-      // 👉 新增
       formData.value = undefined;
       formApi.resetForm();
     }
@@ -128,7 +168,7 @@ async function onSubmit() {
   const { valid } = await formApi.validate();
   if (!valid) return;
   modalApi.lock();
-  const data = await formApi.getValues<SystemPositionApi.Position>();
+  const data = await formApi.getValues<OrganizationPositionApi.Position>();
   try {
     if (formData.value?.id) {
       await updatePositionApi(formData.value.id, data);

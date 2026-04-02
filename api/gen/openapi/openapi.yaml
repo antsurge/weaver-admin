@@ -6,6 +6,135 @@ info:
     title: ""
     version: 0.0.1
 paths:
+    /admin/v1/admin:
+        get:
+            tags:
+                - Identity
+                - Authentication
+            summary: 后台用户-列表
+            description: 后台用户列表
+            operationId: Identity_ListAdmin
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: username
+                  in: query
+                  schema:
+                    type: string
+                - name: phone
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListAdminResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Identity
+                - Authentication
+            summary: 后台用户-创建
+            description: 创建后台用户
+            operationId: Identity_CreateAdmin
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateAdminRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Admin'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/admin/{id}:
+        get:
+            tags:
+                - Identity
+                - Authentication
+            summary: 后台用户-通过id获取
+            description: 通过id获取后台用户
+            operationId: Identity_GetAdmin
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Admin'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - Identity
+                - Authentication
+            summary: 后台用户-修改
+            description: 修改后台用户
+            operationId: Identity_UpdateAdmin
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateAdminRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Admin'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /admin/v1/department:
         post:
             tags:
@@ -710,8 +839,8 @@ paths:
             tags:
                 - Organization
                 - Organization
-            summary: 岗位-列表
-            description: 获取岗位列表
+            summary: 职务-列表
+            description: 获取职务列表
             operationId: Organization_ListPosition
             parameters:
                 - name: currentPage
@@ -751,8 +880,8 @@ paths:
             tags:
                 - Organization
                 - Organization
-            summary: 岗位-创建
-            description: 岗位创建
+            summary: 职务-创建
+            description: 职务创建
             operationId: Organization_CreatePosition
             requestBody:
                 content:
@@ -777,8 +906,8 @@ paths:
             tags:
                 - Organization
                 - Organization
-            summary: 岗位-删除(批量)
-            description: 岗位删除，支持批量删除
+            summary: 职务-删除(批量)
+            description: 职务删除，支持批量删除
             operationId: Organization_DeletePosition
             parameters:
                 - name: ids
@@ -802,8 +931,8 @@ paths:
             tags:
                 - Organization
                 - Organization
-            summary: 岗位-详情
-            description: 岗位详情
+            summary: 职务-详情
+            description: 职务详情
             operationId: Organization_GetPosition
             parameters:
                 - name: id
@@ -828,13 +957,13 @@ paths:
             tags:
                 - Organization
                 - Organization
-            summary: 岗位-修改
-            description: 岗位修改
+            summary: 职务-修改
+            description: 职务修改
             operationId: Organization_UpdatePosition
             parameters:
                 - name: id
                   in: path
-                  description: 岗位ID
+                  description: 职务ID
                   required: true
                   schema:
                     type: string
@@ -862,7 +991,7 @@ paths:
             tags:
                 - Organization
                 - Organization
-            summary: 岗位-修改状态
+            summary: 职务-修改状态
             description: 修改状态
             operationId: Organization_UpdatePositionStatus
             parameters:
@@ -882,6 +1011,66 @@ paths:
                 "200":
                     description: OK
                     content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/position:code-exists:
+        get:
+            tags:
+                - Organization
+                - Organization
+            summary: 职务-职务名称是否存在
+            description: 职务编码是否存在
+            operationId: Organization_IsPositionCodeExists
+            parameters:
+                - name: code
+                  in: query
+                  schema:
+                    type: string
+                - name: id
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/IsPositionFieldExistsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/position:name-exists:
+        get:
+            tags:
+                - Organization
+                - Organization
+            summary: 职务-职务名称是否存在
+            description: 职务名称是否存在
+            operationId: Organization_IsPositionNameExists
+            parameters:
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: id
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/IsPositionFieldExistsResponse'
                 default:
                     description: Default error response
                     content:
@@ -1077,7 +1266,7 @@ paths:
                     type: string
                 - name: status
                   in: query
-                  description: 岗位状态
+                  description: 职务状态
                   schema:
                     type: string
             responses:
@@ -1134,6 +1323,64 @@ paths:
                                 $ref: '#/components/schemas/Status'
 components:
     schemas:
+        Admin:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 用户ID
+                realName:
+                    type: string
+                    description: 真实姓名
+                username:
+                    type: string
+                    description: 用户名
+                email:
+                    type: string
+                    description: 邮箱
+                phone:
+                    type: string
+                    description: 手机号
+                avatar:
+                    type: string
+                    description: 头像
+                status:
+                    type: string
+                    description: 状态(enabled/disabled)
+                createTime:
+                    type: string
+                    description: 创建时间
+                    format: date-time
+                updateTime:
+                    type: string
+                    description: 更新时间
+                    format: date-time
+            description: 后台用户信息
+        CreateAdminRequest:
+            required:
+                - username
+                - password
+            type: object
+            properties:
+                realName:
+                    type: string
+                    description: 真实姓名
+                username:
+                    type: string
+                    description: 用户名
+                email:
+                    type: string
+                    description: 邮箱
+                phone:
+                    type: string
+                    description: 手机号
+                avatar:
+                    type: string
+                    description: 头像
+                password:
+                    type: string
+                    description: 密码
+            description: 创建后台用户请求
         CreateDepartmentRequest:
             type: object
             properties:
@@ -1162,6 +1409,9 @@ components:
                 leaderEmail:
                     type: string
                     description: 负责人邮箱
+                type:
+                    type: string
+                    description: 类型（company=公司 subsidiary=子公司 department=部门 position=岗位）
             description: 创建组织请求
         CreateDictDataRequest:
             required:
@@ -1258,10 +1508,10 @@ components:
             properties:
                 name:
                     type: string
-                    description: 岗位名称
+                    description: 职务名称
                 code:
                     type: string
-                    description: 岗位编码
+                    description: 职务编码
                 weight:
                     type: string
                     description: 权重
@@ -1346,6 +1596,9 @@ components:
                     type: string
                     description: 更新时间
                     format: date-time
+                type:
+                    type: string
+                    description: 类型（company=公司 subsidiary=子公司 department=部门 position=岗位）
                 children:
                     type: array
                     items:
@@ -1450,6 +1703,23 @@ components:
                     description: The type of the serialized message.
             additionalProperties: true
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        IsPositionFieldExistsResponse:
+            type: object
+            properties:
+                exists:
+                    type: boolean
+        ListAdminResponse:
+            type: object
+            properties:
+                total:
+                    type: string
+                    description: 总数
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Admin'
+                    description: 列表
+            description: 后台用户分页结果
         ListDictDataResponse:
             type: object
             properties:
@@ -1575,13 +1845,13 @@ components:
                     description: ID
                 name:
                     type: string
-                    description: 岗位名称
+                    description: 职务名称
                 code:
                     type: string
-                    description: 岗位编码
+                    description: 职务编码
                 weight:
                     type: string
-                    description: 权重（数值越大排序越靠前）
+                    description: 权重/职务级别（越小职务越高）
                 status:
                     type: string
                     description: 状态（enabled=启用，disabled=禁用）
@@ -1596,7 +1866,7 @@ components:
                     type: string
                     description: 更新时间
                     format: date-time
-            description: 岗位
+            description: 职务
         RefreshTokenRequest:
             type: object
             properties:
@@ -1657,6 +1927,30 @@ components:
                         $ref: '#/components/schemas/GoogleProtobufAny'
                     description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
             description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        UpdateAdminRequest:
+            required:
+                - id
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 用户ID
+                realName:
+                    type: string
+                    description: 真实姓名
+                email:
+                    type: string
+                    description: 邮箱
+                phone:
+                    type: string
+                    description: 手机号
+                avatar:
+                    type: string
+                    description: 头像
+                status:
+                    type: string
+                    description: 状态(enabled/disabled)
+            description: 更新后台用户请求
         UpdateDepartmentRequest:
             type: object
             properties:
@@ -1833,10 +2127,10 @@ components:
             properties:
                 name:
                     type: string
-                    description: 岗位名称
+                    description: 职务名称
                 code:
                     type: string
-                    description: 岗位编码
+                    description: 职务编码
                 weight:
                     type: string
                     description: 权重
@@ -1848,7 +2142,7 @@ components:
                     description: 备注
                 id:
                     type: string
-                    description: 岗位ID
+                    description: 职务ID
         UpdatePositionStatusRequest:
             required:
                 - status
@@ -1896,5 +2190,6 @@ tags:
     - name: AuthenticationService
       description: 用户后台登录认证服务
     - name: Dictionary
+    - name: Identity
     - name: Organization
     - name: PermissionService

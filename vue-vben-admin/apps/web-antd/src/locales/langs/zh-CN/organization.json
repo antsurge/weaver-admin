@@ -28,16 +28,16 @@
     }
   },
   "position": {
-    "name": "岗位",
+    "name": "职务",
     "fields": {
-      "name": "岗位名称",
-      "code": "岗位编码",
-      "weight": "权重",
+      "name": "职务名称",
+      "code": "职务编码",
+      "weight": "职务级别",
       "status": "状态",
       "remark": "备注"
     },
     "actions": {
-      "switchStatus": "切换岗位状态",
+      "switchStatus": "切换职务状态",
       "switchStatusConfirm": "确认将【{0}】状态切换为【{1}】？"
     },
     "form_placeholder": {

@@ -9,6 +9,7 @@ message Bootstrap {
   Server server = 1;
   Data data = 2;
   JWT jwt = 3;
+  MQ mq = 4;
 }
 
 message Server {
@@ -58,4 +59,41 @@ message JWT {
 
   // refresh token 有效期
   google.protobuf.Duration refresh_ttl = 5;
+}
+
+/**
+MQ配置
+ */
+message MQ {
+  string driver = 1;
+
+  RabbitMQ rabbitmq = 2;
+  Kafka kafka = 3;
+}
+
+// Rabbitmq 配置
+message RabbitMQ {
+  string url = 1;
+
+  // 默认 exchange（可以为空）
+  string exchange = 2;
+
+  string queue = 3;
+
+  string routing_key = 4;
+
+  int32 prefetch = 5;
+
+  int32 pool_size = 6;
+
+  bool durable = 7;
+}
+
+// Kafka 配置
+message Kafka {
+  repeated string brokers = 1;
+
+  string group_id = 2;
+
+  bool async = 3;
 }

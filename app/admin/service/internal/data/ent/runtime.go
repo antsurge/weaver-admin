@@ -27,16 +27,16 @@ func init() {
 	adminDescRealName := adminFields[1].Descriptor()
 	// admin.DefaultRealName holds the default value on creation for the real_name field.
 	admin.DefaultRealName = adminDescRealName.Default.(string)
-	// adminDescCreateTime is the schema descriptor for create_time field.
-	adminDescCreateTime := adminFields[7].Descriptor()
-	// admin.DefaultCreateTime holds the default value on creation for the create_time field.
-	admin.DefaultCreateTime = adminDescCreateTime.Default.(func() time.Time)
-	// adminDescUpdateTime is the schema descriptor for update_time field.
-	adminDescUpdateTime := adminFields[8].Descriptor()
-	// admin.DefaultUpdateTime holds the default value on creation for the update_time field.
-	admin.DefaultUpdateTime = adminDescUpdateTime.Default.(func() time.Time)
-	// admin.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
-	admin.UpdateDefaultUpdateTime = adminDescUpdateTime.UpdateDefault.(func() time.Time)
+	// adminDescCreatedAt is the schema descriptor for created_at field.
+	adminDescCreatedAt := adminFields[7].Descriptor()
+	// admin.DefaultCreatedAt holds the default value on creation for the created_at field.
+	admin.DefaultCreatedAt = adminDescCreatedAt.Default.(func() time.Time)
+	// adminDescUpdatedAt is the schema descriptor for updated_at field.
+	adminDescUpdatedAt := adminFields[8].Descriptor()
+	// admin.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	admin.DefaultUpdatedAt = adminDescUpdatedAt.Default.(func() time.Time)
+	// admin.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	admin.UpdateDefaultUpdatedAt = adminDescUpdatedAt.UpdateDefault.(func() time.Time)
 	adminroleFields := schema.AdminRole{}.Fields()
 	_ = adminroleFields
 	// adminroleDescAdminID is the schema descriptor for admin_id field.
@@ -98,27 +98,27 @@ func init() {
 		}
 	}()
 	// departmentDescWeight is the schema descriptor for weight field.
-	departmentDescWeight := departmentFields[4].Descriptor()
+	departmentDescWeight := departmentFields[5].Descriptor()
 	// department.DefaultWeight holds the default value on creation for the weight field.
 	department.DefaultWeight = departmentDescWeight.Default.(int)
 	// departmentDescLeaderName is the schema descriptor for leader_name field.
-	departmentDescLeaderName := departmentFields[6].Descriptor()
+	departmentDescLeaderName := departmentFields[7].Descriptor()
 	// department.LeaderNameValidator is a validator for the "leader_name" field. It is called by the builders before save.
 	department.LeaderNameValidator = departmentDescLeaderName.Validators[0].(func(string) error)
 	// departmentDescLeaderPhone is the schema descriptor for leader_phone field.
-	departmentDescLeaderPhone := departmentFields[7].Descriptor()
+	departmentDescLeaderPhone := departmentFields[8].Descriptor()
 	// department.LeaderPhoneValidator is a validator for the "leader_phone" field. It is called by the builders before save.
 	department.LeaderPhoneValidator = departmentDescLeaderPhone.Validators[0].(func(string) error)
 	// departmentDescLeaderEmail is the schema descriptor for leader_email field.
-	departmentDescLeaderEmail := departmentFields[8].Descriptor()
+	departmentDescLeaderEmail := departmentFields[9].Descriptor()
 	// department.LeaderEmailValidator is a validator for the "leader_email" field. It is called by the builders before save.
 	department.LeaderEmailValidator = departmentDescLeaderEmail.Validators[0].(func(string) error)
 	// departmentDescCreatedAt is the schema descriptor for created_at field.
-	departmentDescCreatedAt := departmentFields[9].Descriptor()
+	departmentDescCreatedAt := departmentFields[10].Descriptor()
 	// department.DefaultCreatedAt holds the default value on creation for the created_at field.
 	department.DefaultCreatedAt = departmentDescCreatedAt.Default.(func() time.Time)
 	// departmentDescUpdatedAt is the schema descriptor for updated_at field.
-	departmentDescUpdatedAt := departmentFields[10].Descriptor()
+	departmentDescUpdatedAt := departmentFields[11].Descriptor()
 	// department.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	department.DefaultUpdatedAt = departmentDescUpdatedAt.Default.(func() time.Time)
 	// department.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
@@ -399,12 +399,20 @@ func init() {
 	positionDescCreatedAt := positionFields[6].Descriptor()
 	// position.DefaultCreatedAt holds the default value on creation for the created_at field.
 	position.DefaultCreatedAt = positionDescCreatedAt.Default.(func() time.Time)
+	// positionDescCreatedBy is the schema descriptor for created_by field.
+	positionDescCreatedBy := positionFields[7].Descriptor()
+	// position.DefaultCreatedBy holds the default value on creation for the created_by field.
+	position.DefaultCreatedBy = positionDescCreatedBy.Default.(string)
 	// positionDescUpdatedAt is the schema descriptor for updated_at field.
-	positionDescUpdatedAt := positionFields[7].Descriptor()
+	positionDescUpdatedAt := positionFields[8].Descriptor()
 	// position.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	position.DefaultUpdatedAt = positionDescUpdatedAt.Default.(func() time.Time)
 	// position.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	position.UpdateDefaultUpdatedAt = positionDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// positionDescUpdatedBy is the schema descriptor for updated_by field.
+	positionDescUpdatedBy := positionFields[9].Descriptor()
+	// position.DefaultUpdatedBy holds the default value on creation for the updated_by field.
+	position.DefaultUpdatedBy = positionDescUpdatedBy.Default.(string)
 	// positionDescID is the schema descriptor for id field.
 	positionDescID := positionFields[0].Descriptor()
 	// position.IDValidator is a validator for the "id" field. It is called by the builders before save.
