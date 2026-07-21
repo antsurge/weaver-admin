@@ -3,10 +3,11 @@ package service
 import (
 	"context"
 
-	adminV1 "github.com/hypercoze/kratos-admin/api/gen/go/admin/service/v1"
-	organizationV1 "github.com/hypercoze/kratos-admin/api/gen/go/organization/service/v1"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/biz"
-	"github.com/hypercoze/kratos-admin/pkg/utils/copierx"
+	adminV1 "github.com/antsurge/weaver-admin/api/gen/go/admin/service/v1"
+	organizationV1 "github.com/antsurge/weaver-admin/api/gen/go/organization/service/v1"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/biz"
+	"github.com/antsurge/weaver-admin/pkg/enthelper"
+	"github.com/antsurge/weaver-admin/pkg/utils/copierx"
 	"github.com/jinzhu/copier"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
@@ -117,7 +118,10 @@ func (s *OrganizationService) ListPosition(ctx context.Context, req *organizatio
 		return nil, err
 	}
 
-	list, err := s.positionUc.ListPosition(ctx, &input)
+	opts := &biz.ListPositionOption{}
+	opts.Sorts = enthelper.ConvertSorts(req.Sorts)
+
+	list, err := s.positionUc.ListPosition(ctx, &input, opts)
 	if err != nil {
 		return nil, err
 	}

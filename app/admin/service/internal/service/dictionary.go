@@ -4,11 +4,11 @@ import (
 	"context"
 	"encoding/json"
 
-	adminV1 "github.com/hypercoze/kratos-admin/api/gen/go/admin/service/v1"
-	dictionaryV1 "github.com/hypercoze/kratos-admin/api/gen/go/dictionary/service/v1"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/biz"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data"
-	"github.com/hypercoze/kratos-admin/pkg/utils/copierx"
+	adminV1 "github.com/antsurge/weaver-admin/api/gen/go/admin/service/v1"
+	dictionaryV1 "github.com/antsurge/weaver-admin/api/gen/go/dictionary/service/v1"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/biz"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data"
+	"github.com/antsurge/weaver-admin/pkg/utils/copierx"
 	"github.com/jinzhu/copier"
 	"google.golang.org/protobuf/types/known/emptypb"
 )

@@ -6,25 +6,25 @@ managed:
       value: hyper-admin/api/gen/go
     - file_option: go_package
       path: admin/service/v1
-      value: github.com/hypercoze/kratos-admin/api/gen/go/admin/services/v1;adminpb
+      value: github.com/antsurge/weaver-admin/api/gen/go/admin/services/v1;adminpb
     - file_option: go_package
       path: authentication/service/v1
-      value: github.com/hypercoze/kratos-admin/api/gen/go/authentication/service/v1;authenticationpb
+      value: github.com/antsurge/weaver-admin/api/gen/go/authentication/service/v1;authenticationpb
     - file_option: go_package
       path: permission/service/v1
-      value: github.com/hypercoze/kratos-admin/api/gen/go/permission/service/v1;permissionpb
+      value: github.com/antsurge/weaver-admin/api/gen/go/permission/service/v1;permissionpb
     - file_option: go_package
       path: organization/service/v1
-      value: github.com/hypercoze/kratos-admin/api/gen/go/organization/service/v1;organizationpb
+      value: github.com/antsurge/weaver-admin/api/gen/go/organization/service/v1;organizationpb
     - file_option: go_package
       path: dictionary/service/v1
-      value: github.com/hypercoze/kratos-admin/api/gen/go/dictionary/service/v1;dictionarypb
+      value: github.com/antsurge/weaver-admin/api/gen/go/dictionary/service/v1;dictionarypb
     - file_option: go_package
       path: identity/service/v1
-      value: github.com/hypercoze/kratos-admin/api/gen/go/identity/service/v1;identityypb
+      value: github.com/antsurge/weaver-admin/api/gen/go/identity/service/v1;identityypb
     - file_option: go_package
       path: common/v1
-      value: github.com/hypercoze/kratos-admin/api/gen/go/common/v1;commonpb
+      value: github.com/antsurge/weaver-admin/api/gen/go/common/v1;commonpb
   disable:
     - module: 'buf.build/bufbuild/protovalidate'
     - module: 'buf.build/googleapis/googleapis'

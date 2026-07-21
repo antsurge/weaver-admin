@@ -1,8 +1,8 @@
 package rabbitmq
 
 import (
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/conf"
 	"github.com/google/wire"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/conf"
 )
 
 var ProviderSet = wire.NewSet(
@@ -22,6 +22,12 @@ func NewRabbitMQ(c *conf.MQ) (*RabbitMQ, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	//ch, _ := client.GetConn().Channel()
+	//err = DeclareOrderDelay(ch)
+	//if err != nil {
+	//	panic(err)
+	//}
 
 	pool, err := NewChannelPool(client.GetConn(), int(conf.PoolSize))
 	if err != nil {

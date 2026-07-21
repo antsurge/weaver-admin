@@ -6,10 +6,10 @@ import (
 	"path/filepath"
 	"strings"
 
+	organizationV1 "github.com/antsurge/weaver-admin/api/gen/go/organization/service/v1"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/biz"
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/transport/http"
-	organizationV1 "github.com/hypercoze/kratos-admin/api/gen/go/organization/service/v1"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/biz"
 	"github.com/jinzhu/copier"
 	"github.com/xuri/excelize/v2"
 

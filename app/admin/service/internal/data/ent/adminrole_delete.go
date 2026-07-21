@@ -8,8 +8,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/adminrole"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/predicate"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/adminrole"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/predicate"
 )
 
 // AdminRoleDelete is the builder for deleting a AdminRole entity.

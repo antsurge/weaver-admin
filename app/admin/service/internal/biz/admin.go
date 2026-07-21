@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
+	"github.com/antsurge/weaver-admin/pkg/enthelper"
+	"github.com/antsurge/weaver-admin/pkg/utils/uuid"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/hypercoze/kratos-admin/pkg/enthelper"
-	"github.com/hypercoze/kratos-admin/pkg/utils/uuid"
 )
 
 // Admin 是 biz 层的领域模型 (Domain Object)

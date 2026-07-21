@@ -10,7 +10,7 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/department"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/department"
 )
 
 // DepartmentCreate is the builder for creating a Department entity.

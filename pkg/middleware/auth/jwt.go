@@ -2,11 +2,11 @@ package auth
 
 import (
 	"context"
+	authenticationV1 "github.com/antsurge/weaver-admin/api/gen/go/authentication/service/v1"
+	"github.com/antsurge/weaver-admin/pkg/metadata"
+	"github.com/antsurge/weaver-admin/pkg/utils/auth"
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/transport"
-	authenticationV1 "github.com/hypercoze/kratos-admin/api/gen/go/authentication/service/v1"
-	"github.com/hypercoze/kratos-admin/pkg/metadata"
-	"github.com/hypercoze/kratos-admin/pkg/utils/auth"
 	"strings"
 )
 

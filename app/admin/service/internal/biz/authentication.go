@@ -5,13 +5,13 @@ import (
 	"strings"
 	"time"
 
+	authenticationV1 "github.com/antsurge/weaver-admin/api/gen/go/authentication/service/v1"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/conf"
+	"github.com/antsurge/weaver-admin/pkg/metadata"
+	"github.com/antsurge/weaver-admin/pkg/utils/auth"
+	"github.com/antsurge/weaver-admin/pkg/utils/crypto"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/golang-jwt/jwt/v5"
-	authenticationV1 "github.com/hypercoze/kratos-admin/api/gen/go/authentication/service/v1"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/conf"
-	"github.com/hypercoze/kratos-admin/pkg/metadata"
-	"github.com/hypercoze/kratos-admin/pkg/utils/auth"
-	"github.com/hypercoze/kratos-admin/pkg/utils/crypto"
 )
 
 type TokenRepo interface {

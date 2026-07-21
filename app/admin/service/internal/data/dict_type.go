@@ -4,12 +4,12 @@ import (
 	"context"
 	"time"
 
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/biz"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/dictdata"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/dicttype"
+	"github.com/antsurge/weaver-admin/pkg/enthelper"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/biz"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/dictdata"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/dicttype"
-	"github.com/hypercoze/kratos-admin/pkg/enthelper"
 )
 
 var _ biz.DictTypeRepo = (*dictTypeRepo)(nil)

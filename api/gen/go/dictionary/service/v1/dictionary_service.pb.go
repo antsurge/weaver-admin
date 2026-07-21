@@ -25,8 +25,8 @@ var File_dictionary_service_v1_dictionary_service_proto protoreflect.FileDescrip
 const file_dictionary_service_v1_dictionary_service_proto_rawDesc = "" +
 	"\n" +
 	".dictionary/service/v1/dictionary_service.proto\x12\x15dictionary.service.v12\x13\n" +
-	"\x11DictionaryServiceB\xfa\x01\n" +
-	"\x19com.dictionary.service.v1B\x16DictionaryServiceProtoP\x01ZOgithub.com/hypercoze/kratos-admin/api/gen/go/dictionary/service/v1;dictionarypb\xa2\x02\x03DSX\xaa\x02\x15Dictionary.Service.V1\xca\x02\x15Dictionary\\Service\\V1\xe2\x02!Dictionary\\Service\\V1\\GPBMetadata\xea\x02\x17Dictionary::Service::V1b\x06proto3"
+	"\x11DictionaryServiceB\xf9\x01\n" +
+	"\x19com.dictionary.service.v1B\x16DictionaryServiceProtoP\x01ZNgithub.com/antsurge/weaver-admin/api/gen/go/dictionary/service/v1;dictionarypb\xa2\x02\x03DSX\xaa\x02\x15Dictionary.Service.V1\xca\x02\x15Dictionary\\Service\\V1\xe2\x02!Dictionary\\Service\\V1\\GPBMetadata\xea\x02\x17Dictionary::Service::V1b\x06proto3"
 
 var file_dictionary_service_v1_dictionary_service_proto_goTypes = []any{}
 var file_dictionary_service_v1_dictionary_service_proto_depIdxs = []int32{

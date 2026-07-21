@@ -9,7 +9,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/position"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/position"
 )
 
 // 职务表

@@ -3,6 +3,7 @@ syntax = "proto3";
 package organization.service.v1;
 
 import "buf/validate/validate.proto";
+import "common/v1/sort.proto";
 import "gnostic/openapi/v3/annotations.proto";
 import "google/protobuf/timestamp.proto";
 
@@ -32,6 +33,8 @@ message ListPositionRequest {
   string name = 3 [(gnostic.openapi.v3.property) = {description: "职务名称（支持模糊查询）"}];
   string code = 4 [(gnostic.openapi.v3.property) = {description: "职务编码（支持模糊查询）"}];
   string status = 5 [(gnostic.openapi.v3.property) = {description: "状态（enabled=启用，disabled=禁用）"}];
+
+  repeated common.v1.Sort sorts = 20 [(gnostic.openapi.v3.property) = {description: "排序"}];
 }
 
 message ListPositionResponse {

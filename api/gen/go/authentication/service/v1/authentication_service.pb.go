@@ -368,8 +368,8 @@ const file_authentication_service_v1_authentication_service_proto_rawDesc = "" +
 	"\fRefreshToken\x12..authentication.service.v1.RefreshTokenRequest\x1a(.authentication.service.v1.LoginResponse\"\x00\x12S\n" +
 	"\n" +
 	"GetCaptcha\x12\x16.google.protobuf.Empty\x1a-.authentication.service.v1.GetCaptchaResponse\x12]\n" +
-	"\x0fCurrentUserInfo\x12\x16.google.protobuf.Empty\x1a2.authentication.service.v1.CurrentUserInfoResponseB\x9a\x02\n" +
-	"\x1dcom.authentication.service.v1B\x1aAuthenticationServiceProtoP\x01ZWgithub.com/hypercoze/kratos-admin/api/gen/go/authentication/service/v1;authenticationpb\xa2\x02\x03ASX\xaa\x02\x19Authentication.Service.V1\xca\x02\x19Authentication\\Service\\V1\xe2\x02%Authentication\\Service\\V1\\GPBMetadata\xea\x02\x1bAuthentication::Service::V1b\x06proto3"
+	"\x0fCurrentUserInfo\x12\x16.google.protobuf.Empty\x1a2.authentication.service.v1.CurrentUserInfoResponseB\x99\x02\n" +
+	"\x1dcom.authentication.service.v1B\x1aAuthenticationServiceProtoP\x01ZVgithub.com/antsurge/weaver-admin/api/gen/go/authentication/service/v1;authenticationpb\xa2\x02\x03ASX\xaa\x02\x19Authentication.Service.V1\xca\x02\x19Authentication\\Service\\V1\xe2\x02%Authentication\\Service\\V1\\GPBMetadata\xea\x02\x1bAuthentication::Service::V1b\x06proto3"
 
 var (
 	file_authentication_service_v1_authentication_service_proto_rawDescOnce sync.Once

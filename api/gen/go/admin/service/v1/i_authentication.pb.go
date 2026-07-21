@@ -7,8 +7,8 @@
 package adminpb
 
 import (
+	v1 "github.com/antsurge/weaver-admin/api/gen/go/authentication/service/v1"
 	_ "github.com/google/gnostic/openapiv3"
-	v1 "github.com/hypercoze/kratos-admin/api/gen/go/authentication/service/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -40,8 +40,8 @@ const file_admin_service_v1_i_authentication_proto_rawDesc = "" +
 	"\fRefreshToken\x12..authentication.service.v1.RefreshTokenRequest\x1a(.authentication.service.v1.LoginResponse\"]\xbaG8\n" +
 	"\x0eAuthentication\x12\x12刷新认证令牌\x1a\x12刷新认证令牌\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/admin/v1/refresh-token\x12\xc3\x01\n" +
 	"\x0fCurrentUserInfo\x12\x16.google.protobuf.Empty\x1a2.authentication.service.v1.CurrentUserInfoResponse\"d\xbaGD\n" +
-	"\x0eAuthentication\x12\x18当前登录用户信息\x1a\x18当前登录用户信息\x82\xd3\xe4\x93\x02\x17\x12\x15admin/v1/current-userB\xd6\x01\n" +
-	"\x14com.admin.service.v1B\x14IAuthenticationProtoP\x01ZFgithub.com/hypercoze/kratos-admin/api/gen/go/admin/services/v1;adminpb\xa2\x02\x03ASX\xaa\x02\x10Admin.Service.V1\xca\x02\x10Admin\\Service\\V1\xe2\x02\x1cAdmin\\Service\\V1\\GPBMetadata\xea\x02\x12Admin::Service::V1b\x06proto3"
+	"\x0eAuthentication\x12\x18当前登录用户信息\x1a\x18当前登录用户信息\x82\xd3\xe4\x93\x02\x17\x12\x15admin/v1/current-userB\xd5\x01\n" +
+	"\x14com.admin.service.v1B\x14IAuthenticationProtoP\x01ZEgithub.com/antsurge/weaver-admin/api/gen/go/admin/services/v1;adminpb\xa2\x02\x03ASX\xaa\x02\x10Admin.Service.V1\xca\x02\x10Admin\\Service\\V1\xe2\x02\x1cAdmin\\Service\\V1\\GPBMetadata\xea\x02\x12Admin::Service::V1b\x06proto3"
 
 var file_admin_service_v1_i_authentication_proto_goTypes = []any{
 	(*emptypb.Empty)(nil),              // 0: google.protobuf.Empty

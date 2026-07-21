@@ -103,8 +103,8 @@ const file_authentication_service_v1_authentication_error_proto_rawDesc = "" +
 	"\x0fCAPTCHA_EXPIRED\x10\x02\x1a\x04\xa8E\x90\x03\x12\x19\n" +
 	"\x0fCAPTCHA_INVALID\x10\x03\x1a\x04\xa8E\x90\x03\x12\x1d\n" +
 	"\x13INVALID_CREDENTIALS\x10e\x1a\x04\xa8E\x90\x03\x12\x17\n" +
-	"\rINVALID_TOKEN\x10f\x1a\x04\xa8E\x91\x03\x1a\x04\xa0E\xf4\x03B\x98\x02\n" +
-	"\x1dcom.authentication.service.v1B\x18AuthenticationErrorProtoP\x01ZWgithub.com/hypercoze/kratos-admin/api/gen/go/authentication/service/v1;authenticationpb\xa2\x02\x03ASX\xaa\x02\x19Authentication.Service.V1\xca\x02\x19Authentication\\Service\\V1\xe2\x02%Authentication\\Service\\V1\\GPBMetadata\xea\x02\x1bAuthentication::Service::V1"
+	"\rINVALID_TOKEN\x10f\x1a\x04\xa8E\x91\x03\x1a\x04\xa0E\xf4\x03B\x97\x02\n" +
+	"\x1dcom.authentication.service.v1B\x18AuthenticationErrorProtoP\x01ZVgithub.com/antsurge/weaver-admin/api/gen/go/authentication/service/v1;authenticationpb\xa2\x02\x03ASX\xaa\x02\x19Authentication.Service.V1\xca\x02\x19Authentication\\Service\\V1\xe2\x02%Authentication\\Service\\V1\\GPBMetadata\xea\x02\x1bAuthentication::Service::V1"
 
 var (
 	file_authentication_service_v1_authentication_error_proto_rawDescOnce sync.Once

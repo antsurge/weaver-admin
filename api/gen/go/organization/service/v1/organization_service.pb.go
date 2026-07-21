@@ -26,8 +26,8 @@ const file_organization_service_v1_organization_service_proto_rawDesc = "" +
 	"\n" +
 	"2organization/service/v1/organization_service.proto\x12\x17organization.service.v1\x1a(organization/service/v1/department.proto2\x82\x01\n" +
 	"\x13OrganizationService\x12k\n" +
-	"\x12CreateOrganization\x120.organization.service.v1.CreateDepartmentRequest\x1a#.organization.service.v1.DepartmentB\x8a\x02\n" +
-	"\x1bcom.organization.service.v1B\x18OrganizationServiceProtoP\x01ZSgithub.com/hypercoze/kratos-admin/api/gen/go/organization/service/v1;organizationpb\xa2\x02\x03OSX\xaa\x02\x17Organization.Service.V1\xca\x02\x17Organization\\Service\\V1\xe2\x02#Organization\\Service\\V1\\GPBMetadata\xea\x02\x19Organization::Service::V1b\x06proto3"
+	"\x12CreateOrganization\x120.organization.service.v1.CreateDepartmentRequest\x1a#.organization.service.v1.DepartmentB\x89\x02\n" +
+	"\x1bcom.organization.service.v1B\x18OrganizationServiceProtoP\x01ZRgithub.com/antsurge/weaver-admin/api/gen/go/organization/service/v1;organizationpb\xa2\x02\x03OSX\xaa\x02\x17Organization.Service.V1\xca\x02\x17Organization\\Service\\V1\xe2\x02#Organization\\Service\\V1\\GPBMetadata\xea\x02\x19Organization::Service::V1b\x06proto3"
 
 var file_organization_service_v1_organization_service_proto_goTypes = []any{
 	(*CreateDepartmentRequest)(nil), // 0: organization.service.v1.CreateDepartmentRequest

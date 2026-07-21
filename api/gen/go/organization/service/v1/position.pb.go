@@ -8,6 +8,7 @@ package organizationpb
 
 import (
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	v1 "github.com/antsurge/weaver-admin/api/gen/go/common/v1"
 	_ "github.com/google/gnostic/openapiv3"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -140,6 +141,7 @@ type ListPositionRequest struct {
 	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	Code          string                 `protobuf:"bytes,4,opt,name=code,proto3" json:"code,omitempty"`
 	Status        string                 `protobuf:"bytes,5,opt,name=status,proto3" json:"status,omitempty"`
+	Sorts         []*v1.Sort             `protobuf:"bytes,20,rep,name=sorts,proto3" json:"sorts,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -207,6 +209,13 @@ func (x *ListPositionRequest) GetStatus() string {
 		return x.Status
 	}
 	return ""
+}
+
+func (x *ListPositionRequest) GetSorts() []*v1.Sort {
+	if x != nil {
+		return x.Sorts
+	}
+	return nil
 }
 
 type ListPositionResponse struct {
@@ -726,7 +735,7 @@ var File_organization_service_v1_position_proto protoreflect.FileDescriptor
 
 const file_organization_service_v1_position_proto_rawDesc = "" +
 	"\n" +
-	"&organization/service/v1/position.proto\x12\x17organization.service.v1\x1a\x1bbuf/validate/validate.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xd3\x03\n" +
+	"&organization/service/v1/position.proto\x12\x17organization.service.v1\x1a\x1bbuf/validate/validate.proto\x1a\x14common/v1/sort.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xd3\x03\n" +
 	"\bPosition\x12\x18\n" +
 	"\x02id\x18\x01 \x01(\tB\b\xbaG\x05\x92\x02\x02IDR\x02id\x12&\n" +
 	"\x04name\x18\x02 \x01(\tB\x12\xbaG\x0f\x92\x02\f职务名称R\x04name\x12&\n" +
@@ -735,13 +744,14 @@ const file_organization_service_v1_position_proto_rawDesc = "" +
 	"\x06status\x18\x05 \x01(\tB2\xbaG/\x92\x02,状态（enabled=启用，disabled=禁用）R\x06status\x12*\n" +
 	"\x06remark\x18\x06 \x01(\tB\x12\xbaG\x0f\x92\x02\f备注说明R\x06remark\x12L\n" +
 	"\tcreatedAt\x18\a \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间R\tcreatedAt\x12L\n" +
-	"\tupdatedAt\x18\b \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间R\tupdatedAt\"\xea\x02\n" +
+	"\tupdatedAt\x18\b \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间R\tupdatedAt\"\x9f\x03\n" +
 	"\x13ListPositionRequest\x12D\n" +
 	"\vcurrentPage\x18\x01 \x01(\x03B\"\xbaG\x1f\x92\x02\x1c当前页码（从1开始）R\vcurrentPage\x12A\n" +
 	"\bpageSize\x18\x02 \x01(\x03B%\xbaG\"\x92\x02\x1f每页条数（传0为全部）R\bpageSize\x12>\n" +
 	"\x04name\x18\x03 \x01(\tB*\xbaG'\x92\x02$职务名称（支持模糊查询）R\x04name\x12>\n" +
 	"\x04code\x18\x04 \x01(\tB*\xbaG'\x92\x02$职务编码（支持模糊查询）R\x04code\x12J\n" +
-	"\x06status\x18\x05 \x01(\tB2\xbaG/\x92\x02,状态（enabled=启用，disabled=禁用）R\x06status\"\x81\x01\n" +
+	"\x06status\x18\x05 \x01(\tB2\xbaG/\x92\x02,状态（enabled=启用，disabled=禁用）R\x06status\x123\n" +
+	"\x05sorts\x18\x14 \x03(\v2\x0f.common.v1.SortB\f\xbaG\t\x92\x02\x06排序R\x05sorts\"\x81\x01\n" +
 	"\x14ListPositionResponse\x12E\n" +
 	"\x05items\x18\x01 \x03(\v2!.organization.service.v1.PositionB\f\xbaG\t\x92\x02\x06列表R\x05items\x12\"\n" +
 	"\x05total\x18\x02 \x01(\x03B\f\xbaG\t\x92\x02\x06总数R\x05total\"4\n" +
@@ -786,8 +796,8 @@ const file_organization_service_v1_position_proto_rawDesc = "" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12\x0e\n" +
 	"\x02id\x18\x02 \x01(\tR\x02id\"7\n" +
 	"\x1dIsPositionFieldExistsResponse\x12\x16\n" +
-	"\x06exists\x18\x01 \x01(\bR\x06existsB\xff\x01\n" +
-	"\x1bcom.organization.service.v1B\rPositionProtoP\x01ZSgithub.com/hypercoze/kratos-admin/api/gen/go/organization/service/v1;organizationpb\xa2\x02\x03OSX\xaa\x02\x17Organization.Service.V1\xca\x02\x17Organization\\Service\\V1\xe2\x02#Organization\\Service\\V1\\GPBMetadata\xea\x02\x19Organization::Service::V1b\x06proto3"
+	"\x06exists\x18\x01 \x01(\bR\x06existsB\xfe\x01\n" +
+	"\x1bcom.organization.service.v1B\rPositionProtoP\x01ZRgithub.com/antsurge/weaver-admin/api/gen/go/organization/service/v1;organizationpb\xa2\x02\x03OSX\xaa\x02\x17Organization.Service.V1\xca\x02\x17Organization\\Service\\V1\xe2\x02#Organization\\Service\\V1\\GPBMetadata\xea\x02\x19Organization::Service::V1b\x06proto3"
 
 var (
 	file_organization_service_v1_position_proto_rawDescOnce sync.Once
@@ -815,16 +825,18 @@ var file_organization_service_v1_position_proto_goTypes = []any{
 	(*IsPositionCodeExistsRequest)(nil),   // 9: organization.service.v1.IsPositionCodeExistsRequest
 	(*IsPositionFieldExistsResponse)(nil), // 10: organization.service.v1.IsPositionFieldExistsResponse
 	(*timestamppb.Timestamp)(nil),         // 11: google.protobuf.Timestamp
+	(*v1.Sort)(nil),                       // 12: common.v1.Sort
 }
 var file_organization_service_v1_position_proto_depIdxs = []int32{
 	11, // 0: organization.service.v1.Position.createdAt:type_name -> google.protobuf.Timestamp
 	11, // 1: organization.service.v1.Position.updatedAt:type_name -> google.protobuf.Timestamp
-	0,  // 2: organization.service.v1.ListPositionResponse.items:type_name -> organization.service.v1.Position
-	3,  // [3:3] is the sub-list for method output_type
-	3,  // [3:3] is the sub-list for method input_type
-	3,  // [3:3] is the sub-list for extension type_name
-	3,  // [3:3] is the sub-list for extension extendee
-	0,  // [0:3] is the sub-list for field type_name
+	12, // 2: organization.service.v1.ListPositionRequest.sorts:type_name -> common.v1.Sort
+	0,  // 3: organization.service.v1.ListPositionResponse.items:type_name -> organization.service.v1.Position
+	4,  // [4:4] is the sub-list for method output_type
+	4,  // [4:4] is the sub-list for method input_type
+	4,  // [4:4] is the sub-list for extension type_name
+	4,  // [4:4] is the sub-list for extension extendee
+	0,  // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_organization_service_v1_position_proto_init() }

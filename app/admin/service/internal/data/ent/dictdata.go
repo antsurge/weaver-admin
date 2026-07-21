@@ -10,7 +10,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/dictdata"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/dictdata"
 )
 
 // 字典数据表

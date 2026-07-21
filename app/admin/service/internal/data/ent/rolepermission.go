@@ -9,7 +9,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/rolepermission"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/rolepermission"
 )
 
 // 角色和权限关联表

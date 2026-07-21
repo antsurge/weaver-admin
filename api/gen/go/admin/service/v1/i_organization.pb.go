@@ -7,8 +7,8 @@
 package adminpb
 
 import (
+	v1 "github.com/antsurge/weaver-admin/api/gen/go/organization/service/v1"
 	_ "github.com/google/gnostic/openapiv3"
-	v1 "github.com/hypercoze/kratos-admin/api/gen/go/organization/service/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -57,8 +57,8 @@ const file_admin_service_v1_i_organization_proto_rawDesc = "" +
 	"\x14IsPositionNameExists\x124.organization.service.v1.IsPositionNameExistsRequest\x1a6.organization.service.v1.IsPositionFieldExistsResponse\"r\xbaGI\n" +
 	"\fOrganization\x12\x1f职务-职务名称是否存在\x1a\x18职务名称是否存在\x82\xd3\xe4\x93\x02 \x12\x1e/admin/v1/position:name-exists\x12\xf8\x01\n" +
 	"\x14IsPositionCodeExists\x124.organization.service.v1.IsPositionCodeExistsRequest\x1a6.organization.service.v1.IsPositionFieldExistsResponse\"r\xbaGI\n" +
-	"\fOrganization\x12\x1f职务-职务名称是否存在\x1a\x18职务编码是否存在\x82\xd3\xe4\x93\x02 \x12\x1e/admin/v1/position:code-existsB\xd4\x01\n" +
-	"\x14com.admin.service.v1B\x12IOrganizationProtoP\x01ZFgithub.com/hypercoze/kratos-admin/api/gen/go/admin/services/v1;adminpb\xa2\x02\x03ASX\xaa\x02\x10Admin.Service.V1\xca\x02\x10Admin\\Service\\V1\xe2\x02\x1cAdmin\\Service\\V1\\GPBMetadata\xea\x02\x12Admin::Service::V1b\x06proto3"
+	"\fOrganization\x12\x1f职务-职务名称是否存在\x1a\x18职务编码是否存在\x82\xd3\xe4\x93\x02 \x12\x1e/admin/v1/position:code-existsB\xd3\x01\n" +
+	"\x14com.admin.service.v1B\x12IOrganizationProtoP\x01ZEgithub.com/antsurge/weaver-admin/api/gen/go/admin/services/v1;adminpb\xa2\x02\x03ASX\xaa\x02\x10Admin.Service.V1\xca\x02\x10Admin\\Service\\V1\xe2\x02\x1cAdmin\\Service\\V1\\GPBMetadata\xea\x02\x12Admin::Service::V1b\x06proto3"
 
 var file_admin_service_v1_i_organization_proto_goTypes = []any{
 	(*v1.DepartmentTreeRequest)(nil),         // 0: organization.service.v1.DepartmentTreeRequest

@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
+	"github.com/antsurge/weaver-admin/pkg/utils/uuid"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/hypercoze/kratos-admin/pkg/utils/uuid"
 )
 
 type Department struct {

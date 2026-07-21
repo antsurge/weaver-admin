@@ -1,8 +1,8 @@
 package server
 
 import (
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/handler"
 	"github.com/google/wire"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/handler"
 )
 
 // ProviderSet is server providers.

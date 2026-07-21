@@ -4,11 +4,11 @@ import (
 	"context"
 	"time"
 
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/biz"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/department"
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/biz"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/department"
 )
 
 type departmentRepo struct {

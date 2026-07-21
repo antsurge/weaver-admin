@@ -67,3 +67,63 @@ func DeclareDeadQueue(ch *amqp.Channel, cfg Config) error {
 	)
 	return err
 }
+
+// 初始化订单延迟队列
+func DeclareOrderDelay(ch *amqp.Channel) error {
+	// 1. 声明主交换机（取消订单用）
+	err := ch.ExchangeDeclare(
+		"order.exchange",
+		"direct",
+		true,
+		false,
+		false,
+		false,
+		nil,
+	)
+	if err != nil {
+		return err
+	}
+
+	// 2. 声明取消队列
+	_, err = ch.QueueDeclare(
+		"order.cancel.queue",
+		true,
+		false,
+		false,
+		false,
+		nil,
+	)
+	if err != nil {
+		return err
+	}
+
+	// 3. 绑定取消队列
+	err = ch.QueueBind(
+		"order.cancel.queue",
+		"order.cancel",
+		"order.exchange",
+		false,
+		nil,
+	)
+	if err != nil {
+		return err
+	}
+
+	// 4. 声明延迟队列（核心🔥）
+	args := amqp.Table{
+		"x-message-ttl":             int32(30 * 60 * 1000), // 30分钟
+		"x-dead-letter-exchange":    "order.exchange",
+		"x-dead-letter-routing-key": "order.cancel",
+	}
+
+	_, err = ch.QueueDeclare(
+		"order.delay.queue",
+		true,
+		false,
+		false,
+		false,
+		args,
+	)
+
+	return err
+}

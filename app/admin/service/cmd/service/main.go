@@ -4,7 +4,7 @@ import (
 	"flag"
 	"os"
 
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/conf"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/conf"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"

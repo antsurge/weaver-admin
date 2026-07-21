@@ -6,13 +6,13 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql/schema"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/conf"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent"
+	_ "github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/runtime"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/mq/rabbitmq"
 	"github.com/go-kratos/kratos/v2/log"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/wire"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/conf"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent"
-	_ "github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/runtime"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/mq/rabbitmq"
 	"github.com/redis/go-redis/v9"
 )
 

@@ -668,8 +668,8 @@ const file_dictionary_service_v1_dict_data_proto_rawDesc = "" +
 	"\x17dictData.status.invalid\x12\x17dictData.status.invalid\x1a\x1fthis in ['enabled', 'disabled']r\x13R\aenabledR\bdisabledR\x06status:\f\xbaG\t\xba\x01\x06status\"\xa7\x01\n" +
 	"\x15DeleteDictDataRequset\x12\x8d\x01\n" +
 	"\x03ids\x18\x01 \x03(\tB{\xbaG \x92\x02\x1d组织ID列表，至少一个\xbaHU\xba\x01K\n" +
-	"\x16dictData.ids.not_empty\x12\x16dictData.ids.not_empty\x1a\x19this.all(x, x.size() > 0)\x92\x01\x04\b\x01\x10dR\x03idsB\xf1\x01\n" +
-	"\x19com.dictionary.service.v1B\rDictDataProtoP\x01ZOgithub.com/hypercoze/kratos-admin/api/gen/go/dictionary/service/v1;dictionarypb\xa2\x02\x03DSX\xaa\x02\x15Dictionary.Service.V1\xca\x02\x15Dictionary\\Service\\V1\xe2\x02!Dictionary\\Service\\V1\\GPBMetadata\xea\x02\x17Dictionary::Service::V1b\x06proto3"
+	"\x16dictData.ids.not_empty\x12\x16dictData.ids.not_empty\x1a\x19this.all(x, x.size() > 0)\x92\x01\x04\b\x01\x10dR\x03idsB\xf0\x01\n" +
+	"\x19com.dictionary.service.v1B\rDictDataProtoP\x01ZNgithub.com/antsurge/weaver-admin/api/gen/go/dictionary/service/v1;dictionarypb\xa2\x02\x03DSX\xaa\x02\x15Dictionary.Service.V1\xca\x02\x15Dictionary\\Service\\V1\xe2\x02!Dictionary\\Service\\V1\\GPBMetadata\xea\x02\x17Dictionary::Service::V1b\x06proto3"
 
 var (
 	file_dictionary_service_v1_dict_data_proto_rawDescOnce sync.Once

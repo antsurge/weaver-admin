@@ -570,9 +570,9 @@ const file_identity_service_v1_admin_proto_rawDesc = "" +
 	"\x05items\x18\x02 \x03(\v2\x1a.identity.service.v1.AdminB\f\xbaG\t\x92\x02\x06列表R\x05items:\x1e\xbaG\x1b\x92\x02\x18后台用户分页结果\"\x8d\x01\n" +
 	"\x14ResetPasswordRequest\x12\x1e\n" +
 	"\x02id\x18\x01 \x01(\tB\x0e\xbaG\v\x92\x02\b用户IDR\x02id\x12+\n" +
-	"\bpassword\x18\x02 \x01(\tB\x0f\xbaG\f\x92\x02\t新密码R\bpassword:(\xbaG%\xba\x01\x02id\xba\x01\bpassword\x92\x02\x12重置密码请求B\xe1\x01\n" +
+	"\bpassword\x18\x02 \x01(\tB\x0f\xbaG\f\x92\x02\t新密码R\bpassword:(\xbaG%\xba\x01\x02id\xba\x01\bpassword\x92\x02\x12重置密码请求B\xe0\x01\n" +
 	"\x17com.identity.service.v1B\n" +
-	"AdminProtoP\x01ZLgithub.com/hypercoze/kratos-admin/api/gen/go/identity/service/v1;identityypb\xa2\x02\x03ISX\xaa\x02\x13Identity.Service.V1\xca\x02\x13Identity\\Service\\V1\xe2\x02\x1fIdentity\\Service\\V1\\GPBMetadata\xea\x02\x15Identity::Service::V1b\x06proto3"
+	"AdminProtoP\x01ZKgithub.com/antsurge/weaver-admin/api/gen/go/identity/service/v1;identityypb\xa2\x02\x03ISX\xaa\x02\x13Identity.Service.V1\xca\x02\x13Identity\\Service\\V1\xe2\x02\x1fIdentity\\Service\\V1\\GPBMetadata\xea\x02\x15Identity::Service::V1b\x06proto3"
 
 var (
 	file_identity_service_v1_admin_proto_rawDescOnce sync.Once

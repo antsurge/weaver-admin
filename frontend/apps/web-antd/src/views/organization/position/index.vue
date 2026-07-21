@@ -50,6 +50,13 @@ const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: useGridFormOptions(),
   gridOptions: {
     columns: useColumns(onActionClick, onStatusChange),
+    sortConfig: {
+      remote: true,
+      defaultSort: {
+        field: 'createdAt',
+        order: 'desc',
+      },
+    },
     height: 'auto',
     keepSource: true,
     pagerConfig: {
@@ -59,11 +66,14 @@ const [Grid, gridApi] = useVbenVxeGrid({
     },
     proxyConfig: {
       autoLoad: true,
+      sort:true,
       ajax: {
-        query: async ({ page }, formValues) => {
+        query: async ({ page, sort }, formValues) => {
+          console.log("排序",sort)
           const res = await getPositionListApi({
             ...page,
             ...formValues,
+            sorts: sort,
           });
           return res
         },

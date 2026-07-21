@@ -35,8 +35,8 @@ const file_permission_service_v1_permission_service_proto_rawDesc = "" +
 	"\bListMenu\x12&.permission.service.v1.ListMenuRequest\x1a'.permission.service.v1.ListMenuResponse\x12[\n" +
 	"\bMenuTree\x12&.permission.service.v1.MenuTreeRequest\x1a'.permission.service.v1.MenuTreeResponse\x12N\n" +
 	"\n" +
-	"DeleteMenu\x12(.permission.service.v1.DeleteMenuRequest\x1a\x16.google.protobuf.EmptyB\xfa\x01\n" +
-	"\x19com.permission.service.v1B\x16PermissionServiceProtoP\x01ZOgithub.com/hypercoze/kratos-admin/api/gen/go/permission/service/v1;permissionpb\xa2\x02\x03PSX\xaa\x02\x15Permission.Service.V1\xca\x02\x15Permission\\Service\\V1\xe2\x02!Permission\\Service\\V1\\GPBMetadata\xea\x02\x17Permission::Service::V1b\x06proto3"
+	"DeleteMenu\x12(.permission.service.v1.DeleteMenuRequest\x1a\x16.google.protobuf.EmptyB\xf9\x01\n" +
+	"\x19com.permission.service.v1B\x16PermissionServiceProtoP\x01ZNgithub.com/antsurge/weaver-admin/api/gen/go/permission/service/v1;permissionpb\xa2\x02\x03PSX\xaa\x02\x15Permission.Service.V1\xca\x02\x15Permission\\Service\\V1\xe2\x02!Permission\\Service\\V1\\GPBMetadata\xea\x02\x17Permission::Service::V1b\x06proto3"
 
 var file_permission_service_v1_permission_service_proto_goTypes = []any{
 	(*CreateMenuRequest)(nil),  // 0: permission.service.v1.CreateMenuRequest

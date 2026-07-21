@@ -1,13 +1,13 @@
 package server
 
 import (
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/conf"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/service"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/conf"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/service"
 
-	adminV1 "github.com/hypercoze/kratos-admin/api/gen/go/admin/service/v1"
+	adminV1 "github.com/antsurge/weaver-admin/api/gen/go/admin/service/v1"
 )
 
 // NewGRPCServer new a gRPC server.

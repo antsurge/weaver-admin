@@ -9,7 +9,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/department"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/department"
 )
 
 // 部门表

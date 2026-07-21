@@ -10,7 +10,7 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/menu"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/menu"
 )
 
 // MenuCreate is the builder for creating a Menu entity.

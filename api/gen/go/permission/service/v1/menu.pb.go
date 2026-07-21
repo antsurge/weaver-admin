@@ -1029,8 +1029,8 @@ const file_permission_service_v1_menu_proto_rawDesc = "" +
 	"\x17UpdateMenuStatusRequest\x12g\n" +
 	"\x02id\x18\x01 \x01(\tBW\xbaG\v\x92\x02\b权限ID\xbaHF\xba\x01C\n" +
 	"\x1aGET_PERMISSION_ID_REQUIRED\x12\x14权限ID不能为空\x1a\x0fthis.size() > 0R\x02id\x128\n" +
-	"\x06status\x18\x02 \x01(\tB \xbaG\x1d\x92\x02\x1a状态: enabled / disabledR\x06statusB\xed\x01\n" +
-	"\x19com.permission.service.v1B\tMenuProtoP\x01ZOgithub.com/hypercoze/kratos-admin/api/gen/go/permission/service/v1;permissionpb\xa2\x02\x03PSX\xaa\x02\x15Permission.Service.V1\xca\x02\x15Permission\\Service\\V1\xe2\x02!Permission\\Service\\V1\\GPBMetadata\xea\x02\x17Permission::Service::V1b\x06proto3"
+	"\x06status\x18\x02 \x01(\tB \xbaG\x1d\x92\x02\x1a状态: enabled / disabledR\x06statusB\xec\x01\n" +
+	"\x19com.permission.service.v1B\tMenuProtoP\x01ZNgithub.com/antsurge/weaver-admin/api/gen/go/permission/service/v1;permissionpb\xa2\x02\x03PSX\xaa\x02\x15Permission.Service.V1\xca\x02\x15Permission\\Service\\V1\xe2\x02!Permission\\Service\\V1\\GPBMetadata\xea\x02\x17Permission::Service::V1b\x06proto3"
 
 var (
 	file_permission_service_v1_menu_proto_rawDescOnce sync.Once

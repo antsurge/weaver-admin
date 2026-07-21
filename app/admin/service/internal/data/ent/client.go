@@ -9,20 +9,20 @@ import (
 	"log"
 	"reflect"
 
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/migrate"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/migrate"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/admin"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/adminrole"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/department"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/dictdata"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/dicttype"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/menu"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/position"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/role"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/rolepermission"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/admin"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/adminrole"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/department"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/dictdata"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/dicttype"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/menu"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/position"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/role"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/rolepermission"
 )
 
 // Client is the client that holds all ent builders.

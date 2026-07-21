@@ -6,7 +6,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent"
 )
 
 // The AdminFunc type is an adapter to allow the use of ordinary

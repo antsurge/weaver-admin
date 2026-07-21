@@ -5,12 +5,12 @@ package enttest
 import (
 	"context"
 
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent"
 	// required by schema hooks.
-	_ "github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/runtime"
+	_ "github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/runtime"
 
 	"entgo.io/ent/dialect/sql/schema"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/migrate"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/migrate"
 )
 
 type (

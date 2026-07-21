@@ -3,9 +3,9 @@ package service
 import (
 	"context"
 
-	adminV1 "github.com/hypercoze/kratos-admin/api/gen/go/admin/service/v1"
-	authenticationV1 "github.com/hypercoze/kratos-admin/api/gen/go/authentication/service/v1"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/biz"
+	adminV1 "github.com/antsurge/weaver-admin/api/gen/go/admin/service/v1"
+	authenticationV1 "github.com/antsurge/weaver-admin/api/gen/go/authentication/service/v1"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/biz"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 

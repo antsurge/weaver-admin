@@ -659,8 +659,8 @@ const file_permission_service_v1_role_proto_rawDesc = "" +
 	"\x13role.status.invalid\x12\x13role.status.invalid\x1a\x1fthis in ['enabled', 'disabled']r\x13R\aenabledR\bdisabledR\x06status:\f\xbaG\t\xba\x01\x06status\"\xc6\x01\n" +
 	"\x11DeleteRoleRequest\x12\xb0\x01\n" +
 	"\x03ids\x18\x01 \x03(\tB\x9d\x01\xbaGJ\x92\x02GID列表（必填，至少1个，最多100个，每个ID不能为空）\xbaHM\xba\x01C\n" +
-	"\x12role.ids.not_empty\x12\x12role.ids.not_empty\x1a\x19this.all(x, x.size() > 0)\x92\x01\x04\b\x01\x10dR\x03idsB\xed\x01\n" +
-	"\x19com.permission.service.v1B\tRoleProtoP\x01ZOgithub.com/hypercoze/kratos-admin/api/gen/go/permission/service/v1;permissionpb\xa2\x02\x03PSX\xaa\x02\x15Permission.Service.V1\xca\x02\x15Permission\\Service\\V1\xe2\x02!Permission\\Service\\V1\\GPBMetadata\xea\x02\x17Permission::Service::V1b\x06proto3"
+	"\x12role.ids.not_empty\x12\x12role.ids.not_empty\x1a\x19this.all(x, x.size() > 0)\x92\x01\x04\b\x01\x10dR\x03idsB\xec\x01\n" +
+	"\x19com.permission.service.v1B\tRoleProtoP\x01ZNgithub.com/antsurge/weaver-admin/api/gen/go/permission/service/v1;permissionpb\xa2\x02\x03PSX\xaa\x02\x15Permission.Service.V1\xca\x02\x15Permission\\Service\\V1\xe2\x02!Permission\\Service\\V1\\GPBMetadata\xea\x02\x17Permission::Service::V1b\x06proto3"
 
 var (
 	file_permission_service_v1_role_proto_rawDescOnce sync.Once

@@ -5,16 +5,16 @@ package ent
 import (
 	"time"
 
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/admin"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/adminrole"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/department"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/dictdata"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/dicttype"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/menu"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/position"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/role"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/rolepermission"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/schema"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/admin"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/adminrole"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/department"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/dictdata"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/dicttype"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/menu"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/position"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/role"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/rolepermission"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/schema"
 )
 
 // The init function reads all schema descriptors with runtime code

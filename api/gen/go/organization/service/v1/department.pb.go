@@ -724,8 +724,8 @@ const file_organization_service_v1_department_proto_rawDesc = "" +
 	"\x06status\x18\x02 \x01(\tB\x94\x01\xbaG\x1f\x92\x02\x1c状态（enabled/disabled）\xbaHo\xba\x01W\n" +
 	"\x19department.status.invalid\x12\x19department.status.invalid\x1a\x1fthis in ['enabled', 'disabled']r\x13R\aenabledR\bdisabledR\x06status:\f\xbaG\t\xba\x01\x06status\"&\n" +
 	"\x14GetDepartmentRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02idB\x81\x02\n" +
-	"\x1bcom.organization.service.v1B\x0fDepartmentProtoP\x01ZSgithub.com/hypercoze/kratos-admin/api/gen/go/organization/service/v1;organizationpb\xa2\x02\x03OSX\xaa\x02\x17Organization.Service.V1\xca\x02\x17Organization\\Service\\V1\xe2\x02#Organization\\Service\\V1\\GPBMetadata\xea\x02\x19Organization::Service::V1b\x06proto3"
+	"\x02id\x18\x01 \x01(\tR\x02idB\x80\x02\n" +
+	"\x1bcom.organization.service.v1B\x0fDepartmentProtoP\x01ZRgithub.com/antsurge/weaver-admin/api/gen/go/organization/service/v1;organizationpb\xa2\x02\x03OSX\xaa\x02\x17Organization.Service.V1\xca\x02\x17Organization\\Service\\V1\xe2\x02#Organization\\Service\\V1\\GPBMetadata\xea\x02\x19Organization::Service::V1b\x06proto3"
 
 var (
 	file_organization_service_v1_department_proto_rawDescOnce sync.Once

@@ -7,9 +7,9 @@
 package adminpb
 
 import (
+	_ "github.com/antsurge/weaver-admin/api/gen/go/organization/service/v1"
+	v1 "github.com/antsurge/weaver-admin/api/gen/go/permission/service/v1"
 	_ "github.com/google/gnostic/openapiv3"
-	_ "github.com/hypercoze/kratos-admin/api/gen/go/organization/service/v1"
-	v1 "github.com/hypercoze/kratos-admin/api/gen/go/permission/service/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -69,8 +69,8 @@ const file_admin_service_v1_i_permission_proto_rawDesc = "" +
 	"\n" +
 	"DeleteRole\x12(.permission.service.v1.DeleteRoleRequest\x1a\x16.google.protobuf.Empty\"B\xbaG)\n" +
 	"\n" +
-	"Permission\x12\r角色-删除\x1a\f删除角色\x82\xd3\xe4\x93\x02\x10*\x0e/admin/v1/roleB\xd2\x01\n" +
-	"\x14com.admin.service.v1B\x10IPermissionProtoP\x01ZFgithub.com/hypercoze/kratos-admin/api/gen/go/admin/services/v1;adminpb\xa2\x02\x03ASX\xaa\x02\x10Admin.Service.V1\xca\x02\x10Admin\\Service\\V1\xe2\x02\x1cAdmin\\Service\\V1\\GPBMetadata\xea\x02\x12Admin::Service::V1b\x06proto3"
+	"Permission\x12\r角色-删除\x1a\f删除角色\x82\xd3\xe4\x93\x02\x10*\x0e/admin/v1/roleB\xd1\x01\n" +
+	"\x14com.admin.service.v1B\x10IPermissionProtoP\x01ZEgithub.com/antsurge/weaver-admin/api/gen/go/admin/services/v1;adminpb\xa2\x02\x03ASX\xaa\x02\x10Admin.Service.V1\xca\x02\x10Admin\\Service\\V1\xe2\x02\x1cAdmin\\Service\\V1\\GPBMetadata\xea\x02\x12Admin::Service::V1b\x06proto3"
 
 var file_admin_service_v1_i_permission_proto_goTypes = []any{
 	(*v1.MenuTreeRequest)(nil),         // 0: permission.service.v1.MenuTreeRequest

@@ -3,8 +3,8 @@ package data
 import (
 	"context"
 	"fmt"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/biz"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/biz"
 	"github.com/redis/go-redis/v9"
 	"time"
 )

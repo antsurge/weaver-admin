@@ -4,12 +4,13 @@ import (
 	"context"
 	"time"
 
+	"entgo.io/ent/dialect/sql"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/biz"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/position"
+	"github.com/antsurge/weaver-admin/pkg/enthelper"
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/biz"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data/ent/position"
-	"github.com/hypercoze/kratos-admin/pkg/enthelper"
 )
 
 type positionRepo struct {
@@ -28,9 +29,17 @@ func (r *positionRepo) ListPosition(ctx context.Context, params *biz.ListPositio
 	query := r.data.db.Position.Query().
 		Order(ent.Desc(position.FieldCreatedAt))
 
+	// 排序
+	sorts := make([]enthelper.Sort, 0)
+	sorts = append(sorts, enthelper.Sort{
+		Field: "created_at",
+		Order: "desc",
+	})
+
 	opt := &biz.ListPositionOption{}
 	if len(opts) > 0 {
 		opt = opts[0]
+		sorts = opt.Sorts
 	}
 
 	if opt.OnlyDeleted {
@@ -60,6 +69,9 @@ func (r *positionRepo) ListPosition(ctx context.Context, params *biz.ListPositio
 	if v := params.Status; len(v) > 0 {
 		query = query.Where(position.StatusEQ(position.Status(v)))
 	}
+
+	// 排序
+	query = enthelper.ApplySorts(query, sorts, PositionSortMap())
 
 	res, err := enthelper.Pagination[
 		*ent.Position,
@@ -207,4 +219,30 @@ func (r *positionRepo) IsPositionNameExists(ctx context.Context, name, id string
 
 	// 判断是否存在
 	return query.Exist(ctx)
+}
+
+func PositionSortMap() map[string]enthelper.OrderFunc[*ent.PositionQuery] {
+	return map[string]enthelper.OrderFunc[*ent.PositionQuery]{
+
+		"created_at": func(q *ent.PositionQuery, order string) *ent.PositionQuery {
+			if order == "asc" {
+				return q.Order(position.ByCreatedAt())
+			}
+			return q.Order(position.ByCreatedAt(sql.OrderDesc()))
+		},
+
+		"name": func(q *ent.PositionQuery, order string) *ent.PositionQuery {
+			if order == "asc" {
+				return q.Order(position.ByName())
+			}
+			return q.Order(position.ByName(sql.OrderDesc()))
+		},
+
+		"weight": func(q *ent.PositionQuery, order string) *ent.PositionQuery {
+			if order == "asc" {
+				return q.Order(position.ByWeight())
+			}
+			return q.Order(position.ByWeight(sql.OrderDesc()))
+		},
+	}
 }

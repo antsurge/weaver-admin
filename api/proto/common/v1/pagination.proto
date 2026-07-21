@@ -1,8 +1,0 @@
-syntax = "proto3";
-
-package common.v1;
-
-message PaginationParams {
-  int64 CurrentPage = 1;
-  int64 PageSize = 2;
-}

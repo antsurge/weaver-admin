@@ -6,11 +6,11 @@
 package main
 
 import (
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/biz"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/conf"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/data"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/server"
-	"github.com/hypercoze/kratos-admin/app/admin/service/internal/service"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/biz"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/conf"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/server"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/service"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"

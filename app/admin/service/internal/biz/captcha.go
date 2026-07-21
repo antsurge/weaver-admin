@@ -6,9 +6,9 @@ import (
 	"strings"
 	"time"
 
+	authenticationV1 "github.com/antsurge/weaver-admin/api/gen/go/authentication/service/v1"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/uuid"
-	authenticationV1 "github.com/hypercoze/kratos-admin/api/gen/go/authentication/service/v1"
 	"github.com/mojocn/base64Captcha"
 )
 

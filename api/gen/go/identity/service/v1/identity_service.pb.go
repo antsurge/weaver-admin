@@ -24,7 +24,7 @@ var File_identity_service_v1_identity_service_proto protoreflect.FileDescriptor
 
 const file_identity_service_v1_identity_service_proto_rawDesc = "" +
 	"\n" +
-	"*identity/service/v1/identity_service.protoBfB\x14IdentityServiceProtoP\x01ZLgithub.com/hypercoze/kratos-admin/api/gen/go/identity/service/v1;identityypb"
+	"*identity/service/v1/identity_service.protoBeB\x14IdentityServiceProtoP\x01ZKgithub.com/antsurge/weaver-admin/api/gen/go/identity/service/v1;identityypb"
 
 var file_identity_service_v1_identity_service_proto_goTypes = []any{}
 var file_identity_service_v1_identity_service_proto_depIdxs = []int32{

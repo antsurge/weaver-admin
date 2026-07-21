@@ -8,11 +8,11 @@ import (
 
 	"github.com/go-kratos/kratos/v2/errors"
 
+	"github.com/antsurge/weaver-admin/pkg/enthelper"
+	"github.com/antsurge/weaver-admin/pkg/metadata"
+	"github.com/antsurge/weaver-admin/pkg/utils/excel"
+	uuid "github.com/antsurge/weaver-admin/pkg/utils/uuid"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/hypercoze/kratos-admin/pkg/enthelper"
-	"github.com/hypercoze/kratos-admin/pkg/metadata"
-	"github.com/hypercoze/kratos-admin/pkg/utils/excel"
-	uuid "github.com/hypercoze/kratos-admin/pkg/utils/uuid"
 	"github.com/xuri/excelize/v2"
 )
 
@@ -44,11 +44,12 @@ type PositionRepo interface {
 
 type ListPositionRequest struct {
 	enthelper.PaginationParams
-	Name   string   `form:"name" query:"name"`
-	Code   string   `form:"code" query:"code"`
-	Status string   `form:"status" query:"status"`
-	Names  []string `form:"names" query:"names"`
-	Codes  []string `form:"codes" query:"codes"`
+	Name   string           `form:"name" query:"name"`
+	Code   string           `form:"code" query:"code"`
+	Status string           `form:"status" query:"status"`
+	Names  []string         `form:"names" query:"names"`
+	Codes  []string         `form:"codes" query:"codes"`
+	Sorts  []enthelper.Sort `form:"sorts" query:"sorts"`
 }
 
 type ListPositionResponse struct {

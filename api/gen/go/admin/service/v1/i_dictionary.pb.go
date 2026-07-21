@@ -7,8 +7,8 @@
 package adminpb
 
 import (
+	v1 "github.com/antsurge/weaver-admin/api/gen/go/dictionary/service/v1"
 	_ "github.com/google/gnostic/openapiv3"
-	v1 "github.com/hypercoze/kratos-admin/api/gen/go/dictionary/service/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -60,8 +60,8 @@ const file_admin_service_v1_i_dictionary_proto_rawDesc = "" +
 	"Dictionary\x12\x19字典数据-更新状态\x1a\x18更新字典类型状态\x82\xd3\xe4\x93\x02$:\x01*\x1a\x1f/admin/v1/dict-data/{id}/status\x12\xc1\x01\n" +
 	"\x0eDeleteDictData\x12,.dictionary.service.v1.DeleteDictDataRequset\x1a\x16.google.protobuf.Empty\"i\xbaGK\n" +
 	"\n" +
-	"Dictionary\x12\x1b字典数据-删除(批量)\x1a 删除字典类型(支持批量)\x82\xd3\xe4\x93\x02\x15*\x13/admin/v1/dict-dataB\xd2\x01\n" +
-	"\x14com.admin.service.v1B\x10IDictionaryProtoP\x01ZFgithub.com/hypercoze/kratos-admin/api/gen/go/admin/services/v1;adminpb\xa2\x02\x03ASX\xaa\x02\x10Admin.Service.V1\xca\x02\x10Admin\\Service\\V1\xe2\x02\x1cAdmin\\Service\\V1\\GPBMetadata\xea\x02\x12Admin::Service::V1b\x06proto3"
+	"Dictionary\x12\x1b字典数据-删除(批量)\x1a 删除字典类型(支持批量)\x82\xd3\xe4\x93\x02\x15*\x13/admin/v1/dict-dataB\xd1\x01\n" +
+	"\x14com.admin.service.v1B\x10IDictionaryProtoP\x01ZEgithub.com/antsurge/weaver-admin/api/gen/go/admin/services/v1;adminpb\xa2\x02\x03ASX\xaa\x02\x10Admin.Service.V1\xca\x02\x10Admin\\Service\\V1\xe2\x02\x1cAdmin\\Service\\V1\\GPBMetadata\xea\x02\x12Admin::Service::V1b\x06proto3"
 
 var file_admin_service_v1_i_dictionary_proto_goTypes = []any{
 	(*v1.ListDictTypeRequest)(nil),         // 0: dictionary.service.v1.ListDictTypeRequest
