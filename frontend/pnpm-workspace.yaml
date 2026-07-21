@@ -155,7 +155,7 @@ catalog:
   rimraf: ^6.1.2
   rollup: ^4.57.0
   rollup-plugin-visualizer: ^5.14.0
-  sass: ^1.97.3
+  sass: ^1.79.5
   secure-ls: ^2.0.0
   sortablejs: ^1.15.6
   stylelint: ^16.26.1

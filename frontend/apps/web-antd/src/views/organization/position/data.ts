@@ -92,7 +92,6 @@ export function useColumns(
       align: 'center',
       title: $t('organization.position.fields.weight'),
       width: 160,
-      sortable: true,
     },
     {
       field: 'status',
@@ -110,7 +109,6 @@ export function useColumns(
       title: $t('common.fields.createdAt'),
       width: 180,
       formatter: ({ cellValue }) => cellValue ? new Date(cellValue).toLocaleString() : '-', // 格式化
-      sortable: true,
     },
     {
       field: 'operation',

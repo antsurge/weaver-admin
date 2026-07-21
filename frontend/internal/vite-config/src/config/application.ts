@@ -115,7 +115,7 @@ function createCssOptions(injectGlobalScss = true): CSSOptions {
               return content;
             },
             // api: 'modern',
-            importers: [new NodePackageImporter()],
+            // importers: [new NodePackageImporter()],
           },
         }
       : {},

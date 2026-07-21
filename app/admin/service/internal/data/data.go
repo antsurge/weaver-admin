@@ -67,34 +67,28 @@ func NewRedisClient(c *conf.Data, logger log.Logger) *redis.Client {
 	l := log.NewHelper(logger)
 
 	// 解析超时时间
-	readTimeout := time.Duration(0)
-	writeTimeout := time.Duration(0)
-	if c.Redis != nil {
-		if c.Redis.ReadTimeout != nil {
-			readTimeout = c.Redis.ReadTimeout.AsDuration()
-		}
-		if c.Redis.WriteTimeout != nil {
-			writeTimeout = c.Redis.WriteTimeout.AsDuration()
-		}
-	}
-
-	// 设置默认值
-	if readTimeout == 0 {
-		readTimeout = 2 * time.Second
-	}
-	if writeTimeout == 0 {
-		writeTimeout = 2 * time.Second
-	}
-
+	readTimeout := 2 * time.Second
+	writeTimeout := 2 * time.Second
 	// 解析网络类型和地址
 	network := "tcp"
 	addr := "127.0.0.1:6379"
+	// 密码
+	password := ""
 	if c.Redis != nil {
+		if c.Redis.ReadTimeout != nil && c.Redis.ReadTimeout.AsDuration() > 0 {
+			readTimeout = c.Redis.ReadTimeout.AsDuration()
+		}
+		if c.Redis.WriteTimeout != nil && c.Redis.WriteTimeout.AsDuration() > 0 {
+			writeTimeout = c.Redis.WriteTimeout.AsDuration()
+		}
 		if c.Redis.Network != "" {
 			network = c.Redis.Network
 		}
 		if c.Redis.Addr != "" {
 			addr = c.Redis.Addr
+		}
+		if c.Redis.Password != "" {
+			password = c.Redis.Password
 		}
 	}
 
@@ -104,6 +98,7 @@ func NewRedisClient(c *conf.Data, logger log.Logger) *redis.Client {
 		ReadTimeout:  readTimeout,
 		WriteTimeout: writeTimeout,
 		DialTimeout:  2 * time.Second, // 新增
+		Password:     password,
 	})
 
 	// 测试连接

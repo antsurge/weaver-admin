@@ -38,10 +38,6 @@ export namespace OrganizationPositionApi {
     code?: string;
     /** 状态 */
     status?: 'enabled' | 'disabled';
-    /** 排序字段 */
-    sortField?: string;
-    /** 排序方向 */
-    sortOrder?: 'asc' | 'desc';
   }
 
   export interface isExists {

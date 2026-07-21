@@ -49,6 +49,8 @@
     "vue-tippy": "catalog:"
   },
   "devDependencies": {
-    "@types/qrcode": "catalog:"
+    "@types/qrcode": "catalog:",
+    "sass": "^1.101.3",
+    "sass-loader": "^17.0.0"
   }
 }
