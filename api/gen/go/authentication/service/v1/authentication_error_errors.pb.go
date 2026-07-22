@@ -67,6 +67,20 @@ func ErrorCaptchaInvalid(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, AuthenticationErrorReason_CAPTCHA_INVALID.String(), fmt.Sprintf(format, args...))
 }
 
+// 演示环境
+func IsDemoReadonly(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == AuthenticationErrorReason_DEMO_READONLY.String() && e.Code == 400
+}
+
+// 演示环境
+func ErrorDemoReadonly(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, AuthenticationErrorReason_DEMO_READONLY.String(), fmt.Sprintf(format, args...))
+}
+
 // 401
 func IsInvalidCredentials(err error) bool {
 	if err == nil {

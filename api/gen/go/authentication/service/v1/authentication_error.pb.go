@@ -30,6 +30,7 @@ const (
 	AuthenticationErrorReason_GENERATE_CAPTCHA_FAIL AuthenticationErrorReason = 1 // 生成验证码失败
 	AuthenticationErrorReason_CAPTCHA_EXPIRED       AuthenticationErrorReason = 2 // 验证码失效
 	AuthenticationErrorReason_CAPTCHA_INVALID       AuthenticationErrorReason = 3 // 验证码错误
+	AuthenticationErrorReason_DEMO_READONLY         AuthenticationErrorReason = 4 // 演示环境
 	// 401
 	AuthenticationErrorReason_INVALID_CREDENTIALS AuthenticationErrorReason = 101 // 用户名或密码错误
 	AuthenticationErrorReason_INVALID_TOKEN       AuthenticationErrorReason = 102
@@ -42,6 +43,7 @@ var (
 		1:   "GENERATE_CAPTCHA_FAIL",
 		2:   "CAPTCHA_EXPIRED",
 		3:   "CAPTCHA_INVALID",
+		4:   "DEMO_READONLY",
 		101: "INVALID_CREDENTIALS",
 		102: "INVALID_TOKEN",
 	}
@@ -50,6 +52,7 @@ var (
 		"GENERATE_CAPTCHA_FAIL": 1,
 		"CAPTCHA_EXPIRED":       2,
 		"CAPTCHA_INVALID":       3,
+		"DEMO_READONLY":         4,
 		"INVALID_CREDENTIALS":   101,
 		"INVALID_TOKEN":         102,
 	}
@@ -96,12 +99,13 @@ var File_authentication_service_v1_authentication_error_proto protoreflect.FileD
 
 const file_authentication_service_v1_authentication_error_proto_rawDesc = "" +
 	"\n" +
-	"4authentication/service/v1/authentication_error.proto\x12\x19authentication.service.v1\x1a\x13errors/errors.proto*\xc7\x01\n" +
+	"4authentication/service/v1/authentication_error.proto\x12\x19authentication.service.v1\x1a\x13errors/errors.proto*\xe0\x01\n" +
 	"\x19AuthenticationErrorReason\x12\x15\n" +
 	"\vBAD_REQUEST\x10\x00\x1a\x04\xa8E\x90\x03\x12\x1f\n" +
 	"\x15GENERATE_CAPTCHA_FAIL\x10\x01\x1a\x04\xa8E\x90\x03\x12\x19\n" +
 	"\x0fCAPTCHA_EXPIRED\x10\x02\x1a\x04\xa8E\x90\x03\x12\x19\n" +
-	"\x0fCAPTCHA_INVALID\x10\x03\x1a\x04\xa8E\x90\x03\x12\x1d\n" +
+	"\x0fCAPTCHA_INVALID\x10\x03\x1a\x04\xa8E\x90\x03\x12\x17\n" +
+	"\rDEMO_READONLY\x10\x04\x1a\x04\xa8E\x90\x03\x12\x1d\n" +
 	"\x13INVALID_CREDENTIALS\x10e\x1a\x04\xa8E\x90\x03\x12\x17\n" +
 	"\rINVALID_TOKEN\x10f\x1a\x04\xa8E\x91\x03\x1a\x04\xa0E\xf4\x03B\x97\x02\n" +
 	"\x1dcom.authentication.service.v1B\x18AuthenticationErrorProtoP\x01ZVgithub.com/antsurge/weaver-admin/api/gen/go/authentication/service/v1;authenticationpb\xa2\x02\x03ASX\xaa\x02\x19Authentication.Service.V1\xca\x02\x19Authentication\\Service\\V1\xe2\x02%Authentication\\Service\\V1\\GPBMetadata\xea\x02\x1bAuthentication::Service::V1"

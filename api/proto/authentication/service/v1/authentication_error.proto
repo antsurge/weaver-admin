@@ -10,6 +10,7 @@ enum AuthenticationErrorReason {
   GENERATE_CAPTCHA_FAIL = 1 [(errors.code) = 400]; // 生成验证码失败
   CAPTCHA_EXPIRED = 2 [(errors.code) = 400]; // 验证码失效
   CAPTCHA_INVALID = 3 [(errors.code) = 400]; // 验证码错误
+  DEMO_READONLY = 4 [(errors.code) = 400]; // 演示环境
 
   // 401
   INVALID_CREDENTIALS = 101 [(errors.code) = 400]; // 用户名或密码错误

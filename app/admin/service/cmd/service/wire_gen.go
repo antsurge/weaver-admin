@@ -7,14 +7,14 @@
 package main
 
 import (
-	"github.com/go-kratos/kratos/v2"
-	"github.com/go-kratos/kratos/v2/log"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/biz"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/conf"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/handler"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/server"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/service"
+	"github.com/go-kratos/kratos/v2"
+	"github.com/go-kratos/kratos/v2/log"
 )
 
 import (
@@ -24,7 +24,7 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(confServer *conf.Server, confData *conf.Data, jwt *conf.JWT, mq *conf.MQ, logger log.Logger) (*kratos.App, func(), error) {
+func wireApp(confServer *conf.Server, confData *conf.Data, jwt *conf.JWT, app *conf.App, mq *conf.MQ, logger log.Logger) (*kratos.App, func(), error) {
 	client := data.NewEntClient(confData, logger)
 	redisClient := data.NewRedisClient(confData, logger)
 	dataData, cleanup, err := data.NewData(confData, logger, client, redisClient)
@@ -56,9 +56,9 @@ func wireApp(confServer *conf.Server, confData *conf.Data, jwt *conf.JWT, mq *co
 	identityService := service.NewIdentityService(adminUseCase)
 	grpcServer := server.NewGRPCServer(confServer, authenticationService, permissionService, organizationService, dictionaryService, identityService, logger)
 	organizationHandler := handler.NewOrganizationHandler(positionUsecase)
-	httpServer := server.NewHTTPServer(confServer, jwt, authenticationService, permissionService, organizationService, dictionaryService, identityService, organizationHandler, logger)
-	app := newApp(logger, grpcServer, httpServer)
-	return app, func() {
+	httpServer := server.NewHTTPServer(confServer, jwt, app, authenticationService, permissionService, organizationService, dictionaryService, identityService, organizationHandler, logger)
+	kratosApp := newApp(logger, grpcServer, httpServer)
+	return kratosApp, func() {
 		cleanup()
 	}, nil
 }

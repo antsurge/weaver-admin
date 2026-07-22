@@ -10,6 +10,7 @@ import (
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/service"
 	"github.com/antsurge/weaver-admin/pkg/middleware/auth"
 	"github.com/antsurge/weaver-admin/pkg/middleware/bufvalidate"
+	"github.com/antsurge/weaver-admin/pkg/middleware/demo"
 	"github.com/antsurge/weaver-admin/pkg/middleware/localize"
 	authUtils "github.com/antsurge/weaver-admin/pkg/utils/auth"
 	"github.com/go-kratos/kratos/v2/log"
@@ -33,10 +34,22 @@ func NewWhiteListMatcher() selector.MatchFunc {
 	}
 }
 
+func NewDemoWhiteListMatcher() selector.MatchFunc {
+	whiteList := make(map[string]struct{})
+	whiteList["/admin.service.v1.AuthenticationService/Login"] = struct{}{}
+	return func(ctx context.Context, operation string) bool {
+		if _, ok := whiteList[operation]; ok {
+			return false
+		}
+		return true
+	}
+}
+
 // NewHTTPServer new an HTTP server.
 func NewHTTPServer(
 	c *conf.Server,
 	jwtConf *conf.JWT,
+	appConf *conf.App,
 	authenticationService *service.AuthenticationService,
 	permissionService *service.PermissionService,
 	organizationService *service.OrganizationService,
@@ -47,7 +60,6 @@ func NewHTTPServer(
 
 	logger log.Logger,
 ) *http.Server {
-	//middlewares := serverMiddleware(jwtConf)
 
 	var opts = []http.ServerOption{
 		http.Middleware(
@@ -58,6 +70,8 @@ func NewHTTPServer(
 			)).Match(NewWhiteListMatcher()).Build(),
 			recovery.Recovery(),
 			bufvalidate.BufValidator(),
+			selector.Server(demo.DemoReadonly(appConf.IsDemo)).
+				Match(NewDemoWhiteListMatcher()).Build(),
 		),
 	}
 	if c.Http.Network != "" {

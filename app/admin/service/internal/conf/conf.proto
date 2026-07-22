@@ -10,6 +10,11 @@ message Bootstrap {
   Data data = 2;
   JWT jwt = 3;
   MQ mq = 4;
+  App app = 5;
+}
+
+message App {
+  bool is_demo = 1; // 演示环境
 }
 
 message Server {
