@@ -96,7 +96,7 @@ service PermissionService {
   }
   rpc UpdateRole(permission.service.v1.UpdateRoleRequest) returns (permission.service.v1.Role) {
     option (google.api.http) = {
-      put: "/admin/v1/role"
+      put: "/admin/v1/role/{id}"
       body: "*"
     };
     option (gnostic.openapi.v3.operation) = {
@@ -119,6 +119,31 @@ service PermissionService {
       tags: "Permission"
       summary: "角色-删除"
       description: "删除角色"
+    };
+  }
+
+  // ====== RBAC 角色菜单绑定 ======
+
+  // 为角色绑定菜单（全量替换）
+  rpc BindMenusForRole(permission.service.v1.BindMenusForRoleRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/admin/v1/role/{roleId}/menus"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Permission"
+      summary: "角色-绑定菜单"
+      description: "为角色绑定菜单（全量替换）"
+    };
+  }
+
+  // 查询角色的菜单列表（树形结构）
+  rpc ListMenusByRole(permission.service.v1.ListMenusByRoleRequest) returns (permission.service.v1.ListMenusByRoleResponse) {
+    option (google.api.http) = {get: "/admin/v1/role/{roleId}/menus"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Permission"
+      summary: "角色-查询菜单"
+      description: "查询角色关联的菜单树"
     };
   }
 }

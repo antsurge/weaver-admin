@@ -2,7 +2,7 @@ import { requestClient } from '#/api/request';
 import type { PaginationParams, PaginationResult } from '#/types/pagination'
 
 export namespace AdminuserAdminApi {
-  // 角色
+  // 用户
   export interface Admin {
     /** 用户ID */
     id: string;
@@ -18,6 +18,8 @@ export namespace AdminuserAdminApi {
     avatar?: string;
     /** 状态 */
     status: 'enabled' | 'disabled';
+    /** 关联的角色ID列表 */
+    roleIds?: string[];
     /** 创建时间 */
     createTime?: string;
     /** 更新时间 */

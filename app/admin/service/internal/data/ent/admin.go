@@ -32,8 +32,42 @@ type Admin struct {
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
-	UpdatedAt    time.Time `json:"updated_at,omitempty"`
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
+	// DeletedAt holds the value of the "deleted_at" field.
+	DeletedAt *time.Time `json:"deleted_at,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the AdminQuery when eager-loading is set.
+	Edges        AdminEdges `json:"edges"`
 	selectValues sql.SelectValues
+}
+
+// AdminEdges holds the relations/edges for other nodes in the graph.
+type AdminEdges struct {
+	// Roles holds the value of the roles edge.
+	Roles []*Role `json:"roles,omitempty"`
+	// AdminRoles holds the value of the admin_roles edge.
+	AdminRoles []*AdminRole `json:"admin_roles,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [2]bool
+}
+
+// RolesOrErr returns the Roles value or an error if the edge
+// was not loaded in eager-loading.
+func (e AdminEdges) RolesOrErr() ([]*Role, error) {
+	if e.loadedTypes[0] {
+		return e.Roles, nil
+	}
+	return nil, &NotLoadedError{edge: "roles"}
+}
+
+// AdminRolesOrErr returns the AdminRoles value or an error if the edge
+// was not loaded in eager-loading.
+func (e AdminEdges) AdminRolesOrErr() ([]*AdminRole, error) {
+	if e.loadedTypes[1] {
+		return e.AdminRoles, nil
+	}
+	return nil, &NotLoadedError{edge: "admin_roles"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -43,7 +77,7 @@ func (*Admin) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case admin.FieldID, admin.FieldRealName, admin.FieldUsername, admin.FieldEmail, admin.FieldPhone, admin.FieldAvatar, admin.FieldPassword:
 			values[i] = new(sql.NullString)
-		case admin.FieldCreatedAt, admin.FieldUpdatedAt:
+		case admin.FieldCreatedAt, admin.FieldUpdatedAt, admin.FieldDeletedAt:
 			values[i] = new(sql.NullTime)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -114,6 +148,13 @@ func (_m *Admin) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.UpdatedAt = value.Time
 			}
+		case admin.FieldDeletedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
+			} else if value.Valid {
+				_m.DeletedAt = new(time.Time)
+				*_m.DeletedAt = value.Time
+			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
 		}
@@ -125,6 +166,16 @@ func (_m *Admin) assignValues(columns []string, values []any) error {
 // This includes values selected through modifiers, order, etc.
 func (_m *Admin) Value(name string) (ent.Value, error) {
 	return _m.selectValues.Get(name)
+}
+
+// QueryRoles queries the "roles" edge of the Admin entity.
+func (_m *Admin) QueryRoles() *RoleQuery {
+	return NewAdminClient(_m.config).QueryRoles(_m)
+}
+
+// QueryAdminRoles queries the "admin_roles" edge of the Admin entity.
+func (_m *Admin) QueryAdminRoles() *AdminRoleQuery {
+	return NewAdminClient(_m.config).QueryAdminRoles(_m)
 }
 
 // Update returns a builder for updating this Admin.
@@ -172,6 +223,11 @@ func (_m *Admin) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("updated_at=")
 	builder.WriteString(_m.UpdatedAt.Format(time.ANSIC))
+	builder.WriteString(", ")
+	if v := _m.DeletedAt; v != nil {
+		builder.WriteString("deleted_at=")
+		builder.WriteString(v.Format(time.ANSIC))
+	}
 	builder.WriteByte(')')
 	return builder.String()
 }

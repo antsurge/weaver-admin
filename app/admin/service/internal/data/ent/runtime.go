@@ -13,6 +13,7 @@ import (
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/menu"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/position"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/role"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/rolemenu"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/rolepermission"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/schema"
 )
@@ -445,6 +446,24 @@ func init() {
 	roleDescID := roleFields[0].Descriptor()
 	// role.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	role.IDValidator = roleDescID.Validators[0].(func(string) error)
+	rolemenuFields := schema.RoleMenu{}.Fields()
+	_ = rolemenuFields
+	// rolemenuDescRoleID is the schema descriptor for role_id field.
+	rolemenuDescRoleID := rolemenuFields[1].Descriptor()
+	// rolemenu.RoleIDValidator is a validator for the "role_id" field. It is called by the builders before save.
+	rolemenu.RoleIDValidator = rolemenuDescRoleID.Validators[0].(func(string) error)
+	// rolemenuDescMenuID is the schema descriptor for menu_id field.
+	rolemenuDescMenuID := rolemenuFields[2].Descriptor()
+	// rolemenu.MenuIDValidator is a validator for the "menu_id" field. It is called by the builders before save.
+	rolemenu.MenuIDValidator = rolemenuDescMenuID.Validators[0].(func(string) error)
+	// rolemenuDescCreatedAt is the schema descriptor for created_at field.
+	rolemenuDescCreatedAt := rolemenuFields[3].Descriptor()
+	// rolemenu.DefaultCreatedAt holds the default value on creation for the created_at field.
+	rolemenu.DefaultCreatedAt = rolemenuDescCreatedAt.Default.(func() time.Time)
+	// rolemenuDescID is the schema descriptor for id field.
+	rolemenuDescID := rolemenuFields[0].Descriptor()
+	// rolemenu.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	rolemenu.IDValidator = rolemenuDescID.Validators[0].(func(string) error)
 	rolepermissionFields := schema.RolePermission{}.Fields()
 	_ = rolepermissionFields
 	// rolepermissionDescRoleID is the schema descriptor for role_id field.

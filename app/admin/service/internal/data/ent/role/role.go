@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 const (
@@ -34,8 +35,40 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
 	FieldDeletedAt = "deleted_at"
+	// EdgeMenus holds the string denoting the menus edge name in mutations.
+	EdgeMenus = "menus"
+	// EdgeAdmins holds the string denoting the admins edge name in mutations.
+	EdgeAdmins = "admins"
+	// EdgeRoleMenus holds the string denoting the role_menus edge name in mutations.
+	EdgeRoleMenus = "role_menus"
+	// EdgeAdminRoles holds the string denoting the admin_roles edge name in mutations.
+	EdgeAdminRoles = "admin_roles"
 	// Table holds the table name of the role in the database.
 	Table = "role"
+	// MenusTable is the table that holds the menus relation/edge. The primary key declared below.
+	MenusTable = "role_menus"
+	// MenusInverseTable is the table name for the Menu entity.
+	// It exists in this package in order to avoid circular dependency with the "menu" package.
+	MenusInverseTable = "menu"
+	// AdminsTable is the table that holds the admins relation/edge. The primary key declared below.
+	AdminsTable = "admin_roles"
+	// AdminsInverseTable is the table name for the Admin entity.
+	// It exists in this package in order to avoid circular dependency with the "admin" package.
+	AdminsInverseTable = "admin"
+	// RoleMenusTable is the table that holds the role_menus relation/edge.
+	RoleMenusTable = "role_menus"
+	// RoleMenusInverseTable is the table name for the RoleMenu entity.
+	// It exists in this package in order to avoid circular dependency with the "rolemenu" package.
+	RoleMenusInverseTable = "role_menus"
+	// RoleMenusColumn is the table column denoting the role_menus relation/edge.
+	RoleMenusColumn = "role_id"
+	// AdminRolesTable is the table that holds the admin_roles relation/edge.
+	AdminRolesTable = "admin_roles"
+	// AdminRolesInverseTable is the table name for the AdminRole entity.
+	// It exists in this package in order to avoid circular dependency with the "adminrole" package.
+	AdminRolesInverseTable = "admin_roles"
+	// AdminRolesColumn is the table column denoting the admin_roles relation/edge.
+	AdminRolesColumn = "role_id"
 )
 
 // Columns holds all SQL columns for role fields.
@@ -52,6 +85,15 @@ var Columns = []string{
 	FieldUpdatedAt,
 	FieldDeletedAt,
 }
+
+var (
+	// MenusPrimaryKey and MenusColumn2 are the table columns denoting the
+	// primary key for the menus relation (M2M).
+	MenusPrimaryKey = []string{"role_id", "menu_id"}
+	// AdminsPrimaryKey and AdminsColumn2 are the table columns denoting the
+	// primary key for the admins relation (M2M).
+	AdminsPrimaryKey = []string{"admin_id", "role_id"}
+)
 
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {
@@ -162,4 +204,88 @@ func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
 // ByDeletedAt orders the results by the deleted_at field.
 func ByDeletedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDeletedAt, opts...).ToFunc()
+}
+
+// ByMenusCount orders the results by menus count.
+func ByMenusCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newMenusStep(), opts...)
+	}
+}
+
+// ByMenus orders the results by menus terms.
+func ByMenus(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newMenusStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByAdminsCount orders the results by admins count.
+func ByAdminsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newAdminsStep(), opts...)
+	}
+}
+
+// ByAdmins orders the results by admins terms.
+func ByAdmins(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newAdminsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByRoleMenusCount orders the results by role_menus count.
+func ByRoleMenusCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newRoleMenusStep(), opts...)
+	}
+}
+
+// ByRoleMenus orders the results by role_menus terms.
+func ByRoleMenus(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newRoleMenusStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByAdminRolesCount orders the results by admin_roles count.
+func ByAdminRolesCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newAdminRolesStep(), opts...)
+	}
+}
+
+// ByAdminRoles orders the results by admin_roles terms.
+func ByAdminRoles(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newAdminRolesStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+func newMenusStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(MenusInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, false, MenusTable, MenusPrimaryKey...),
+	)
+}
+func newAdminsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(AdminsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, true, AdminsTable, AdminsPrimaryKey...),
+	)
+}
+func newRoleMenusStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(RoleMenusInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, true, RoleMenusTable, RoleMenusColumn),
+	)
+}
+func newAdminRolesStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(AdminRolesInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, true, AdminRolesTable, AdminRolesColumn),
+	)
 }

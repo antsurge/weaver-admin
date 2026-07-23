@@ -4,27 +4,27 @@ import { $t } from '#/locales';
 /**
  * 职务名称
  */
-export const nameRule = z
+export const realNameRule = z
   .string()
   .min(
     2,
-    $t('ui.formRules.minLength', [$t('organization.position.fields.name'), 2]),
+    $t('ui.formRules.minLength', [$t('adminuser.admin.fields.realName'), 2]),
   )
   .max(
     30,
-    $t('ui.formRules.maxLength', [$t('organization.position.fields.name'), 30]),
+    $t('ui.formRules.maxLength', [$t('adminuser.admin.fields.realName'), 30]),
   );
 
 /**
  * 职务编码
  */
-export const codeRule = z
+export const usernameRule = z
   .string()
   .min(
     2,
-    $t('ui.formRules.minLength', [$t('organization.position.fields.code'), 2]),
+    $t('ui.formRules.minLength', [$t('adminuser.admin.fields.username'), 2]),
   )
   .max(
     30,
-    $t('ui.formRules.maxLength', [$t('organization.position.fields.code'), 30]),
+    $t('ui.formRules.maxLength', [$t('adminuser.admin.fields.username'), 30]),
   );

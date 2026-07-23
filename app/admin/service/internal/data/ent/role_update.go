@@ -11,8 +11,12 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/admin"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/adminrole"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/menu"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/predicate"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/role"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/rolemenu"
 )
 
 // RoleUpdate is the builder for updating Role entities.
@@ -179,9 +183,153 @@ func (_u *RoleUpdate) ClearDeletedAt() *RoleUpdate {
 	return _u
 }
 
+// AddMenuIDs adds the "menus" edge to the Menu entity by IDs.
+func (_u *RoleUpdate) AddMenuIDs(ids ...string) *RoleUpdate {
+	_u.mutation.AddMenuIDs(ids...)
+	return _u
+}
+
+// AddMenus adds the "menus" edges to the Menu entity.
+func (_u *RoleUpdate) AddMenus(v ...*Menu) *RoleUpdate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddMenuIDs(ids...)
+}
+
+// AddAdminIDs adds the "admins" edge to the Admin entity by IDs.
+func (_u *RoleUpdate) AddAdminIDs(ids ...string) *RoleUpdate {
+	_u.mutation.AddAdminIDs(ids...)
+	return _u
+}
+
+// AddAdmins adds the "admins" edges to the Admin entity.
+func (_u *RoleUpdate) AddAdmins(v ...*Admin) *RoleUpdate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddAdminIDs(ids...)
+}
+
+// AddRoleMenuIDs adds the "role_menus" edge to the RoleMenu entity by IDs.
+func (_u *RoleUpdate) AddRoleMenuIDs(ids ...string) *RoleUpdate {
+	_u.mutation.AddRoleMenuIDs(ids...)
+	return _u
+}
+
+// AddRoleMenus adds the "role_menus" edges to the RoleMenu entity.
+func (_u *RoleUpdate) AddRoleMenus(v ...*RoleMenu) *RoleUpdate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddRoleMenuIDs(ids...)
+}
+
+// AddAdminRoleIDs adds the "admin_roles" edge to the AdminRole entity by IDs.
+func (_u *RoleUpdate) AddAdminRoleIDs(ids ...string) *RoleUpdate {
+	_u.mutation.AddAdminRoleIDs(ids...)
+	return _u
+}
+
+// AddAdminRoles adds the "admin_roles" edges to the AdminRole entity.
+func (_u *RoleUpdate) AddAdminRoles(v ...*AdminRole) *RoleUpdate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddAdminRoleIDs(ids...)
+}
+
 // Mutation returns the RoleMutation object of the builder.
 func (_u *RoleUpdate) Mutation() *RoleMutation {
 	return _u.mutation
+}
+
+// ClearMenus clears all "menus" edges to the Menu entity.
+func (_u *RoleUpdate) ClearMenus() *RoleUpdate {
+	_u.mutation.ClearMenus()
+	return _u
+}
+
+// RemoveMenuIDs removes the "menus" edge to Menu entities by IDs.
+func (_u *RoleUpdate) RemoveMenuIDs(ids ...string) *RoleUpdate {
+	_u.mutation.RemoveMenuIDs(ids...)
+	return _u
+}
+
+// RemoveMenus removes "menus" edges to Menu entities.
+func (_u *RoleUpdate) RemoveMenus(v ...*Menu) *RoleUpdate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveMenuIDs(ids...)
+}
+
+// ClearAdmins clears all "admins" edges to the Admin entity.
+func (_u *RoleUpdate) ClearAdmins() *RoleUpdate {
+	_u.mutation.ClearAdmins()
+	return _u
+}
+
+// RemoveAdminIDs removes the "admins" edge to Admin entities by IDs.
+func (_u *RoleUpdate) RemoveAdminIDs(ids ...string) *RoleUpdate {
+	_u.mutation.RemoveAdminIDs(ids...)
+	return _u
+}
+
+// RemoveAdmins removes "admins" edges to Admin entities.
+func (_u *RoleUpdate) RemoveAdmins(v ...*Admin) *RoleUpdate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveAdminIDs(ids...)
+}
+
+// ClearRoleMenus clears all "role_menus" edges to the RoleMenu entity.
+func (_u *RoleUpdate) ClearRoleMenus() *RoleUpdate {
+	_u.mutation.ClearRoleMenus()
+	return _u
+}
+
+// RemoveRoleMenuIDs removes the "role_menus" edge to RoleMenu entities by IDs.
+func (_u *RoleUpdate) RemoveRoleMenuIDs(ids ...string) *RoleUpdate {
+	_u.mutation.RemoveRoleMenuIDs(ids...)
+	return _u
+}
+
+// RemoveRoleMenus removes "role_menus" edges to RoleMenu entities.
+func (_u *RoleUpdate) RemoveRoleMenus(v ...*RoleMenu) *RoleUpdate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveRoleMenuIDs(ids...)
+}
+
+// ClearAdminRoles clears all "admin_roles" edges to the AdminRole entity.
+func (_u *RoleUpdate) ClearAdminRoles() *RoleUpdate {
+	_u.mutation.ClearAdminRoles()
+	return _u
+}
+
+// RemoveAdminRoleIDs removes the "admin_roles" edge to AdminRole entities by IDs.
+func (_u *RoleUpdate) RemoveAdminRoleIDs(ids ...string) *RoleUpdate {
+	_u.mutation.RemoveAdminRoleIDs(ids...)
+	return _u
+}
+
+// RemoveAdminRoles removes "admin_roles" edges to AdminRole entities.
+func (_u *RoleUpdate) RemoveAdminRoles(v ...*AdminRole) *RoleUpdate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveAdminRoleIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -280,6 +428,210 @@ func (_u *RoleUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if _u.mutation.DeletedAtCleared() {
 		_spec.ClearField(role.FieldDeletedAt, field.TypeTime)
+	}
+	if _u.mutation.MenusCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   role.MenusTable,
+			Columns: role.MenusPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
+			},
+		}
+		createE := &RoleMenuCreate{config: _u.config, mutation: newRoleMenuMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedMenusIDs(); len(nodes) > 0 && !_u.mutation.MenusCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   role.MenusTable,
+			Columns: role.MenusPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &RoleMenuCreate{config: _u.config, mutation: newRoleMenuMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.MenusIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   role.MenusTable,
+			Columns: role.MenusPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &RoleMenuCreate{config: _u.config, mutation: newRoleMenuMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.AdminsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   role.AdminsTable,
+			Columns: role.AdminsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(admin.FieldID, field.TypeString),
+			},
+		}
+		createE := &AdminRoleCreate{config: _u.config, mutation: newAdminRoleMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedAdminsIDs(); len(nodes) > 0 && !_u.mutation.AdminsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   role.AdminsTable,
+			Columns: role.AdminsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(admin.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &AdminRoleCreate{config: _u.config, mutation: newAdminRoleMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.AdminsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   role.AdminsTable,
+			Columns: role.AdminsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(admin.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &AdminRoleCreate{config: _u.config, mutation: newAdminRoleMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.RoleMenusCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.RoleMenusTable,
+			Columns: []string{role.RoleMenusColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(rolemenu.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedRoleMenusIDs(); len(nodes) > 0 && !_u.mutation.RoleMenusCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.RoleMenusTable,
+			Columns: []string{role.RoleMenusColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(rolemenu.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RoleMenusIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.RoleMenusTable,
+			Columns: []string{role.RoleMenusColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(rolemenu.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.AdminRolesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.AdminRolesTable,
+			Columns: []string{role.AdminRolesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(adminrole.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedAdminRolesIDs(); len(nodes) > 0 && !_u.mutation.AdminRolesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.AdminRolesTable,
+			Columns: []string{role.AdminRolesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(adminrole.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.AdminRolesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.AdminRolesTable,
+			Columns: []string{role.AdminRolesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(adminrole.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -452,9 +804,153 @@ func (_u *RoleUpdateOne) ClearDeletedAt() *RoleUpdateOne {
 	return _u
 }
 
+// AddMenuIDs adds the "menus" edge to the Menu entity by IDs.
+func (_u *RoleUpdateOne) AddMenuIDs(ids ...string) *RoleUpdateOne {
+	_u.mutation.AddMenuIDs(ids...)
+	return _u
+}
+
+// AddMenus adds the "menus" edges to the Menu entity.
+func (_u *RoleUpdateOne) AddMenus(v ...*Menu) *RoleUpdateOne {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddMenuIDs(ids...)
+}
+
+// AddAdminIDs adds the "admins" edge to the Admin entity by IDs.
+func (_u *RoleUpdateOne) AddAdminIDs(ids ...string) *RoleUpdateOne {
+	_u.mutation.AddAdminIDs(ids...)
+	return _u
+}
+
+// AddAdmins adds the "admins" edges to the Admin entity.
+func (_u *RoleUpdateOne) AddAdmins(v ...*Admin) *RoleUpdateOne {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddAdminIDs(ids...)
+}
+
+// AddRoleMenuIDs adds the "role_menus" edge to the RoleMenu entity by IDs.
+func (_u *RoleUpdateOne) AddRoleMenuIDs(ids ...string) *RoleUpdateOne {
+	_u.mutation.AddRoleMenuIDs(ids...)
+	return _u
+}
+
+// AddRoleMenus adds the "role_menus" edges to the RoleMenu entity.
+func (_u *RoleUpdateOne) AddRoleMenus(v ...*RoleMenu) *RoleUpdateOne {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddRoleMenuIDs(ids...)
+}
+
+// AddAdminRoleIDs adds the "admin_roles" edge to the AdminRole entity by IDs.
+func (_u *RoleUpdateOne) AddAdminRoleIDs(ids ...string) *RoleUpdateOne {
+	_u.mutation.AddAdminRoleIDs(ids...)
+	return _u
+}
+
+// AddAdminRoles adds the "admin_roles" edges to the AdminRole entity.
+func (_u *RoleUpdateOne) AddAdminRoles(v ...*AdminRole) *RoleUpdateOne {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddAdminRoleIDs(ids...)
+}
+
 // Mutation returns the RoleMutation object of the builder.
 func (_u *RoleUpdateOne) Mutation() *RoleMutation {
 	return _u.mutation
+}
+
+// ClearMenus clears all "menus" edges to the Menu entity.
+func (_u *RoleUpdateOne) ClearMenus() *RoleUpdateOne {
+	_u.mutation.ClearMenus()
+	return _u
+}
+
+// RemoveMenuIDs removes the "menus" edge to Menu entities by IDs.
+func (_u *RoleUpdateOne) RemoveMenuIDs(ids ...string) *RoleUpdateOne {
+	_u.mutation.RemoveMenuIDs(ids...)
+	return _u
+}
+
+// RemoveMenus removes "menus" edges to Menu entities.
+func (_u *RoleUpdateOne) RemoveMenus(v ...*Menu) *RoleUpdateOne {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveMenuIDs(ids...)
+}
+
+// ClearAdmins clears all "admins" edges to the Admin entity.
+func (_u *RoleUpdateOne) ClearAdmins() *RoleUpdateOne {
+	_u.mutation.ClearAdmins()
+	return _u
+}
+
+// RemoveAdminIDs removes the "admins" edge to Admin entities by IDs.
+func (_u *RoleUpdateOne) RemoveAdminIDs(ids ...string) *RoleUpdateOne {
+	_u.mutation.RemoveAdminIDs(ids...)
+	return _u
+}
+
+// RemoveAdmins removes "admins" edges to Admin entities.
+func (_u *RoleUpdateOne) RemoveAdmins(v ...*Admin) *RoleUpdateOne {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveAdminIDs(ids...)
+}
+
+// ClearRoleMenus clears all "role_menus" edges to the RoleMenu entity.
+func (_u *RoleUpdateOne) ClearRoleMenus() *RoleUpdateOne {
+	_u.mutation.ClearRoleMenus()
+	return _u
+}
+
+// RemoveRoleMenuIDs removes the "role_menus" edge to RoleMenu entities by IDs.
+func (_u *RoleUpdateOne) RemoveRoleMenuIDs(ids ...string) *RoleUpdateOne {
+	_u.mutation.RemoveRoleMenuIDs(ids...)
+	return _u
+}
+
+// RemoveRoleMenus removes "role_menus" edges to RoleMenu entities.
+func (_u *RoleUpdateOne) RemoveRoleMenus(v ...*RoleMenu) *RoleUpdateOne {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveRoleMenuIDs(ids...)
+}
+
+// ClearAdminRoles clears all "admin_roles" edges to the AdminRole entity.
+func (_u *RoleUpdateOne) ClearAdminRoles() *RoleUpdateOne {
+	_u.mutation.ClearAdminRoles()
+	return _u
+}
+
+// RemoveAdminRoleIDs removes the "admin_roles" edge to AdminRole entities by IDs.
+func (_u *RoleUpdateOne) RemoveAdminRoleIDs(ids ...string) *RoleUpdateOne {
+	_u.mutation.RemoveAdminRoleIDs(ids...)
+	return _u
+}
+
+// RemoveAdminRoles removes "admin_roles" edges to AdminRole entities.
+func (_u *RoleUpdateOne) RemoveAdminRoles(v ...*AdminRole) *RoleUpdateOne {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveAdminRoleIDs(ids...)
 }
 
 // Where appends a list predicates to the RoleUpdate builder.
@@ -583,6 +1079,210 @@ func (_u *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) {
 	}
 	if _u.mutation.DeletedAtCleared() {
 		_spec.ClearField(role.FieldDeletedAt, field.TypeTime)
+	}
+	if _u.mutation.MenusCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   role.MenusTable,
+			Columns: role.MenusPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
+			},
+		}
+		createE := &RoleMenuCreate{config: _u.config, mutation: newRoleMenuMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedMenusIDs(); len(nodes) > 0 && !_u.mutation.MenusCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   role.MenusTable,
+			Columns: role.MenusPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &RoleMenuCreate{config: _u.config, mutation: newRoleMenuMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.MenusIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   role.MenusTable,
+			Columns: role.MenusPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &RoleMenuCreate{config: _u.config, mutation: newRoleMenuMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.AdminsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   role.AdminsTable,
+			Columns: role.AdminsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(admin.FieldID, field.TypeString),
+			},
+		}
+		createE := &AdminRoleCreate{config: _u.config, mutation: newAdminRoleMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedAdminsIDs(); len(nodes) > 0 && !_u.mutation.AdminsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   role.AdminsTable,
+			Columns: role.AdminsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(admin.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &AdminRoleCreate{config: _u.config, mutation: newAdminRoleMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.AdminsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   role.AdminsTable,
+			Columns: role.AdminsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(admin.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &AdminRoleCreate{config: _u.config, mutation: newAdminRoleMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.RoleMenusCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.RoleMenusTable,
+			Columns: []string{role.RoleMenusColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(rolemenu.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedRoleMenusIDs(); len(nodes) > 0 && !_u.mutation.RoleMenusCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.RoleMenusTable,
+			Columns: []string{role.RoleMenusColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(rolemenu.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RoleMenusIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.RoleMenusTable,
+			Columns: []string{role.RoleMenusColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(rolemenu.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.AdminRolesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.AdminRolesTable,
+			Columns: []string{role.AdminRolesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(adminrole.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedAdminRolesIDs(); len(nodes) > 0 && !_u.mutation.AdminRolesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.AdminRolesTable,
+			Columns: []string{role.AdminRolesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(adminrole.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.AdminRolesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.AdminRolesTable,
+			Columns: []string{role.AdminRolesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(adminrole.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &Role{config: _u.config}
 	_spec.Assign = _node.assignValues

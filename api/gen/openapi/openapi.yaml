@@ -76,6 +76,30 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Identity
+                - Authentication
+            summary: 后台用户-删除
+            description: 批量删除后台用户
+            operationId: Identity_DeleteAdmin
+            parameters:
+                - name: ids
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /admin/v1/admin/{id}:
         get:
             tags:
@@ -1146,32 +1170,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-        put:
-            tags:
-                - PermissionService
-                - Permission
-            summary: 角色-修改
-            description: 修改角色
-            operationId: PermissionService_UpdateRole
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/UpdateRoleRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Role'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
         post:
             tags:
                 - PermissionService
@@ -1249,6 +1247,38 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - PermissionService
+                - Permission
+            summary: 角色-修改
+            description: 修改角色
+            operationId: PermissionService_UpdateRole
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateRoleRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Role'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /admin/v1/role/{id}/status:
         get:
             tags:
@@ -1269,6 +1299,62 @@ paths:
                   description: 职务状态
                   schema:
                     type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/role/{roleId}/menus:
+        get:
+            tags:
+                - PermissionService
+                - Permission
+            summary: 角色-查询菜单
+            description: 查询角色关联的菜单树
+            operationId: PermissionService_ListMenusByRole
+            parameters:
+                - name: roleId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListMenusByRoleResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - PermissionService
+                - Permission
+            summary: 角色-绑定菜单
+            description: 为角色绑定菜单（全量替换）
+            operationId: PermissionService_BindMenusForRole
+            parameters:
+                - name: roleId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/BindMenusForRoleRequest'
+                required: true
             responses:
                 "200":
                     description: OK
@@ -1355,7 +1441,24 @@ components:
                     type: string
                     description: 更新时间
                     format: date-time
+                roleIds:
+                    type: array
+                    items:
+                        type: string
+                    description: 关联的角色ID列表
             description: 后台用户信息
+        BindMenusForRoleRequest:
+            type: object
+            properties:
+                roleId:
+                    type: string
+                    description: 角色ID
+                menuIds:
+                    type: array
+                    items:
+                        type: string
+                    description: 要绑定的菜单ID列表（全量替换）
+            description: 为角色绑定菜单请求（全量替换）
         CreateAdminRequest:
             required:
                 - username
@@ -1380,6 +1483,14 @@ components:
                 password:
                     type: string
                     description: 密码
+                status:
+                    type: string
+                    description: 状态(enabled/disabled)
+                roleIds:
+                    type: array
+                    items:
+                        type: string
+                    description: 关联的角色ID列表
             description: 创建后台用户请求
         CreateDepartmentRequest:
             type: object
@@ -1550,6 +1661,11 @@ components:
                 isSystem:
                     type: boolean
                     description: 是否系统内置角色
+                menuIds:
+                    type: array
+                    items:
+                        type: string
+                    description: 关联的菜单ID列表
         CurrentUserInfoResponse:
             type: object
             properties:
@@ -1738,6 +1854,15 @@ components:
                         $ref: '#/components/schemas/DictType'
                 total:
                     type: string
+        ListMenusByRoleResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Menu'
+                    description: 菜单树
+            description: 查询角色的菜单列表响应（返回树形结构）
         ListPositionResponse:
             type: object
             properties:
@@ -1910,6 +2035,11 @@ components:
                     type: string
                     description: 更新时间
                     format: date-time
+                menuIds:
+                    type: array
+                    items:
+                        type: string
+                    description: 关联的菜单ID列表
             description: 角色信息
         Status:
             type: object
@@ -1950,6 +2080,14 @@ components:
                 status:
                     type: string
                     description: 状态(enabled/disabled)
+                username:
+                    type: string
+                    description: 用户名
+                roleIds:
+                    type: array
+                    items:
+                        type: string
+                    description: 关联的角色ID列表
             description: 更新后台用户请求
         UpdateDepartmentRequest:
             type: object
@@ -2186,6 +2324,11 @@ components:
                 isSystem:
                     type: boolean
                     description: 是否系统内置角色
+                menuIds:
+                    type: array
+                    items:
+                        type: string
+                    description: 关联的菜单ID列表
 tags:
     - name: AuthenticationService
       description: 用户后台登录认证服务

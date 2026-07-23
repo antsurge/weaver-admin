@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/predicate"
 )
 
@@ -247,6 +248,52 @@ func CreatedAtLT(v time.Time) predicate.AdminRole {
 // CreatedAtLTE applies the LTE predicate on the "created_at" field.
 func CreatedAtLTE(v time.Time) predicate.AdminRole {
 	return predicate.AdminRole(sql.FieldLTE(FieldCreatedAt, v))
+}
+
+// HasAdmin applies the HasEdge predicate on the "admin" edge.
+func HasAdmin() predicate.AdminRole {
+	return predicate.AdminRole(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, AdminTable, AdminColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasAdminWith applies the HasEdge predicate on the "admin" edge with a given conditions (other predicates).
+func HasAdminWith(preds ...predicate.Admin) predicate.AdminRole {
+	return predicate.AdminRole(func(s *sql.Selector) {
+		step := newAdminStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasRole applies the HasEdge predicate on the "role" edge.
+func HasRole() predicate.AdminRole {
+	return predicate.AdminRole(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, RoleTable, RoleColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasRoleWith applies the HasEdge predicate on the "role" edge with a given conditions (other predicates).
+func HasRoleWith(preds ...predicate.Role) predicate.AdminRole {
+	return predicate.AdminRole(func(s *sql.Selector) {
+		step := newRoleStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
 }
 
 // And groups predicates with the AND operator between them.

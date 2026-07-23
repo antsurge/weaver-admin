@@ -10,7 +10,9 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/admin"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/adminrole"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/role"
 )
 
 // AdminRoleCreate is the builder for creating a AdminRole entity.
@@ -50,6 +52,16 @@ func (_c *AdminRoleCreate) SetNillableCreatedAt(v *time.Time) *AdminRoleCreate {
 func (_c *AdminRoleCreate) SetID(v string) *AdminRoleCreate {
 	_c.mutation.SetID(v)
 	return _c
+}
+
+// SetAdmin sets the "admin" edge to the Admin entity.
+func (_c *AdminRoleCreate) SetAdmin(v *Admin) *AdminRoleCreate {
+	return _c.SetAdminID(v.ID)
+}
+
+// SetRole sets the "role" edge to the Role entity.
+func (_c *AdminRoleCreate) SetRole(v *Role) *AdminRoleCreate {
+	return _c.SetRoleID(v.ID)
 }
 
 // Mutation returns the AdminRoleMutation object of the builder.
@@ -119,6 +131,12 @@ func (_c *AdminRoleCreate) check() error {
 			return &ValidationError{Name: "id", err: fmt.Errorf(`ent: validator failed for field "AdminRole.id": %w`, err)}
 		}
 	}
+	if len(_c.mutation.AdminIDs()) == 0 {
+		return &ValidationError{Name: "admin", err: errors.New(`ent: missing required edge "AdminRole.admin"`)}
+	}
+	if len(_c.mutation.RoleIDs()) == 0 {
+		return &ValidationError{Name: "role", err: errors.New(`ent: missing required edge "AdminRole.role"`)}
+	}
 	return nil
 }
 
@@ -154,17 +172,43 @@ func (_c *AdminRoleCreate) createSpec() (*AdminRole, *sqlgraph.CreateSpec) {
 		_node.ID = id
 		_spec.ID.Value = id
 	}
-	if value, ok := _c.mutation.AdminID(); ok {
-		_spec.SetField(adminrole.FieldAdminID, field.TypeString, value)
-		_node.AdminID = value
-	}
-	if value, ok := _c.mutation.RoleID(); ok {
-		_spec.SetField(adminrole.FieldRoleID, field.TypeString, value)
-		_node.RoleID = value
-	}
 	if value, ok := _c.mutation.CreatedAt(); ok {
 		_spec.SetField(adminrole.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
+	}
+	if nodes := _c.mutation.AdminIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: false,
+			Table:   adminrole.AdminTable,
+			Columns: []string{adminrole.AdminColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(admin.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.AdminID = nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.RoleIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: false,
+			Table:   adminrole.RoleTable,
+			Columns: []string{adminrole.RoleColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.RoleID = nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }

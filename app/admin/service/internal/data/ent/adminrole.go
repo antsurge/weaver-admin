@@ -9,10 +9,12 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/admin"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/adminrole"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/role"
 )
 
-// 用户和角色关联表
+// 用户角色关联表
 type AdminRole struct {
 	config `json:"-"`
 	// ID of the ent.
@@ -23,8 +25,44 @@ type AdminRole struct {
 	// 角色ID
 	RoleID string `json:"role_id,omitempty"`
 	// 创建时间
-	CreatedAt    time.Time `json:"created_at,omitempty"`
+	CreatedAt time.Time `json:"created_at,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the AdminRoleQuery when eager-loading is set.
+	Edges        AdminRoleEdges `json:"edges"`
 	selectValues sql.SelectValues
+}
+
+// AdminRoleEdges holds the relations/edges for other nodes in the graph.
+type AdminRoleEdges struct {
+	// Admin holds the value of the admin edge.
+	Admin *Admin `json:"admin,omitempty"`
+	// Role holds the value of the role edge.
+	Role *Role `json:"role,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [2]bool
+}
+
+// AdminOrErr returns the Admin value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e AdminRoleEdges) AdminOrErr() (*Admin, error) {
+	if e.Admin != nil {
+		return e.Admin, nil
+	} else if e.loadedTypes[0] {
+		return nil, &NotFoundError{label: admin.Label}
+	}
+	return nil, &NotLoadedError{edge: "admin"}
+}
+
+// RoleOrErr returns the Role value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e AdminRoleEdges) RoleOrErr() (*Role, error) {
+	if e.Role != nil {
+		return e.Role, nil
+	} else if e.loadedTypes[1] {
+		return nil, &NotFoundError{label: role.Label}
+	}
+	return nil, &NotLoadedError{edge: "role"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -86,6 +124,16 @@ func (_m *AdminRole) assignValues(columns []string, values []any) error {
 // This includes values selected through modifiers, order, etc.
 func (_m *AdminRole) Value(name string) (ent.Value, error) {
 	return _m.selectValues.Get(name)
+}
+
+// QueryAdmin queries the "admin" edge of the AdminRole entity.
+func (_m *AdminRole) QueryAdmin() *AdminQuery {
+	return NewAdminRoleClient(_m.config).QueryAdmin(_m)
+}
+
+// QueryRole queries the "role" edge of the AdminRole entity.
+func (_m *AdminRole) QueryRole() *RoleQuery {
+	return NewAdminRoleClient(_m.config).QueryRole(_m)
 }
 
 // Update returns a builder for updating this AdminRole.

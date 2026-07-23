@@ -35,9 +35,11 @@ type Role struct {
 	// 数据权限范围
 	DataScope string `protobuf:"bytes,7,opt,name=dataScope,proto3" json:"dataScope,omitempty"`
 	// 是否系统内置
-	IsSystem      bool                   `protobuf:"varint,8,opt,name=isSystem,proto3" json:"isSystem,omitempty"`
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
-	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`
+	IsSystem  bool                   `protobuf:"varint,8,opt,name=isSystem,proto3" json:"isSystem,omitempty"`
+	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
+	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`
+	// 关联的菜单ID列表
+	MenuIds       []string `protobuf:"bytes,20,rep,name=menuIds,proto3" json:"menuIds,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -138,6 +140,13 @@ func (x *Role) GetCreatedAt() *timestamppb.Timestamp {
 func (x *Role) GetUpdatedAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.UpdatedAt
+	}
+	return nil
+}
+
+func (x *Role) GetMenuIds() []string {
+	if x != nil {
+		return x.MenuIds
 	}
 	return nil
 }
@@ -324,7 +333,9 @@ type CreateRoleRequest struct {
 	// 数据权限范围
 	DataScope string `protobuf:"bytes,7,opt,name=dataScope,proto3" json:"dataScope,omitempty"`
 	// 是否系统内置
-	IsSystem      bool `protobuf:"varint,8,opt,name=isSystem,proto3" json:"isSystem,omitempty"`
+	IsSystem bool `protobuf:"varint,8,opt,name=isSystem,proto3" json:"isSystem,omitempty"`
+	// 关联的菜单ID列表
+	MenuIds       []string `protobuf:"bytes,20,rep,name=menuIds,proto3" json:"menuIds,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -408,6 +419,13 @@ func (x *CreateRoleRequest) GetIsSystem() bool {
 	return false
 }
 
+func (x *CreateRoleRequest) GetMenuIds() []string {
+	if x != nil {
+		return x.MenuIds
+	}
+	return nil
+}
+
 type UpdateRoleRequest struct {
 	state  protoimpl.MessageState `protogen:"open.v1"`
 	Id     string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -419,7 +437,9 @@ type UpdateRoleRequest struct {
 	// 数据权限范围
 	DataScope string `protobuf:"bytes,7,opt,name=dataScope,proto3" json:"dataScope,omitempty"`
 	// 是否系统内置
-	IsSystem      bool `protobuf:"varint,8,opt,name=isSystem,proto3" json:"isSystem,omitempty"`
+	IsSystem bool `protobuf:"varint,8,opt,name=isSystem,proto3" json:"isSystem,omitempty"`
+	// 关联的菜单ID列表
+	MenuIds       []string `protobuf:"bytes,20,rep,name=menuIds,proto3" json:"menuIds,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -508,6 +528,13 @@ func (x *UpdateRoleRequest) GetIsSystem() bool {
 		return x.IsSystem
 	}
 	return false
+}
+
+func (x *UpdateRoleRequest) GetMenuIds() []string {
+	if x != nil {
+		return x.MenuIds
+	}
+	return nil
 }
 
 type UpdateRoleStatusRequest struct {
@@ -608,11 +635,154 @@ func (x *DeleteRoleRequest) GetIds() []string {
 	return nil
 }
 
+// 为角色绑定菜单请求（全量替换）
+type BindMenusForRoleRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RoleId        string                 `protobuf:"bytes,1,opt,name=roleId,proto3" json:"roleId,omitempty"`
+	MenuIds       []string               `protobuf:"bytes,2,rep,name=menuIds,proto3" json:"menuIds,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BindMenusForRoleRequest) Reset() {
+	*x = BindMenusForRoleRequest{}
+	mi := &file_permission_service_v1_role_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BindMenusForRoleRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BindMenusForRoleRequest) ProtoMessage() {}
+
+func (x *BindMenusForRoleRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_permission_service_v1_role_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BindMenusForRoleRequest.ProtoReflect.Descriptor instead.
+func (*BindMenusForRoleRequest) Descriptor() ([]byte, []int) {
+	return file_permission_service_v1_role_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *BindMenusForRoleRequest) GetRoleId() string {
+	if x != nil {
+		return x.RoleId
+	}
+	return ""
+}
+
+func (x *BindMenusForRoleRequest) GetMenuIds() []string {
+	if x != nil {
+		return x.MenuIds
+	}
+	return nil
+}
+
+// 查询角色的菜单列表请求
+type ListMenusByRoleRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RoleId        string                 `protobuf:"bytes,1,opt,name=roleId,proto3" json:"roleId,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListMenusByRoleRequest) Reset() {
+	*x = ListMenusByRoleRequest{}
+	mi := &file_permission_service_v1_role_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListMenusByRoleRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListMenusByRoleRequest) ProtoMessage() {}
+
+func (x *ListMenusByRoleRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_permission_service_v1_role_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListMenusByRoleRequest.ProtoReflect.Descriptor instead.
+func (*ListMenusByRoleRequest) Descriptor() ([]byte, []int) {
+	return file_permission_service_v1_role_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *ListMenusByRoleRequest) GetRoleId() string {
+	if x != nil {
+		return x.RoleId
+	}
+	return ""
+}
+
+// 查询角色的菜单列表响应（返回树形结构）
+type ListMenusByRoleResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Items         []*Menu                `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListMenusByRoleResponse) Reset() {
+	*x = ListMenusByRoleResponse{}
+	mi := &file_permission_service_v1_role_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListMenusByRoleResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListMenusByRoleResponse) ProtoMessage() {}
+
+func (x *ListMenusByRoleResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_permission_service_v1_role_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListMenusByRoleResponse.ProtoReflect.Descriptor instead.
+func (*ListMenusByRoleResponse) Descriptor() ([]byte, []int) {
+	return file_permission_service_v1_role_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *ListMenusByRoleResponse) GetItems() []*Menu {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
 var File_permission_service_v1_role_proto protoreflect.FileDescriptor
 
 const file_permission_service_v1_role_proto_rawDesc = "" +
 	"\n" +
-	" permission/service/v1/role.proto\x12\x15permission.service.v1\x1a\x1bbuf/validate/validate.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xd4\x04\n" +
+	" permission/service/v1/role.proto\x12\x15permission.service.v1\x1a\x1bbuf/validate/validate.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a permission/service/v1/menu.proto\"\x8d\x05\n" +
 	"\x04Role\x12\x1e\n" +
 	"\x02id\x18\x01 \x01(\tB\x0e\xbaG\v\x92\x02\b角色IDR\x02id\x12&\n" +
 	"\x04name\x18\x02 \x01(\tB\x12\xbaG\x0f\x92\x02\f角色名称R\x04name\x12&\n" +
@@ -624,7 +794,8 @@ const file_permission_service_v1_role_proto_rawDesc = "" +
 	"\bisSystem\x18\b \x01(\bB\x1e\xbaG\x1b\x92\x02\x18是否系统内置角色R\bisSystem\x12L\n" +
 	"\tcreatedAt\x18\n" +
 	" \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间R\tcreatedAt\x12L\n" +
-	"\tupdatedAt\x18\v \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间R\tupdatedAt:\x12\xbaG\x0f\x92\x02\f角色信息\"\xe6\x02\n" +
+	"\tupdatedAt\x18\v \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间R\tupdatedAt\x127\n" +
+	"\amenuIds\x18\x14 \x03(\tB\x1d\xbaG\x1a\x92\x02\x17关联的菜单ID列表R\amenuIds:\x12\xbaG\x0f\x92\x02\f角色信息\"\xe6\x02\n" +
 	"\x0fListRoleRequest\x12D\n" +
 	"\vcurrentPage\x18\x01 \x01(\x03B\"\xbaG\x1f\x92\x02\x1c当前页码（从1开始）R\vcurrentPage\x12A\n" +
 	"\bpageSize\x18\x02 \x01(\x03B%\xbaG\"\x92\x02\x1f每页条数（传0为全部）R\bpageSize\x12>\n" +
@@ -635,7 +806,7 @@ const file_permission_service_v1_role_proto_rawDesc = "" +
 	"\x05items\x18\x01 \x03(\v2\x1b.permission.service.v1.RoleB\f\xbaG\t\x92\x02\x06列表R\x05items\x12\"\n" +
 	"\x05total\x18\x02 \x01(\x03B\f\xbaG\t\x92\x02\x06总数R\x05total\"*\n" +
 	"\x0eGetRoleRequest\x12\x18\n" +
-	"\x02id\x18\x01 \x01(\tB\b\xbaG\x05\x92\x02\x02IDR\x02id\"\xad\x03\n" +
+	"\x02id\x18\x01 \x01(\tB\b\xbaG\x05\x92\x02\x02IDR\x02id\"\xe6\x03\n" +
 	"\x11CreateRoleRequest\x12&\n" +
 	"\x04name\x18\x02 \x01(\tB\x12\xbaG\x0f\x92\x02\f角色名称R\x04name\x12&\n" +
 	"\x04code\x18\x03 \x01(\tB\x12\xbaG\x0f\x92\x02\f角色编码R\x04code\x12*\n" +
@@ -643,7 +814,8 @@ const file_permission_service_v1_role_proto_rawDesc = "" +
 	"\x06weight\x18\x05 \x01(\x05B\x1b\xbaG\x18\x92\x02\x15权重（排序用）R\x06weight\x12:\n" +
 	"\x06status\x18\x06 \x01(\tB\"\xbaG\x1f\x92\x02\x1c状态（enabled/disabled）R\x06status\x12S\n" +
 	"\tdataScope\x18\a \x01(\tB5\xbaG2\x92\x02/数据权限范围（如：ALL、DEPT、SELF）R\tdataScope\x12:\n" +
-	"\bisSystem\x18\b \x01(\bB\x1e\xbaG\x1b\x92\x02\x18是否系统内置角色R\bisSystem:\x1a\xbaG\x17\xba\x01\x04name\xba\x01\x04code\xba\x01\x06status\"\xc7\x03\n" +
+	"\bisSystem\x18\b \x01(\bB\x1e\xbaG\x1b\x92\x02\x18是否系统内置角色R\bisSystem\x127\n" +
+	"\amenuIds\x18\x14 \x03(\tB\x1d\xbaG\x1a\x92\x02\x17关联的菜单ID列表R\amenuIds:\x1a\xbaG\x17\xba\x01\x04name\xba\x01\x04code\xba\x01\x06status\"\x80\x04\n" +
 	"\x11UpdateRoleRequest\x12\x18\n" +
 	"\x02id\x18\x01 \x01(\tB\b\xbaG\x05\x92\x02\x02IDR\x02id\x12&\n" +
 	"\x04name\x18\x02 \x01(\tB\x12\xbaG\x0f\x92\x02\f角色名称R\x04name\x12&\n" +
@@ -652,14 +824,24 @@ const file_permission_service_v1_role_proto_rawDesc = "" +
 	"\x06weight\x18\x05 \x01(\x05B\x1b\xbaG\x18\x92\x02\x15权重（排序用）R\x06weight\x12:\n" +
 	"\x06status\x18\x06 \x01(\tB\"\xbaG\x1f\x92\x02\x1c状态（enabled/disabled）R\x06status\x12S\n" +
 	"\tdataScope\x18\a \x01(\tB5\xbaG2\x92\x02/数据权限范围（如：ALL、DEPT、SELF）R\tdataScope\x12:\n" +
-	"\bisSystem\x18\b \x01(\bB\x1e\xbaG\x1b\x92\x02\x18是否系统内置角色R\bisSystem:\x1a\xbaG\x17\xba\x01\x04name\xba\x01\x04code\xba\x01\x06status\"\xe5\x01\n" +
+	"\bisSystem\x18\b \x01(\bB\x1e\xbaG\x1b\x92\x02\x18是否系统内置角色R\bisSystem\x127\n" +
+	"\amenuIds\x18\x14 \x03(\tB\x1d\xbaG\x1a\x92\x02\x17关联的菜单ID列表R\amenuIds:\x1a\xbaG\x17\xba\x01\x04name\xba\x01\x04code\xba\x01\x06status\"\xe5\x01\n" +
 	"\x17UpdateRoleStatusRequest\x12\x18\n" +
 	"\x02id\x18\x01 \x01(\tB\b\xbaG\x05\x92\x02\x02IDR\x02id\x12\xa1\x01\n" +
 	"\x06status\x18\x02 \x01(\tB\x88\x01\xbaG\x1f\x92\x02\x1c状态（enabled/disabled）\xbaHc\xba\x01K\n" +
 	"\x13role.status.invalid\x12\x13role.status.invalid\x1a\x1fthis in ['enabled', 'disabled']r\x13R\aenabledR\bdisabledR\x06status:\f\xbaG\t\xba\x01\x06status\"\xc6\x01\n" +
 	"\x11DeleteRoleRequest\x12\xb0\x01\n" +
 	"\x03ids\x18\x01 \x03(\tB\x9d\x01\xbaGJ\x92\x02GID列表（必填，至少1个，最多100个，每个ID不能为空）\xbaHM\xba\x01C\n" +
-	"\x12role.ids.not_empty\x12\x12role.ids.not_empty\x1a\x19this.all(x, x.size() > 0)\x92\x01\x04\b\x01\x10dR\x03idsB\xec\x01\n" +
+	"\x12role.ids.not_empty\x12\x12role.ids.not_empty\x1a\x19this.all(x, x.size() > 0)\x92\x01\x04\b\x01\x10dR\x03ids\"\xdc\x01\n" +
+	"\x17BindMenusForRoleRequest\x12j\n" +
+	"\x06roleId\x18\x01 \x01(\tBR\xbaG\v\x92\x02\b角色ID\xbaHA\xba\x01>\n" +
+	"\x15BIND_ROLE_ID_REQUIRED\x12\x14角色ID不能为空\x1a\x0fthis.size() > 0R\x06roleId\x12U\n" +
+	"\amenuIds\x18\x02 \x03(\tB;\xbaG/\x92\x02,要绑定的菜单ID列表（全量替换）\xbaH\x06\x92\x01\x03\x10\xc8\x01R\amenuIds\"\x7f\n" +
+	"\x16ListMenusByRoleRequest\x12e\n" +
+	"\x06roleId\x18\x01 \x01(\tBM\xbaG\v\x92\x02\b角色ID\xbaH<\xba\x019\n" +
+	"\x10ROLE_ID_REQUIRED\x12\x14角色ID不能为空\x1a\x0fthis.size() > 0R\x06roleId\"]\n" +
+	"\x17ListMenusByRoleResponse\x12B\n" +
+	"\x05items\x18\x01 \x03(\v2\x1b.permission.service.v1.MenuB\x0f\xbaG\f\x92\x02\t菜单树R\x05itemsB\xec\x01\n" +
 	"\x19com.permission.service.v1B\tRoleProtoP\x01ZNgithub.com/antsurge/weaver-admin/api/gen/go/permission/service/v1;permissionpb\xa2\x02\x03PSX\xaa\x02\x15Permission.Service.V1\xca\x02\x15Permission\\Service\\V1\xe2\x02!Permission\\Service\\V1\\GPBMetadata\xea\x02\x17Permission::Service::V1b\x06proto3"
 
 var (
@@ -674,7 +856,7 @@ func file_permission_service_v1_role_proto_rawDescGZIP() []byte {
 	return file_permission_service_v1_role_proto_rawDescData
 }
 
-var file_permission_service_v1_role_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_permission_service_v1_role_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_permission_service_v1_role_proto_goTypes = []any{
 	(*Role)(nil),                    // 0: permission.service.v1.Role
 	(*ListRoleRequest)(nil),         // 1: permission.service.v1.ListRoleRequest
@@ -684,17 +866,22 @@ var file_permission_service_v1_role_proto_goTypes = []any{
 	(*UpdateRoleRequest)(nil),       // 5: permission.service.v1.UpdateRoleRequest
 	(*UpdateRoleStatusRequest)(nil), // 6: permission.service.v1.UpdateRoleStatusRequest
 	(*DeleteRoleRequest)(nil),       // 7: permission.service.v1.DeleteRoleRequest
-	(*timestamppb.Timestamp)(nil),   // 8: google.protobuf.Timestamp
+	(*BindMenusForRoleRequest)(nil), // 8: permission.service.v1.BindMenusForRoleRequest
+	(*ListMenusByRoleRequest)(nil),  // 9: permission.service.v1.ListMenusByRoleRequest
+	(*ListMenusByRoleResponse)(nil), // 10: permission.service.v1.ListMenusByRoleResponse
+	(*timestamppb.Timestamp)(nil),   // 11: google.protobuf.Timestamp
+	(*Menu)(nil),                    // 12: permission.service.v1.Menu
 }
 var file_permission_service_v1_role_proto_depIdxs = []int32{
-	8, // 0: permission.service.v1.Role.createdAt:type_name -> google.protobuf.Timestamp
-	8, // 1: permission.service.v1.Role.updatedAt:type_name -> google.protobuf.Timestamp
-	0, // 2: permission.service.v1.ListRoleResponse.items:type_name -> permission.service.v1.Role
-	3, // [3:3] is the sub-list for method output_type
-	3, // [3:3] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	11, // 0: permission.service.v1.Role.createdAt:type_name -> google.protobuf.Timestamp
+	11, // 1: permission.service.v1.Role.updatedAt:type_name -> google.protobuf.Timestamp
+	0,  // 2: permission.service.v1.ListRoleResponse.items:type_name -> permission.service.v1.Role
+	12, // 3: permission.service.v1.ListMenusByRoleResponse.items:type_name -> permission.service.v1.Menu
+	4,  // [4:4] is the sub-list for method output_type
+	4,  // [4:4] is the sub-list for method input_type
+	4,  // [4:4] is the sub-list for extension type_name
+	4,  // [4:4] is the sub-list for extension extendee
+	0,  // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_permission_service_v1_role_proto_init() }
@@ -702,13 +889,14 @@ func file_permission_service_v1_role_proto_init() {
 	if File_permission_service_v1_role_proto != nil {
 		return
 	}
+	file_permission_service_v1_menu_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_permission_service_v1_role_proto_rawDesc), len(file_permission_service_v1_role_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -25,16 +25,18 @@ const (
 )
 
 type Admin struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	RealName      string                 `protobuf:"bytes,2,opt,name=realName,proto3" json:"realName,omitempty"`
-	Username      string                 `protobuf:"bytes,3,opt,name=username,proto3" json:"username,omitempty"`
-	Email         string                 `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty"`
-	Phone         string                 `protobuf:"bytes,5,opt,name=phone,proto3" json:"phone,omitempty"`
-	Avatar        string                 `protobuf:"bytes,6,opt,name=avatar,proto3" json:"avatar,omitempty"`
-	Status        string                 `protobuf:"bytes,7,opt,name=status,proto3" json:"status,omitempty"`
-	CreateTime    *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=createTime,proto3" json:"createTime,omitempty"`
-	UpdateTime    *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=updateTime,proto3" json:"updateTime,omitempty"`
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	Id         string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	RealName   string                 `protobuf:"bytes,2,opt,name=realName,proto3" json:"realName,omitempty"`
+	Username   string                 `protobuf:"bytes,3,opt,name=username,proto3" json:"username,omitempty"`
+	Email      string                 `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty"`
+	Phone      string                 `protobuf:"bytes,5,opt,name=phone,proto3" json:"phone,omitempty"`
+	Avatar     string                 `protobuf:"bytes,6,opt,name=avatar,proto3" json:"avatar,omitempty"`
+	Status     string                 `protobuf:"bytes,7,opt,name=status,proto3" json:"status,omitempty"`
+	CreateTime *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=createTime,proto3" json:"createTime,omitempty"`
+	UpdateTime *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=updateTime,proto3" json:"updateTime,omitempty"`
+	// 关联的角色ID列表
+	RoleIds       []string `protobuf:"bytes,20,rep,name=roleIds,proto3" json:"roleIds,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -132,14 +134,24 @@ func (x *Admin) GetUpdateTime() *timestamppb.Timestamp {
 	return nil
 }
 
+func (x *Admin) GetRoleIds() []string {
+	if x != nil {
+		return x.RoleIds
+	}
+	return nil
+}
+
 type CreateAdminRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	RealName      string                 `protobuf:"bytes,1,opt,name=realName,proto3" json:"realName,omitempty"`
-	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
-	Phone         string                 `protobuf:"bytes,4,opt,name=phone,proto3" json:"phone,omitempty"`
-	Avatar        string                 `protobuf:"bytes,5,opt,name=avatar,proto3" json:"avatar,omitempty"`
-	Password      string                 `protobuf:"bytes,6,opt,name=password,proto3" json:"password,omitempty"`
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	RealName string                 `protobuf:"bytes,1,opt,name=realName,proto3" json:"realName,omitempty"`
+	Username string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	Email    string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
+	Phone    string                 `protobuf:"bytes,4,opt,name=phone,proto3" json:"phone,omitempty"`
+	Avatar   string                 `protobuf:"bytes,5,opt,name=avatar,proto3" json:"avatar,omitempty"`
+	Password string                 `protobuf:"bytes,6,opt,name=password,proto3" json:"password,omitempty"`
+	Status   string                 `protobuf:"bytes,7,opt,name=status,proto3" json:"status,omitempty"`
+	// 关联的角色ID列表（可选）
+	RoleIds       []string `protobuf:"bytes,20,rep,name=roleIds,proto3" json:"roleIds,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -216,14 +228,31 @@ func (x *CreateAdminRequest) GetPassword() string {
 	return ""
 }
 
+func (x *CreateAdminRequest) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *CreateAdminRequest) GetRoleIds() []string {
+	if x != nil {
+		return x.RoleIds
+	}
+	return nil
+}
+
 type UpdateAdminRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	RealName      string                 `protobuf:"bytes,2,opt,name=realName,proto3" json:"realName,omitempty"`
-	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
-	Phone         string                 `protobuf:"bytes,4,opt,name=phone,proto3" json:"phone,omitempty"`
-	Avatar        string                 `protobuf:"bytes,5,opt,name=avatar,proto3" json:"avatar,omitempty"`
-	Status        string                 `protobuf:"bytes,6,opt,name=status,proto3" json:"status,omitempty"`
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	Id       string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	RealName string                 `protobuf:"bytes,2,opt,name=realName,proto3" json:"realName,omitempty"`
+	Email    string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
+	Phone    string                 `protobuf:"bytes,4,opt,name=phone,proto3" json:"phone,omitempty"`
+	Avatar   string                 `protobuf:"bytes,5,opt,name=avatar,proto3" json:"avatar,omitempty"`
+	Status   string                 `protobuf:"bytes,6,opt,name=status,proto3" json:"status,omitempty"`
+	Username string                 `protobuf:"bytes,7,opt,name=username,proto3" json:"username,omitempty"`
+	// 关联的角色ID列表（可选，全量替换）
+	RoleIds       []string `protobuf:"bytes,20,rep,name=roleIds,proto3" json:"roleIds,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -298,6 +327,20 @@ func (x *UpdateAdminRequest) GetStatus() string {
 		return x.Status
 	}
 	return ""
+}
+
+func (x *UpdateAdminRequest) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *UpdateAdminRequest) GetRoleIds() []string {
+	if x != nil {
+		return x.RoleIds
+	}
+	return nil
 }
 
 type GetAdminRequest struct {
@@ -524,11 +567,55 @@ func (x *ResetPasswordRequest) GetPassword() string {
 	return ""
 }
 
+type DeleteAdminRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Ids           []string               `protobuf:"bytes,1,rep,name=ids,proto3" json:"ids,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteAdminRequest) Reset() {
+	*x = DeleteAdminRequest{}
+	mi := &file_identity_service_v1_admin_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteAdminRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteAdminRequest) ProtoMessage() {}
+
+func (x *DeleteAdminRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_identity_service_v1_admin_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteAdminRequest.ProtoReflect.Descriptor instead.
+func (*DeleteAdminRequest) Descriptor() ([]byte, []int) {
+	return file_identity_service_v1_admin_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *DeleteAdminRequest) GetIds() []string {
+	if x != nil {
+		return x.Ids
+	}
+	return nil
+}
+
 var File_identity_service_v1_admin_proto protoreflect.FileDescriptor
 
 const file_identity_service_v1_admin_proto_rawDesc = "" +
 	"\n" +
-	"\x1fidentity/service/v1/admin.proto\x12\x13identity.service.v1\x1a\x1bbuf/validate/validate.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xe7\x03\n" +
+	"\x1fidentity/service/v1/admin.proto\x12\x13identity.service.v1\x1a\x1bbuf/validate/validate.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa0\x04\n" +
 	"\x05Admin\x12\x1e\n" +
 	"\x02id\x18\x01 \x01(\tB\x0e\xbaG\v\x92\x02\b用户IDR\x02id\x12.\n" +
 	"\brealName\x18\x02 \x01(\tB\x12\xbaG\x0f\x92\x02\f真实姓名R\brealName\x12+\n" +
@@ -542,21 +629,26 @@ const file_identity_service_v1_admin_proto_rawDesc = "" +
 	"createTime\x12N\n" +
 	"\n" +
 	"updateTime\x18\t \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间R\n" +
-	"updateTime:\x18\xbaG\x15\x92\x02\x12后台用户信息\"\xc2\x02\n" +
+	"updateTime\x127\n" +
+	"\aroleIds\x18\x14 \x03(\tB\x1d\xbaG\x1a\x92\x02\x17关联的角色ID列表R\aroleIds:\x18\xbaG\x15\x92\x02\x12后台用户信息\"\xb3\x03\n" +
 	"\x12CreateAdminRequest\x12.\n" +
 	"\brealName\x18\x01 \x01(\tB\x12\xbaG\x0f\x92\x02\f真实姓名R\brealName\x12+\n" +
 	"\busername\x18\x02 \x01(\tB\x0f\xbaG\f\x92\x02\t用户名R\busername\x12\"\n" +
 	"\x05email\x18\x03 \x01(\tB\f\xbaG\t\x92\x02\x06邮箱R\x05email\x12%\n" +
 	"\x05phone\x18\x04 \x01(\tB\x0f\xbaG\f\x92\x02\t手机号R\x05phone\x12$\n" +
 	"\x06avatar\x18\x05 \x01(\tB\f\xbaG\t\x92\x02\x06头像R\x06avatar\x12(\n" +
-	"\bpassword\x18\x06 \x01(\tB\f\xbaG\t\x92\x02\x06密码R\bpassword:4\xbaG1\xba\x01\busername\xba\x01\bpassword\x92\x02\x18创建后台用户请求\"\xb2\x02\n" +
+	"\bpassword\x18\x06 \x01(\tB\f\xbaG\t\x92\x02\x06密码R\bpassword\x126\n" +
+	"\x06status\x18\a \x01(\tB\x1e\xbaG\x1b\x92\x02\x18状态(enabled/disabled)R\x06status\x127\n" +
+	"\aroleIds\x18\x14 \x03(\tB\x1d\xbaG\x1a\x92\x02\x17关联的角色ID列表R\aroleIds:4\xbaG1\xba\x01\busername\xba\x01\bpassword\x92\x02\x18创建后台用户请求\"\x98\x03\n" +
 	"\x12UpdateAdminRequest\x12\x1e\n" +
 	"\x02id\x18\x01 \x01(\tB\x0e\xbaG\v\x92\x02\b用户IDR\x02id\x12.\n" +
 	"\brealName\x18\x02 \x01(\tB\x12\xbaG\x0f\x92\x02\f真实姓名R\brealName\x12\"\n" +
 	"\x05email\x18\x03 \x01(\tB\f\xbaG\t\x92\x02\x06邮箱R\x05email\x12%\n" +
 	"\x05phone\x18\x04 \x01(\tB\x0f\xbaG\f\x92\x02\t手机号R\x05phone\x12$\n" +
 	"\x06avatar\x18\x05 \x01(\tB\f\xbaG\t\x92\x02\x06头像R\x06avatar\x126\n" +
-	"\x06status\x18\x06 \x01(\tB\x1e\xbaG\x1b\x92\x02\x18状态(enabled/disabled)R\x06status:#\xbaG \xba\x01\x02id\x92\x02\x18更新后台用户请求\"\\\n" +
+	"\x06status\x18\x06 \x01(\tB\x1e\xbaG\x1b\x92\x02\x18状态(enabled/disabled)R\x06status\x12+\n" +
+	"\busername\x18\a \x01(\tB\x0f\xbaG\f\x92\x02\t用户名R\busername\x127\n" +
+	"\aroleIds\x18\x14 \x03(\tB\x1d\xbaG\x1a\x92\x02\x17关联的角色ID列表R\aroleIds:#\xbaG \xba\x01\x02id\x92\x02\x18更新后台用户请求\"\\\n" +
 	"\x0fGetAdminRequest\x12\x1e\n" +
 	"\x02id\x18\x01 \x01(\tB\x0e\xbaG\v\x92\x02\b用户IDR\x02id:)\xbaG&\xba\x01\x02id\x92\x02\x1e获取后台用户详情请求\"\xfe\x01\n" +
 	"\x10ListAdminRequest\x12 \n" +
@@ -570,7 +662,10 @@ const file_identity_service_v1_admin_proto_rawDesc = "" +
 	"\x05items\x18\x02 \x03(\v2\x1a.identity.service.v1.AdminB\f\xbaG\t\x92\x02\x06列表R\x05items:\x1e\xbaG\x1b\x92\x02\x18后台用户分页结果\"\x8d\x01\n" +
 	"\x14ResetPasswordRequest\x12\x1e\n" +
 	"\x02id\x18\x01 \x01(\tB\x0e\xbaG\v\x92\x02\b用户IDR\x02id\x12+\n" +
-	"\bpassword\x18\x02 \x01(\tB\x0f\xbaG\f\x92\x02\t新密码R\bpassword:(\xbaG%\xba\x01\x02id\xba\x01\bpassword\x92\x02\x12重置密码请求B\xe0\x01\n" +
+	"\bpassword\x18\x02 \x01(\tB\x0f\xbaG\f\x92\x02\t新密码R\bpassword:(\xbaG%\xba\x01\x02id\xba\x01\bpassword\x92\x02\x12重置密码请求\"\xc9\x01\n" +
+	"\x12DeleteAdminRequest\x12\xb2\x01\n" +
+	"\x03ids\x18\x01 \x03(\tB\x9f\x01\xbaGJ\x92\x02GID列表（必填，至少1个，最多100个，每个ID不能为空）\xbaHO\xba\x01E\n" +
+	"\x13admin.ids.not_empty\x12\x13admin.ids.not_empty\x1a\x19this.all(x, x.size() > 0)\x92\x01\x04\b\x01\x10dR\x03idsB\xe0\x01\n" +
 	"\x17com.identity.service.v1B\n" +
 	"AdminProtoP\x01ZKgithub.com/antsurge/weaver-admin/api/gen/go/identity/service/v1;identityypb\xa2\x02\x03ISX\xaa\x02\x13Identity.Service.V1\xca\x02\x13Identity\\Service\\V1\xe2\x02\x1fIdentity\\Service\\V1\\GPBMetadata\xea\x02\x15Identity::Service::V1b\x06proto3"
 
@@ -586,7 +681,7 @@ func file_identity_service_v1_admin_proto_rawDescGZIP() []byte {
 	return file_identity_service_v1_admin_proto_rawDescData
 }
 
-var file_identity_service_v1_admin_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_identity_service_v1_admin_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_identity_service_v1_admin_proto_goTypes = []any{
 	(*Admin)(nil),                 // 0: identity.service.v1.Admin
 	(*CreateAdminRequest)(nil),    // 1: identity.service.v1.CreateAdminRequest
@@ -595,11 +690,12 @@ var file_identity_service_v1_admin_proto_goTypes = []any{
 	(*ListAdminRequest)(nil),      // 4: identity.service.v1.ListAdminRequest
 	(*ListAdminResponse)(nil),     // 5: identity.service.v1.ListAdminResponse
 	(*ResetPasswordRequest)(nil),  // 6: identity.service.v1.ResetPasswordRequest
-	(*timestamppb.Timestamp)(nil), // 7: google.protobuf.Timestamp
+	(*DeleteAdminRequest)(nil),    // 7: identity.service.v1.DeleteAdminRequest
+	(*timestamppb.Timestamp)(nil), // 8: google.protobuf.Timestamp
 }
 var file_identity_service_v1_admin_proto_depIdxs = []int32{
-	7, // 0: identity.service.v1.Admin.createTime:type_name -> google.protobuf.Timestamp
-	7, // 1: identity.service.v1.Admin.updateTime:type_name -> google.protobuf.Timestamp
+	8, // 0: identity.service.v1.Admin.createTime:type_name -> google.protobuf.Timestamp
+	8, // 1: identity.service.v1.Admin.updateTime:type_name -> google.protobuf.Timestamp
 	0, // 2: identity.service.v1.ListAdminResponse.items:type_name -> identity.service.v1.Admin
 	3, // [3:3] is the sub-list for method output_type
 	3, // [3:3] is the sub-list for method input_type
@@ -619,7 +715,7 @@ func file_identity_service_v1_admin_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_identity_service_v1_admin_proto_rawDesc), len(file_identity_service_v1_admin_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   7,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

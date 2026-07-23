@@ -17,6 +17,9 @@ message Admin {
   string status = 7 [(gnostic.openapi.v3.property) = {description: "状态(enabled/disabled)"}];
   google.protobuf.Timestamp createTime = 8 [(gnostic.openapi.v3.property) = {description: "创建时间"}];
   google.protobuf.Timestamp updateTime = 9 [(gnostic.openapi.v3.property) = {description: "更新时间"}];
+
+  // 关联的角色ID列表
+  repeated string roleIds = 20 [(gnostic.openapi.v3.property) = {description: "关联的角色ID列表"}];
 }
 
 message CreateAdminRequest {
@@ -33,6 +36,10 @@ message CreateAdminRequest {
   string phone = 4 [(gnostic.openapi.v3.property) = {description: "手机号"}];
   string avatar = 5 [(gnostic.openapi.v3.property) = {description: "头像"}];
   string password = 6 [(gnostic.openapi.v3.property) = {description: "密码"}];
+  string status = 7 [(gnostic.openapi.v3.property) = {description: "状态(enabled/disabled)"}];
+
+  // 关联的角色ID列表（可选）
+  repeated string roleIds = 20 [(gnostic.openapi.v3.property) = {description: "关联的角色ID列表"}];
 }
 
 message UpdateAdminRequest {
@@ -46,6 +53,10 @@ message UpdateAdminRequest {
   string phone = 4 [(gnostic.openapi.v3.property) = {description: "手机号"}];
   string avatar = 5 [(gnostic.openapi.v3.property) = {description: "头像"}];
   string status = 6 [(gnostic.openapi.v3.property) = {description: "状态(enabled/disabled)"}];
+  string username = 7 [(gnostic.openapi.v3.property) = {description: "用户名"}];
+
+  // 关联的角色ID列表（可选，全量替换）
+  repeated string roleIds = 20 [(gnostic.openapi.v3.property) = {description: "关联的角色ID列表"}];
 }
 
 message GetAdminRequest {
@@ -81,4 +92,19 @@ message ResetPasswordRequest {
   };
   string id = 1 [(gnostic.openapi.v3.property) = {description: "用户ID"}];
   string password = 2 [(gnostic.openapi.v3.property) = {description: "新密码"}];
+}
+
+message DeleteAdminRequest {
+  repeated string ids = 1 [
+    (buf.validate.field).repeated = {
+      min_items: 1
+      max_items: 100
+    },
+    (buf.validate.field).cel = {
+      id: "admin.ids.not_empty"
+      message: "admin.ids.not_empty"
+      expression: "this.all(x, x.size() > 0)"
+    },
+    (gnostic.openapi.v3.property) = {description: "ID列表（必填，至少1个，最多100个，每个ID不能为空）"}
+  ];
 }

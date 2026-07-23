@@ -11,6 +11,8 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/menu"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/role"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/rolemenu"
 )
 
 // MenuCreate is the builder for creating a Menu entity.
@@ -204,6 +206,36 @@ func (_c *MenuCreate) SetNillableUpdatedAt(v *time.Time) *MenuCreate {
 func (_c *MenuCreate) SetID(v string) *MenuCreate {
 	_c.mutation.SetID(v)
 	return _c
+}
+
+// AddRoleIDs adds the "roles" edge to the Role entity by IDs.
+func (_c *MenuCreate) AddRoleIDs(ids ...string) *MenuCreate {
+	_c.mutation.AddRoleIDs(ids...)
+	return _c
+}
+
+// AddRoles adds the "roles" edges to the Role entity.
+func (_c *MenuCreate) AddRoles(v ...*Role) *MenuCreate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddRoleIDs(ids...)
+}
+
+// AddRoleMenuIDs adds the "role_menus" edge to the RoleMenu entity by IDs.
+func (_c *MenuCreate) AddRoleMenuIDs(ids ...string) *MenuCreate {
+	_c.mutation.AddRoleMenuIDs(ids...)
+	return _c
+}
+
+// AddRoleMenus adds the "role_menus" edges to the RoleMenu entity.
+func (_c *MenuCreate) AddRoleMenus(v ...*RoleMenu) *MenuCreate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddRoleMenuIDs(ids...)
 }
 
 // Mutation returns the MenuMutation object of the builder.
@@ -473,6 +505,42 @@ func (_c *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.UpdatedAt(); ok {
 		_spec.SetField(menu.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
+	}
+	if nodes := _c.mutation.RolesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   menu.RolesTable,
+			Columns: menu.RolesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &RoleMenuCreate{config: _c.config, mutation: newRoleMenuMutation(_c.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.RoleMenusIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   menu.RoleMenusTable,
+			Columns: []string{menu.RoleMenusColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(rolemenu.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }

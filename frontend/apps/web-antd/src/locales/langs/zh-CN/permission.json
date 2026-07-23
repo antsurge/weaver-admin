@@ -43,7 +43,11 @@
       "code": "角色编码",
       "weight": "权重",
       "status": "状态",
-      "remark": "备注"
+      "remark": "备注",
+      "menuPermission": "菜单权限"
+    },
+    "rules": {
+      "menuRequired": "请至少选择一个菜单权限"
     },
     "actions": {
       "switchStatus": "切换角色状态",

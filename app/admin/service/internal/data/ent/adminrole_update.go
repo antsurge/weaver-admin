@@ -10,8 +10,10 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/admin"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/adminrole"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/predicate"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/role"
 )
 
 // AdminRoleUpdate is the builder for updating AdminRole entities.
@@ -55,9 +57,31 @@ func (_u *AdminRoleUpdate) SetNillableRoleID(v *string) *AdminRoleUpdate {
 	return _u
 }
 
+// SetAdmin sets the "admin" edge to the Admin entity.
+func (_u *AdminRoleUpdate) SetAdmin(v *Admin) *AdminRoleUpdate {
+	return _u.SetAdminID(v.ID)
+}
+
+// SetRole sets the "role" edge to the Role entity.
+func (_u *AdminRoleUpdate) SetRole(v *Role) *AdminRoleUpdate {
+	return _u.SetRoleID(v.ID)
+}
+
 // Mutation returns the AdminRoleMutation object of the builder.
 func (_u *AdminRoleUpdate) Mutation() *AdminRoleMutation {
 	return _u.mutation
+}
+
+// ClearAdmin clears the "admin" edge to the Admin entity.
+func (_u *AdminRoleUpdate) ClearAdmin() *AdminRoleUpdate {
+	_u.mutation.ClearAdmin()
+	return _u
+}
+
+// ClearRole clears the "role" edge to the Role entity.
+func (_u *AdminRoleUpdate) ClearRole() *AdminRoleUpdate {
+	_u.mutation.ClearRole()
+	return _u
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -99,6 +123,12 @@ func (_u *AdminRoleUpdate) check() error {
 			return &ValidationError{Name: "role_id", err: fmt.Errorf(`ent: validator failed for field "AdminRole.role_id": %w`, err)}
 		}
 	}
+	if _u.mutation.AdminCleared() && len(_u.mutation.AdminIDs()) > 0 {
+		return errors.New(`ent: clearing a required unique edge "AdminRole.admin"`)
+	}
+	if _u.mutation.RoleCleared() && len(_u.mutation.RoleIDs()) > 0 {
+		return errors.New(`ent: clearing a required unique edge "AdminRole.role"`)
+	}
 	return nil
 }
 
@@ -114,11 +144,63 @@ func (_u *AdminRoleUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 			}
 		}
 	}
-	if value, ok := _u.mutation.AdminID(); ok {
-		_spec.SetField(adminrole.FieldAdminID, field.TypeString, value)
+	if _u.mutation.AdminCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: false,
+			Table:   adminrole.AdminTable,
+			Columns: []string{adminrole.AdminColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(admin.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if value, ok := _u.mutation.RoleID(); ok {
-		_spec.SetField(adminrole.FieldRoleID, field.TypeString, value)
+	if nodes := _u.mutation.AdminIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: false,
+			Table:   adminrole.AdminTable,
+			Columns: []string{adminrole.AdminColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(admin.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.RoleCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: false,
+			Table:   adminrole.RoleTable,
+			Columns: []string{adminrole.RoleColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RoleIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: false,
+			Table:   adminrole.RoleTable,
+			Columns: []string{adminrole.RoleColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -168,9 +250,31 @@ func (_u *AdminRoleUpdateOne) SetNillableRoleID(v *string) *AdminRoleUpdateOne {
 	return _u
 }
 
+// SetAdmin sets the "admin" edge to the Admin entity.
+func (_u *AdminRoleUpdateOne) SetAdmin(v *Admin) *AdminRoleUpdateOne {
+	return _u.SetAdminID(v.ID)
+}
+
+// SetRole sets the "role" edge to the Role entity.
+func (_u *AdminRoleUpdateOne) SetRole(v *Role) *AdminRoleUpdateOne {
+	return _u.SetRoleID(v.ID)
+}
+
 // Mutation returns the AdminRoleMutation object of the builder.
 func (_u *AdminRoleUpdateOne) Mutation() *AdminRoleMutation {
 	return _u.mutation
+}
+
+// ClearAdmin clears the "admin" edge to the Admin entity.
+func (_u *AdminRoleUpdateOne) ClearAdmin() *AdminRoleUpdateOne {
+	_u.mutation.ClearAdmin()
+	return _u
+}
+
+// ClearRole clears the "role" edge to the Role entity.
+func (_u *AdminRoleUpdateOne) ClearRole() *AdminRoleUpdateOne {
+	_u.mutation.ClearRole()
+	return _u
 }
 
 // Where appends a list predicates to the AdminRoleUpdate builder.
@@ -225,6 +329,12 @@ func (_u *AdminRoleUpdateOne) check() error {
 			return &ValidationError{Name: "role_id", err: fmt.Errorf(`ent: validator failed for field "AdminRole.role_id": %w`, err)}
 		}
 	}
+	if _u.mutation.AdminCleared() && len(_u.mutation.AdminIDs()) > 0 {
+		return errors.New(`ent: clearing a required unique edge "AdminRole.admin"`)
+	}
+	if _u.mutation.RoleCleared() && len(_u.mutation.RoleIDs()) > 0 {
+		return errors.New(`ent: clearing a required unique edge "AdminRole.role"`)
+	}
 	return nil
 }
 
@@ -257,11 +367,63 @@ func (_u *AdminRoleUpdateOne) sqlSave(ctx context.Context) (_node *AdminRole, er
 			}
 		}
 	}
-	if value, ok := _u.mutation.AdminID(); ok {
-		_spec.SetField(adminrole.FieldAdminID, field.TypeString, value)
+	if _u.mutation.AdminCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: false,
+			Table:   adminrole.AdminTable,
+			Columns: []string{adminrole.AdminColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(admin.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if value, ok := _u.mutation.RoleID(); ok {
-		_spec.SetField(adminrole.FieldRoleID, field.TypeString, value)
+	if nodes := _u.mutation.AdminIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: false,
+			Table:   adminrole.AdminTable,
+			Columns: []string{adminrole.AdminColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(admin.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.RoleCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: false,
+			Table:   adminrole.RoleTable,
+			Columns: []string{adminrole.RoleColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RoleIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: false,
+			Table:   adminrole.RoleTable,
+			Columns: []string{adminrole.RoleColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &AdminRole{config: _u.config}
 	_spec.Assign = _node.assignValues

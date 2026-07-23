@@ -12,7 +12,7 @@ import (
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	_ "google.golang.org/protobuf/types/known/emptypb"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	unsafe "unsafe"
 )
@@ -28,7 +28,7 @@ var File_admin_service_v1_i_identity_proto protoreflect.FileDescriptor
 
 const file_admin_service_v1_i_identity_proto_rawDesc = "" +
 	"\n" +
-	"!admin/service/v1/i_identity.proto\x12\x10admin.service.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fidentity/service/v1/admin.proto2\xd4\x05\n" +
+	"!admin/service/v1/i_identity.proto\x12\x10admin.service.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fidentity/service/v1/admin.proto2\x80\a\n" +
 	"\bIdentity\x12\xaf\x01\n" +
 	"\tListAdmin\x12%.identity.service.v1.ListAdminRequest\x1a&.identity.service.v1.ListAdminResponse\"S\xbaG9\n" +
 	"\x0eAuthentication\x12\x13后台用户-列表\x1a\x12后台用户列表\x82\xd3\xe4\x93\x02\x11\x12\x0f/admin/v1/admin\x12\xaa\x01\n" +
@@ -37,7 +37,9 @@ const file_admin_service_v1_i_identity_proto_rawDesc = "" +
 	"\vUpdateAdmin\x12'.identity.service.v1.UpdateAdminRequest\x1a\x1a.identity.service.v1.Admin\"[\xbaG9\n" +
 	"\x0eAuthentication\x12\x13后台用户-修改\x1a\x12修改后台用户\x82\xd3\xe4\x93\x02\x19:\x01*\x1a\x14/admin/v1/admin/{id}\x12\xb6\x01\n" +
 	"\bGetAdmin\x12$.identity.service.v1.GetAdminRequest\x1a\x1a.identity.service.v1.Admin\"h\xbaGI\n" +
-	"\x0eAuthentication\x12\x1b后台用户-通过id获取\x1a\x1a通过id获取后台用户\x82\xd3\xe4\x93\x02\x16\x12\x14/admin/v1/admin/{id}B\xcf\x01\n" +
+	"\x0eAuthentication\x12\x1b后台用户-通过id获取\x1a\x1a通过id获取后台用户\x82\xd3\xe4\x93\x02\x16\x12\x14/admin/v1/admin/{id}\x12\xa9\x01\n" +
+	"\vDeleteAdmin\x12'.identity.service.v1.DeleteAdminRequest\x1a\x16.google.protobuf.Empty\"Y\xbaG?\n" +
+	"\x0eAuthentication\x12\x13后台用户-删除\x1a\x18批量删除后台用户\x82\xd3\xe4\x93\x02\x11*\x0f/admin/v1/adminB\xcf\x01\n" +
 	"\x14com.admin.service.v1B\x0eIIdentityProtoP\x01ZEgithub.com/antsurge/weaver-admin/api/gen/go/admin/services/v1;adminpb\xa2\x02\x03ASX\xaa\x02\x10Admin.Service.V1\xca\x02\x10Admin\\Service\\V1\xe2\x02\x1cAdmin\\Service\\V1\\GPBMetadata\xea\x02\x12Admin::Service::V1b\x06proto3"
 
 var file_admin_service_v1_i_identity_proto_goTypes = []any{
@@ -45,20 +47,24 @@ var file_admin_service_v1_i_identity_proto_goTypes = []any{
 	(*v1.CreateAdminRequest)(nil), // 1: identity.service.v1.CreateAdminRequest
 	(*v1.UpdateAdminRequest)(nil), // 2: identity.service.v1.UpdateAdminRequest
 	(*v1.GetAdminRequest)(nil),    // 3: identity.service.v1.GetAdminRequest
-	(*v1.ListAdminResponse)(nil),  // 4: identity.service.v1.ListAdminResponse
-	(*v1.Admin)(nil),              // 5: identity.service.v1.Admin
+	(*v1.DeleteAdminRequest)(nil), // 4: identity.service.v1.DeleteAdminRequest
+	(*v1.ListAdminResponse)(nil),  // 5: identity.service.v1.ListAdminResponse
+	(*v1.Admin)(nil),              // 6: identity.service.v1.Admin
+	(*emptypb.Empty)(nil),         // 7: google.protobuf.Empty
 }
 var file_admin_service_v1_i_identity_proto_depIdxs = []int32{
 	0, // 0: admin.service.v1.Identity.ListAdmin:input_type -> identity.service.v1.ListAdminRequest
 	1, // 1: admin.service.v1.Identity.CreateAdmin:input_type -> identity.service.v1.CreateAdminRequest
 	2, // 2: admin.service.v1.Identity.UpdateAdmin:input_type -> identity.service.v1.UpdateAdminRequest
 	3, // 3: admin.service.v1.Identity.GetAdmin:input_type -> identity.service.v1.GetAdminRequest
-	4, // 4: admin.service.v1.Identity.ListAdmin:output_type -> identity.service.v1.ListAdminResponse
-	5, // 5: admin.service.v1.Identity.CreateAdmin:output_type -> identity.service.v1.Admin
-	5, // 6: admin.service.v1.Identity.UpdateAdmin:output_type -> identity.service.v1.Admin
-	5, // 7: admin.service.v1.Identity.GetAdmin:output_type -> identity.service.v1.Admin
-	4, // [4:8] is the sub-list for method output_type
-	0, // [0:4] is the sub-list for method input_type
+	4, // 4: admin.service.v1.Identity.DeleteAdmin:input_type -> identity.service.v1.DeleteAdminRequest
+	5, // 5: admin.service.v1.Identity.ListAdmin:output_type -> identity.service.v1.ListAdminResponse
+	6, // 6: admin.service.v1.Identity.CreateAdmin:output_type -> identity.service.v1.Admin
+	6, // 7: admin.service.v1.Identity.UpdateAdmin:output_type -> identity.service.v1.Admin
+	6, // 8: admin.service.v1.Identity.GetAdmin:output_type -> identity.service.v1.Admin
+	7, // 9: admin.service.v1.Identity.DeleteAdmin:output_type -> google.protobuf.Empty
+	5, // [5:10] is the sub-list for method output_type
+	0, // [0:5] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

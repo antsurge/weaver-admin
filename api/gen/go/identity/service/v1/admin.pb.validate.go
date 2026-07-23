@@ -239,6 +239,8 @@ func (m *CreateAdminRequest) validate(all bool) error {
 
 	// no validation rules for Password
 
+	// no validation rules for Status
+
 	if len(errors) > 0 {
 		return CreateAdminRequestMultiError(errors)
 	}
@@ -352,6 +354,8 @@ func (m *UpdateAdminRequest) validate(all bool) error {
 	// no validation rules for Avatar
 
 	// no validation rules for Status
+
+	// no validation rules for Username
 
 	if len(errors) > 0 {
 		return UpdateAdminRequestMultiError(errors)
@@ -888,3 +892,105 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ResetPasswordRequestValidationError{}
+
+// Validate checks the field values on DeleteAdminRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *DeleteAdminRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on DeleteAdminRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// DeleteAdminRequestMultiError, or nil if none found.
+func (m *DeleteAdminRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *DeleteAdminRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return DeleteAdminRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// DeleteAdminRequestMultiError is an error wrapping multiple validation errors
+// returned by DeleteAdminRequest.ValidateAll() if the designated constraints
+// aren't met.
+type DeleteAdminRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m DeleteAdminRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m DeleteAdminRequestMultiError) AllErrors() []error { return m }
+
+// DeleteAdminRequestValidationError is the validation error returned by
+// DeleteAdminRequest.Validate if the designated constraints aren't met.
+type DeleteAdminRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e DeleteAdminRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e DeleteAdminRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e DeleteAdminRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e DeleteAdminRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e DeleteAdminRequestValidationError) ErrorName() string {
+	return "DeleteAdminRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e DeleteAdminRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sDeleteAdminRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = DeleteAdminRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = DeleteAdminRequestValidationError{}

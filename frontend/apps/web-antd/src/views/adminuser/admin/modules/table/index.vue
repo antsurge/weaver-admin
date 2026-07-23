@@ -167,13 +167,13 @@ function onBatchDelete() {
   const rows = selectedRows.value;
   if (!rows?.length) return;
   const ids = rows.map((r) => r.id);
-  const names = rows.map((r) => r.name || r.id).join('、');
+  const names = rows.map((r) => r.username || r.realName).join('、');
 
   Modal.confirm({
-    title: $t('ui.actionMessage.confirmDelete'),
+    title: $t('ui.actionMessage.deleteConfirm', [$t('adminuser.admin.name')]),
     content: $t('ui.actionMessage.deleteConfirm', [names]),
-    okText: $t('ui.actionTitle.confirm'),
-    cancelText: $t('ui.actionTitle.cancel'),
+    okText: $t('adminuser.admin.actions.confirm'),
+    cancelText: $t('adminuser.admin.actions.cancel'),
     okType: 'danger',
     onOk() {
       const hideLoading = message.loading({
@@ -183,8 +183,8 @@ function onBatchDelete() {
       });
       return deleteAdminApi(ids)
         .then(() => {
-          message.success({
-            content: $t('ui.actionMessage.deleteSuccess', [names]),
+           message.success({
+            content: $t('ui.actionMessage.deleteSuccess', [row.name]),
             key: 'batch_delete_msg',
           });
           selectedRows.value = [];

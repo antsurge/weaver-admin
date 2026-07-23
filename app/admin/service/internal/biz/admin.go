@@ -21,6 +21,8 @@ type Admin struct {
 	Password  string // 用于创建时传递，查询时通常为空
 	CreatedAt time.Time
 	UpdatedAt time.Time
+	// 关联的角色ID列表
+	RoleIDs []string `json:"roleIds"`
 }
 
 type ListAdminRequest struct {
@@ -44,18 +46,27 @@ type AdminRepo interface {
 	UpdateAdmin(ctx context.Context, admin *Admin) error
 	FindByUsername(ctx context.Context, username string) (*Admin, error)
 	FindByID(ctx context.Context, id string) (*Admin, error)
-	//DeleteAdmin(ctx context.Context, id string) error
+	DeleteAdmin(ctx context.Context, ids []string) error
+
+	// ====== 角色关联方法 ======
+
+	// BindRolesForAdmin 为用户绑定角色（全量替换：先删除所有现有绑定，再批量插入新绑定）
+	BindRolesForAdmin(ctx context.Context, adminID string, roleIDs []string) error
+
+	// GetRoleIDsByAdmin 获取用户关联的角色ID列表
+	GetRoleIDsByAdmin(ctx context.Context, adminID string) ([]string, error)
 }
 
 // AdminUseCase 是业务逻辑控制器
 type AdminUseCase struct {
-	repo AdminRepo
-	log  *log.Helper
+	repo     AdminRepo
+	roleRepo RoleRepo
+	log      *log.Helper
 }
 
 // NewAdminUseCase 构造函数，由 Wire 注入 Repo
-func NewAdminUseCase(repo AdminRepo, logger log.Logger) *AdminUseCase {
-	return &AdminUseCase{repo: repo, log: log.NewHelper(logger)}
+func NewAdminUseCase(repo AdminRepo, roleRepo RoleRepo, logger log.Logger) *AdminUseCase {
+	return &AdminUseCase{repo: repo, roleRepo: roleRepo, log: log.NewHelper(logger)}
 }
 
 func (uc *AdminUseCase) ListAdmin(ctx context.Context, params *ListAdminRequest) (*ListAdminResponse, error) {
@@ -69,13 +80,55 @@ func (uc *AdminUseCase) CreateAdmin(ctx context.Context, admin *Admin) (*Admin, 
 	admin.UpdatedAt = now
 
 	err := uc.repo.CreateAdmin(ctx, admin)
-	return admin, err
+	if err != nil {
+		return nil, err
+	}
+
+	// 绑定角色（如果有）
+	if len(admin.RoleIDs) > 0 {
+		if err := uc.repo.BindRolesForAdmin(ctx, admin.ID, admin.RoleIDs); err != nil {
+			return nil, err
+		}
+	}
+
+	return admin, nil
 }
 
 func (uc *AdminUseCase) UpdateAdmin(ctx context.Context, admin *Admin) (*Admin, error) {
 	now := time.Now()
 	admin.UpdatedAt = now
 	err := uc.repo.UpdateAdmin(ctx, admin)
+	if err != nil {
+		return nil, err
+	}
 
-	return admin, err
+	// 重新绑定角色（全量替换）
+	if err := uc.repo.BindRolesForAdmin(ctx, admin.ID, admin.RoleIDs); err != nil {
+		return nil, err
+	}
+
+	return admin, nil
+}
+
+// GetAdminWithRoles 获取用户详情（包含角色ID列表）
+func (uc *AdminUseCase) GetAdminWithRoles(ctx context.Context, id string) (*Admin, error) {
+	admin, err := uc.repo.FindByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	// 填充角色ID列表
+	roleIDs, err := uc.repo.GetRoleIDsByAdmin(ctx, id)
+	if err != nil {
+		uc.log.Warnf("获取用户角色失败: %v", err)
+		roleIDs = []string{}
+	}
+	admin.RoleIDs = roleIDs
+
+	return admin, nil
+}
+
+// DeleteAdmin 删除用户（软删除）
+func (uc *AdminUseCase) DeleteAdmin(ctx context.Context, ids []string) error {
+	return uc.repo.DeleteAdmin(ctx, ids)
 }

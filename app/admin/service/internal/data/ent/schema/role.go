@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
+	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 )
 
@@ -62,14 +63,14 @@ func (Role) Fields() []ent.Field {
 }
 
 func (Role) Edges() []ent.Edge {
-	return nil
-	//return []ent.Edge{
-	//	// Role → Permissions
-	//	edge.To("permissions", Permission.Type).
-	//		Through("role_permissions", RolePermission.Type),
-	//
-	//	// Role ← Admins (反向)
-	//	edge.From("admins", Admin.Type).
-	//		Ref("roles"), // 对应 Admin.roles
-	//}
+	return []ent.Edge{
+		// Role → Menus (多对多，通过 role_menus 关联表)
+		edge.To("menus", Menu.Type).
+			Through("role_menus", RoleMenu.Type),
+
+		// Role ← Admins (反向，用户-角色多对多)
+		edge.From("admins", Admin.Type).
+			Ref("roles").
+			Through("admin_roles", AdminRole.Type),
+	}
 }

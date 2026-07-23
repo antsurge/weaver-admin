@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/predicate"
 )
 
@@ -577,6 +578,98 @@ func DeletedAtIsNil() predicate.Role {
 // DeletedAtNotNil applies the NotNil predicate on the "deleted_at" field.
 func DeletedAtNotNil() predicate.Role {
 	return predicate.Role(sql.FieldNotNull(FieldDeletedAt))
+}
+
+// HasMenus applies the HasEdge predicate on the "menus" edge.
+func HasMenus() predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, MenusTable, MenusPrimaryKey...),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasMenusWith applies the HasEdge predicate on the "menus" edge with a given conditions (other predicates).
+func HasMenusWith(preds ...predicate.Menu) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		step := newMenusStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasAdmins applies the HasEdge predicate on the "admins" edge.
+func HasAdmins() predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, AdminsTable, AdminsPrimaryKey...),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasAdminsWith applies the HasEdge predicate on the "admins" edge with a given conditions (other predicates).
+func HasAdminsWith(preds ...predicate.Admin) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		step := newAdminsStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasRoleMenus applies the HasEdge predicate on the "role_menus" edge.
+func HasRoleMenus() predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, RoleMenusTable, RoleMenusColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasRoleMenusWith applies the HasEdge predicate on the "role_menus" edge with a given conditions (other predicates).
+func HasRoleMenusWith(preds ...predicate.RoleMenu) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		step := newRoleMenusStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasAdminRoles applies the HasEdge predicate on the "admin_roles" edge.
+func HasAdminRoles() predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, AdminRolesTable, AdminRolesColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasAdminRolesWith applies the HasEdge predicate on the "admin_roles" edge with a given conditions (other predicates).
+func HasAdminRolesWith(preds ...predicate.AdminRole) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		step := newAdminRolesStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
 }
 
 // And groups predicates with the AND operator between them.

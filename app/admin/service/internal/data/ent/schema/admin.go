@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
+	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 )
 
@@ -37,14 +38,17 @@ func (Admin) Fields() []ent.Field {
 			Default(time.Now).Immutable(), // 对应 Proto createTime
 		field.Time("updated_at").
 			Default(time.Now).UpdateDefault(time.Now), // 对应 Proto updateTime
+		field.Time("deleted_at").
+			Optional().
+			Nillable(), // 软删除时间
 	}
 }
 
 // Edges of the Admin.
 func (Admin) Edges() []ent.Edge {
-	return nil
-	//return []ent.Edge{
-	//	edge.To("roles", Role.Type).
-	//		Through("admin_roles", AdminRole.Type),
-	//}
+	return []ent.Edge{
+		// Admin → Roles (多对多，通过 admin_roles 关联表)
+		edge.To("roles", Role.Type).
+			Through("admin_roles", AdminRole.Type),
+	}
 }

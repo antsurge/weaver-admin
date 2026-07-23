@@ -11,8 +11,10 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/admin"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/adminrole"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/predicate"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/role"
 )
 
 // AdminRoleQuery is the builder for querying AdminRole entities.
@@ -22,6 +24,8 @@ type AdminRoleQuery struct {
 	order      []adminrole.OrderOption
 	inters     []Interceptor
 	predicates []predicate.AdminRole
+	withAdmin  *AdminQuery
+	withRole   *RoleQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -56,6 +60,50 @@ func (_q *AdminRoleQuery) Unique(unique bool) *AdminRoleQuery {
 func (_q *AdminRoleQuery) Order(o ...adminrole.OrderOption) *AdminRoleQuery {
 	_q.order = append(_q.order, o...)
 	return _q
+}
+
+// QueryAdmin chains the current query on the "admin" edge.
+func (_q *AdminRoleQuery) QueryAdmin() *AdminQuery {
+	query := (&AdminClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(adminrole.Table, adminrole.FieldID, selector),
+			sqlgraph.To(admin.Table, admin.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, adminrole.AdminTable, adminrole.AdminColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryRole chains the current query on the "role" edge.
+func (_q *AdminRoleQuery) QueryRole() *RoleQuery {
+	query := (&RoleClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(adminrole.Table, adminrole.FieldID, selector),
+			sqlgraph.To(role.Table, role.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, adminrole.RoleTable, adminrole.RoleColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first AdminRole entity from the query.
@@ -250,10 +298,34 @@ func (_q *AdminRoleQuery) Clone() *AdminRoleQuery {
 		order:      append([]adminrole.OrderOption{}, _q.order...),
 		inters:     append([]Interceptor{}, _q.inters...),
 		predicates: append([]predicate.AdminRole{}, _q.predicates...),
+		withAdmin:  _q.withAdmin.Clone(),
+		withRole:   _q.withRole.Clone(),
 		// clone intermediate query.
 		sql:  _q.sql.Clone(),
 		path: _q.path,
 	}
+}
+
+// WithAdmin tells the query-builder to eager-load the nodes that are connected to
+// the "admin" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *AdminRoleQuery) WithAdmin(opts ...func(*AdminQuery)) *AdminRoleQuery {
+	query := (&AdminClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withAdmin = query
+	return _q
+}
+
+// WithRole tells the query-builder to eager-load the nodes that are connected to
+// the "role" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *AdminRoleQuery) WithRole(opts ...func(*RoleQuery)) *AdminRoleQuery {
+	query := (&RoleClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withRole = query
+	return _q
 }
 
 // GroupBy is used to group vertices by one or more fields/columns.
@@ -332,8 +404,12 @@ func (_q *AdminRoleQuery) prepareQuery(ctx context.Context) error {
 
 func (_q *AdminRoleQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*AdminRole, error) {
 	var (
-		nodes = []*AdminRole{}
-		_spec = _q.querySpec()
+		nodes       = []*AdminRole{}
+		_spec       = _q.querySpec()
+		loadedTypes = [2]bool{
+			_q.withAdmin != nil,
+			_q.withRole != nil,
+		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*AdminRole).scanValues(nil, columns)
@@ -341,6 +417,7 @@ func (_q *AdminRoleQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Ad
 	_spec.Assign = func(columns []string, values []any) error {
 		node := &AdminRole{config: _q.config}
 		nodes = append(nodes, node)
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
 	for i := range hooks {
@@ -352,7 +429,78 @@ func (_q *AdminRoleQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Ad
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	if query := _q.withAdmin; query != nil {
+		if err := _q.loadAdmin(ctx, query, nodes, nil,
+			func(n *AdminRole, e *Admin) { n.Edges.Admin = e }); err != nil {
+			return nil, err
+		}
+	}
+	if query := _q.withRole; query != nil {
+		if err := _q.loadRole(ctx, query, nodes, nil,
+			func(n *AdminRole, e *Role) { n.Edges.Role = e }); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
+}
+
+func (_q *AdminRoleQuery) loadAdmin(ctx context.Context, query *AdminQuery, nodes []*AdminRole, init func(*AdminRole), assign func(*AdminRole, *Admin)) error {
+	ids := make([]string, 0, len(nodes))
+	nodeids := make(map[string][]*AdminRole)
+	for i := range nodes {
+		fk := nodes[i].AdminID
+		if _, ok := nodeids[fk]; !ok {
+			ids = append(ids, fk)
+		}
+		nodeids[fk] = append(nodeids[fk], nodes[i])
+	}
+	if len(ids) == 0 {
+		return nil
+	}
+	query.Where(admin.IDIn(ids...))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nodeids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "admin_id" returned %v`, n.ID)
+		}
+		for i := range nodes {
+			assign(nodes[i], n)
+		}
+	}
+	return nil
+}
+func (_q *AdminRoleQuery) loadRole(ctx context.Context, query *RoleQuery, nodes []*AdminRole, init func(*AdminRole), assign func(*AdminRole, *Role)) error {
+	ids := make([]string, 0, len(nodes))
+	nodeids := make(map[string][]*AdminRole)
+	for i := range nodes {
+		fk := nodes[i].RoleID
+		if _, ok := nodeids[fk]; !ok {
+			ids = append(ids, fk)
+		}
+		nodeids[fk] = append(nodeids[fk], nodes[i])
+	}
+	if len(ids) == 0 {
+		return nil
+	}
+	query.Where(role.IDIn(ids...))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nodeids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "role_id" returned %v`, n.ID)
+		}
+		for i := range nodes {
+			assign(nodes[i], n)
+		}
+	}
+	return nil
 }
 
 func (_q *AdminRoleQuery) sqlCount(ctx context.Context) (int, error) {
@@ -379,6 +527,12 @@ func (_q *AdminRoleQuery) querySpec() *sqlgraph.QuerySpec {
 			if fields[i] != adminrole.FieldID {
 				_spec.Node.Columns = append(_spec.Node.Columns, fields[i])
 			}
+		}
+		if _q.withAdmin != nil {
+			_spec.Node.AddColumnOnce(adminrole.FieldAdminID)
+		}
+		if _q.withRole != nil {
+			_spec.Node.AddColumnOnce(adminrole.FieldRoleID)
 		}
 	}
 	if ps := _q.predicates; len(ps) > 0 {

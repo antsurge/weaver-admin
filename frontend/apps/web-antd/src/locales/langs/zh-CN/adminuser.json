@@ -4,18 +4,20 @@
     "fields": {
       "username": "用户名",
       "realName": "用户昵称",
-      "email":"邮箱",
+      "email": "邮箱",
       "phone": "手机号",
-      "avatar":"头像",
+      "avatar": "头像",
       "status": "状态",
-      "remark": "备注"
+      "remark": "备注",
+      "roleIds": "分配角色"
     },
     "actions": {
       "switchStatus": "切换用户状态",
-      "switchStatusConfirm": "确认将【{0}】状态切换为【{1}】？"
+      "switchStatusConfirm": "确认将【{0}】状态切换为【{1}】？",
+      "confirm": "确认",
+      "cancel": "取消",
+      "delete": "删除"
     },
-    "form_placeholder": {
-      "remark": "请输入备注"
-    }
+    "form_placeholder": { "remark": "请输入备注", "roleIds": "请选择角色" }
   }
 }

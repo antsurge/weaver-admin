@@ -36,8 +36,62 @@ type Role struct {
 	// UpdatedAt holds the value of the "updated_at" field.
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
 	// DeletedAt holds the value of the "deleted_at" field.
-	DeletedAt    *time.Time `json:"deleted_at,omitempty"`
+	DeletedAt *time.Time `json:"deleted_at,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the RoleQuery when eager-loading is set.
+	Edges        RoleEdges `json:"edges"`
 	selectValues sql.SelectValues
+}
+
+// RoleEdges holds the relations/edges for other nodes in the graph.
+type RoleEdges struct {
+	// Menus holds the value of the menus edge.
+	Menus []*Menu `json:"menus,omitempty"`
+	// Admins holds the value of the admins edge.
+	Admins []*Admin `json:"admins,omitempty"`
+	// RoleMenus holds the value of the role_menus edge.
+	RoleMenus []*RoleMenu `json:"role_menus,omitempty"`
+	// AdminRoles holds the value of the admin_roles edge.
+	AdminRoles []*AdminRole `json:"admin_roles,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [4]bool
+}
+
+// MenusOrErr returns the Menus value or an error if the edge
+// was not loaded in eager-loading.
+func (e RoleEdges) MenusOrErr() ([]*Menu, error) {
+	if e.loadedTypes[0] {
+		return e.Menus, nil
+	}
+	return nil, &NotLoadedError{edge: "menus"}
+}
+
+// AdminsOrErr returns the Admins value or an error if the edge
+// was not loaded in eager-loading.
+func (e RoleEdges) AdminsOrErr() ([]*Admin, error) {
+	if e.loadedTypes[1] {
+		return e.Admins, nil
+	}
+	return nil, &NotLoadedError{edge: "admins"}
+}
+
+// RoleMenusOrErr returns the RoleMenus value or an error if the edge
+// was not loaded in eager-loading.
+func (e RoleEdges) RoleMenusOrErr() ([]*RoleMenu, error) {
+	if e.loadedTypes[2] {
+		return e.RoleMenus, nil
+	}
+	return nil, &NotLoadedError{edge: "role_menus"}
+}
+
+// AdminRolesOrErr returns the AdminRoles value or an error if the edge
+// was not loaded in eager-loading.
+func (e RoleEdges) AdminRolesOrErr() ([]*AdminRole, error) {
+	if e.loadedTypes[3] {
+		return e.AdminRoles, nil
+	}
+	return nil, &NotLoadedError{edge: "admin_roles"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -146,6 +200,26 @@ func (_m *Role) assignValues(columns []string, values []any) error {
 // This includes values selected through modifiers, order, etc.
 func (_m *Role) Value(name string) (ent.Value, error) {
 	return _m.selectValues.Get(name)
+}
+
+// QueryMenus queries the "menus" edge of the Role entity.
+func (_m *Role) QueryMenus() *MenuQuery {
+	return NewRoleClient(_m.config).QueryMenus(_m)
+}
+
+// QueryAdmins queries the "admins" edge of the Role entity.
+func (_m *Role) QueryAdmins() *AdminQuery {
+	return NewRoleClient(_m.config).QueryAdmins(_m)
+}
+
+// QueryRoleMenus queries the "role_menus" edge of the Role entity.
+func (_m *Role) QueryRoleMenus() *RoleMenuQuery {
+	return NewRoleClient(_m.config).QueryRoleMenus(_m)
+}
+
+// QueryAdminRoles queries the "admin_roles" edge of the Role entity.
+func (_m *Role) QueryAdminRoles() *AdminRoleQuery {
+	return NewRoleClient(_m.config).QueryAdminRoles(_m)
 }
 
 // Update returns a builder for updating this Role.

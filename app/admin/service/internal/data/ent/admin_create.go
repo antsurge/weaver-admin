@@ -11,6 +11,8 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/admin"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/adminrole"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/role"
 )
 
 // AdminCreate is the builder for creating a Admin entity.
@@ -116,10 +118,54 @@ func (_c *AdminCreate) SetNillableUpdatedAt(v *time.Time) *AdminCreate {
 	return _c
 }
 
+// SetDeletedAt sets the "deleted_at" field.
+func (_c *AdminCreate) SetDeletedAt(v time.Time) *AdminCreate {
+	_c.mutation.SetDeletedAt(v)
+	return _c
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (_c *AdminCreate) SetNillableDeletedAt(v *time.Time) *AdminCreate {
+	if v != nil {
+		_c.SetDeletedAt(*v)
+	}
+	return _c
+}
+
 // SetID sets the "id" field.
 func (_c *AdminCreate) SetID(v string) *AdminCreate {
 	_c.mutation.SetID(v)
 	return _c
+}
+
+// AddRoleIDs adds the "roles" edge to the Role entity by IDs.
+func (_c *AdminCreate) AddRoleIDs(ids ...string) *AdminCreate {
+	_c.mutation.AddRoleIDs(ids...)
+	return _c
+}
+
+// AddRoles adds the "roles" edges to the Role entity.
+func (_c *AdminCreate) AddRoles(v ...*Role) *AdminCreate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddRoleIDs(ids...)
+}
+
+// AddAdminRoleIDs adds the "admin_roles" edge to the AdminRole entity by IDs.
+func (_c *AdminCreate) AddAdminRoleIDs(ids ...string) *AdminCreate {
+	_c.mutation.AddAdminRoleIDs(ids...)
+	return _c
+}
+
+// AddAdminRoles adds the "admin_roles" edges to the AdminRole entity.
+func (_c *AdminCreate) AddAdminRoles(v ...*AdminRole) *AdminCreate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddAdminRoleIDs(ids...)
 }
 
 // Mutation returns the AdminMutation object of the builder.
@@ -254,6 +300,46 @@ func (_c *AdminCreate) createSpec() (*Admin, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.UpdatedAt(); ok {
 		_spec.SetField(admin.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
+	}
+	if value, ok := _c.mutation.DeletedAt(); ok {
+		_spec.SetField(admin.FieldDeletedAt, field.TypeTime, value)
+		_node.DeletedAt = &value
+	}
+	if nodes := _c.mutation.RolesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   admin.RolesTable,
+			Columns: admin.RolesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &AdminRoleCreate{config: _c.config, mutation: newAdminRoleMutation(_c.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.AdminRolesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   admin.AdminRolesTable,
+			Columns: []string{admin.AdminRolesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(adminrole.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }

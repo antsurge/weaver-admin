@@ -29,7 +29,7 @@ var File_admin_service_v1_i_permission_proto protoreflect.FileDescriptor
 
 const file_admin_service_v1_i_permission_proto_rawDesc = "" +
 	"\n" +
-	"#admin/service/v1/i_permission.proto\x12\x10admin.service.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a(organization/service/v1/department.proto\x1a permission/service/v1/menu.proto\x1a permission/service/v1/role.proto2\x92\x0e\n" +
+	"#admin/service/v1/i_permission.proto\x12\x10admin.service.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a(organization/service/v1/department.proto\x1a permission/service/v1/menu.proto\x1a permission/service/v1/role.proto2\xc9\x11\n" +
 	"\x11PermissionService\x12\xa3\x01\n" +
 	"\bMenuTree\x12&.permission.service.v1.MenuTreeRequest\x1a'.permission.service.v1.MenuTreeResponse\"F\xbaG(\n" +
 	"\n" +
@@ -58,18 +58,24 @@ const file_admin_service_v1_i_permission_proto_rawDesc = "" +
 	"\n" +
 	"CreateRole\x12(.permission.service.v1.CreateRoleRequest\x1a\x1b.permission.service.v1.Role\"E\xbaG)\n" +
 	"\n" +
-	"Permission\x12\r角色-创建\x1a\f创建角色\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/admin/v1/role\x12\x9a\x01\n" +
+	"Permission\x12\r角色-创建\x1a\f创建角色\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/admin/v1/role\x12\x9f\x01\n" +
 	"\n" +
-	"UpdateRole\x12(.permission.service.v1.UpdateRoleRequest\x1a\x1b.permission.service.v1.Role\"E\xbaG)\n" +
+	"UpdateRole\x12(.permission.service.v1.UpdateRoleRequest\x1a\x1b.permission.service.v1.Role\"J\xbaG)\n" +
 	"\n" +
-	"Permission\x12\r角色-修改\x1a\f修改角色\x82\xd3\xe4\x93\x02\x13:\x01*\x1a\x0e/admin/v1/role\x12\xb0\x01\n" +
+	"Permission\x12\r角色-修改\x1a\f修改角色\x82\xd3\xe4\x93\x02\x18:\x01*\x1a\x13/admin/v1/role/{id}\x12\xb0\x01\n" +
 	"\x10UpdateRoleStatus\x12..permission.service.v1.UpdateRoleStatusRequest\x1a\x16.google.protobuf.Empty\"T\xbaG/\n" +
 	"\n" +
 	"Permission\x12\x13角色-修改状态\x1a\f修改状态\x82\xd3\xe4\x93\x02\x1c\x12\x1a/admin/v1/role/{id}/status\x12\x92\x01\n" +
 	"\n" +
 	"DeleteRole\x12(.permission.service.v1.DeleteRoleRequest\x1a\x16.google.protobuf.Empty\"B\xbaG)\n" +
 	"\n" +
-	"Permission\x12\r角色-删除\x1a\f删除角色\x82\xd3\xe4\x93\x02\x10*\x0e/admin/v1/roleB\xd1\x01\n" +
+	"Permission\x12\r角色-删除\x1a\f删除角色\x82\xd3\xe4\x93\x02\x10*\x0e/admin/v1/role\x12\xd1\x01\n" +
+	"\x10BindMenusForRole\x12..permission.service.v1.BindMenusForRoleRequest\x1a\x16.google.protobuf.Empty\"u\xbaGJ\n" +
+	"\n" +
+	"Permission\x12\x13角色-绑定菜单\x1a'为角色绑定菜单（全量替换）\x82\xd3\xe4\x93\x02\":\x01*\x1a\x1d/admin/v1/role/{roleId}/menus\x12\xdb\x01\n" +
+	"\x0fListMenusByRole\x12-.permission.service.v1.ListMenusByRoleRequest\x1a..permission.service.v1.ListMenusByRoleResponse\"i\xbaGA\n" +
+	"\n" +
+	"Permission\x12\x13角色-查询菜单\x1a\x1e查询角色关联的菜单树\x82\xd3\xe4\x93\x02\x1f\x12\x1d/admin/v1/role/{roleId}/menusB\xd1\x01\n" +
 	"\x14com.admin.service.v1B\x10IPermissionProtoP\x01ZEgithub.com/antsurge/weaver-admin/api/gen/go/admin/services/v1;adminpb\xa2\x02\x03ASX\xaa\x02\x10Admin.Service.V1\xca\x02\x10Admin\\Service\\V1\xe2\x02\x1cAdmin\\Service\\V1\\GPBMetadata\xea\x02\x12Admin::Service::V1b\x06proto3"
 
 var file_admin_service_v1_i_permission_proto_goTypes = []any{
@@ -84,11 +90,14 @@ var file_admin_service_v1_i_permission_proto_goTypes = []any{
 	(*v1.UpdateRoleRequest)(nil),       // 8: permission.service.v1.UpdateRoleRequest
 	(*v1.UpdateRoleStatusRequest)(nil), // 9: permission.service.v1.UpdateRoleStatusRequest
 	(*v1.DeleteRoleRequest)(nil),       // 10: permission.service.v1.DeleteRoleRequest
-	(*v1.MenuTreeResponse)(nil),        // 11: permission.service.v1.MenuTreeResponse
-	(*v1.Menu)(nil),                    // 12: permission.service.v1.Menu
-	(*emptypb.Empty)(nil),              // 13: google.protobuf.Empty
-	(*v1.ListRoleResponse)(nil),        // 14: permission.service.v1.ListRoleResponse
-	(*v1.Role)(nil),                    // 15: permission.service.v1.Role
+	(*v1.BindMenusForRoleRequest)(nil), // 11: permission.service.v1.BindMenusForRoleRequest
+	(*v1.ListMenusByRoleRequest)(nil),  // 12: permission.service.v1.ListMenusByRoleRequest
+	(*v1.MenuTreeResponse)(nil),        // 13: permission.service.v1.MenuTreeResponse
+	(*v1.Menu)(nil),                    // 14: permission.service.v1.Menu
+	(*emptypb.Empty)(nil),              // 15: google.protobuf.Empty
+	(*v1.ListRoleResponse)(nil),        // 16: permission.service.v1.ListRoleResponse
+	(*v1.Role)(nil),                    // 17: permission.service.v1.Role
+	(*v1.ListMenusByRoleResponse)(nil), // 18: permission.service.v1.ListMenusByRoleResponse
 }
 var file_admin_service_v1_i_permission_proto_depIdxs = []int32{
 	0,  // 0: admin.service.v1.PermissionService.MenuTree:input_type -> permission.service.v1.MenuTreeRequest
@@ -102,19 +111,23 @@ var file_admin_service_v1_i_permission_proto_depIdxs = []int32{
 	8,  // 8: admin.service.v1.PermissionService.UpdateRole:input_type -> permission.service.v1.UpdateRoleRequest
 	9,  // 9: admin.service.v1.PermissionService.UpdateRoleStatus:input_type -> permission.service.v1.UpdateRoleStatusRequest
 	10, // 10: admin.service.v1.PermissionService.DeleteRole:input_type -> permission.service.v1.DeleteRoleRequest
-	11, // 11: admin.service.v1.PermissionService.MenuTree:output_type -> permission.service.v1.MenuTreeResponse
-	12, // 12: admin.service.v1.PermissionService.CreateMenu:output_type -> permission.service.v1.Menu
-	12, // 13: admin.service.v1.PermissionService.UpdateMenu:output_type -> permission.service.v1.Menu
-	13, // 14: admin.service.v1.PermissionService.UpdateMenuStatus:output_type -> google.protobuf.Empty
-	13, // 15: admin.service.v1.PermissionService.DeleteMenu:output_type -> google.protobuf.Empty
-	14, // 16: admin.service.v1.PermissionService.ListRole:output_type -> permission.service.v1.ListRoleResponse
-	15, // 17: admin.service.v1.PermissionService.GetRole:output_type -> permission.service.v1.Role
-	15, // 18: admin.service.v1.PermissionService.CreateRole:output_type -> permission.service.v1.Role
-	15, // 19: admin.service.v1.PermissionService.UpdateRole:output_type -> permission.service.v1.Role
-	13, // 20: admin.service.v1.PermissionService.UpdateRoleStatus:output_type -> google.protobuf.Empty
-	13, // 21: admin.service.v1.PermissionService.DeleteRole:output_type -> google.protobuf.Empty
-	11, // [11:22] is the sub-list for method output_type
-	0,  // [0:11] is the sub-list for method input_type
+	11, // 11: admin.service.v1.PermissionService.BindMenusForRole:input_type -> permission.service.v1.BindMenusForRoleRequest
+	12, // 12: admin.service.v1.PermissionService.ListMenusByRole:input_type -> permission.service.v1.ListMenusByRoleRequest
+	13, // 13: admin.service.v1.PermissionService.MenuTree:output_type -> permission.service.v1.MenuTreeResponse
+	14, // 14: admin.service.v1.PermissionService.CreateMenu:output_type -> permission.service.v1.Menu
+	14, // 15: admin.service.v1.PermissionService.UpdateMenu:output_type -> permission.service.v1.Menu
+	15, // 16: admin.service.v1.PermissionService.UpdateMenuStatus:output_type -> google.protobuf.Empty
+	15, // 17: admin.service.v1.PermissionService.DeleteMenu:output_type -> google.protobuf.Empty
+	16, // 18: admin.service.v1.PermissionService.ListRole:output_type -> permission.service.v1.ListRoleResponse
+	17, // 19: admin.service.v1.PermissionService.GetRole:output_type -> permission.service.v1.Role
+	17, // 20: admin.service.v1.PermissionService.CreateRole:output_type -> permission.service.v1.Role
+	17, // 21: admin.service.v1.PermissionService.UpdateRole:output_type -> permission.service.v1.Role
+	15, // 22: admin.service.v1.PermissionService.UpdateRoleStatus:output_type -> google.protobuf.Empty
+	15, // 23: admin.service.v1.PermissionService.DeleteRole:output_type -> google.protobuf.Empty
+	15, // 24: admin.service.v1.PermissionService.BindMenusForRole:output_type -> google.protobuf.Empty
+	18, // 25: admin.service.v1.PermissionService.ListMenusByRole:output_type -> permission.service.v1.ListMenusByRoleResponse
+	13, // [13:26] is the sub-list for method output_type
+	0,  // [0:13] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

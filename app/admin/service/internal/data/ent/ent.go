@@ -20,6 +20,7 @@ import (
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/menu"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/position"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/role"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/rolemenu"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/rolepermission"
 )
 
@@ -89,6 +90,7 @@ func checkColumn(t, c string) error {
 			menu.Table:           menu.ValidColumn,
 			position.Table:       position.ValidColumn,
 			role.Table:           role.ValidColumn,
+			rolemenu.Table:       rolemenu.ValidColumn,
 			rolepermission.Table: rolepermission.ValidColumn,
 		})
 	})

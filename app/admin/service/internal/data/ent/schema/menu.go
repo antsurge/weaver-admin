@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
+	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 )
 
@@ -42,5 +43,10 @@ func (Menu) Fields() []ent.Field {
 }
 
 func (Menu) Edges() []ent.Edge {
-	return nil
+	return []ent.Edge{
+		// Menu ← Roles (反向关联)
+		edge.From("roles", Role.Type).
+			Ref("menus").
+			Through("role_menus", RoleMenu.Type),
+	}
 }

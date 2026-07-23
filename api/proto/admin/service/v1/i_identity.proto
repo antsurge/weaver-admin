@@ -46,4 +46,12 @@ service Identity {
       description: "通过id获取后台用户"
     };
   }
+  rpc DeleteAdmin(identity.service.v1.DeleteAdminRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/admin/v1/admin"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Authentication"
+      summary: "后台用户-删除"
+      description: "批量删除后台用户"
+    };
+  }
 }

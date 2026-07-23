@@ -10,6 +10,12 @@ export namespace PermissionRoleApi {
     weight: number;
     status: 'enabled' | 'disabled';
     remark: string;
+    /** 数据权限范围 */
+    dataScope?: string;
+    /** 是否系统内置 */
+    isSystem?: boolean;
+    /** 关联的菜单ID列表 */
+    menuIds?: string[];
     /** 创建时间 */
     createdAt?: string;
     /** 更新时间 */
@@ -73,6 +79,26 @@ async function deleteRoleApi(ids: string[]) {
   });
 }
 
+/**
+ * 为角色绑定菜单（全量替换）
+ * @param roleId 角色ID
+ * @param menuIds 菜单ID列表
+ */
+async function bindMenusForRoleApi(roleId: string, menuIds: string[]) {
+  return requestClient.put(`/admin/v1/role/${roleId}/menus`, {
+    menuIds,
+  }, {
+    showSuccessMessage: false,
+  });
+}
+
+/**
+ * 查询角色的菜单树
+ * @param roleId 角色ID
+ */
+async function getMenusByRoleApi(roleId: string) {
+  return requestClient.get('/admin/v1/role/{roleId}/menus'.replace('{roleId}', roleId));
+}
 
 export {
   getRoleListApi,
@@ -81,4 +107,6 @@ export {
   updateRoleApi,
   updateRoleStatusApi,
   deleteRoleApi,
+  bindMenusForRoleApi,
+  getMenusByRoleApi,
 }

@@ -10,7 +10,11 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/admin"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/adminrole"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/menu"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/role"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/rolemenu"
 )
 
 // RoleCreate is the builder for creating a Role entity.
@@ -148,6 +152,66 @@ func (_c *RoleCreate) SetNillableDeletedAt(v *time.Time) *RoleCreate {
 func (_c *RoleCreate) SetID(v string) *RoleCreate {
 	_c.mutation.SetID(v)
 	return _c
+}
+
+// AddMenuIDs adds the "menus" edge to the Menu entity by IDs.
+func (_c *RoleCreate) AddMenuIDs(ids ...string) *RoleCreate {
+	_c.mutation.AddMenuIDs(ids...)
+	return _c
+}
+
+// AddMenus adds the "menus" edges to the Menu entity.
+func (_c *RoleCreate) AddMenus(v ...*Menu) *RoleCreate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddMenuIDs(ids...)
+}
+
+// AddAdminIDs adds the "admins" edge to the Admin entity by IDs.
+func (_c *RoleCreate) AddAdminIDs(ids ...string) *RoleCreate {
+	_c.mutation.AddAdminIDs(ids...)
+	return _c
+}
+
+// AddAdmins adds the "admins" edges to the Admin entity.
+func (_c *RoleCreate) AddAdmins(v ...*Admin) *RoleCreate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddAdminIDs(ids...)
+}
+
+// AddRoleMenuIDs adds the "role_menus" edge to the RoleMenu entity by IDs.
+func (_c *RoleCreate) AddRoleMenuIDs(ids ...string) *RoleCreate {
+	_c.mutation.AddRoleMenuIDs(ids...)
+	return _c
+}
+
+// AddRoleMenus adds the "role_menus" edges to the RoleMenu entity.
+func (_c *RoleCreate) AddRoleMenus(v ...*RoleMenu) *RoleCreate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddRoleMenuIDs(ids...)
+}
+
+// AddAdminRoleIDs adds the "admin_roles" edge to the AdminRole entity by IDs.
+func (_c *RoleCreate) AddAdminRoleIDs(ids ...string) *RoleCreate {
+	_c.mutation.AddAdminRoleIDs(ids...)
+	return _c
+}
+
+// AddAdminRoles adds the "admin_roles" edges to the AdminRole entity.
+func (_c *RoleCreate) AddAdminRoles(v ...*AdminRole) *RoleCreate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddAdminRoleIDs(ids...)
 }
 
 // Mutation returns the RoleMutation object of the builder.
@@ -321,6 +385,78 @@ func (_c *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.DeletedAt(); ok {
 		_spec.SetField(role.FieldDeletedAt, field.TypeTime, value)
 		_node.DeletedAt = &value
+	}
+	if nodes := _c.mutation.MenusIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   role.MenusTable,
+			Columns: role.MenusPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &RoleMenuCreate{config: _c.config, mutation: newRoleMenuMutation(_c.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.AdminsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   role.AdminsTable,
+			Columns: role.AdminsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(admin.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &AdminRoleCreate{config: _c.config, mutation: newAdminRoleMutation(_c.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.RoleMenusIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.RoleMenusTable,
+			Columns: []string{role.RoleMenusColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(rolemenu.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.AdminRolesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.AdminRolesTable,
+			Columns: []string{role.AdminRolesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(adminrole.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }

@@ -12,6 +12,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -24,6 +25,7 @@ const (
 	Identity_CreateAdmin_FullMethodName = "/admin.service.v1.Identity/CreateAdmin"
 	Identity_UpdateAdmin_FullMethodName = "/admin.service.v1.Identity/UpdateAdmin"
 	Identity_GetAdmin_FullMethodName    = "/admin.service.v1.Identity/GetAdmin"
+	Identity_DeleteAdmin_FullMethodName = "/admin.service.v1.Identity/DeleteAdmin"
 )
 
 // IdentityClient is the client API for Identity service.
@@ -34,6 +36,7 @@ type IdentityClient interface {
 	CreateAdmin(ctx context.Context, in *v1.CreateAdminRequest, opts ...grpc.CallOption) (*v1.Admin, error)
 	UpdateAdmin(ctx context.Context, in *v1.UpdateAdminRequest, opts ...grpc.CallOption) (*v1.Admin, error)
 	GetAdmin(ctx context.Context, in *v1.GetAdminRequest, opts ...grpc.CallOption) (*v1.Admin, error)
+	DeleteAdmin(ctx context.Context, in *v1.DeleteAdminRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type identityClient struct {
@@ -84,6 +87,16 @@ func (c *identityClient) GetAdmin(ctx context.Context, in *v1.GetAdminRequest, o
 	return out, nil
 }
 
+func (c *identityClient) DeleteAdmin(ctx context.Context, in *v1.DeleteAdminRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Identity_DeleteAdmin_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // IdentityServer is the server API for Identity service.
 // All implementations must embed UnimplementedIdentityServer
 // for forward compatibility.
@@ -92,6 +105,7 @@ type IdentityServer interface {
 	CreateAdmin(context.Context, *v1.CreateAdminRequest) (*v1.Admin, error)
 	UpdateAdmin(context.Context, *v1.UpdateAdminRequest) (*v1.Admin, error)
 	GetAdmin(context.Context, *v1.GetAdminRequest) (*v1.Admin, error)
+	DeleteAdmin(context.Context, *v1.DeleteAdminRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedIdentityServer()
 }
 
@@ -113,6 +127,9 @@ func (UnimplementedIdentityServer) UpdateAdmin(context.Context, *v1.UpdateAdminR
 }
 func (UnimplementedIdentityServer) GetAdmin(context.Context, *v1.GetAdminRequest) (*v1.Admin, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAdmin not implemented")
+}
+func (UnimplementedIdentityServer) DeleteAdmin(context.Context, *v1.DeleteAdminRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteAdmin not implemented")
 }
 func (UnimplementedIdentityServer) mustEmbedUnimplementedIdentityServer() {}
 func (UnimplementedIdentityServer) testEmbeddedByValue()                  {}
@@ -207,6 +224,24 @@ func _Identity_GetAdmin_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Identity_DeleteAdmin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.DeleteAdminRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(IdentityServer).DeleteAdmin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Identity_DeleteAdmin_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IdentityServer).DeleteAdmin(ctx, req.(*v1.DeleteAdminRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Identity_ServiceDesc is the grpc.ServiceDesc for Identity service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -229,6 +264,10 @@ var Identity_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAdmin",
 			Handler:    _Identity_GetAdmin_Handler,
+		},
+		{
+			MethodName: "DeleteAdmin",
+			Handler:    _Identity_DeleteAdmin_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
