@@ -5,6 +5,7 @@ package authentication.service.v1;
 import "buf/validate/validate.proto";
 import "gnostic/openapi/v3/annotations.proto";
 import "google/protobuf/empty.proto";
+import "permission/service/v1/menu.proto";
 
 // 用户登录认证服务
 service AuthenticationService {
@@ -22,6 +23,9 @@ service AuthenticationService {
 
   // 获取当前用户
   rpc CurrentUserInfo(google.protobuf.Empty) returns (CurrentUserInfoResponse);
+
+  // 获取当前用户的菜单（根据用户角色返回绑定的菜单树）
+  rpc CurrentUserMenus(google.protobuf.Empty) returns (CurrentUserMenusResponse);
 }
 
 message LoginRequest {
@@ -81,4 +85,10 @@ message RefreshTokenRequest {
 message CurrentUserInfoResponse {
   string id = 1;
   string realName = 2;
+  repeated permission.service.v1.Menu menusTree = 3; // 菜单树
+}
+
+// 当前用户菜单响应（返回用户角色绑定的菜单树）
+message CurrentUserMenusResponse {
+  repeated permission.service.v1.Menu items = 1;  // 菜单树
 }

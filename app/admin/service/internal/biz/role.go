@@ -23,6 +23,8 @@ type Role struct {
 	MenuIDs   []string  `json:"menuIds"`
 }
 
+type AdminRole struct{}
+
 type ListRoleRequest struct {
 	enthelper.PaginationParams
 	Name   string `form:"name" query:"name"`
@@ -60,6 +62,14 @@ type RoleRepo interface {
 
 	// GetMenusByRole 获取角色关联的完整菜单列表（用于返回树形结构）
 	GetMenusByRole(ctx context.Context, roleID string) ([]*Menu, error)
+}
+
+type AdminRoleRepo interface {
+	GetRoleIdsByAdminId(ctx context.Context, id string) ([]string, error)
+}
+
+type RoleMenuRepo interface {
+	GetMenuIdsByRoleIds(ctx context.Context, roleIds []string) ([]string, error)
 }
 
 type RoleUsecase struct {

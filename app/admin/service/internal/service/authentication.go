@@ -5,7 +5,10 @@ import (
 
 	adminV1 "github.com/antsurge/weaver-admin/api/gen/go/admin/service/v1"
 	authenticationV1 "github.com/antsurge/weaver-admin/api/gen/go/authentication/service/v1"
+	permissionV1 "github.com/antsurge/weaver-admin/api/gen/go/permission/service/v1"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/biz"
+	"github.com/antsurge/weaver-admin/pkg/utils/copierx"
+	"github.com/jinzhu/copier"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -49,5 +52,29 @@ func (s *AuthenticationService) Logout(ctx context.Context, req *authenticationV
 
 // 获取验证码
 func (s *AuthenticationService) CurrentUserInfo(ctx context.Context, _ *emptypb.Empty) (*authenticationV1.CurrentUserInfoResponse, error) {
-	return s.authenticationUc.CurrentUserInfo(ctx)
+	data, err := s.authenticationUc.CurrentUserInfo(ctx)
+	if err != nil {
+		return nil, err
+	}
+	output := &authenticationV1.CurrentUserInfoResponse{}
+	err = copierx.Copy(output, data)
+
+	return output, nil
+}
+
+// CurrentUserMenus 获取当前用户的菜单（根据用户角色返回绑定的菜单树）
+func (s *AuthenticationService) CurrentUserMenus(ctx context.Context, _ *emptypb.Empty) (*authenticationV1.CurrentUserMenusResponse, error) {
+	menus, err := s.authenticationUc.CurrentUserMenus(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// 转换为 Proto 消息
+	output := make([]*permissionV1.Menu, 0)
+	err = copier.Copy(&output, &menus)
+	if err != nil {
+		return nil, err
+	}
+
+	return &authenticationV1.CurrentUserMenusResponse{Items: output}, nil
 }

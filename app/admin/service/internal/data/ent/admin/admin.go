@@ -39,15 +39,15 @@ const (
 	// Table holds the table name of the admin in the database.
 	Table = "admin"
 	// RolesTable is the table that holds the roles relation/edge. The primary key declared below.
-	RolesTable = "admin_roles"
+	RolesTable = "admin_role"
 	// RolesInverseTable is the table name for the Role entity.
 	// It exists in this package in order to avoid circular dependency with the "role" package.
 	RolesInverseTable = "role"
 	// AdminRolesTable is the table that holds the admin_roles relation/edge.
-	AdminRolesTable = "admin_roles"
+	AdminRolesTable = "admin_role"
 	// AdminRolesInverseTable is the table name for the AdminRole entity.
 	// It exists in this package in order to avoid circular dependency with the "adminrole" package.
-	AdminRolesInverseTable = "admin_roles"
+	AdminRolesInverseTable = "admin_role"
 	// AdminRolesColumn is the table column denoting the admin_roles relation/edge.
 	AdminRolesColumn = "admin_id"
 )

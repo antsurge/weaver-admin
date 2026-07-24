@@ -20,11 +20,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthenticationService_Login_FullMethodName           = "/authentication.service.v1.AuthenticationService/Login"
-	AuthenticationService_Logout_FullMethodName          = "/authentication.service.v1.AuthenticationService/Logout"
-	AuthenticationService_RefreshToken_FullMethodName    = "/authentication.service.v1.AuthenticationService/RefreshToken"
-	AuthenticationService_GetCaptcha_FullMethodName      = "/authentication.service.v1.AuthenticationService/GetCaptcha"
-	AuthenticationService_CurrentUserInfo_FullMethodName = "/authentication.service.v1.AuthenticationService/CurrentUserInfo"
+	AuthenticationService_Login_FullMethodName            = "/authentication.service.v1.AuthenticationService/Login"
+	AuthenticationService_Logout_FullMethodName           = "/authentication.service.v1.AuthenticationService/Logout"
+	AuthenticationService_RefreshToken_FullMethodName     = "/authentication.service.v1.AuthenticationService/RefreshToken"
+	AuthenticationService_GetCaptcha_FullMethodName       = "/authentication.service.v1.AuthenticationService/GetCaptcha"
+	AuthenticationService_CurrentUserInfo_FullMethodName  = "/authentication.service.v1.AuthenticationService/CurrentUserInfo"
+	AuthenticationService_CurrentUserMenus_FullMethodName = "/authentication.service.v1.AuthenticationService/CurrentUserMenus"
 )
 
 // AuthenticationServiceClient is the client API for AuthenticationService service.
@@ -43,6 +44,8 @@ type AuthenticationServiceClient interface {
 	GetCaptcha(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetCaptchaResponse, error)
 	// 获取当前用户
 	CurrentUserInfo(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*CurrentUserInfoResponse, error)
+	// 获取当前用户的菜单（根据用户角色返回绑定的菜单树）
+	CurrentUserMenus(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*CurrentUserMenusResponse, error)
 }
 
 type authenticationServiceClient struct {
@@ -103,6 +106,16 @@ func (c *authenticationServiceClient) CurrentUserInfo(ctx context.Context, in *e
 	return out, nil
 }
 
+func (c *authenticationServiceClient) CurrentUserMenus(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*CurrentUserMenusResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CurrentUserMenusResponse)
+	err := c.cc.Invoke(ctx, AuthenticationService_CurrentUserMenus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthenticationServiceServer is the server API for AuthenticationService service.
 // All implementations must embed UnimplementedAuthenticationServiceServer
 // for forward compatibility.
@@ -119,6 +132,8 @@ type AuthenticationServiceServer interface {
 	GetCaptcha(context.Context, *emptypb.Empty) (*GetCaptchaResponse, error)
 	// 获取当前用户
 	CurrentUserInfo(context.Context, *emptypb.Empty) (*CurrentUserInfoResponse, error)
+	// 获取当前用户的菜单（根据用户角色返回绑定的菜单树）
+	CurrentUserMenus(context.Context, *emptypb.Empty) (*CurrentUserMenusResponse, error)
 	mustEmbedUnimplementedAuthenticationServiceServer()
 }
 
@@ -143,6 +158,9 @@ func (UnimplementedAuthenticationServiceServer) GetCaptcha(context.Context, *emp
 }
 func (UnimplementedAuthenticationServiceServer) CurrentUserInfo(context.Context, *emptypb.Empty) (*CurrentUserInfoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CurrentUserInfo not implemented")
+}
+func (UnimplementedAuthenticationServiceServer) CurrentUserMenus(context.Context, *emptypb.Empty) (*CurrentUserMenusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CurrentUserMenus not implemented")
 }
 func (UnimplementedAuthenticationServiceServer) mustEmbedUnimplementedAuthenticationServiceServer() {}
 func (UnimplementedAuthenticationServiceServer) testEmbeddedByValue()                               {}
@@ -255,6 +273,24 @@ func _AuthenticationService_CurrentUserInfo_Handler(srv interface{}, ctx context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthenticationService_CurrentUserMenus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthenticationServiceServer).CurrentUserMenus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthenticationService_CurrentUserMenus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthenticationServiceServer).CurrentUserMenus(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthenticationService_ServiceDesc is the grpc.ServiceDesc for AuthenticationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -281,6 +317,10 @@ var AuthenticationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CurrentUserInfo",
 			Handler:    _AuthenticationService_CurrentUserInfo_Handler,
+		},
+		{
+			MethodName: "CurrentUserMenus",
+			Handler:    _AuthenticationService_CurrentUserMenus_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

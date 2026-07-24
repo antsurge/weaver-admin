@@ -28,12 +28,22 @@ type TokenRepo interface {
 	Exists(ctx context.Context, token string) (bool, error)
 }
 
+type CurrentUserInfoResponse struct {
+	Id        string
+	RealName  string
+	MenusTree []*Menu
+}
+
 type AuthenticationUsecase struct {
-	log         *log.Helper
-	adminRepo   AdminRepo
-	captchaRepo CaptchaRepo
-	tokenRepo   TokenRepo
-	jwtConf     *conf.JWT
+	log           *log.Helper
+	adminRepo     AdminRepo
+	captchaRepo   CaptchaRepo
+	tokenRepo     TokenRepo
+	roleRepo      RoleRepo
+	menuRepo      MenuRepo
+	adminRoleRepo AdminRoleRepo
+	roleMenuRepo  RoleMenuRepo
+	jwtConf       *conf.JWT
 }
 
 func NewAuthenticationUsecase(
@@ -41,14 +51,22 @@ func NewAuthenticationUsecase(
 	adminRepo AdminRepo,
 	captchaRepo CaptchaRepo,
 	tokenRepo TokenRepo,
+	roleRepo RoleRepo,
+	menuRepo MenuRepo,
+	adminRoleRepo AdminRoleRepo,
+	roleMenuRepo RoleMenuRepo,
 	jwtConf *conf.JWT,
 ) *AuthenticationUsecase {
 	return &AuthenticationUsecase{
-		log:         log.NewHelper(logger),
-		adminRepo:   adminRepo,
-		captchaRepo: captchaRepo,
-		tokenRepo:   tokenRepo,
-		jwtConf:     jwtConf,
+		log:           log.NewHelper(logger),
+		adminRepo:     adminRepo,
+		captchaRepo:   captchaRepo,
+		tokenRepo:     tokenRepo,
+		roleRepo:      roleRepo,
+		menuRepo:      menuRepo,
+		adminRoleRepo: adminRoleRepo,
+		roleMenuRepo:  roleMenuRepo,
+		jwtConf:       jwtConf,
 	}
 }
 
@@ -76,10 +94,27 @@ func (uc *AuthenticationUsecase) Login(ctx context.Context, req *authenticationV
 	if admin == nil {
 		return nil, authenticationV1.ErrorInvalidCredentials("INVALID_CREDENTIALS")
 	}
-
 	// 校验密码
 	if !crypto.CheckPasswordHash(req.Password, admin.Password) {
 		return nil, authenticationV1.ErrorInvalidCredentials("INVALID_CREDENTIALS")
+	}
+
+	// 获取当前用户的角色
+	roleIds, err := uc.adminRoleRepo.GetRoleIdsByAdminId(ctx, admin.ID)
+	if err != nil {
+		return nil, err
+	}
+	if len(roleIds) == 0 {
+		return nil, authenticationV1.ErrorNoPermission("NO_PERMISSION")
+	}
+
+	// 根据角色id获取已启用的菜单（已启用的）
+	munuIds, err := uc.roleMenuRepo.GetMenuIdsByRoleIds(ctx, roleIds)
+	if err != nil {
+		return nil, err
+	}
+	if len(munuIds) == 0 {
+		return nil, authenticationV1.ErrorNoPermission("NO_PERMISSION")
 	}
 
 	// 生成 Access/Refresh
@@ -152,7 +187,7 @@ func (uc *AuthenticationUsecase) Logout(ctx context.Context, req *authentication
 	return nil
 }
 
-func (uc *AuthenticationUsecase) CurrentUserInfo(ctx context.Context) (*authenticationV1.CurrentUserInfoResponse, error) {
+func (uc *AuthenticationUsecase) CurrentUserInfo(ctx context.Context) (*CurrentUserInfoResponse, error) {
 	// 验证用户名和密码
 	admin, err := uc.adminRepo.FindByID(ctx, metadata.GetAdminID(ctx))
 	if err != nil {
@@ -163,8 +198,108 @@ func (uc *AuthenticationUsecase) CurrentUserInfo(ctx context.Context) (*authenti
 		return nil, authenticationV1.ErrorInvalidToken("INVALID_TOKEN")
 	}
 
-	return &authenticationV1.CurrentUserInfoResponse{
-		Id:       admin.ID,
-		RealName: admin.RealName,
+	// 2. 查询用户关联的角色ID列表
+	roleIDs, err := uc.adminRepo.GetRoleIDsByAdmin(ctx, admin.ID)
+	if err != nil {
+		uc.log.Errorf("获取用户 %s 的角色失败: %v", admin.ID, err)
+		return nil, err
+	}
+
+	// 如果用户没有绑定角色，返回空菜单
+	if len(roleIDs) == 0 {
+		uc.log.Warnf("用户 %s 没有绑定任何角色", admin.ID)
+		return nil, authenticationV1.ErrorNoPermission("NO_PERMISSION")
+	}
+
+	// 3. 查询所有角色关联的菜单ID列表（去重）
+	menuIDSet := make(map[string]bool)
+	for _, roleID := range roleIDs {
+		menuIDs, err := uc.roleRepo.GetMenuIDsByRole(ctx, roleID)
+		if err != nil {
+			uc.log.Warnf("获取角色 %s 的菜单失败: %v", roleID, err)
+			continue
+		}
+		for _, menuID := range menuIDs {
+			menuIDSet[menuID] = true
+		}
+	}
+
+	// 如果没有关联任何菜单，返回空
+	if len(menuIDSet) == 0 {
+		return nil, authenticationV1.ErrorNoPermission("NO_PERMISSION")
+	}
+
+	// 4. 根据菜单ID列表查询完整的菜单数据
+	menuIDs := make([]string, 0, len(menuIDSet))
+	for id := range menuIDSet {
+		menuIDs = append(menuIDs, id)
+	}
+
+	menus, err := uc.menuRepo.GetMenusByIDs(ctx, menuIDs)
+	if err != nil {
+		uc.log.Errorf("查询菜单详情失败: %v", err)
+		return nil, err
+	}
+
+	// 5. 构建树形结构
+	tree := buildMenuTree(menus)
+
+	return &CurrentUserInfoResponse{
+		Id:        admin.ID,
+		RealName:  admin.RealName,
+		MenusTree: tree,
 	}, nil
+}
+
+// CurrentUserMenus 获取当前用户的菜单（根据用户角色返回绑定的菜单树）
+func (uc *AuthenticationUsecase) CurrentUserMenus(ctx context.Context) ([]*Menu, error) {
+	// 1. 获取当前用户ID
+	userID := metadata.GetAdminID(ctx)
+
+	// 2. 查询用户关联的角色ID列表
+	roleIDs, err := uc.adminRepo.GetRoleIDsByAdmin(ctx, userID)
+	if err != nil {
+		uc.log.Errorf("获取用户 %s 的角色失败: %v", userID, err)
+		return nil, err
+	}
+
+	// 如果用户没有绑定角色，返回空菜单
+	if len(roleIDs) == 0 {
+		uc.log.Warnf("用户 %s 没有绑定任何角色", userID)
+		return []*Menu{}, nil
+	}
+
+	// 3. 查询所有角色关联的菜单ID列表（去重）
+	menuIDSet := make(map[string]bool)
+	for _, roleID := range roleIDs {
+		menuIDs, err := uc.roleRepo.GetMenuIDsByRole(ctx, roleID)
+		if err != nil {
+			uc.log.Warnf("获取角色 %s 的菜单失败: %v", roleID, err)
+			continue
+		}
+		for _, menuID := range menuIDs {
+			menuIDSet[menuID] = true
+		}
+	}
+
+	// 如果没有关联任何菜单，返回空
+	if len(menuIDSet) == 0 {
+		return []*Menu{}, nil
+	}
+
+	// 4. 根据菜单ID列表查询完整的菜单数据
+	menuIDs := make([]string, 0, len(menuIDSet))
+	for id := range menuIDSet {
+		menuIDs = append(menuIDs, id)
+	}
+
+	menus, err := uc.menuRepo.GetMenusByIDs(ctx, menuIDs)
+	if err != nil {
+		uc.log.Errorf("查询菜单详情失败: %v", err)
+		return nil, err
+	}
+
+	// 5. 构建树形结构
+	tree := buildMenuTree(menus)
+	return tree, nil
 }

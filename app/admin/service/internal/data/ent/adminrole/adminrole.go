@@ -25,16 +25,16 @@ const (
 	// EdgeRole holds the string denoting the role edge name in mutations.
 	EdgeRole = "role"
 	// Table holds the table name of the adminrole in the database.
-	Table = "admin_roles"
+	Table = "admin_role"
 	// AdminTable is the table that holds the admin relation/edge.
-	AdminTable = "admin_roles"
+	AdminTable = "admin_role"
 	// AdminInverseTable is the table name for the Admin entity.
 	// It exists in this package in order to avoid circular dependency with the "admin" package.
 	AdminInverseTable = "admin"
 	// AdminColumn is the table column denoting the admin relation/edge.
 	AdminColumn = "admin_id"
 	// RoleTable is the table that holds the role relation/edge.
-	RoleTable = "admin_roles"
+	RoleTable = "admin_role"
 	// RoleInverseTable is the table name for the Role entity.
 	// It exists in this package in order to avoid circular dependency with the "role" package.
 	RoleInverseTable = "role"

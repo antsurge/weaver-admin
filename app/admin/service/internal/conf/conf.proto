@@ -43,6 +43,7 @@ message Data {
     string password = 3;
     google.protobuf.Duration read_timeout = 4;
     google.protobuf.Duration write_timeout = 5;
+    string key_prefix = 6;
   }
   Database database = 1;
   Redis redis = 2;

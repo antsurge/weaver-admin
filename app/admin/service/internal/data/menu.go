@@ -164,3 +164,40 @@ func (r *menuRepo) UpdateMenuStatus(ctx context.Context, id, status string) erro
 		Save(ctx)
 	return err
 }
+
+// GetMenusByIDs 根据ID列表查询菜单（用于用户菜单查询）
+func (r *menuRepo) GetMenusByIDs(ctx context.Context, ids []string) ([]*biz.Menu, error) {
+	if len(ids) == 0 {
+		return []*biz.Menu{}, nil
+	}
+
+	list, err := r.data.db.Menu.Query().
+		Where(menu.IDIn(ids...)).
+		Order(ent.Asc(menu.FieldWeight)).
+		All(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	res := make([]*biz.Menu, 0, len(list))
+	for _, v := range list {
+		res = append(res, &biz.Menu{
+			ID:        v.ID,
+			ParentID:  v.ParentID,
+			Name:      v.Name,
+			Code:      v.Code,
+			Remark:    v.Remark,
+			Path:      v.Path,
+			Icon:      v.Icon,
+			Type:      string(v.Type),
+			Url:       v.URL,
+			Component: v.Component,
+			Weight:    v.Weight,
+			Status:    string(v.Status),
+			CreatedAt: v.CreatedAt,
+			UpdatedAt: v.UpdatedAt,
+		})
+	}
+
+	return res, nil
+}

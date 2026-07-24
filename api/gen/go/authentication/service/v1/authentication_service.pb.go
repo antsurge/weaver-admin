@@ -8,6 +8,7 @@ package authenticationpb
 
 import (
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	v1 "github.com/antsurge/weaver-admin/api/gen/go/permission/service/v1"
 	_ "github.com/google/gnostic/openapiv3"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -284,6 +285,7 @@ type CurrentUserInfoResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	RealName      string                 `protobuf:"bytes,2,opt,name=realName,proto3" json:"realName,omitempty"`
+	MenusTree     []*v1.Menu             `protobuf:"bytes,3,rep,name=menusTree,proto3" json:"menusTree,omitempty"` // 菜单树
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -332,11 +334,63 @@ func (x *CurrentUserInfoResponse) GetRealName() string {
 	return ""
 }
 
+func (x *CurrentUserInfoResponse) GetMenusTree() []*v1.Menu {
+	if x != nil {
+		return x.MenusTree
+	}
+	return nil
+}
+
+// 当前用户菜单响应（返回用户角色绑定的菜单树）
+type CurrentUserMenusResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Items         []*v1.Menu             `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"` // 菜单树
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CurrentUserMenusResponse) Reset() {
+	*x = CurrentUserMenusResponse{}
+	mi := &file_authentication_service_v1_authentication_service_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CurrentUserMenusResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CurrentUserMenusResponse) ProtoMessage() {}
+
+func (x *CurrentUserMenusResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_authentication_service_v1_authentication_service_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CurrentUserMenusResponse.ProtoReflect.Descriptor instead.
+func (*CurrentUserMenusResponse) Descriptor() ([]byte, []int) {
+	return file_authentication_service_v1_authentication_service_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *CurrentUserMenusResponse) GetItems() []*v1.Menu {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
 var File_authentication_service_v1_authentication_service_proto protoreflect.FileDescriptor
 
 const file_authentication_service_v1_authentication_service_proto_rawDesc = "" +
 	"\n" +
-	"6authentication/service/v1/authentication_service.proto\x12\x19authentication.service.v1\x1a\x1bbuf/validate/validate.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\"\x9e\x04\n" +
+	"6authentication/service/v1/authentication_service.proto\x12\x19authentication.service.v1\x1a\x1bbuf/validate/validate.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a permission/service/v1/menu.proto\"\x9e\x04\n" +
 	"\fLoginRequest\x12\x82\x01\n" +
 	"\busername\x18\x01 \x01(\tBf\xbaG\f\x92\x02\t用户名\xbaHT\xba\x01Q\n" +
 	"\x1eLOGINREQUEST_USERNAME_REQUIRED\x12\x1eLOGINREQUEST_USERNAME_REQUIRED\x1a\x0fthis.size() > 0R\busername\x12\x7f\n" +
@@ -358,17 +412,21 @@ const file_authentication_service_v1_authentication_service_proto_rawDesc = "" +
 	"\vimageBase64\x18\x02 \x01(\tR\vimageBase64\"[\n" +
 	"\x13RefreshTokenRequest\x12\"\n" +
 	"\frefreshToken\x18\x01 \x01(\tR\frefreshToken\x12 \n" +
-	"\vaccessToken\x18\x02 \x01(\tR\vaccessToken\"E\n" +
+	"\vaccessToken\x18\x02 \x01(\tR\vaccessToken\"\x80\x01\n" +
 	"\x17CurrentUserInfoResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
-	"\brealName\x18\x02 \x01(\tR\brealName2\xe7\x03\n" +
+	"\brealName\x18\x02 \x01(\tR\brealName\x129\n" +
+	"\tmenusTree\x18\x03 \x03(\v2\x1b.permission.service.v1.MenuR\tmenusTree\"M\n" +
+	"\x18CurrentUserMenusResponse\x121\n" +
+	"\x05items\x18\x01 \x03(\v2\x1b.permission.service.v1.MenuR\x05items2\xc8\x04\n" +
 	"\x15AuthenticationService\x12\\\n" +
 	"\x05Login\x12'.authentication.service.v1.LoginRequest\x1a(.authentication.service.v1.LoginResponse\"\x00\x12P\n" +
 	"\x06Logout\x12..authentication.service.v1.RefreshTokenRequest\x1a\x16.google.protobuf.Empty\x12j\n" +
 	"\fRefreshToken\x12..authentication.service.v1.RefreshTokenRequest\x1a(.authentication.service.v1.LoginResponse\"\x00\x12S\n" +
 	"\n" +
 	"GetCaptcha\x12\x16.google.protobuf.Empty\x1a-.authentication.service.v1.GetCaptchaResponse\x12]\n" +
-	"\x0fCurrentUserInfo\x12\x16.google.protobuf.Empty\x1a2.authentication.service.v1.CurrentUserInfoResponseB\x99\x02\n" +
+	"\x0fCurrentUserInfo\x12\x16.google.protobuf.Empty\x1a2.authentication.service.v1.CurrentUserInfoResponse\x12_\n" +
+	"\x10CurrentUserMenus\x12\x16.google.protobuf.Empty\x1a3.authentication.service.v1.CurrentUserMenusResponseB\x99\x02\n" +
 	"\x1dcom.authentication.service.v1B\x1aAuthenticationServiceProtoP\x01ZVgithub.com/antsurge/weaver-admin/api/gen/go/authentication/service/v1;authenticationpb\xa2\x02\x03ASX\xaa\x02\x19Authentication.Service.V1\xca\x02\x19Authentication\\Service\\V1\xe2\x02%Authentication\\Service\\V1\\GPBMetadata\xea\x02\x1bAuthentication::Service::V1b\x06proto3"
 
 var (
@@ -383,31 +441,37 @@ func file_authentication_service_v1_authentication_service_proto_rawDescGZIP() [
 	return file_authentication_service_v1_authentication_service_proto_rawDescData
 }
 
-var file_authentication_service_v1_authentication_service_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_authentication_service_v1_authentication_service_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_authentication_service_v1_authentication_service_proto_goTypes = []any{
-	(*LoginRequest)(nil),            // 0: authentication.service.v1.LoginRequest
-	(*LoginResponse)(nil),           // 1: authentication.service.v1.LoginResponse
-	(*GetCaptchaResponse)(nil),      // 2: authentication.service.v1.GetCaptchaResponse
-	(*RefreshTokenRequest)(nil),     // 3: authentication.service.v1.RefreshTokenRequest
-	(*CurrentUserInfoResponse)(nil), // 4: authentication.service.v1.CurrentUserInfoResponse
-	(*emptypb.Empty)(nil),           // 5: google.protobuf.Empty
+	(*LoginRequest)(nil),             // 0: authentication.service.v1.LoginRequest
+	(*LoginResponse)(nil),            // 1: authentication.service.v1.LoginResponse
+	(*GetCaptchaResponse)(nil),       // 2: authentication.service.v1.GetCaptchaResponse
+	(*RefreshTokenRequest)(nil),      // 3: authentication.service.v1.RefreshTokenRequest
+	(*CurrentUserInfoResponse)(nil),  // 4: authentication.service.v1.CurrentUserInfoResponse
+	(*CurrentUserMenusResponse)(nil), // 5: authentication.service.v1.CurrentUserMenusResponse
+	(*v1.Menu)(nil),                  // 6: permission.service.v1.Menu
+	(*emptypb.Empty)(nil),            // 7: google.protobuf.Empty
 }
 var file_authentication_service_v1_authentication_service_proto_depIdxs = []int32{
-	0, // 0: authentication.service.v1.AuthenticationService.Login:input_type -> authentication.service.v1.LoginRequest
-	3, // 1: authentication.service.v1.AuthenticationService.Logout:input_type -> authentication.service.v1.RefreshTokenRequest
-	3, // 2: authentication.service.v1.AuthenticationService.RefreshToken:input_type -> authentication.service.v1.RefreshTokenRequest
-	5, // 3: authentication.service.v1.AuthenticationService.GetCaptcha:input_type -> google.protobuf.Empty
-	5, // 4: authentication.service.v1.AuthenticationService.CurrentUserInfo:input_type -> google.protobuf.Empty
-	1, // 5: authentication.service.v1.AuthenticationService.Login:output_type -> authentication.service.v1.LoginResponse
-	5, // 6: authentication.service.v1.AuthenticationService.Logout:output_type -> google.protobuf.Empty
-	1, // 7: authentication.service.v1.AuthenticationService.RefreshToken:output_type -> authentication.service.v1.LoginResponse
-	2, // 8: authentication.service.v1.AuthenticationService.GetCaptcha:output_type -> authentication.service.v1.GetCaptchaResponse
-	4, // 9: authentication.service.v1.AuthenticationService.CurrentUserInfo:output_type -> authentication.service.v1.CurrentUserInfoResponse
-	5, // [5:10] is the sub-list for method output_type
-	0, // [0:5] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	6, // 0: authentication.service.v1.CurrentUserInfoResponse.menusTree:type_name -> permission.service.v1.Menu
+	6, // 1: authentication.service.v1.CurrentUserMenusResponse.items:type_name -> permission.service.v1.Menu
+	0, // 2: authentication.service.v1.AuthenticationService.Login:input_type -> authentication.service.v1.LoginRequest
+	3, // 3: authentication.service.v1.AuthenticationService.Logout:input_type -> authentication.service.v1.RefreshTokenRequest
+	3, // 4: authentication.service.v1.AuthenticationService.RefreshToken:input_type -> authentication.service.v1.RefreshTokenRequest
+	7, // 5: authentication.service.v1.AuthenticationService.GetCaptcha:input_type -> google.protobuf.Empty
+	7, // 6: authentication.service.v1.AuthenticationService.CurrentUserInfo:input_type -> google.protobuf.Empty
+	7, // 7: authentication.service.v1.AuthenticationService.CurrentUserMenus:input_type -> google.protobuf.Empty
+	1, // 8: authentication.service.v1.AuthenticationService.Login:output_type -> authentication.service.v1.LoginResponse
+	7, // 9: authentication.service.v1.AuthenticationService.Logout:output_type -> google.protobuf.Empty
+	1, // 10: authentication.service.v1.AuthenticationService.RefreshToken:output_type -> authentication.service.v1.LoginResponse
+	2, // 11: authentication.service.v1.AuthenticationService.GetCaptcha:output_type -> authentication.service.v1.GetCaptchaResponse
+	4, // 12: authentication.service.v1.AuthenticationService.CurrentUserInfo:output_type -> authentication.service.v1.CurrentUserInfoResponse
+	5, // 13: authentication.service.v1.AuthenticationService.CurrentUserMenus:output_type -> authentication.service.v1.CurrentUserMenusResponse
+	8, // [8:14] is the sub-list for method output_type
+	2, // [2:8] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_authentication_service_v1_authentication_service_proto_init() }
@@ -421,7 +485,7 @@ func file_authentication_service_v1_authentication_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_authentication_service_v1_authentication_service_proto_rawDesc), len(file_authentication_service_v1_authentication_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

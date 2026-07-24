@@ -16,7 +16,7 @@ type AdminRole struct {
 
 func (AdminRole) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entsql.Annotation{Table: "admin_roles"},
+		entsql.Annotation{Table: "admin_role"},
 		entsql.WithComments(true),
 		schema.Comment("用户角色关联表"),
 	}

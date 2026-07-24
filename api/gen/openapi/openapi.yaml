@@ -159,6 +159,27 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /admin/v1/current-user/menus:
+        get:
+            tags:
+                - AuthenticationService
+                - Authentication
+            summary: 获取当前用户菜单
+            description: 根据用户角色返回绑定的菜单树
+            operationId: AuthenticationService_CurrentUserMenus
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CurrentUserMenusResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /admin/v1/department:
         post:
             tags:
@@ -1673,6 +1694,18 @@ components:
                     type: string
                 realName:
                     type: string
+                menusTree:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Menu'
+        CurrentUserMenusResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Menu'
+            description: 当前用户菜单响应（返回用户角色绑定的菜单树）
         Department:
             type: object
             properties:

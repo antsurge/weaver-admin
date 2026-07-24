@@ -3,21 +3,25 @@ package data
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/biz"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/conf"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/redis/go-redis/v9"
-	"time"
 )
 
 type tokenRepo struct {
 	data *Data
 	log  *log.Helper
+	conf *conf.Data
 }
 
-func NewTokenRepo(data *Data, logger log.Logger) biz.TokenRepo {
+func NewTokenRepo(data *Data, logger log.Logger, c *conf.Data) biz.TokenRepo {
 	return &tokenRepo{
 		data: data,
 		log:  log.NewHelper(logger),
+		conf: c,
 	}
 }
 
@@ -63,5 +67,5 @@ func (r *tokenRepo) Exists(ctx context.Context, token string) (bool, error) {
 }
 
 func (r *tokenRepo) key(token string) string {
-	return fmt.Sprintf("token:%s", token)
+	return fmt.Sprintf("%stoken:%s", r.conf.Redis.KeyPrefix, token)
 }

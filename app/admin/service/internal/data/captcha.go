@@ -3,21 +3,25 @@ package data
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/biz"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/conf"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/redis/go-redis/v9"
-	"time"
 )
 
 type captchaRepo struct {
 	data *Data
 	log  *log.Helper
+	conf *conf.Data
 }
 
-func NewCaptchaRepo(data *Data, logger log.Logger) biz.CaptchaRepo {
+func NewCaptchaRepo(data *Data, logger log.Logger, conf *conf.Data) biz.CaptchaRepo {
 	return &captchaRepo{
 		data: data,
 		log:  log.NewHelper(logger),
+		conf: conf,
 	}
 }
 
@@ -55,5 +59,5 @@ func (r *captchaRepo) Delete(ctx context.Context, id string) error {
 
 // key 生成 Redis Key
 func (r *captchaRepo) key(id string) string {
-	return fmt.Sprintf("captcha:%s", id)
+	return fmt.Sprintf("%scaptcha:%s", r.conf.Redis.KeyPrefix, id)
 }

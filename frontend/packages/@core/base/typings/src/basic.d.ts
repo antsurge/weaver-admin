@@ -1,3 +1,5 @@
+import { PermissionMenuApi } from '@/api/permission/menu';
+
 interface BasicOption {
   label: string;
   value: string;
@@ -28,6 +30,10 @@ interface BasicUserInfo {
    * 用户名
    */
   username: string;
+  /**
+   * 菜单树
+   */
+   menuTree: PermissionMenuApi.PermissionMenu[];
 }
 
 type ClassType = Array<object | string> | object | string;

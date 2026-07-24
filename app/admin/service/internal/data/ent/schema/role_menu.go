@@ -17,7 +17,7 @@ type RoleMenu struct {
 // Annotations 指定表名
 func (RoleMenu) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entsql.Annotation{Table: "role_menus"},
+		entsql.Annotation{Table: "role_menu"},
 		entsql.WithComments(true),
 		schema.Comment("角色菜单关联表"),
 	}

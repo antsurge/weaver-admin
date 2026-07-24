@@ -28,6 +28,8 @@ var ProviderSet = wire.NewSet(
 
 	NewMenuRepo,
 	NewRoleRepo,
+	NewAdminRoleRepo,
+	NewRoleMenuRepo,
 
 	NewDepartmentRepo,
 	NewPositionRepo,
@@ -47,14 +49,16 @@ func NewEntClient(c *conf.Data, logger log.Logger) *ent.Client {
 		l.Fatalf("failed opening connection to database: %v", err)
 	}
 
+	// 开发环境开启 SQL 日志
+	client = client.Debug()
+
 	// 开发环境下开启自动迁移 (Auto Migration)
 	// 生产环境建议通过 deploy/sql 下的脚本手动管理
 	if err := client.Schema.Create(
 		context.Background(),
-		//schema.WithAtlas(true),       // 使用 Atlas 引擎（功能更强）
-		schema.WithForeignKeys(true), // 生成外键
-		schema.WithDropColumn(true),  // 允许删除字段 (慎用!)
-		schema.WithDropIndex(true),   // 允许删除索引
+		schema.WithForeignKeys(true),
+		schema.WithDropColumn(true),
+		schema.WithDropIndex(true),
 	); err != nil {
 		l.Fatalf("failed creating schema resources: %v", err)
 	}

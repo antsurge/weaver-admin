@@ -46,27 +46,27 @@ const (
 	// Table holds the table name of the role in the database.
 	Table = "role"
 	// MenusTable is the table that holds the menus relation/edge. The primary key declared below.
-	MenusTable = "role_menus"
+	MenusTable = "role_menu"
 	// MenusInverseTable is the table name for the Menu entity.
 	// It exists in this package in order to avoid circular dependency with the "menu" package.
 	MenusInverseTable = "menu"
 	// AdminsTable is the table that holds the admins relation/edge. The primary key declared below.
-	AdminsTable = "admin_roles"
+	AdminsTable = "admin_role"
 	// AdminsInverseTable is the table name for the Admin entity.
 	// It exists in this package in order to avoid circular dependency with the "admin" package.
 	AdminsInverseTable = "admin"
 	// RoleMenusTable is the table that holds the role_menus relation/edge.
-	RoleMenusTable = "role_menus"
+	RoleMenusTable = "role_menu"
 	// RoleMenusInverseTable is the table name for the RoleMenu entity.
 	// It exists in this package in order to avoid circular dependency with the "rolemenu" package.
-	RoleMenusInverseTable = "role_menus"
+	RoleMenusInverseTable = "role_menu"
 	// RoleMenusColumn is the table column denoting the role_menus relation/edge.
 	RoleMenusColumn = "role_id"
 	// AdminRolesTable is the table that holds the admin_roles relation/edge.
-	AdminRolesTable = "admin_roles"
+	AdminRolesTable = "admin_role"
 	// AdminRolesInverseTable is the table name for the AdminRole entity.
 	// It exists in this package in order to avoid circular dependency with the "adminrole" package.
-	AdminRolesInverseTable = "admin_roles"
+	AdminRolesInverseTable = "admin_role"
 	// AdminRolesColumn is the table column denoting the admin_roles relation/edge.
 	AdminRolesColumn = "role_id"
 )

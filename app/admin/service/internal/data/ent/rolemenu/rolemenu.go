@@ -25,16 +25,16 @@ const (
 	// EdgeMenu holds the string denoting the menu edge name in mutations.
 	EdgeMenu = "menu"
 	// Table holds the table name of the rolemenu in the database.
-	Table = "role_menus"
+	Table = "role_menu"
 	// RoleTable is the table that holds the role relation/edge.
-	RoleTable = "role_menus"
+	RoleTable = "role_menu"
 	// RoleInverseTable is the table name for the Role entity.
 	// It exists in this package in order to avoid circular dependency with the "role" package.
 	RoleInverseTable = "role"
 	// RoleColumn is the table column denoting the role relation/edge.
 	RoleColumn = "role_id"
 	// MenuTable is the table that holds the menu relation/edge.
-	MenuTable = "role_menus"
+	MenuTable = "role_menu"
 	// MenuInverseTable is the table name for the Menu entity.
 	// It exists in this package in order to avoid circular dependency with the "menu" package.
 	MenuInverseTable = "menu"

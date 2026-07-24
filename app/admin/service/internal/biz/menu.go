@@ -33,6 +33,8 @@ type MenuRepo interface {
 	UpdateMenuStatus(ctx context.Context, id, status string) error
 	DeleteMenu(ctx context.Context, ids []string) error
 	ListMenu(ctx context.Context, req *ListMenuRequest) ([]*Menu, error)
+	// GetMenusByIDs 根据ID列表查询菜单（用于用户菜单查询）
+	GetMenusByIDs(ctx context.Context, ids []string) ([]*Menu, error)
 }
 
 type ListMenuRequest struct {

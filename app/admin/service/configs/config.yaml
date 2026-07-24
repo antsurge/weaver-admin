@@ -14,6 +14,7 @@ data:
   redis:
     addr: 127.0.0.1:6379
     password: ""
+    key_prefix: "weaver_admin:"
     read_timeout: 3s
     write_timeout: 3s
 jwt:

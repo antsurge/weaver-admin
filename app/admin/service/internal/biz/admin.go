@@ -111,21 +111,15 @@ func (uc *AdminUseCase) UpdateAdmin(ctx context.Context, admin *Admin) (*Admin, 
 }
 
 // GetAdminWithRoles 获取用户详情（包含角色ID列表）
-func (uc *AdminUseCase) GetAdminWithRoles(ctx context.Context, id string) (*Admin, error) {
-	admin, err := uc.repo.FindByID(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-
+func (uc *AdminUseCase) GetAdminWithRoles(ctx context.Context, id string) (*[]Role, error) {
 	// 填充角色ID列表
-	roleIDs, err := uc.repo.GetRoleIDsByAdmin(ctx, id)
-	if err != nil {
-		uc.log.Warnf("获取用户角色失败: %v", err)
-		roleIDs = []string{}
-	}
-	admin.RoleIDs = roleIDs
+	//roleIDs, err := uc.repo.GetRoleIDsByAdmin(ctx, id)
+	//if err != nil {
+	//	uc.log.Warnf("获取用户角色失败: %v", err)
+	//	roleIDs = []string{}
+	//}
 
-	return admin, nil
+	return nil, nil
 }
 
 // DeleteAdmin 删除用户（软删除）

@@ -67,6 +67,20 @@ func ErrorCaptchaInvalid(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, AuthenticationErrorReason_CAPTCHA_INVALID.String(), fmt.Sprintf(format, args...))
 }
 
+// 用户名或密码错误
+func IsInvalidCredentials(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == AuthenticationErrorReason_INVALID_CREDENTIALS.String() && e.Code == 400
+}
+
+// 用户名或密码错误
+func ErrorInvalidCredentials(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, AuthenticationErrorReason_INVALID_CREDENTIALS.String(), fmt.Sprintf(format, args...))
+}
+
 // 演示环境
 func IsDemoReadonly(err error) bool {
 	if err == nil {
@@ -81,20 +95,19 @@ func ErrorDemoReadonly(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, AuthenticationErrorReason_DEMO_READONLY.String(), fmt.Sprintf(format, args...))
 }
 
-// 401
-func IsInvalidCredentials(err error) bool {
+func IsNoPermission(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == AuthenticationErrorReason_INVALID_CREDENTIALS.String() && e.Code == 400
+	return e.Reason == AuthenticationErrorReason_NO_PERMISSION.String() && e.Code == 400
+}
+
+func ErrorNoPermission(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, AuthenticationErrorReason_NO_PERMISSION.String(), fmt.Sprintf(format, args...))
 }
 
 // 401
-func ErrorInvalidCredentials(format string, args ...interface{}) *errors.Error {
-	return errors.New(400, AuthenticationErrorReason_INVALID_CREDENTIALS.String(), fmt.Sprintf(format, args...))
-}
-
 func IsInvalidToken(err error) bool {
 	if err == nil {
 		return false
@@ -103,6 +116,7 @@ func IsInvalidToken(err error) bool {
 	return e.Reason == AuthenticationErrorReason_INVALID_TOKEN.String() && e.Code == 401
 }
 
+// 401
 func ErrorInvalidToken(format string, args ...interface{}) *errors.Error {
 	return errors.New(401, AuthenticationErrorReason_INVALID_TOKEN.String(), fmt.Sprintf(format, args...))
 }

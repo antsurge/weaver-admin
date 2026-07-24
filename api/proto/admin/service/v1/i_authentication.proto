@@ -63,4 +63,13 @@ service AuthenticationService {
       description: "当前登录用户信息"
     };
   }
+  // 当前用户的菜单（根据用户角色返回绑定的菜单树）
+  rpc CurrentUserMenus(google.protobuf.Empty) returns (authentication.service.v1.CurrentUserMenusResponse) {
+    option (google.api.http) = {get: "/admin/v1/current-user/menus"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Authentication"
+      summary: "获取当前用户菜单"
+      description: "根据用户角色返回绑定的菜单树"
+    };
+  }
 }

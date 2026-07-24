@@ -28,7 +28,7 @@ var File_admin_service_v1_i_authentication_proto protoreflect.FileDescriptor
 
 const file_admin_service_v1_i_authentication_proto_rawDesc = "" +
 	"\n" +
-	"'admin/service/v1/i_authentication.proto\x12\x10admin.service.v1\x1a6authentication/service/v1/authentication_service.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto2\x97\a\n" +
+	"'admin/service/v1/i_authentication.proto\x12\x10admin.service.v1\x1a6authentication/service/v1/authentication_service.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto2\xf8\b\n" +
 	"\x15AuthenticationService\x12\xa6\x01\n" +
 	"\n" +
 	"GetCaptcha\x12\x16.google.protobuf.Empty\x1a-.authentication.service.v1.GetCaptchaResponse\"Q\xbaG2\n" +
@@ -40,16 +40,19 @@ const file_admin_service_v1_i_authentication_proto_rawDesc = "" +
 	"\fRefreshToken\x12..authentication.service.v1.RefreshTokenRequest\x1a(.authentication.service.v1.LoginResponse\"]\xbaG8\n" +
 	"\x0eAuthentication\x12\x12刷新认证令牌\x1a\x12刷新认证令牌\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/admin/v1/refresh-token\x12\xc3\x01\n" +
 	"\x0fCurrentUserInfo\x12\x16.google.protobuf.Empty\x1a2.authentication.service.v1.CurrentUserInfoResponse\"d\xbaGD\n" +
-	"\x0eAuthentication\x12\x18当前登录用户信息\x1a\x18当前登录用户信息\x82\xd3\xe4\x93\x02\x17\x12\x15admin/v1/current-userB\xd5\x01\n" +
+	"\x0eAuthentication\x12\x18当前登录用户信息\x1a\x18当前登录用户信息\x82\xd3\xe4\x93\x02\x17\x12\x15admin/v1/current-user\x12\xde\x01\n" +
+	"\x10CurrentUserMenus\x12\x16.google.protobuf.Empty\x1a3.authentication.service.v1.CurrentUserMenusResponse\"}\xbaGV\n" +
+	"\x0eAuthentication\x12\x18获取当前用户菜单\x1a*根据用户角色返回绑定的菜单树\x82\xd3\xe4\x93\x02\x1e\x12\x1c/admin/v1/current-user/menusB\xd5\x01\n" +
 	"\x14com.admin.service.v1B\x14IAuthenticationProtoP\x01ZEgithub.com/antsurge/weaver-admin/api/gen/go/admin/services/v1;adminpb\xa2\x02\x03ASX\xaa\x02\x10Admin.Service.V1\xca\x02\x10Admin\\Service\\V1\xe2\x02\x1cAdmin\\Service\\V1\\GPBMetadata\xea\x02\x12Admin::Service::V1b\x06proto3"
 
 var file_admin_service_v1_i_authentication_proto_goTypes = []any{
-	(*emptypb.Empty)(nil),              // 0: google.protobuf.Empty
-	(*v1.LoginRequest)(nil),            // 1: authentication.service.v1.LoginRequest
-	(*v1.RefreshTokenRequest)(nil),     // 2: authentication.service.v1.RefreshTokenRequest
-	(*v1.GetCaptchaResponse)(nil),      // 3: authentication.service.v1.GetCaptchaResponse
-	(*v1.LoginResponse)(nil),           // 4: authentication.service.v1.LoginResponse
-	(*v1.CurrentUserInfoResponse)(nil), // 5: authentication.service.v1.CurrentUserInfoResponse
+	(*emptypb.Empty)(nil),               // 0: google.protobuf.Empty
+	(*v1.LoginRequest)(nil),             // 1: authentication.service.v1.LoginRequest
+	(*v1.RefreshTokenRequest)(nil),      // 2: authentication.service.v1.RefreshTokenRequest
+	(*v1.GetCaptchaResponse)(nil),       // 3: authentication.service.v1.GetCaptchaResponse
+	(*v1.LoginResponse)(nil),            // 4: authentication.service.v1.LoginResponse
+	(*v1.CurrentUserInfoResponse)(nil),  // 5: authentication.service.v1.CurrentUserInfoResponse
+	(*v1.CurrentUserMenusResponse)(nil), // 6: authentication.service.v1.CurrentUserMenusResponse
 }
 var file_admin_service_v1_i_authentication_proto_depIdxs = []int32{
 	0, // 0: admin.service.v1.AuthenticationService.GetCaptcha:input_type -> google.protobuf.Empty
@@ -57,13 +60,15 @@ var file_admin_service_v1_i_authentication_proto_depIdxs = []int32{
 	2, // 2: admin.service.v1.AuthenticationService.Logout:input_type -> authentication.service.v1.RefreshTokenRequest
 	2, // 3: admin.service.v1.AuthenticationService.RefreshToken:input_type -> authentication.service.v1.RefreshTokenRequest
 	0, // 4: admin.service.v1.AuthenticationService.CurrentUserInfo:input_type -> google.protobuf.Empty
-	3, // 5: admin.service.v1.AuthenticationService.GetCaptcha:output_type -> authentication.service.v1.GetCaptchaResponse
-	4, // 6: admin.service.v1.AuthenticationService.Login:output_type -> authentication.service.v1.LoginResponse
-	0, // 7: admin.service.v1.AuthenticationService.Logout:output_type -> google.protobuf.Empty
-	4, // 8: admin.service.v1.AuthenticationService.RefreshToken:output_type -> authentication.service.v1.LoginResponse
-	5, // 9: admin.service.v1.AuthenticationService.CurrentUserInfo:output_type -> authentication.service.v1.CurrentUserInfoResponse
-	5, // [5:10] is the sub-list for method output_type
-	0, // [0:5] is the sub-list for method input_type
+	0, // 5: admin.service.v1.AuthenticationService.CurrentUserMenus:input_type -> google.protobuf.Empty
+	3, // 6: admin.service.v1.AuthenticationService.GetCaptcha:output_type -> authentication.service.v1.GetCaptchaResponse
+	4, // 7: admin.service.v1.AuthenticationService.Login:output_type -> authentication.service.v1.LoginResponse
+	0, // 8: admin.service.v1.AuthenticationService.Logout:output_type -> google.protobuf.Empty
+	4, // 9: admin.service.v1.AuthenticationService.RefreshToken:output_type -> authentication.service.v1.LoginResponse
+	5, // 10: admin.service.v1.AuthenticationService.CurrentUserInfo:output_type -> authentication.service.v1.CurrentUserInfoResponse
+	6, // 11: admin.service.v1.AuthenticationService.CurrentUserMenus:output_type -> authentication.service.v1.CurrentUserMenusResponse
+	6, // [6:12] is the sub-list for method output_type
+	0, // [0:6] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

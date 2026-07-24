@@ -28,5 +28,8 @@ other = "错误请求"
 [INVALID_TOKEN]
 other = "授权失败"
 
+[NO_PERMISSION]
+other = "无权限访问"
+
 [DEMO_READONLY]
 other = "演示环境禁止修改数据"

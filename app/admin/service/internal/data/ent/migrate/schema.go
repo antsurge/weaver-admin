@@ -29,29 +29,29 @@ var (
 		Columns:    AdminColumns,
 		PrimaryKey: []*schema.Column{AdminColumns[0]},
 	}
-	// AdminRolesColumns holds the columns for the "admin_roles" table.
-	AdminRolesColumns = []*schema.Column{
+	// AdminRoleColumns holds the columns for the "admin_role" table.
+	AdminRoleColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true, Comment: "主键ID"},
 		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间"},
 		{Name: "admin_id", Type: field.TypeString, Comment: "用户ID"},
 		{Name: "role_id", Type: field.TypeString, Comment: "角色ID"},
 	}
-	// AdminRolesTable holds the schema information for the "admin_roles" table.
-	AdminRolesTable = &schema.Table{
-		Name:       "admin_roles",
+	// AdminRoleTable holds the schema information for the "admin_role" table.
+	AdminRoleTable = &schema.Table{
+		Name:       "admin_role",
 		Comment:    "用户角色关联表",
-		Columns:    AdminRolesColumns,
-		PrimaryKey: []*schema.Column{AdminRolesColumns[0]},
+		Columns:    AdminRoleColumns,
+		PrimaryKey: []*schema.Column{AdminRoleColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "admin_roles_admin_admin",
-				Columns:    []*schema.Column{AdminRolesColumns[2]},
+				Symbol:     "admin_role_admin_admin",
+				Columns:    []*schema.Column{AdminRoleColumns[2]},
 				RefColumns: []*schema.Column{AdminColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 			{
-				Symbol:     "admin_roles_role_role",
-				Columns:    []*schema.Column{AdminRolesColumns[3]},
+				Symbol:     "admin_role_role_role",
+				Columns:    []*schema.Column{AdminRoleColumns[3]},
 				RefColumns: []*schema.Column{RoleColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
@@ -60,7 +60,7 @@ var (
 			{
 				Name:    "adminrole_admin_id_role_id",
 				Unique:  true,
-				Columns: []*schema.Column{AdminRolesColumns[2], AdminRolesColumns[3]},
+				Columns: []*schema.Column{AdminRoleColumns[2], AdminRoleColumns[3]},
 			},
 		},
 	}
@@ -213,29 +213,29 @@ var (
 		Columns:    RoleColumns,
 		PrimaryKey: []*schema.Column{RoleColumns[0]},
 	}
-	// RoleMenusColumns holds the columns for the "role_menus" table.
-	RoleMenusColumns = []*schema.Column{
+	// RoleMenuColumns holds the columns for the "role_menu" table.
+	RoleMenuColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true, Comment: "主键ID"},
 		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间"},
 		{Name: "role_id", Type: field.TypeString, Comment: "角色ID"},
 		{Name: "menu_id", Type: field.TypeString, Size: 36, Comment: "菜单ID"},
 	}
-	// RoleMenusTable holds the schema information for the "role_menus" table.
-	RoleMenusTable = &schema.Table{
-		Name:       "role_menus",
+	// RoleMenuTable holds the schema information for the "role_menu" table.
+	RoleMenuTable = &schema.Table{
+		Name:       "role_menu",
 		Comment:    "角色菜单关联表",
-		Columns:    RoleMenusColumns,
-		PrimaryKey: []*schema.Column{RoleMenusColumns[0]},
+		Columns:    RoleMenuColumns,
+		PrimaryKey: []*schema.Column{RoleMenuColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "role_menus_role_role",
-				Columns:    []*schema.Column{RoleMenusColumns[2]},
+				Symbol:     "role_menu_role_role",
+				Columns:    []*schema.Column{RoleMenuColumns[2]},
 				RefColumns: []*schema.Column{RoleColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 			{
-				Symbol:     "role_menus_menu_menu",
-				Columns:    []*schema.Column{RoleMenusColumns[3]},
+				Symbol:     "role_menu_menu_menu",
+				Columns:    []*schema.Column{RoleMenuColumns[3]},
 				RefColumns: []*schema.Column{MenuColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
@@ -244,7 +244,7 @@ var (
 			{
 				Name:    "rolemenu_role_id_menu_id",
 				Unique:  true,
-				Columns: []*schema.Column{RoleMenusColumns[2], RoleMenusColumns[3]},
+				Columns: []*schema.Column{RoleMenuColumns[2], RoleMenuColumns[3]},
 			},
 		},
 	}
@@ -265,14 +265,14 @@ var (
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		AdminTable,
-		AdminRolesTable,
+		AdminRoleTable,
 		DepartmentTable,
 		DictDataTable,
 		DictTypeTable,
 		MenuTable,
 		PositionTable,
 		RoleTable,
-		RoleMenusTable,
+		RoleMenuTable,
 		RolePermissionTable,
 	}
 )
@@ -281,10 +281,10 @@ func init() {
 	AdminTable.Annotation = &entsql.Annotation{
 		Table: "admin",
 	}
-	AdminRolesTable.ForeignKeys[0].RefTable = AdminTable
-	AdminRolesTable.ForeignKeys[1].RefTable = RoleTable
-	AdminRolesTable.Annotation = &entsql.Annotation{
-		Table: "admin_roles",
+	AdminRoleTable.ForeignKeys[0].RefTable = AdminTable
+	AdminRoleTable.ForeignKeys[1].RefTable = RoleTable
+	AdminRoleTable.Annotation = &entsql.Annotation{
+		Table: "admin_role",
 	}
 	DepartmentTable.Annotation = &entsql.Annotation{
 		Table: "department",
@@ -304,10 +304,10 @@ func init() {
 	RoleTable.Annotation = &entsql.Annotation{
 		Table: "role",
 	}
-	RoleMenusTable.ForeignKeys[0].RefTable = RoleTable
-	RoleMenusTable.ForeignKeys[1].RefTable = MenuTable
-	RoleMenusTable.Annotation = &entsql.Annotation{
-		Table: "role_menus",
+	RoleMenuTable.ForeignKeys[0].RefTable = RoleTable
+	RoleMenuTable.ForeignKeys[1].RefTable = MenuTable
+	RoleMenuTable.Annotation = &entsql.Annotation{
+		Table: "role_menu",
 	}
 	RolePermissionTable.Annotation = &entsql.Annotation{
 		Table: "role_permission",
