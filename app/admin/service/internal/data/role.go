@@ -280,3 +280,20 @@ func (r *roleRepo) GetMenusByRole(ctx context.Context, roleID string) ([]*biz.Me
 
 	return bizMenus, nil
 }
+
+func (r *roleRepo) GetCodesByIds(ctx context.Context, ids []string) ([]string, error) {
+	if len(ids) == 0 {
+		return []string{}, nil
+	}
+	codes, err := r.data.db.Role.
+		Query().
+		Where(role.IDIn(ids...)).
+		Select(role.FieldCode).
+		Strings(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return codes, nil
+}

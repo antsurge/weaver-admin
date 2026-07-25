@@ -85,7 +85,8 @@ message RefreshTokenRequest {
 message CurrentUserInfoResponse {
   string id = 1;
   string realName = 2;
-  repeated permission.service.v1.Menu menusTree = 3; // 菜单树
+  repeated permission.service.v1.Menu menuTree = 3; // 菜单树
+  repeated string roleCodes = 4; // 角色code
 }
 
 // 当前用户菜单响应（返回用户角色绑定的菜单树）

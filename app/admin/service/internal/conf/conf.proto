@@ -15,6 +15,7 @@ message Bootstrap {
 
 message App {
   bool is_demo = 1; // 演示环境
+  string super_admin_code = 2;  // 超级管理员的code
 }
 
 message Server {

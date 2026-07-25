@@ -285,7 +285,8 @@ type CurrentUserInfoResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	RealName      string                 `protobuf:"bytes,2,opt,name=realName,proto3" json:"realName,omitempty"`
-	MenusTree     []*v1.Menu             `protobuf:"bytes,3,rep,name=menusTree,proto3" json:"menusTree,omitempty"` // 菜单树
+	MenuTree      []*v1.Menu             `protobuf:"bytes,3,rep,name=menuTree,proto3" json:"menuTree,omitempty"`   // 菜单树
+	RoleCodes     []string               `protobuf:"bytes,4,rep,name=roleCodes,proto3" json:"roleCodes,omitempty"` // 角色code
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -334,9 +335,16 @@ func (x *CurrentUserInfoResponse) GetRealName() string {
 	return ""
 }
 
-func (x *CurrentUserInfoResponse) GetMenusTree() []*v1.Menu {
+func (x *CurrentUserInfoResponse) GetMenuTree() []*v1.Menu {
 	if x != nil {
-		return x.MenusTree
+		return x.MenuTree
+	}
+	return nil
+}
+
+func (x *CurrentUserInfoResponse) GetRoleCodes() []string {
+	if x != nil {
+		return x.RoleCodes
 	}
 	return nil
 }
@@ -412,11 +420,12 @@ const file_authentication_service_v1_authentication_service_proto_rawDesc = "" +
 	"\vimageBase64\x18\x02 \x01(\tR\vimageBase64\"[\n" +
 	"\x13RefreshTokenRequest\x12\"\n" +
 	"\frefreshToken\x18\x01 \x01(\tR\frefreshToken\x12 \n" +
-	"\vaccessToken\x18\x02 \x01(\tR\vaccessToken\"\x80\x01\n" +
+	"\vaccessToken\x18\x02 \x01(\tR\vaccessToken\"\x9c\x01\n" +
 	"\x17CurrentUserInfoResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
-	"\brealName\x18\x02 \x01(\tR\brealName\x129\n" +
-	"\tmenusTree\x18\x03 \x03(\v2\x1b.permission.service.v1.MenuR\tmenusTree\"M\n" +
+	"\brealName\x18\x02 \x01(\tR\brealName\x127\n" +
+	"\bmenuTree\x18\x03 \x03(\v2\x1b.permission.service.v1.MenuR\bmenuTree\x12\x1c\n" +
+	"\troleCodes\x18\x04 \x03(\tR\troleCodes\"M\n" +
 	"\x18CurrentUserMenusResponse\x121\n" +
 	"\x05items\x18\x01 \x03(\v2\x1b.permission.service.v1.MenuR\x05items2\xc8\x04\n" +
 	"\x15AuthenticationService\x12\\\n" +
@@ -453,7 +462,7 @@ var file_authentication_service_v1_authentication_service_proto_goTypes = []any{
 	(*emptypb.Empty)(nil),            // 7: google.protobuf.Empty
 }
 var file_authentication_service_v1_authentication_service_proto_depIdxs = []int32{
-	6, // 0: authentication.service.v1.CurrentUserInfoResponse.menusTree:type_name -> permission.service.v1.Menu
+	6, // 0: authentication.service.v1.CurrentUserInfoResponse.menuTree:type_name -> permission.service.v1.Menu
 	6, // 1: authentication.service.v1.CurrentUserMenusResponse.items:type_name -> permission.service.v1.Menu
 	0, // 2: authentication.service.v1.AuthenticationService.Login:input_type -> authentication.service.v1.LoginRequest
 	3, // 3: authentication.service.v1.AuthenticationService.Logout:input_type -> authentication.service.v1.RefreshTokenRequest

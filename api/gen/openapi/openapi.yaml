@@ -1623,7 +1623,7 @@ components:
                 component:
                     type: string
                     description: 组件路径
-                weigh:
+                weight:
                     type: integer
                     description: 权重
                     format: int32
@@ -1694,10 +1694,14 @@ components:
                     type: string
                 realName:
                     type: string
-                menusTree:
+                menuTree:
                     type: array
                     items:
                         $ref: '#/components/schemas/Menu'
+                roleCodes:
+                    type: array
+                    items:
+                        type: string
         CurrentUserMenusResponse:
             type: object
             properties:
@@ -2272,7 +2276,7 @@ components:
                 component:
                     type: string
                     description: 组件路径
-                weigh:
+                weight:
                     type: integer
                     description: 权重
                     format: int32

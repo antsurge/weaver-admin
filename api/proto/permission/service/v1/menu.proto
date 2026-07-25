@@ -96,7 +96,7 @@ message CreateMenuRequest {
     (gnostic.openapi.v3.property) = {description: "组件路径"}
   ];
 
-  int32 weigh = 10 [
+  int32 weight = 10 [
     (buf.validate.field).cel = {
       id: "CREATE_PERMISSION_WEIGH_MIN"
       expression: "this >= 0"
@@ -189,7 +189,7 @@ message UpdateMenuRequest {
     (gnostic.openapi.v3.property) = {description: "组件路径"}
   ];
 
-  optional int32 weigh = 11 [
+  optional int32 weight = 11 [
     (buf.validate.field).cel = {
       id: "UPDATE_PERMISSION_WEIGH_MIN"
       expression: "this >= 0"

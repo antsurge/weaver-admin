@@ -5,10 +5,10 @@ import { preferences } from '@vben/preferences';
 import { useAccessStore, useUserStore } from '@vben/stores';
 import { startProgress, stopProgress } from '@vben/utils';
 
-import { accessRoutes, coreRouteNames } from '#/router/routes';
+import {  coreRouteNames } from '#/router/routes';
 import { useAuthStore } from '#/store';
 
-import { generateAccess } from './access';
+import { generateAccess,transformAccessRoutes } from './access';
 
 /**
  * 通用守卫配置
@@ -94,6 +94,9 @@ function setupAccessGuard(router: Router) {
     // 当前登录用户拥有的角色标识列表
     const userInfo = userStore.userInfo || (await authStore.fetchUserInfo());
     const userRoles = userInfo.roles ?? [];
+    const menuTree = userInfo.menuTree ?? [];
+    var accessMenuPaths:string[] = []
+    const accessRoutes = transformAccessRoutes(menuTree,accessMenuPaths);
 
     // 生成菜单和路由
     const { accessibleMenus, accessibleRoutes } = await generateAccess({

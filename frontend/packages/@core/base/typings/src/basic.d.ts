@@ -34,6 +34,10 @@ interface BasicUserInfo {
    * 菜单树
    */
    menuTree: PermissionMenuApi.PermissionMenu[];
+   /**
+    * 角色code
+    */
+   roleCodes: string[];
 }
 
 type ClassType = Array<object | string> | object | string;

@@ -62,6 +62,8 @@ type RoleRepo interface {
 
 	// GetMenusByRole 获取角色关联的完整菜单列表（用于返回树形结构）
 	GetMenusByRole(ctx context.Context, roleID string) ([]*Menu, error)
+
+	GetCodesByIds(ctx context.Context, ids []string) ([]string, error)
 }
 
 type AdminRoleRepo interface {

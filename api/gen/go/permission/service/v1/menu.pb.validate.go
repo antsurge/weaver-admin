@@ -289,7 +289,7 @@ func (m *CreateMenuRequest) validate(all bool) error {
 
 	// no validation rules for Component
 
-	// no validation rules for Weigh
+	// no validation rules for Weight
 
 	// no validation rules for Status
 
@@ -564,8 +564,8 @@ func (m *UpdateMenuRequest) validate(all bool) error {
 		// no validation rules for Component
 	}
 
-	if m.Weigh != nil {
-		// no validation rules for Weigh
+	if m.Weight != nil {
+		// no validation rules for Weight
 	}
 
 	if m.Status != nil {

@@ -38,7 +38,7 @@ func wireApp(confServer *conf.Server, confData *conf.Data, jwt *conf.JWT, app *c
 	menuRepo := data.NewMenuRepo(dataData, logger)
 	adminRoleRepo := data.NewAdminRoleRepo(dataData, logger)
 	roleMenuRepo := data.NewRoleMenuRepo(dataData, logger)
-	authenticationUsecase := biz.NewAuthenticationUsecase(logger, adminRepo, captchaRepo, tokenRepo, roleRepo, menuRepo, adminRoleRepo, roleMenuRepo, jwt)
+	authenticationUsecase := biz.NewAuthenticationUsecase(logger, adminRepo, captchaRepo, tokenRepo, roleRepo, menuRepo, adminRoleRepo, roleMenuRepo, jwt, app)
 	captchaUsecase := biz.NewCaptchaUsecase(captchaRepo, logger)
 	authenticationService := service.NewAuthenticationService(authenticationUsecase, captchaUsecase)
 	menuUsecase := biz.NewMenuUsecase(menuRepo, logger)

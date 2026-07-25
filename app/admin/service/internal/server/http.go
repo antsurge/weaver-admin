@@ -24,6 +24,7 @@ import (
 func NewWhiteListMatcher() selector.MatchFunc {
 	whiteList := make(map[string]struct{})
 	whiteList["/admin.service.v1.AuthenticationService/Login"] = struct{}{}
+	whiteList["/admin.service.v1.AuthenticationService/Logout"] = struct{}{}
 	whiteList["/admin.service.v1.AuthenticationService/GetCaptcha"] = struct{}{}
 	whiteList["/admin.service.v1.AuthenticationService/RefreshToken"] = struct{}{}
 	return func(ctx context.Context, operation string) bool {

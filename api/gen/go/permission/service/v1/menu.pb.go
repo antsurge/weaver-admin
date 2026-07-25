@@ -193,7 +193,7 @@ type CreateMenuRequest struct {
 	Icon          string                 `protobuf:"bytes,7,opt,name=icon,proto3" json:"icon,omitempty"`
 	Url           string                 `protobuf:"bytes,8,opt,name=url,proto3" json:"url,omitempty"`
 	Component     string                 `protobuf:"bytes,9,opt,name=component,proto3" json:"component,omitempty"`
-	Weigh         int32                  `protobuf:"varint,10,opt,name=weigh,proto3" json:"weigh,omitempty"`
+	Weight        int32                  `protobuf:"varint,10,opt,name=weight,proto3" json:"weight,omitempty"`
 	Status        string                 `protobuf:"bytes,11,opt,name=status,proto3" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -292,9 +292,9 @@ func (x *CreateMenuRequest) GetComponent() string {
 	return ""
 }
 
-func (x *CreateMenuRequest) GetWeigh() int32 {
+func (x *CreateMenuRequest) GetWeight() int32 {
 	if x != nil {
-		return x.Weigh
+		return x.Weight
 	}
 	return 0
 }
@@ -364,7 +364,7 @@ type UpdateMenuRequest struct {
 	Icon          *string                `protobuf:"bytes,8,opt,name=icon,proto3,oneof" json:"icon,omitempty"`
 	Url           *string                `protobuf:"bytes,9,opt,name=url,proto3,oneof" json:"url,omitempty"`
 	Component     *string                `protobuf:"bytes,10,opt,name=component,proto3,oneof" json:"component,omitempty"`
-	Weigh         *int32                 `protobuf:"varint,11,opt,name=weigh,proto3,oneof" json:"weigh,omitempty"`
+	Weight        *int32                 `protobuf:"varint,11,opt,name=weight,proto3,oneof" json:"weight,omitempty"`
 	Status        *string                `protobuf:"bytes,12,opt,name=status,proto3,oneof" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -470,9 +470,9 @@ func (x *UpdateMenuRequest) GetComponent() string {
 	return ""
 }
 
-func (x *UpdateMenuRequest) GetWeigh() int32 {
-	if x != nil && x.Weigh != nil {
-		return *x.Weigh
+func (x *UpdateMenuRequest) GetWeight() int32 {
+	if x != nil && x.Weight != nil {
+		return *x.Weight
 	}
 	return 0
 }
@@ -934,7 +934,7 @@ const file_permission_service_v1_menu_proto_rawDesc = "" +
 	"\x06status\x18\f \x01(\tR\x06status\x128\n" +
 	"\tcreatedAt\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x128\n" +
 	"\tupdatedAt\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x127\n" +
-	"\bchildren\x18\x1e \x03(\v2\x1b.permission.service.v1.MenuR\bchildren\"\xf5\b\n" +
+	"\bchildren\x18\x1e \x03(\v2\x1b.permission.service.v1.MenuR\bchildren\"\xf7\b\n" +
 	"\x11CreateMenuRequest\x12\x8d\x01\n" +
 	"\x04name\x18\x01 \x01(\tBy\xbaG\x0f\x92\x02\f权限名称\xbaHd\xba\x01a\n" +
 	"\x1fCREATE_PERMISSION_NAME_REQUIRED\x12\x18权限名称不能为空\x1a$this.size() > 0 && this.size() <= 64R\x04name\x12\x93\x01\n" +
@@ -952,15 +952,15 @@ const file_permission_service_v1_menu_proto_rawDesc = "" +
 	"\x03url\x18\b \x01(\tB>\xbaG\x06\x92\x02\x03URL\xbaH2\xba\x01/\n" +
 	"\x19CREATE_PERMISSION_URL_MAX\x1a\x12this.size() <= 256R\x03url\x12k\n" +
 	"\tcomponent\x18\t \x01(\tBM\xbaG\x0f\x92\x02\f组件路径\xbaH8\xba\x015\n" +
-	"\x1fCREATE_PERMISSION_COMPONENT_MAX\x1a\x12this.size() <= 256R\tcomponent\x12P\n" +
-	"\x05weigh\x18\n" +
+	"\x1fCREATE_PERMISSION_COMPONENT_MAX\x1a\x12this.size() <= 256R\tcomponent\x12R\n" +
+	"\x06weight\x18\n" +
 	" \x01(\x05B:\xbaG\t\x92\x02\x06权重\xbaH+\xba\x01(\n" +
-	"\x1bCREATE_PERMISSION_WEIGH_MIN\x1a\tthis >= 0R\x05weigh\x128\n" +
+	"\x1bCREATE_PERMISSION_WEIGH_MIN\x1a\tthis >= 0R\x06weight\x128\n" +
 	"\x06status\x18\v \x01(\tB \xbaG\x1d\x92\x02\x1a状态: enabled / disabledR\x06status\"Q\n" +
 	"\x12CreateMenuResponse\x12;\n" +
 	"\n" +
 	"permission\x18\x01 \x01(\v2\x1b.permission.service.v1.MenuR\n" +
-	"permission\"\xa8\n" +
+	"permission\"\xab\n" +
 	"\n" +
 	"\x11UpdateMenuRequest\x12j\n" +
 	"\x02id\x18\x01 \x01(\tBZ\xbaG\v\x92\x02\b权限ID\xbaHI\xba\x01F\n" +
@@ -982,9 +982,9 @@ const file_permission_service_v1_menu_proto_rawDesc = "" +
 	"\x19UPDATE_PERMISSION_URL_MAX\x1a\x12this.size() <= 256H\aR\x03url\x88\x01\x01\x12p\n" +
 	"\tcomponent\x18\n" +
 	" \x01(\tBM\xbaG\x0f\x92\x02\f组件路径\xbaH8\xba\x015\n" +
-	"\x1fUPDATE_PERMISSION_COMPONENT_MAX\x1a\x12this.size() <= 256H\bR\tcomponent\x88\x01\x01\x12U\n" +
-	"\x05weigh\x18\v \x01(\x05B:\xbaG\t\x92\x02\x06权重\xbaH+\xba\x01(\n" +
-	"\x1bUPDATE_PERMISSION_WEIGH_MIN\x1a\tthis >= 0H\tR\x05weigh\x88\x01\x01\x12=\n" +
+	"\x1fUPDATE_PERMISSION_COMPONENT_MAX\x1a\x12this.size() <= 256H\bR\tcomponent\x88\x01\x01\x12W\n" +
+	"\x06weight\x18\v \x01(\x05B:\xbaG\t\x92\x02\x06权重\xbaH+\xba\x01(\n" +
+	"\x1bUPDATE_PERMISSION_WEIGH_MIN\x1a\tthis >= 0H\tR\x06weight\x88\x01\x01\x12=\n" +
 	"\x06status\x18\f \x01(\tB \xbaG\x1d\x92\x02\x1a状态: enabled / disabledH\n" +
 	"R\x06status\x88\x01\x01B\a\n" +
 	"\x05_nameB\a\n" +
@@ -996,8 +996,8 @@ const file_permission_service_v1_menu_proto_rawDesc = "" +
 	"\x05_iconB\x06\n" +
 	"\x04_urlB\f\n" +
 	"\n" +
-	"_componentB\b\n" +
-	"\x06_weighB\t\n" +
+	"_componentB\t\n" +
+	"\a_weightB\t\n" +
 	"\a_status\"Q\n" +
 	"\x12UpdateMenuResponse\x12;\n" +
 	"\n" +

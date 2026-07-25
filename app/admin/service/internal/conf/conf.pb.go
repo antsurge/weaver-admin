@@ -99,10 +99,11 @@ func (x *Bootstrap) GetApp() *App {
 }
 
 type App struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	IsDemo        bool                   `protobuf:"varint,1,opt,name=is_demo,json=isDemo,proto3" json:"is_demo,omitempty"` // 演示环境
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	IsDemo         bool                   `protobuf:"varint,1,opt,name=is_demo,json=isDemo,proto3" json:"is_demo,omitempty"`                          // 演示环境
+	SuperAdminCode string                 `protobuf:"bytes,2,opt,name=super_admin_code,json=superAdminCode,proto3" json:"super_admin_code,omitempty"` // 超级管理员的code
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *App) Reset() {
@@ -140,6 +141,13 @@ func (x *App) GetIsDemo() bool {
 		return x.IsDemo
 	}
 	return false
+}
+
+func (x *App) GetSuperAdminCode() string {
+	if x != nil {
+		return x.SuperAdminCode
+	}
+	return ""
 }
 
 type Server struct {
@@ -743,9 +751,10 @@ const file_conf_conf_proto_rawDesc = "" +
 	"\x04data\x18\x02 \x01(\v2\x10.kratos.api.DataR\x04data\x12!\n" +
 	"\x03jwt\x18\x03 \x01(\v2\x0f.kratos.api.JWTR\x03jwt\x12\x1e\n" +
 	"\x02mq\x18\x04 \x01(\v2\x0e.kratos.api.MQR\x02mq\x12!\n" +
-	"\x03app\x18\x05 \x01(\v2\x0f.kratos.api.AppR\x03app\"\x1e\n" +
+	"\x03app\x18\x05 \x01(\v2\x0f.kratos.api.AppR\x03app\"H\n" +
 	"\x03App\x12\x17\n" +
-	"\ais_demo\x18\x01 \x01(\bR\x06isDemo\"\xb8\x02\n" +
+	"\ais_demo\x18\x01 \x01(\bR\x06isDemo\x12(\n" +
+	"\x10super_admin_code\x18\x02 \x01(\tR\x0esuperAdminCode\"\xb8\x02\n" +
 	"\x06Server\x12+\n" +
 	"\x04http\x18\x01 \x01(\v2\x17.kratos.api.Server.HTTPR\x04http\x12+\n" +
 	"\x04grpc\x18\x02 \x01(\v2\x17.kratos.api.Server.GRPCR\x04grpc\x1ai\n" +
