@@ -2,13 +2,13 @@
   "menu": {
     "name": "菜单",
     "fields": {
-      "name": "菜单名称",
+      "type": "类型",
+      "name": "名称/编码",
+      "title":"标题",
       "code": "菜单编码",
       "parentID": "上级菜单",
       "path": "路由路径",
       "icon": "图标",
-      "type": "菜单类型",
-      "menuType": "菜单类型",
       "url": "链接地址",
       "component": "组件路径",
       "weight": "权重",
@@ -20,9 +20,11 @@
       "appendChildren": "新增下级"
     },
     "type_options": {
-      "menu_dir": "菜单目录",
-      "menu": "菜单项",
-      "button": "页面按钮"
+      "catalog": "目录",
+      "menu": "菜单",
+      "action": "按钮",
+      "iframe": "内嵌",
+      "link": "外链"
     },
     "menu_type_options": {
       "tab": "选项卡",
@@ -34,6 +36,10 @@
       "path": "web端路由路径(path)，无需以`/admin`开头，如:system/permission",
       "component": "web端组件路径，请以/src开头，如:src/views/system/permission.vue",
       "url": "请输入链接或Iframe的URL地址"
+    },
+    "form_group":{
+      "basic": "基本信息",
+      "advanced": "高级信息"
     }
   },
   "role": {

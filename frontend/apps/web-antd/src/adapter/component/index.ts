@@ -39,6 +39,9 @@ import { isEmpty } from '@vben/utils';
 
 import { message, Modal, notification } from 'ant-design-vue';
 
+// 导入自定义表单组件
+import FormTitle from '#/components/form/title/index.vue';
+
 const AutoComplete = defineAsyncComponent(
   () => import('ant-design-vue/es/auto-complete'),
 );
@@ -494,6 +497,7 @@ export type ComponentType =
   | 'DatePicker'
   | 'DefaultButton'
   | 'Divider'
+  | 'FormTitle'           // 自定义表单标题组件
   | 'IconPicker'
   | 'Input'
   | 'InputNumber'
@@ -550,6 +554,8 @@ async function initComponentAdapter() {
       return h(Button, { ...props, attrs, type: 'default' }, slots);
     },
     Divider,
+    // 自定义表单标题组件
+    FormTitle,
     IconPicker: withDefaultPlaceholder(IconPicker, 'select', {
       iconSlot: 'addonAfter',
       inputComponent: Input,

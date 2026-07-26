@@ -4,25 +4,37 @@ import type { VbenFormProps } from '#/adapter/form';
 
 import { $t } from '#/locales';
 
-export const PermissionTypeOptionsValueMenuDir = "menu_dir"
+export const PermissionTypeOptionsValueCatalog = "catalog"
 export const PermissionTypeOptionsValueMenu = "menu"
-export const PermissionTypeOptionsValueButton = "button"
+export const PermissionTypeOptionsValueAction = "action"
+export const PermissionTypeOptionsValueIframe = "iframe"
+export const PermissionTypeOptionsValueLink = "link"
 export function getPermissionTypeOptions() {
   return [
     {
       color: 'purple',
-      label: $t('permission.menu.type_options.menu_dir'),
-      value: 'menu_dir',
+      label: $t('permission.menu.type_options.catalog'),
+      value: 'catalog',
     },
     {
       color: 'success',
       label: $t('permission.menu.type_options.menu'),
-      value: 'menu'
+      value: 'menu',
     },
     {
       color: 'warning',
-      label: $t('permission.menu.type_options.button'),
-      value: 'button'
+      label: $t('permission.menu.type_options.action'),
+      value: 'action',
+    },
+    {
+      color: 'blue',
+      label: $t('permission.menu.type_options.iframe'),
+      value: 'iframe',
+    },
+    {
+      color: 'cyan',
+      label: $t('permission.menu.type_options.link'),
+      value: 'link',
     },
   ];
 }
@@ -123,7 +135,7 @@ export function useColumns(
           {
             code: 'append',
             text: $t('permission.menu.operation.appendChildren'),
-            show: (row: any) => row.type !== PermissionTypeOptionsValueButton,
+            show: (row: any) => row.type !== PermissionTypeOptionsValueAction,
           },
           'edit', // 默认的编辑按钮
           'delete', // 默认的删除按钮

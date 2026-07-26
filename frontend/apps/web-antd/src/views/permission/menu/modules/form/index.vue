@@ -13,6 +13,7 @@ import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
 import type { AllResult } from '#/types/pagination'
 
 import { useVbenForm } from '#/adapter/form';
+
 import {
   nameRule,
   codeRule,
@@ -35,10 +36,11 @@ import {
   getPermissionTypeOptions,
   getPermissionMenuTypeOptions,
   PermissionTypeOptionsValueMenu,
-  PermissionTypeOptionsValueButton,
-  PermissionMenuTypeOptionsValueTab,
-  PermissionMenuTypeOptionsValueLink,
-  PermissionMenuTypeOptionsValueIframe,
+  // PermissionTypeOptionsValueTab,
+  PermissionTypeOptionsValueLink,
+  PermissionTypeOptionsValueIframe,
+  PermissionTypeOptionsValueCatalog,
+  PermissionTypeOptionsValueAction,
 } from '#/views/permission/menu/data';
 
 const emit = defineEmits<{
@@ -52,10 +54,35 @@ const titleSuffix = ref<string>();
  * 表单 schema
  */
 const schema: VbenFormSchema[] = [
+  // ==================== 基础设置 ====================
+  {
+    fieldName: '',
+    component: 'FormTitle',
+    label: '',
+    labelWidth: 0,
+    formItemClass: 'col-span-2 md:col-span-2',
+    componentProps: {
+      title: '基础设置',
+    },
+  },
+  // 类型 - 占据整行
+  {
+    fieldName: 'type',
+    label: $t('permission.menu.fields.type'),
+    defaultValue: PermissionTypeOptionsValueCatalog,
+    component: 'RadioGroup',
+    formItemClass: 'col-span-2 md:col-span-2',
+    componentProps: {
+      optionType: "button",
+      options: getPermissionTypeOptions(),
+    },
+  },
+  // 上级菜单 - 占据整行
   {
     fieldName: 'parentID',
     label: $t('permission.menu.fields.parentID'),
     component: 'ApiTreeSelect',
+    formItemClass: 'col-span-2 md:col-span-2',
     componentProps: {
       api: getMenuTreeApi,
       allowClear: true,
@@ -79,12 +106,6 @@ const schema: VbenFormSchema[] = [
       childrenField: 'children',
       getPopupContainer,
       placeholder: $t('permission.menu.form_placeholder.parentID')
-      // filterTreeNode(input: string, node: Recordable<any>) {
-      //   if (!input) return true;
-      //   const title: string = node.meta?.title ?? '';
-      //   if (!title) return false;
-      //   return title.includes(input) || $t(title).includes(input);
-      // },
     },
     renderComponentContent() {
       return {
@@ -99,50 +120,50 @@ const schema: VbenFormSchema[] = [
       };
     },
   },
-  {
-    fieldName: 'type',
-    label: $t('permission.menu.fields.type'),
-    defaultValue: 'menu_dir',
-    component: 'RadioGroup',
-    componentProps: {
-      optionType: "button",
-      options: getPermissionTypeOptions(),
-    },
-  },
+  // 菜单名称 + 菜单编码（一行两个字段）
   {
     fieldName: 'name',
     label: $t('permission.menu.fields.name'),
     component: 'Input',
+    formItemClass: 'col-span-1 md:col-span-1',
     rules: nameRule,
     componentProps: {
       placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.name")])
     }
   },
   {
-    fieldName: 'code',
-    label: $t('permission.menu.fields.code'),
+    fieldName: 'title',
+    label: $t('permission.menu.fields.title'),
     component: 'Input',
+    formItemClass: 'col-span-1 md:col-span-1',
     rules: codeRule,
     componentProps: {
-      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.code")])
+      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.title")])
     }
   },
+  // 权重 + 图标（一行两个字段，按钮类型时隐藏图标）
   {
-    fieldName: 'path',
-    label: $t('permission.menu.fields.path'),
-    component: 'Input',
+    component: 'InputNumber',
+    fieldName: 'weight',
+    label: $t('permission.menu.fields.weight'),
+    formItemClass: 'col-span-1 md:col-span-1',
     componentProps: {
-      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.path")])
+      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.weight")]),
+      min: 0,
+      step: 1,
+      precision: 0,
+      stringMode: false,
+      style: { width: '100%' },
+      onInput: (e: Event) => {
+        const input = e.target as HTMLInputElement;
+        input.value = input.value.replace(/[^\d]/g, '');
+      },
     },
-    dependencies: {
-      triggerFields: ['type'],
-      show: (values) => values.type !== PermissionTypeOptionsValueButton,
-    },
-    rules: pathRule,
   },
   {
     fieldName: 'icon',
     component: 'IconPicker',
+    formItemClass: 'col-span-1 md:col-span-1',
     componentProps: {
       placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.icon")]),
       disabled: true,
@@ -150,13 +171,30 @@ const schema: VbenFormSchema[] = [
     label: $t('permission.menu.fields.icon'),
     dependencies: {
       triggerFields: ['type'],
-      show: (values) => values.type !== PermissionTypeOptionsValueButton,
+      show: (values) => values.type !== PermissionTypeOptionsValueAction,
     }
+  },
+
+  // ==================== 其他设置（保留原有逻辑）====================
+  {
+    fieldName: 'path',
+    label: $t('permission.menu.fields.path'),
+    component: 'Input',
+    formItemClass: 'col-span-2 md:col-span-2',
+    componentProps: {
+      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.path")])
+    },
+    dependencies: {
+      triggerFields: ['type'],
+      show: (values) => values.type !== PermissionTypeOptionsValueAction,
+    },
+    rules: pathRule,
   },
   {
     fieldName: 'menuType',
     component: 'RadioGroup',
     label: $t('permission.menu.fields.menuType'),
+    formItemClass: 'col-span-2 md:col-span-2',
     defaultValue: 'tab',
     componentProps: {
       optionType: "button",
@@ -171,13 +209,14 @@ const schema: VbenFormSchema[] = [
     fieldName: 'component',
     component: 'Input',
     label: $t('permission.menu.fields.component'),
+    formItemClass: 'col-span-2 md:col-span-2',
     componentProps: {
-      placeholder: $t('permission.menu.form_placeholder.component')
+      placeholder: $t("ui.formRules.placeholder.component")
     },
     dependencies: {
       triggerFields: ['type', 'menuType'],
       show: (values) => {
-        return (values.type === PermissionTypeOptionsValueMenu && values.menuType === PermissionMenuTypeOptionsValueTab)
+        return (values.type === PermissionTypeOptionsValueMenu && values.menuType === PermissionTypeMenuTypeOptionsValueTab)
       }
     },
     rules: componentRule,
@@ -186,13 +225,14 @@ const schema: VbenFormSchema[] = [
     fieldName: 'url',
     component: 'Input',
     label: $t('permission.menu.fields.url'),
+    formItemClass: 'col-span-2 md:col-span-2',
     componentProps: {
-      placeholder: $t('permission.menu.form_placeholder.url')
+      placeholder: $t("ui.formRules.placeholder.url")
     },
     dependencies: {
       triggerFields: ['type', 'menuType'],
       show: (values) => {
-        return (values.type === PermissionTypeOptionsValueMenu && [PermissionMenuTypeOptionsValueLink, PermissionMenuTypeOptionsValueIframe]
+        return (values.type === PermissionTypeOptionsValueMenu && [PermissionTypeMenuTypeOptionsValueLink, PermissionTypeMenuTypeOptionsValueIframe]
           .includes(values.menuType))
       },
     },
@@ -201,28 +241,11 @@ const schema: VbenFormSchema[] = [
   {
     fieldName: 'description',
     component: 'Textarea',
+    formItemClass: 'col-span-2 md:col-span-2',
     componentProps: {
       placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.remark")])
     },
     label: $t('permission.menu.fields.remark'),
-  },
-  {
-    component: 'InputNumber',
-    fieldName: 'weight',
-    label: $t('permission.menu.fields.weight'),
-    componentProps: {
-      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.weight")]),
-      min: 0,
-      step: 1,       // 只能按整数步进
-      precision: 0,  // 小数位数 0，即整数
-      stringMode: false, // 默认 false，可以直接输入数字
-      style: { width: '100%' },
-      onInput: (e: Event) => {
-        const input = e.target as HTMLInputElement;
-        // 去掉所有非数字字符
-        input.value = input.value.replace(/[^\d]/g, '');
-      },
-    },
   },
   {
     component: 'Switch',
@@ -234,6 +257,7 @@ const schema: VbenFormSchema[] = [
       unCheckedValue: "disabled",
     },
     fieldName: 'status',
+    formItemClass: 'col-span-2 md:col-span-2',
     defaultValue: 'enabled',
     label: $t('permission.menu.fields.status'),
   },
@@ -249,7 +273,7 @@ const [Form, formApi] = useVbenForm({
   commonConfig: {
     colon: true,
     formItemClass: 'col-span-2 md:col-span-2',
-    labelWidth: 70,
+    labelWidth: 75,
   },
   schema,
   showDefaultActions: false,
@@ -290,7 +314,7 @@ async function onSubmit() {
   const data = await formApi.getValues();
 
   // 清理隐藏字段
-  if (data.type === PermissionTypeOptionsValueButton) {
+  if (data.type === PermissionTypeOptionsValueAction) {
     delete data.path;
     delete data.icon;
     delete data.menuType;
@@ -298,11 +322,11 @@ async function onSubmit() {
     delete data.url;
   }
 
-  if (data.menuType !== PermissionMenuTypeOptionsValueTab) {
-    delete data.component;
-  }
+  // if (data.menuType !== PermissionTypeOptionsValueTab) {
+  //   delete data.component;
+  // }
 
-  if (![PermissionMenuTypeOptionsValueLink, PermissionMenuTypeOptionsValueIframe]
+  if (![PermissionTypeOptionsValueLink, PermissionTypeOptionsValueIframe]
     .includes(data.menuType)) {
     delete data.url;
   }
