@@ -35,10 +35,11 @@
       "parentID": "点击选择",
       "path": "web端路由路径(path)，无需以`/admin`开头，如:system/permission",
       "component": "web端组件路径，请以/src开头，如:src/views/system/permission.vue",
-      "url": "请输入链接或Iframe的URL地址"
+      "url": "请输入链接或Iframe的URL地址",
+      "i18nKey": "国际化的路径"
     },
     "form_group":{
-      "basic": "基本信息",
+      "basicInfo": "基本信息",
       "advanced": "高级信息"
     }
   },

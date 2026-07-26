@@ -556,6 +556,7 @@ async function initComponentAdapter() {
     Divider,
     // 自定义表单标题组件
     FormTitle,
+    // 自定义国际化输入组件
     IconPicker: withDefaultPlaceholder(IconPicker, 'select', {
       iconSlot: 'addonAfter',
       inputComponent: Input,

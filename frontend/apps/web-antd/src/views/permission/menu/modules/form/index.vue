@@ -31,7 +31,9 @@ import type {
   PermissionMenuApi,
 } from '#/api/permission/menu';
 
-import { $t } from '#/locales';
+import { $t} from '#/locales';
+import { $te } from '@vben/locales';
+
 import {
   getPermissionTypeOptions,
   getPermissionMenuTypeOptions,
@@ -62,7 +64,7 @@ const schema: VbenFormSchema[] = [
     labelWidth: 0,
     formItemClass: 'col-span-2 md:col-span-2',
     componentProps: {
-      title: '基础设置',
+      title: $t('permission.menu.form_group.basicInfo'),
     },
   },
   // 类型 - 占据整行
@@ -137,9 +139,16 @@ const schema: VbenFormSchema[] = [
     component: 'Input',
     formItemClass: 'col-span-1 md:col-span-1',
     rules: codeRule,
-    componentProps: {
-      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.title")])
-    }
+     componentProps() {
+      // 不需要处理多语言时就无需这么做
+      return {
+        placeholder: `${$t("ui.formRules.required", [$t("permission.menu.fields.title")])}(${$t('permission.menu.form_placeholder.i18nKey')})`,
+        ...(titleSuffix.value && { addonAfter: titleSuffix.value }),
+        onChange({ target: { value } }: { target: { value: string } }) {
+          titleSuffix.value = value && $te(value) ? $t(value) : undefined;
+        },
+      };
+    },
   },
   // 权重 + 图标（一行两个字段，按钮类型时隐藏图标）
   {
