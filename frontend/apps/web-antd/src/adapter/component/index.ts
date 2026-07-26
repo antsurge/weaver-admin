@@ -41,6 +41,7 @@ import { message, Modal, notification } from 'ant-design-vue';
 
 // 导入自定义表单组件
 import FormTitle from '#/components/form/title/index.vue';
+import EnhancedIconPicker from '#/components/icon-picker/enhanced-icon-picker.vue';
 
 const AutoComplete = defineAsyncComponent(
   () => import('ant-design-vue/es/auto-complete'),
@@ -498,7 +499,9 @@ export type ComponentType =
   | 'DefaultButton'
   | 'Divider'
   | 'FormTitle'           // 自定义表单标题组件
+  | 'EnhancedIconPicker'  // 增强版多图标源选择器
   | 'IconPicker'
+  | 'I18nInput'           // 国际化输入组件
   | 'Input'
   | 'InputNumber'
   | 'InputPassword'
@@ -556,6 +559,8 @@ async function initComponentAdapter() {
     Divider,
     // 自定义表单标题组件
     FormTitle,
+    // 增强版多图标源选择器
+    EnhancedIconPicker,
     // 自定义国际化输入组件
     IconPicker: withDefaultPlaceholder(IconPicker, 'select', {
       iconSlot: 'addonAfter',

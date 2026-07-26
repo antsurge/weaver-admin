@@ -18,7 +18,6 @@ import {
   nameRule,
   codeRule,
   componentRule,
-  urlRule,
   pathRule,
 } from "#/views/permission/menu/modules/form/rules"
 
@@ -36,7 +35,8 @@ import { $te } from '@vben/locales';
 
 import {
   getPermissionTypeOptions,
-  getPermissionMenuTypeOptions,
+  getBadgeTypeOptions,
+  getBadgeStyleOptions,
   PermissionTypeOptionsValueMenu,
   // PermissionTypeOptionsValueTab,
   PermissionTypeOptionsValueLink,
@@ -107,7 +107,7 @@ const schema: VbenFormSchema[] = [
       valueField: 'id',
       childrenField: 'children',
       getPopupContainer,
-      placeholder: $t('permission.menu.form_placeholder.parentID')
+      placeholder: $t('ui.formRules.selectRequired', [$t('permission.menu.fields.parentID')]),
     },
     renderComponentContent() {
       return {
@@ -139,16 +139,17 @@ const schema: VbenFormSchema[] = [
     component: 'Input',
     formItemClass: 'col-span-1 md:col-span-1',
     rules: codeRule,
-     componentProps() {
+    componentProps() {
       // 不需要处理多语言时就无需这么做
       return {
-        placeholder: `${$t("ui.formRules.required", [$t("permission.menu.fields.title")])}(${$t('permission.menu.form_placeholder.i18nKey')})`,
+        placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.title")]),
         ...(titleSuffix.value && { addonAfter: titleSuffix.value }),
         onChange({ target: { value } }: { target: { value: string } }) {
           titleSuffix.value = value && $te(value) ? $t(value) : undefined;
         },
       };
     },
+    description: $t('permission.menu.description.title'),
   },
   // 权重 + 图标（一行两个字段，按钮类型时隐藏图标）
   {
@@ -171,92 +172,96 @@ const schema: VbenFormSchema[] = [
   },
   {
     fieldName: 'icon',
-    component: 'IconPicker',
+    component: 'EnhancedIconPicker',
     formItemClass: 'col-span-1 md:col-span-1',
-    componentProps: {
+    componentProps: () => ({
       placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.icon")]),
-      disabled: true,
-    },
+      // 启用的图标源（可自定义）
+      sources: ['ant-design', 'bootstrap-icons', 'lucide', 'local-svg'],
+    }),
     label: $t('permission.menu.fields.icon'),
     dependencies: {
       triggerFields: ['type'],
       show: (values) => values.type !== PermissionTypeOptionsValueAction,
-    }
+    },
   },
 
-  // ==================== 其他设置（保留原有逻辑）====================
+  // ==================== 路由配置 ====================
+   {
+    fieldName: '',
+    component: 'FormTitle',
+    label: '',
+    labelWidth: 0,
+    formItemClass: 'col-span-2 md:col-span-2',
+    componentProps: {
+      title: $t('permission.menu.form_group.routeConfiguration'),
+    },
+  },
   {
     fieldName: 'path',
-    label: $t('permission.menu.fields.path'),
     component: 'Input',
+    label: $t('permission.menu.fields.path'),
     formItemClass: 'col-span-2 md:col-span-2',
     componentProps: {
       placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.path")])
     },
+    description:$t("permission.menu.description.path"),
     dependencies: {
       triggerFields: ['type'],
-      show: (values) => values.type !== PermissionTypeOptionsValueAction,
+      show: (values) => {
+        return [PermissionTypeOptionsValueCatalog, PermissionTypeOptionsValueMenu]
+          .includes(values.type)
+      },
     },
     rules: pathRule,
   },
   {
-    fieldName: 'menuType',
-    component: 'RadioGroup',
-    label: $t('permission.menu.fields.menuType'),
-    formItemClass: 'col-span-2 md:col-span-2',
-    defaultValue: 'tab',
-    componentProps: {
-      optionType: "button",
-      options: getPermissionMenuTypeOptions(),
-    },
-    dependencies: {
-      triggerFields: ['type'],
-      show: (values) => values.type === PermissionTypeOptionsValueMenu,
-    },
-  },
-  {
-    fieldName: 'component',
+     fieldName: 'component',
     component: 'Input',
     label: $t('permission.menu.fields.component'),
     formItemClass: 'col-span-2 md:col-span-2',
     componentProps: {
-      placeholder: $t("ui.formRules.placeholder.component")
+      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.component")])
     },
+    description: $t("permission.menu.description.component"),
     dependencies: {
-      triggerFields: ['type', 'menuType'],
+      triggerFields: ['type'],
       show: (values) => {
-        return (values.type === PermissionTypeOptionsValueMenu && values.menuType === PermissionTypeMenuTypeOptionsValueTab)
-      }
+        return [PermissionTypeOptionsValueMenu]
+          .includes(values.type)
+      },
     },
     rules: componentRule,
   },
+  // ==================== 权限与状态 ====================
   {
-    fieldName: 'url',
-    component: 'Input',
-    label: $t('permission.menu.fields.url'),
+    fieldName: '',
+    component: 'FormTitle',
+    label: '',
+    labelWidth: 0,
     formItemClass: 'col-span-2 md:col-span-2',
     componentProps: {
-      placeholder: $t("ui.formRules.placeholder.url")
+      title: $t('permission.menu.form_group.permissionAndStatus'),
+    },
+  },
+  {
+     fieldName: 'authCode',
+    component: 'Input',
+    label: $t('permission.menu.fields.authCode'),
+    formItemClass: 'col-span-1 md:col-span-1',
+    componentProps: {
+      placeholder: $t("permission.menu.form_placeholder.authCode")
     },
     dependencies: {
-      triggerFields: ['type', 'menuType'],
+      triggerFields: ['type'],
       show: (values) => {
-        return (values.type === PermissionTypeOptionsValueMenu && [PermissionTypeMenuTypeOptionsValueLink, PermissionTypeMenuTypeOptionsValueIframe]
-          .includes(values.menuType))
+        return [PermissionTypeOptionsValueCatalog,PermissionTypeOptionsValueMenu,PermissionTypeOptionsValueAction]
+          .includes(values.type)
       },
     },
-    rules: urlRule,
+    rules: componentRule,
   },
-  {
-    fieldName: 'description',
-    component: 'Textarea',
-    formItemClass: 'col-span-2 md:col-span-2',
-    componentProps: {
-      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.remark")])
-    },
-    label: $t('permission.menu.fields.remark'),
-  },
-  {
+   {
     component: 'Switch',
     componentProps: {
       class: 'w-auto',
@@ -266,9 +271,96 @@ const schema: VbenFormSchema[] = [
       unCheckedValue: "disabled",
     },
     fieldName: 'status',
-    formItemClass: 'col-span-2 md:col-span-2',
+    formItemClass: 'col-span-1 md:col-span-1',
     defaultValue: 'enabled',
     label: $t('permission.menu.fields.status'),
+  },
+  
+  // ==================== 徽标配置 ====================
+  {
+    fieldName: '',
+    component: 'FormTitle',
+    label: '',
+    labelWidth: 0,
+    formItemClass: 'col-span-2 md:col-span-2',
+    componentProps: {
+      title: $t('permission.menu.form_group.badgeConfiguration'),
+    },
+    dependencies: {
+      triggerFields: ['type'],
+      show: (values) => {
+        return values.type !== PermissionTypeOptionsValueAction;
+      },
+    },
+  },
+  {
+    fieldName: 'badgeType',
+    component: 'Select',
+    componentProps: {
+      allowClear: true,
+      class: 'w-full',
+      options: getBadgeTypeOptions(),
+    },
+    dependencies: {
+      show: (values) => {
+        return values.type !== PermissionTypeOptionsValueAction;
+      },
+      triggerFields: ['type'],
+    },
+    label: $t('permission.menu.fields.badgeType'),
+    formItemClass: 'col-span-1 md:col-span-1',
+  },
+  {
+    fieldName: 'badgeContent',
+    component: 'Input',
+    label: $t('permission.menu.fields.badgeContent'),
+    formItemClass: 'col-span-1 md:col-span-1',
+    componentProps: {
+    },
+    dependencies: {
+      triggerFields: ['type'],
+      show: (values) => {
+        return values.type !== PermissionTypeOptionsValueAction;
+      },
+    },
+  },
+  {
+    fieldName: 'badgeStyle',
+    component: 'Select',
+    componentProps: {
+      allowClear: true,
+      class: 'w-full',
+      options: getBadgeStyleOptions(),
+    },
+    dependencies: {
+      show: (values) => {
+        return values.type !== PermissionTypeOptionsValueAction;
+      },
+      triggerFields: ['type'],
+    },
+    label: $t('permission.menu.fields.badgeStyle'),
+    formItemClass: 'col-span-1 md:col-span-1',
+  },
+
+  // ==================== 其他设置 ====================
+  {
+    fieldName: '',
+    component: 'FormTitle',
+    label: '',
+    labelWidth: 0,
+    formItemClass: 'col-span-2 md:col-span-2',
+    componentProps: {
+      title: $t('permission.menu.form_group.otherConfiguration'),
+    },
+  },
+  {
+    fieldName: 'remark',
+    component: 'Textarea',
+    formItemClass: 'col-span-2 md:col-span-2',
+    componentProps: {
+      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.remark")])
+    },
+    label: $t('permission.menu.fields.remark'),
   },
 ];
 

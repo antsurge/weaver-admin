@@ -33,6 +33,6 @@ defineProps<{
 .form-title-text {
   font-size: 14px;
   font-weight: 600;
-  color: #1f2937;
+  color: hsl(var(--primary));
 }
 </style>

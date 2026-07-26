@@ -39,25 +39,43 @@ export function getPermissionTypeOptions() {
   ];
 }
 
-export const PermissionMenuTypeOptionsValueTab = "tab"
-export const PermissionMenuTypeOptionsValueLink = "link"
-export const PermissionMenuTypeOptionsValueIframe = "iframe"
-export function getPermissionMenuTypeOptions() {
+export const PermissionBadgeTypeOptionsValueDot = "dot"
+export const PermissionBadgeTypeOptionsValueText = "text"
+export function getBadgeTypeOptions() {
   return [
     {
-      color: 'processing',
-      label: $t('permission.menu.menu_type_options.tab'),
-      value: PermissionMenuTypeOptionsValueTab,
+      label: $t('permission.menu.badgeType_options.dot'),
+      value: PermissionBadgeTypeOptionsValueDot,
     },
     {
       color: 'success',
-      label: $t('permission.menu.menu_type_options.link'),
-      value: PermissionMenuTypeOptionsValueLink,
+      label: $t('permission.menu.badgeType_options.text'),
+      value: PermissionBadgeTypeOptionsValueText,
+    },
+  ];
+}
+
+export function getBadgeStyleOptions() {
+  return [
+    {
+      label: 'default',
+      value: 'default',
     },
     {
-      color: 'warning',
-      label: $t('permission.menu.menu_type_options.iframe'),
-      value: PermissionMenuTypeOptionsValueIframe,
+      label: 'destructive',
+      value: 'destructive',
+    },
+    {
+      label: 'primary',
+      value: 'primary',
+    },
+    {
+      label: 'success',
+      value: 'success',
+    },
+    {
+      label: 'warning',
+      value: 'warning',
     },
   ];
 }
