@@ -8,20 +8,26 @@ import "google/protobuf/timestamp.proto";
 
 // 菜单
 message Menu {
-  string id = 1;
-  string parentID = 2; // null 表示根
-  string name = 3;
-  string code = 4;
-  string description = 5;
-  string type = 6;
-  string path = 7;
-  string icon = 8;
-  string url = 9;
-  string component = 10;
-  int32 weight = 11;
-  string status = 12;
-  google.protobuf.Timestamp createdAt = 13;
-  google.protobuf.Timestamp updatedAt = 14;
+  string id = 1; // ID
+  string parentID = 2; // 上级菜单
+  string name = 3; // 名称
+  string code = 4; // 编码
+  string description = 5; // 描述
+  string type = 6; // 类型
+  string path = 7; // 路由路径
+  string icon = 8; // 图标
+  string linkUrl = 9; // 链接地址
+  string component = 10; // 页面组件
+  int32 weight = 11; // 权重
+  string status = 12; // 状态
+  string title = 13; // 标题
+  string authCode = 14; // 权限标识
+  string badgeType = 15; // 徽标类型
+  string badgeContent = 16; // 徽标内容
+  string badgeStyle = 17; // 徽标样式
+  string remark = 18; // 备注
+  google.protobuf.Timestamp createdAt = 19; // 创建时间
+  google.protobuf.Timestamp updatedAt = 20; // 更新时间
 
   repeated Menu children = 30;
 }
