@@ -277,7 +277,7 @@ const [Form, formApi] = useVbenForm({
   },
   schema,
   showDefaultActions: false,
-  wrapperClass: 'grid-cols-2 gap-x-4',
+  wrapperClass: 'grid-cols-2 gap-x-0',
 });
 
 /**
