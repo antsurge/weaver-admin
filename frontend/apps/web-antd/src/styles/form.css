@@ -1,0 +1,23 @@
+/**
+ * 修复带 description 的表单项输入框对齐问题
+ *
+ * 问题：Vben Form 的 FormItem 为 flex-row items-center 布局（label 与右侧内容区垂直居中对齐）。
+ * 当某个字段配置了 description 时，右侧内容区 = 输入框 + description，整体变高，
+ * 垂直居中导致输入框向上偏移；同一行两个字段（col-span-1）时，
+ * 有 description 和没有 description 的输入框位置不一致。
+ *
+ * 方案：让 description 绝对定位（与错误消息 FormMessage 相同的处理方式），
+ * 脱离文档流但停留在原静态位置（输入框下方），
+ * FormItem 自带的 pb-4（非 compact）底部 padding 已为其预留空间。
+ */
+[id$='-form-item-description'] {
+  position: absolute;
+}
+
+/**
+ * 校验失败时，错误消息（同样绝对定位于输入框下方）与 description 位置重叠，
+ * 此时优先展示错误消息，隐藏 description。
+ */
+.form-valid-error [id$='-form-item-description'] {
+  visibility: hidden;
+}

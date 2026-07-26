@@ -222,11 +222,11 @@ function onBatchDelete() {
     <Grid>
       <template #toolbar-tools>
         <div class="flex gap-2">
-          <Button type="primary" danger @click="onBatchDelete" :disabled="!selectedRows.length">
+          <Button type="primary" class="inline-flex items-center" danger @click="onBatchDelete" :disabled="!selectedRows.length">
             <IconifyIcon icon="ant-design:delete-outlined" class="size-5" />
             {{ $t('ui.actionTitle.delete') }}
           </Button>
-          <Button type="primary" @click="onCreate">
+          <Button type="primary" class="inline-flex items-center" @click="onCreate">
             <Plus class="size-5" />
             {{ $t('ui.actionTitle.create') }}
           </Button>

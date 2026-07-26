@@ -16,9 +16,11 @@ import { useVbenForm } from '#/adapter/form';
 
 import {
   nameRule,
-  codeRule,
+  titleRule,
   componentRule,
   pathRule,
+  authCodeRule,
+  linkUrlRule,
 } from "#/views/permission/menu/modules/form/rules"
 
 import {
@@ -43,6 +45,7 @@ import {
   PermissionTypeOptionsValueIframe,
   PermissionTypeOptionsValueCatalog,
   PermissionTypeOptionsValueAction,
+  PermissionBadgeTypeOptionsValueText,
 } from '#/views/permission/menu/data';
 
 const emit = defineEmits<{
@@ -130,7 +133,9 @@ const schema: VbenFormSchema[] = [
     formItemClass: 'col-span-1 md:col-span-1',
     rules: nameRule,
     componentProps: {
-      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.name")])
+      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.name")]),
+      showCount: true,
+      maxlength: 30,
     }
   },
   {
@@ -138,7 +143,7 @@ const schema: VbenFormSchema[] = [
     label: $t('permission.menu.fields.title'),
     component: 'Input',
     formItemClass: 'col-span-1 md:col-span-1',
-    rules: codeRule,
+    rules: titleRule,
     componentProps() {
       // 不需要处理多语言时就无需这么做
       return {
@@ -147,6 +152,8 @@ const schema: VbenFormSchema[] = [
         onChange({ target: { value } }: { target: { value: string } }) {
           titleSuffix.value = value && $te(value) ? $t(value) : undefined;
         },
+        showCount: true,
+        maxlength: 60,
       };
     },
     description: $t('permission.menu.description.title'),
@@ -196,6 +203,14 @@ const schema: VbenFormSchema[] = [
     componentProps: {
       title: $t('permission.menu.form_group.routeConfiguration'),
     },
+    dependencies: {
+      triggerFields: ['type'],
+      show: (values) => {
+        return [PermissionTypeOptionsValueCatalog, 
+        PermissionTypeOptionsValueMenu,PermissionTypeOptionsValueIframe,PermissionTypeOptionsValueLink]
+          .includes(values.type)
+      },
+    },
   },
   {
     fieldName: 'path',
@@ -203,25 +218,29 @@ const schema: VbenFormSchema[] = [
     label: $t('permission.menu.fields.path'),
     formItemClass: 'col-span-2 md:col-span-2',
     componentProps: {
-      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.path")])
+      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.path")]),
+      showCount: true,
+      maxlength: 100,
     },
     description:$t("permission.menu.description.path"),
     dependencies: {
       triggerFields: ['type'],
       show: (values) => {
-        return [PermissionTypeOptionsValueCatalog, PermissionTypeOptionsValueMenu]
+        return [PermissionTypeOptionsValueCatalog, PermissionTypeOptionsValueMenu,PermissionTypeOptionsValueIframe]
           .includes(values.type)
       },
     },
     rules: pathRule,
   },
   {
-     fieldName: 'component',
+    fieldName: 'component',
     component: 'Input',
     label: $t('permission.menu.fields.component'),
     formItemClass: 'col-span-2 md:col-span-2',
     componentProps: {
-      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.component")])
+      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.component")]),
+      showCount: true,
+      maxlength: 100,
     },
     description: $t("permission.menu.description.component"),
     dependencies: {
@@ -233,6 +252,27 @@ const schema: VbenFormSchema[] = [
     },
     rules: componentRule,
   },
+  {
+    fieldName: 'linkUrl',
+    component: 'Input',
+    label: $t('permission.menu.fields.linkUrl'),
+    formItemClass: 'col-span-2 md:col-span-2',
+    componentProps: {
+      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.linkUrl")]),
+      showCount: true,
+      maxlength: 100,
+    },
+    dependencies: {
+      triggerFields: ['type'],
+      show: (values) => {
+        return [PermissionTypeOptionsValueIframe,PermissionTypeOptionsValueLink]
+          .includes(values.type)
+      },
+    },
+    rules: linkUrlRule,
+  },
+
+
   // ==================== 权限与状态 ====================
   {
     fieldName: '',
@@ -250,7 +290,9 @@ const schema: VbenFormSchema[] = [
     label: $t('permission.menu.fields.authCode'),
     formItemClass: 'col-span-1 md:col-span-1',
     componentProps: {
-      placeholder: $t("permission.menu.form_placeholder.authCode")
+      placeholder:  $t("ui.formRules.required", [$t("permission.menu.fields.authCode")]),
+      showCount: true,
+      maxlength: 100,
     },
     dependencies: {
       triggerFields: ['type'],
@@ -259,7 +301,7 @@ const schema: VbenFormSchema[] = [
           .includes(values.type)
       },
     },
-    rules: componentRule,
+    rules: authCodeRule,
   },
    {
     component: 'Switch',
@@ -300,6 +342,7 @@ const schema: VbenFormSchema[] = [
       allowClear: true,
       class: 'w-full',
       options: getBadgeTypeOptions(),
+      placeholder: $t("ui.formRules.selectRequired", [$t("permission.menu.fields.badgeType")])
     },
     dependencies: {
       show: (values) => {
@@ -316,11 +359,22 @@ const schema: VbenFormSchema[] = [
     label: $t('permission.menu.fields.badgeContent'),
     formItemClass: 'col-span-1 md:col-span-1',
     componentProps: {
+      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.badgeContent")]),
+      showCount: true,
+      maxlength: 10,
     },
     dependencies: {
-      triggerFields: ['type'],
+      triggerFields: ['type', 'badgeType'],
       show: (values) => {
         return values.type !== PermissionTypeOptionsValueAction;
+      },
+      // 只有 badgeType 选择 dot 时才能输入
+      disabled: (values) => values.badgeType !== PermissionBadgeTypeOptionsValueText,
+      // badgeType 不是 dot 时，清空 badgeContent 的值
+      trigger: (values, formApi) => {
+        if (values.badgeType !== PermissionBadgeTypeOptionsValueText && values.badgeContent) {
+          formApi.setFieldValue('badgeContent', undefined);
+        }
       },
     },
   },
@@ -331,6 +385,7 @@ const schema: VbenFormSchema[] = [
       allowClear: true,
       class: 'w-full',
       options: getBadgeStyleOptions(),
+      placeholder: $t("ui.formRules.selectRequired", [$t("permission.menu.fields.badgeStyle")])
     },
     dependencies: {
       show: (values) => {

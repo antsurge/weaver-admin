@@ -16,7 +16,8 @@
       "operation": "操作",
       "badgeType":"徽标类型", 
       "badgeContent":"徽标内容", 
-      "badgeStyle":"徽标样式"
+      "badgeStyle":"徽标样式",
+      "linkUrl":"链接地址" 
     },
     "operation": {
       "appendChildren": "新增下级"

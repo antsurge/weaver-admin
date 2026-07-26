@@ -16,6 +16,20 @@ export const nameRule = z
   );
 
 /**
+ * 标题
+ */
+export const titleRule = z
+  .string()
+  .min(
+    2,
+    $t('ui.formRules.minLength', [$t('permission.menu.fields.title'), 2]),
+  )
+  .max(
+    30,
+    $t('ui.formRules.maxLength', [$t('permission.menu.fields.title'), 30]),
+  );  
+
+/**
  * 权限编码
  */
 export const codeRule = z
@@ -39,8 +53,8 @@ export const pathRule = z
     $t('ui.formRules.minLength', [$t('permission.menu.fields.path'), 2]),
   )
   .max(
-    30,
-    $t('ui.formRules.maxLength', [$t('permission.menu.fields.path'), 30]),
+    100,
+    $t('ui.formRules.maxLength', [$t('permission.menu.fields.path'), 100]),
   );
 
 /**
@@ -56,29 +70,37 @@ export const componentRule = z.string()
     $t('ui.formRules.maxLength', [$t('permission.menu.fields.component'), 100]),
   );
 
-// rules: z
-//   .string()
-//   .min(2, $t('ui.formRules.minLength', [$t('permission.menu.fields.code'), 2]))
-//   .max(30, $t('ui.formRules.maxLength', [$t('permission.menu.fields.code'), 30])),
-// .refine(
-//   async (value: string) =>
-//     !(await isPermissionNameExists(value, formData.value?.id)),
-//   (value) => ({
-//     message: $t('ui.formRules.alreadyExists', [
-//       $t('system.menu.menuName'),
-//       value,
-//     ]),
-//   }),
-// ),
 /**
- * 组件路径
+ * 权限编码
  */
-export const urlRule = z.string()
+export const authCodeRule = z.string()
   .min(
     2,
-    $t('ui.formRules.minLength', [$t('permission.menu.fields.url'), 2]),
+    $t('ui.formRules.minLength', [$t('permission.menu.fields.authCode'), 2]),
   )
   .max(
     100,
-    $t('ui.formRules.maxLength', [$t('permission.menu.fields.url'), 100]),
+    $t('ui.formRules.maxLength', [$t('permission.menu.fields.authCode'), 100]),
+  );  
+
+/**
+ * 权限编码
+ */
+export const badgeContentRule = z.string()
+  .max(
+    10,
+    $t('ui.formRules.maxLength', [$t('permission.menu.fields.badgeContent'), 10]),
+  );  
+
+/**
+ * 链接路径
+ */
+export const linkUrlRule = z.string()
+  .min(
+    2,
+    $t('ui.formRules.minLength', [$t('permission.menu.fields.linkUrl'), 2]),
+  )
+  .max(
+    100,
+    $t('ui.formRules.maxLength', [$t('permission.menu.fields.linkUrl'), 100]),
   );
