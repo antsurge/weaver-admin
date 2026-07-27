@@ -101,6 +101,9 @@ function transformAccessRoutes(
                     title: $t(menu.title),
                     icon: menu.icon,
                     order: menu.weight ?? 0,
+                    badgeType: menu?.badgeType ?? "",
+                    badge: menu?.badgeContent ?? "",
+                    badgeVariants: menu?.badgeStyle ?? "",
                 },
                 // 🔧 修复1: 目录类型使用 BasicLayout 组件
                 component: isDirectory

@@ -100,6 +100,9 @@ export function useColumns(
       treeNode: true,
       slots: { default: 'title' },
       width: 200,
+      formatter: ({ cellValue }) => {
+        return $t(cellValue);
+      },
     },
     {
       field: 'name',
