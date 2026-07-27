@@ -23,8 +23,8 @@ type Menu struct {
 	Status       string    `json:"status"`
 	AuthCode     string    `json:"authCode"`     // 权限标识
 	BadgeType    string    `json:"badgeType"`    // 徽标类型: dot / text
-	BadgeContent string    `json:"badgeContent"` // 徽标内容
-	BadgeStyle   string    `json:"badgeStyle"`   // 徽标样式
+	Badge        string    `json:"badge"`        // 徽标内容
+	BadgeVariants string    `json:"badgeVariants"` // 徽标样式
 	Remark       string    `json:"remark"`
 	CreatedAt    time.Time `json:"createdAt"`
 	UpdatedAt    time.Time `json:"updatedAt"`

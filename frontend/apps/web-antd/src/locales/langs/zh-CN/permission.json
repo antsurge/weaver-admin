@@ -17,8 +17,8 @@
       "status": "状态",
       "weight": "权重",
       "badgeType": "徽标类型",
-      "badgeContent": "徽标内容",
-      "badgeStyle": "徽标样式",
+      "badge": "徽标内容",
+      "badgeVariants": "徽标样式",
       "remark": "备注",
       "operation": "操作"
     },

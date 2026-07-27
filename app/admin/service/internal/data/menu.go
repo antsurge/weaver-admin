@@ -37,8 +37,8 @@ func (r *menuRepo) CreateMenu(ctx context.Context, p *biz.Menu) error {
 		SetComponent(p.Component).
 		SetAuthCode(p.AuthCode).
 		SetBadgeType(p.BadgeType).
-		SetBadgeContent(p.BadgeContent).
-		SetBadgeStyle(p.BadgeStyle).
+		SetBadge(p.Badge).
+		SetBadgeVariants(p.BadgeVariants).
 		SetWeight(p.Weight).
 		SetStatus(menu.Status(p.Status)).
 		SetCreatedAt(p.CreatedAt).
@@ -61,8 +61,8 @@ func (r *menuRepo) UpdateMenu(ctx context.Context, p *biz.Menu) error {
 		SetComponent(p.Component).
 		SetAuthCode(p.AuthCode).
 		SetBadgeType(p.BadgeType).
-		SetBadgeContent(p.BadgeContent).
-		SetBadgeStyle(p.BadgeStyle).
+		SetBadge(p.Badge).
+		SetBadgeVariants(p.BadgeVariants).
 		SetWeight(p.Weight).
 		SetStatus(menu.Status(p.Status)).
 		SetUpdatedAt(p.UpdatedAt).
@@ -160,8 +160,8 @@ func (r *menuRepo) ListMenu(
 			Component:    v.Component,
 			AuthCode:     v.AuthCode,
 			BadgeType:    v.BadgeType,
-			BadgeContent: v.BadgeContent,
-			BadgeStyle:   v.BadgeStyle,
+			Badge:        v.Badge,
+			BadgeVariants: v.BadgeVariants,
 			Weight:       v.Weight,
 			Status:       string(v.Status),
 			CreatedAt:    v.CreatedAt,
@@ -210,8 +210,8 @@ func (r *menuRepo) GetMenusByIDs(ctx context.Context, ids []string) ([]*biz.Menu
 			Component:    v.Component,
 			AuthCode:     v.AuthCode,
 			BadgeType:    v.BadgeType,
-			BadgeContent: v.BadgeContent,
-			BadgeStyle:   v.BadgeStyle,
+			Badge:        v.Badge,
+			BadgeVariants: v.BadgeVariants,
 			Weight:       v.Weight,
 			Status:       string(v.Status),
 			CreatedAt:    v.CreatedAt,

@@ -23,8 +23,8 @@ message Menu {
   string title = 13; // 标题
   string authCode = 14; // 权限标识
   string badgeType = 15; // 徽标类型
-  string badgeContent = 16; // 徽标内容
-  string badgeStyle = 17; // 徽标样式
+  string badge = 16; // 徽标内容
+  string badgeVariants = 17; // 徽标样式
   string remark = 18; // 备注
   google.protobuf.Timestamp createdAt = 19; // 创建时间
   google.protobuf.Timestamp updatedAt = 20; // 更新时间
@@ -125,7 +125,7 @@ message CreateMenuRequest {
 
   string badgeType = 14 [(gnostic.openapi.v3.property) = {description: "徽标类型: dot / text"}];
 
-  string badgeContent = 15 [
+  string badge = 15 [
     (buf.validate.field).cel = {
       id: "CREATE_MENU_BADGE_CONTENT_MAX"
       expression: "this.size() <= 10"
@@ -133,7 +133,7 @@ message CreateMenuRequest {
     (gnostic.openapi.v3.property) = {description: "徽标内容"}
   ];
 
-  string badgeStyle = 16 [(gnostic.openapi.v3.property) = {description: "徽标样式: default / destructive / primary / success / warning"}];
+  string badgeVariants = 16 [(gnostic.openapi.v3.property) = {description: "徽标样式: default / destructive / primary / success / warning"}];
 
   string remark = 17 [(gnostic.openapi.v3.property) = {description: "备注"}];
 }
@@ -238,7 +238,7 @@ message UpdateMenuRequest {
 
   optional string badgeType = 15 [(gnostic.openapi.v3.property) = {description: "徽标类型: dot / text"}];
 
-  optional string badgeContent = 16 [
+  optional string badge = 16 [
     (buf.validate.field).cel = {
       id: "UPDATE_MENU_BADGE_CONTENT_MAX"
       expression: "this.size() <= 10"
@@ -246,7 +246,7 @@ message UpdateMenuRequest {
     (gnostic.openapi.v3.property) = {description: "徽标内容"}
   ];
 
-  optional string badgeStyle = 17 [(gnostic.openapi.v3.property) = {description: "徽标样式: default / destructive / primary / success / warning"}];
+  optional string badgeVariants = 17 [(gnostic.openapi.v3.property) = {description: "徽标样式: default / destructive / primary / success / warning"}];
 
   optional string remark = 18 [(gnostic.openapi.v3.property) = {description: "备注"}];
 }

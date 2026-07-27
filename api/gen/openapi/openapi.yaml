@@ -1633,10 +1633,10 @@ components:
                 badgeType:
                     type: string
                     description: '徽标类型: dot / text'
-                badgeContent:
+                badge:
                     type: string
                     description: 徽标内容
-                badgeStyle:
+                badgeVariants:
                     type: string
                     description: '徽标样式: default / destructive / primary / success / warning'
                 remark:
@@ -1998,9 +1998,9 @@ components:
                     type: string
                 badgeType:
                     type: string
-                badgeContent:
+                badge:
                     type: string
-                badgeStyle:
+                badgeVariants:
                     type: string
                 remark:
                     type: string
@@ -2310,10 +2310,10 @@ components:
                 badgeType:
                     type: string
                     description: '徽标类型: dot / text'
-                badgeContent:
+                badge:
                     type: string
                     description: 徽标内容
-                badgeStyle:
+                badgeVariants:
                     type: string
                     description: '徽标样式: default / destructive / primary / success / warning'
                 remark:

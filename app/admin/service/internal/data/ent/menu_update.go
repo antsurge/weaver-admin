@@ -218,30 +218,30 @@ func (_u *MenuUpdate) SetNillableBadgeType(v *string) *MenuUpdate {
 	return _u
 }
 
-// SetBadgeContent sets the "badge_content" field.
-func (_u *MenuUpdate) SetBadgeContent(v string) *MenuUpdate {
-	_u.mutation.SetBadgeContent(v)
+// SetBadge sets the "badge" field.
+func (_u *MenuUpdate) SetBadge(v string) *MenuUpdate {
+	_u.mutation.SetBadge(v)
 	return _u
 }
 
-// SetNillableBadgeContent sets the "badge_content" field if the given value is not nil.
-func (_u *MenuUpdate) SetNillableBadgeContent(v *string) *MenuUpdate {
+// SetNillableBadge sets the "badge" field if the given value is not nil.
+func (_u *MenuUpdate) SetNillableBadge(v *string) *MenuUpdate {
 	if v != nil {
-		_u.SetBadgeContent(*v)
+		_u.SetBadge(*v)
 	}
 	return _u
 }
 
-// SetBadgeStyle sets the "badge_style" field.
-func (_u *MenuUpdate) SetBadgeStyle(v string) *MenuUpdate {
-	_u.mutation.SetBadgeStyle(v)
+// SetBadgeVariants sets the "badge_variants" field.
+func (_u *MenuUpdate) SetBadgeVariants(v string) *MenuUpdate {
+	_u.mutation.SetBadgeVariants(v)
 	return _u
 }
 
-// SetNillableBadgeStyle sets the "badge_style" field if the given value is not nil.
-func (_u *MenuUpdate) SetNillableBadgeStyle(v *string) *MenuUpdate {
+// SetNillableBadgeVariants sets the "badge_variants" field if the given value is not nil.
+func (_u *MenuUpdate) SetNillableBadgeVariants(v *string) *MenuUpdate {
 	if v != nil {
-		_u.SetBadgeStyle(*v)
+		_u.SetBadgeVariants(*v)
 	}
 	return _u
 }
@@ -462,14 +462,14 @@ func (_u *MenuUpdate) check() error {
 			return &ValidationError{Name: "badge_type", err: fmt.Errorf(`ent: validator failed for field "Menu.badge_type": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.BadgeContent(); ok {
-		if err := menu.BadgeContentValidator(v); err != nil {
-			return &ValidationError{Name: "badge_content", err: fmt.Errorf(`ent: validator failed for field "Menu.badge_content": %w`, err)}
+	if v, ok := _u.mutation.Badge(); ok {
+		if err := menu.BadgeValidator(v); err != nil {
+			return &ValidationError{Name: "badge", err: fmt.Errorf(`ent: validator failed for field "Menu.badge": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.BadgeStyle(); ok {
-		if err := menu.BadgeStyleValidator(v); err != nil {
-			return &ValidationError{Name: "badge_style", err: fmt.Errorf(`ent: validator failed for field "Menu.badge_style": %w`, err)}
+	if v, ok := _u.mutation.BadgeVariants(); ok {
+		if err := menu.BadgeVariantsValidator(v); err != nil {
+			return &ValidationError{Name: "badge_variants", err: fmt.Errorf(`ent: validator failed for field "Menu.badge_variants": %w`, err)}
 		}
 	}
 	if v, ok := _u.mutation.Status(); ok {
@@ -534,11 +534,11 @@ func (_u *MenuUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.BadgeType(); ok {
 		_spec.SetField(menu.FieldBadgeType, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.BadgeContent(); ok {
-		_spec.SetField(menu.FieldBadgeContent, field.TypeString, value)
+	if value, ok := _u.mutation.Badge(); ok {
+		_spec.SetField(menu.FieldBadge, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.BadgeStyle(); ok {
-		_spec.SetField(menu.FieldBadgeStyle, field.TypeString, value)
+	if value, ok := _u.mutation.BadgeVariants(); ok {
+		_spec.SetField(menu.FieldBadgeVariants, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Weight(); ok {
 		_spec.SetField(menu.FieldWeight, field.TypeInt, value)
@@ -862,30 +862,30 @@ func (_u *MenuUpdateOne) SetNillableBadgeType(v *string) *MenuUpdateOne {
 	return _u
 }
 
-// SetBadgeContent sets the "badge_content" field.
-func (_u *MenuUpdateOne) SetBadgeContent(v string) *MenuUpdateOne {
-	_u.mutation.SetBadgeContent(v)
+// SetBadge sets the "badge" field.
+func (_u *MenuUpdateOne) SetBadge(v string) *MenuUpdateOne {
+	_u.mutation.SetBadge(v)
 	return _u
 }
 
-// SetNillableBadgeContent sets the "badge_content" field if the given value is not nil.
-func (_u *MenuUpdateOne) SetNillableBadgeContent(v *string) *MenuUpdateOne {
+// SetNillableBadge sets the "badge" field if the given value is not nil.
+func (_u *MenuUpdateOne) SetNillableBadge(v *string) *MenuUpdateOne {
 	if v != nil {
-		_u.SetBadgeContent(*v)
+		_u.SetBadge(*v)
 	}
 	return _u
 }
 
-// SetBadgeStyle sets the "badge_style" field.
-func (_u *MenuUpdateOne) SetBadgeStyle(v string) *MenuUpdateOne {
-	_u.mutation.SetBadgeStyle(v)
+// SetBadgeVariants sets the "badge_variants" field.
+func (_u *MenuUpdateOne) SetBadgeVariants(v string) *MenuUpdateOne {
+	_u.mutation.SetBadgeVariants(v)
 	return _u
 }
 
-// SetNillableBadgeStyle sets the "badge_style" field if the given value is not nil.
-func (_u *MenuUpdateOne) SetNillableBadgeStyle(v *string) *MenuUpdateOne {
+// SetNillableBadgeVariants sets the "badge_variants" field if the given value is not nil.
+func (_u *MenuUpdateOne) SetNillableBadgeVariants(v *string) *MenuUpdateOne {
 	if v != nil {
-		_u.SetBadgeStyle(*v)
+		_u.SetBadgeVariants(*v)
 	}
 	return _u
 }
@@ -1119,14 +1119,14 @@ func (_u *MenuUpdateOne) check() error {
 			return &ValidationError{Name: "badge_type", err: fmt.Errorf(`ent: validator failed for field "Menu.badge_type": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.BadgeContent(); ok {
-		if err := menu.BadgeContentValidator(v); err != nil {
-			return &ValidationError{Name: "badge_content", err: fmt.Errorf(`ent: validator failed for field "Menu.badge_content": %w`, err)}
+	if v, ok := _u.mutation.Badge(); ok {
+		if err := menu.BadgeValidator(v); err != nil {
+			return &ValidationError{Name: "badge", err: fmt.Errorf(`ent: validator failed for field "Menu.badge": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.BadgeStyle(); ok {
-		if err := menu.BadgeStyleValidator(v); err != nil {
-			return &ValidationError{Name: "badge_style", err: fmt.Errorf(`ent: validator failed for field "Menu.badge_style": %w`, err)}
+	if v, ok := _u.mutation.BadgeVariants(); ok {
+		if err := menu.BadgeVariantsValidator(v); err != nil {
+			return &ValidationError{Name: "badge_variants", err: fmt.Errorf(`ent: validator failed for field "Menu.badge_variants": %w`, err)}
 		}
 	}
 	if v, ok := _u.mutation.Status(); ok {
@@ -1208,11 +1208,11 @@ func (_u *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) {
 	if value, ok := _u.mutation.BadgeType(); ok {
 		_spec.SetField(menu.FieldBadgeType, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.BadgeContent(); ok {
-		_spec.SetField(menu.FieldBadgeContent, field.TypeString, value)
+	if value, ok := _u.mutation.Badge(); ok {
+		_spec.SetField(menu.FieldBadge, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.BadgeStyle(); ok {
-		_spec.SetField(menu.FieldBadgeStyle, field.TypeString, value)
+	if value, ok := _u.mutation.BadgeVariants(); ok {
+		_spec.SetField(menu.FieldBadgeVariants, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Weight(); ok {
 		_spec.SetField(menu.FieldWeight, field.TypeInt, value)

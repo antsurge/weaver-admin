@@ -265,8 +265,8 @@ function onBatchDelete() {
             </span>
           </div>
           <!-- 右侧 Badge -->
-          <MenuBadge v-if="row?.badgeType" class="menu-badge" :badge="row.badgeContent" :badge-type="row.badgeType"
-            :badge-variants="row.badgeStyle" />
+          <MenuBadge v-if="row?.badgeType" class="menu-badge" :badge="row.badge" :badge-type="row.badgeType"
+            :badge-variants="row.badgeVariants" />
         </div>
       </template>
     </Grid>

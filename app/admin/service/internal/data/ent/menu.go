@@ -44,9 +44,9 @@ type Menu struct {
 	// 徽标类型:dot=圆点,text=文本
 	BadgeType string `json:"badge_type,omitempty"`
 	// 徽标内容
-	BadgeContent string `json:"badge_content,omitempty"`
+	Badge string `json:"badge,omitempty"`
 	// 徽标样式:default/destructive/primary/success/warning
-	BadgeStyle string `json:"badge_style,omitempty"`
+	BadgeVariants string `json:"badge_variants,omitempty"`
 	// 权重
 	Weight int `json:"weight,omitempty"`
 	// 状态：enabled=启用 disabled=禁用
@@ -97,7 +97,7 @@ func (*Menu) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case menu.FieldWeight:
 			values[i] = new(sql.NullInt64)
-		case menu.FieldID, menu.FieldParentID, menu.FieldName, menu.FieldCode, menu.FieldTitle, menu.FieldRemark, menu.FieldPath, menu.FieldIcon, menu.FieldType, menu.FieldMenuType, menu.FieldURL, menu.FieldComponent, menu.FieldAuthCode, menu.FieldBadgeType, menu.FieldBadgeContent, menu.FieldBadgeStyle, menu.FieldStatus:
+		case menu.FieldID, menu.FieldParentID, menu.FieldName, menu.FieldCode, menu.FieldTitle, menu.FieldRemark, menu.FieldPath, menu.FieldIcon, menu.FieldType, menu.FieldMenuType, menu.FieldURL, menu.FieldComponent, menu.FieldAuthCode, menu.FieldBadgeType, menu.FieldBadge, menu.FieldBadgeVariants, menu.FieldStatus:
 			values[i] = new(sql.NullString)
 		case menu.FieldCreatedAt, menu.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -200,17 +200,17 @@ func (_m *Menu) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.BadgeType = value.String
 			}
-		case menu.FieldBadgeContent:
+		case menu.FieldBadge:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field badge_content", values[i])
+				return fmt.Errorf("unexpected type %T for field badge", values[i])
 			} else if value.Valid {
-				_m.BadgeContent = value.String
+				_m.Badge = value.String
 			}
-		case menu.FieldBadgeStyle:
+		case menu.FieldBadgeVariants:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field badge_style", values[i])
+				return fmt.Errorf("unexpected type %T for field badge_variants", values[i])
 			} else if value.Valid {
-				_m.BadgeStyle = value.String
+				_m.BadgeVariants = value.String
 			}
 		case menu.FieldWeight:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -321,11 +321,11 @@ func (_m *Menu) String() string {
 	builder.WriteString("badge_type=")
 	builder.WriteString(_m.BadgeType)
 	builder.WriteString(", ")
-	builder.WriteString("badge_content=")
-	builder.WriteString(_m.BadgeContent)
+	builder.WriteString("badge=")
+	builder.WriteString(_m.Badge)
 	builder.WriteString(", ")
-	builder.WriteString("badge_style=")
-	builder.WriteString(_m.BadgeStyle)
+	builder.WriteString("badge_variants=")
+	builder.WriteString(_m.BadgeVariants)
 	builder.WriteString(", ")
 	builder.WriteString("weight=")
 	builder.WriteString(fmt.Sprintf("%v", _m.Weight))

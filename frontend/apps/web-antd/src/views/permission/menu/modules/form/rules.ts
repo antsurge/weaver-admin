@@ -71,12 +71,12 @@ export const authCodeRule = z.string()
   );  
 
 /**
- * 权限编码
+ * 徽标内容
  */
-export const badgeContentRule = z.string()
+export const badgeRule = z.string()
   .max(
     10,
-    $t('ui.formRules.maxLength', [$t('permission.menu.fields.badgeContent'), 10]),
+    $t('ui.formRules.maxLength', [$t('permission.menu.fields.badge'), 10]),
   );  
 
 /**

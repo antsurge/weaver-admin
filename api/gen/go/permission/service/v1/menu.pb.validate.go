@@ -86,9 +86,9 @@ func (m *Menu) validate(all bool) error {
 
 	// no validation rules for BadgeType
 
-	// no validation rules for BadgeContent
+	// no validation rules for Badge
 
-	// no validation rules for BadgeStyle
+	// no validation rules for BadgeVariants
 
 	// no validation rules for Remark
 
@@ -307,9 +307,9 @@ func (m *CreateMenuRequest) validate(all bool) error {
 
 	// no validation rules for BadgeType
 
-	// no validation rules for BadgeContent
+	// no validation rules for Badge
 
-	// no validation rules for BadgeStyle
+	// no validation rules for BadgeVariants
 
 	// no validation rules for Remark
 
@@ -596,12 +596,12 @@ func (m *UpdateMenuRequest) validate(all bool) error {
 		// no validation rules for BadgeType
 	}
 
-	if m.BadgeContent != nil {
-		// no validation rules for BadgeContent
+	if m.Badge != nil {
+		// no validation rules for Badge
 	}
 
-	if m.BadgeStyle != nil {
-		// no validation rules for BadgeStyle
+	if m.BadgeVariants != nil {
+		// no validation rules for BadgeVariants
 	}
 
 	if m.Remark != nil {

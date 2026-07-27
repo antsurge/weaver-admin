@@ -38,7 +38,7 @@ import { $te } from '@vben/locales';
 import {
   getPermissionTypeOptions,
   getBadgeTypeOptions,
-  getBadgeStyleOptions,
+  getBadgeVariantsOptions,
   PermissionTypeOptionsValueMenu,
   // PermissionTypeOptionsValueTab,
   PermissionTypeOptionsValueLink,
@@ -354,12 +354,12 @@ const schema: VbenFormSchema[] = [
     formItemClass: 'col-span-1 md:col-span-1',
   },
   {
-    fieldName: 'badgeContent',
+    fieldName: 'badge',
     component: 'Input',
-    label: $t('permission.menu.fields.badgeContent'),
+    label: $t('permission.menu.fields.badge'),
     formItemClass: 'col-span-1 md:col-span-1',
     componentProps: {
-      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.badgeContent")]),
+      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.badge")]),
       showCount: true,
       maxlength: 10,
     },
@@ -370,22 +370,22 @@ const schema: VbenFormSchema[] = [
       },
       // 只有 badgeType 选择 dot 时才能输入
       disabled: (values) => values.badgeType !== PermissionBadgeTypeOptionsValueText,
-      // badgeType 不是 dot 时，清空 badgeContent 的值
+      // badgeType 不是 text 时，清空 badge 的值
       trigger: (values, formApi) => {
-        if (values.badgeType !== PermissionBadgeTypeOptionsValueText && values.badgeContent) {
-          formApi.setFieldValue('badgeContent', undefined);
+        if (values.badgeType !== PermissionBadgeTypeOptionsValueText && values.badge) {
+          formApi.setFieldValue('badge', undefined);
         }
       },
     },
   },
   {
-    fieldName: 'badgeStyle',
+    fieldName: 'badgeVariants',
     component: 'Select',
     componentProps: {
       allowClear: true,
       class: 'w-full',
-      options: getBadgeStyleOptions(),
-      placeholder: $t("ui.formRules.selectRequired", [$t("permission.menu.fields.badgeStyle")])
+      options: getBadgeVariantsOptions(),
+      placeholder: $t("ui.formRules.selectRequired", [$t("permission.menu.fields.badgeVariants")])
     },
     dependencies: {
       show: (values) => {
@@ -393,7 +393,7 @@ const schema: VbenFormSchema[] = [
       },
       triggerFields: ['type'],
     },
-    label: $t('permission.menu.fields.badgeStyle'),
+    label: $t('permission.menu.fields.badgeVariants'),
     formItemClass: 'col-span-1 md:col-span-1',
   },
 
@@ -481,8 +481,8 @@ function cleanHiddenFields(data: Record<string, any>) {
       delete data.component;
       delete data.linkUrl;
       delete data.badgeType;
-      delete data.badgeContent;
-      delete data.badgeStyle;
+      delete data.badge;
+      delete data.badgeVariants;
       break;
     case PermissionTypeOptionsValueIframe:
       // iframe：隐藏 component、authCode

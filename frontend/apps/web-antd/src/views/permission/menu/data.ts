@@ -55,7 +55,7 @@ export function getBadgeTypeOptions() {
   ];
 }
 
-export function getBadgeStyleOptions() {
+export function getBadgeVariantsOptions() {
   return [
     {
       label: 'default',

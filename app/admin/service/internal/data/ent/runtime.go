@@ -338,18 +338,18 @@ func init() {
 	menu.DefaultBadgeType = menuDescBadgeType.Default.(string)
 	// menu.BadgeTypeValidator is a validator for the "badge_type" field. It is called by the builders before save.
 	menu.BadgeTypeValidator = menuDescBadgeType.Validators[0].(func(string) error)
-	// menuDescBadgeContent is the schema descriptor for badge_content field.
-	menuDescBadgeContent := menuFields[14].Descriptor()
-	// menu.DefaultBadgeContent holds the default value on creation for the badge_content field.
-	menu.DefaultBadgeContent = menuDescBadgeContent.Default.(string)
-	// menu.BadgeContentValidator is a validator for the "badge_content" field. It is called by the builders before save.
-	menu.BadgeContentValidator = menuDescBadgeContent.Validators[0].(func(string) error)
-	// menuDescBadgeStyle is the schema descriptor for badge_style field.
-	menuDescBadgeStyle := menuFields[15].Descriptor()
-	// menu.DefaultBadgeStyle holds the default value on creation for the badge_style field.
-	menu.DefaultBadgeStyle = menuDescBadgeStyle.Default.(string)
-	// menu.BadgeStyleValidator is a validator for the "badge_style" field. It is called by the builders before save.
-	menu.BadgeStyleValidator = menuDescBadgeStyle.Validators[0].(func(string) error)
+	// menuDescBadge is the schema descriptor for badge field.
+	menuDescBadge := menuFields[14].Descriptor()
+	// menu.DefaultBadge holds the default value on creation for the badge field.
+	menu.DefaultBadge = menuDescBadge.Default.(string)
+	// menu.BadgeValidator is a validator for the "badge" field. It is called by the builders before save.
+	menu.BadgeValidator = menuDescBadge.Validators[0].(func(string) error)
+	// menuDescBadgeVariants is the schema descriptor for badge_variants field.
+	menuDescBadgeVariants := menuFields[15].Descriptor()
+	// menu.DefaultBadgeVariants holds the default value on creation for the badge_variants field.
+	menu.DefaultBadgeVariants = menuDescBadgeVariants.Default.(string)
+	// menu.BadgeVariantsValidator is a validator for the "badge_variants" field. It is called by the builders before save.
+	menu.BadgeVariantsValidator = menuDescBadgeVariants.Validators[0].(func(string) error)
 	// menuDescWeight is the schema descriptor for weight field.
 	menuDescWeight := menuFields[16].Descriptor()
 	// menu.DefaultWeight holds the default value on creation for the weight field.

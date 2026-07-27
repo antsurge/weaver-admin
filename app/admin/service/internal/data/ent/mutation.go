@@ -4275,8 +4275,8 @@ type MenuMutation struct {
 	component         *string
 	auth_code         *string
 	badge_type        *string
-	badge_content     *string
-	badge_style       *string
+	badge             *string
+	badge_variants    *string
 	weight            *int
 	addweight         *int
 	status            *menu.Status
@@ -4879,76 +4879,76 @@ func (m *MenuMutation) ResetBadgeType() {
 	m.badge_type = nil
 }
 
-// SetBadgeContent sets the "badge_content" field.
-func (m *MenuMutation) SetBadgeContent(s string) {
-	m.badge_content = &s
+// SetBadge sets the "badge" field.
+func (m *MenuMutation) SetBadge(s string) {
+	m.badge = &s
 }
 
-// BadgeContent returns the value of the "badge_content" field in the mutation.
-func (m *MenuMutation) BadgeContent() (r string, exists bool) {
-	v := m.badge_content
+// Badge returns the value of the "badge" field in the mutation.
+func (m *MenuMutation) Badge() (r string, exists bool) {
+	v := m.badge
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldBadgeContent returns the old "badge_content" field's value of the Menu entity.
+// OldBadge returns the old "badge" field's value of the Menu entity.
 // If the Menu object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MenuMutation) OldBadgeContent(ctx context.Context) (v string, err error) {
+func (m *MenuMutation) OldBadge(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldBadgeContent is only allowed on UpdateOne operations")
+		return v, errors.New("OldBadge is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldBadgeContent requires an ID field in the mutation")
+		return v, errors.New("OldBadge requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldBadgeContent: %w", err)
+		return v, fmt.Errorf("querying old value for OldBadge: %w", err)
 	}
-	return oldValue.BadgeContent, nil
+	return oldValue.Badge, nil
 }
 
-// ResetBadgeContent resets all changes to the "badge_content" field.
-func (m *MenuMutation) ResetBadgeContent() {
-	m.badge_content = nil
+// ResetBadge resets all changes to the "badge" field.
+func (m *MenuMutation) ResetBadge() {
+	m.badge = nil
 }
 
-// SetBadgeStyle sets the "badge_style" field.
-func (m *MenuMutation) SetBadgeStyle(s string) {
-	m.badge_style = &s
+// SetBadgeVariants sets the "badge_variants" field.
+func (m *MenuMutation) SetBadgeVariants(s string) {
+	m.badge_variants = &s
 }
 
-// BadgeStyle returns the value of the "badge_style" field in the mutation.
-func (m *MenuMutation) BadgeStyle() (r string, exists bool) {
-	v := m.badge_style
+// BadgeVariants returns the value of the "badge_variants" field in the mutation.
+func (m *MenuMutation) BadgeVariants() (r string, exists bool) {
+	v := m.badge_variants
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldBadgeStyle returns the old "badge_style" field's value of the Menu entity.
+// OldBadgeVariants returns the old "badge_variants" field's value of the Menu entity.
 // If the Menu object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MenuMutation) OldBadgeStyle(ctx context.Context) (v string, err error) {
+func (m *MenuMutation) OldBadgeVariants(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldBadgeStyle is only allowed on UpdateOne operations")
+		return v, errors.New("OldBadgeVariants is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldBadgeStyle requires an ID field in the mutation")
+		return v, errors.New("OldBadgeVariants requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldBadgeStyle: %w", err)
+		return v, fmt.Errorf("querying old value for OldBadgeVariants: %w", err)
 	}
-	return oldValue.BadgeStyle, nil
+	return oldValue.BadgeVariants, nil
 }
 
-// ResetBadgeStyle resets all changes to the "badge_style" field.
-func (m *MenuMutation) ResetBadgeStyle() {
-	m.badge_style = nil
+// ResetBadgeVariants resets all changes to the "badge_variants" field.
+func (m *MenuMutation) ResetBadgeVariants() {
+	m.badge_variants = nil
 }
 
 // SetWeight sets the "weight" field.
@@ -5297,11 +5297,11 @@ func (m *MenuMutation) Fields() []string {
 	if m.badge_type != nil {
 		fields = append(fields, menu.FieldBadgeType)
 	}
-	if m.badge_content != nil {
-		fields = append(fields, menu.FieldBadgeContent)
+	if m.badge != nil {
+		fields = append(fields, menu.FieldBadge)
 	}
-	if m.badge_style != nil {
-		fields = append(fields, menu.FieldBadgeStyle)
+	if m.badge_variants != nil {
+		fields = append(fields, menu.FieldBadgeVariants)
 	}
 	if m.weight != nil {
 		fields = append(fields, menu.FieldWeight)
@@ -5349,10 +5349,10 @@ func (m *MenuMutation) Field(name string) (ent.Value, bool) {
 		return m.AuthCode()
 	case menu.FieldBadgeType:
 		return m.BadgeType()
-	case menu.FieldBadgeContent:
-		return m.BadgeContent()
-	case menu.FieldBadgeStyle:
-		return m.BadgeStyle()
+	case menu.FieldBadge:
+		return m.Badge()
+	case menu.FieldBadgeVariants:
+		return m.BadgeVariants()
 	case menu.FieldWeight:
 		return m.Weight()
 	case menu.FieldStatus:
@@ -5396,10 +5396,10 @@ func (m *MenuMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldAuthCode(ctx)
 	case menu.FieldBadgeType:
 		return m.OldBadgeType(ctx)
-	case menu.FieldBadgeContent:
-		return m.OldBadgeContent(ctx)
-	case menu.FieldBadgeStyle:
-		return m.OldBadgeStyle(ctx)
+	case menu.FieldBadge:
+		return m.OldBadge(ctx)
+	case menu.FieldBadgeVariants:
+		return m.OldBadgeVariants(ctx)
 	case menu.FieldWeight:
 		return m.OldWeight(ctx)
 	case menu.FieldStatus:
@@ -5508,19 +5508,19 @@ func (m *MenuMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetBadgeType(v)
 		return nil
-	case menu.FieldBadgeContent:
+	case menu.FieldBadge:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetBadgeContent(v)
+		m.SetBadge(v)
 		return nil
-	case menu.FieldBadgeStyle:
+	case menu.FieldBadgeVariants:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetBadgeStyle(v)
+		m.SetBadgeVariants(v)
 		return nil
 	case menu.FieldWeight:
 		v, ok := value.(int)
@@ -5662,11 +5662,11 @@ func (m *MenuMutation) ResetField(name string) error {
 	case menu.FieldBadgeType:
 		m.ResetBadgeType()
 		return nil
-	case menu.FieldBadgeContent:
-		m.ResetBadgeContent()
+	case menu.FieldBadge:
+		m.ResetBadge()
 		return nil
-	case menu.FieldBadgeStyle:
-		m.ResetBadgeStyle()
+	case menu.FieldBadgeVariants:
+		m.ResetBadgeVariants()
 		return nil
 	case menu.FieldWeight:
 		m.ResetWeight()

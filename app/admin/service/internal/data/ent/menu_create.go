@@ -196,30 +196,30 @@ func (_c *MenuCreate) SetNillableBadgeType(v *string) *MenuCreate {
 	return _c
 }
 
-// SetBadgeContent sets the "badge_content" field.
-func (_c *MenuCreate) SetBadgeContent(v string) *MenuCreate {
-	_c.mutation.SetBadgeContent(v)
+// SetBadge sets the "badge" field.
+func (_c *MenuCreate) SetBadge(v string) *MenuCreate {
+	_c.mutation.SetBadge(v)
 	return _c
 }
 
-// SetNillableBadgeContent sets the "badge_content" field if the given value is not nil.
-func (_c *MenuCreate) SetNillableBadgeContent(v *string) *MenuCreate {
+// SetNillableBadge sets the "badge" field if the given value is not nil.
+func (_c *MenuCreate) SetNillableBadge(v *string) *MenuCreate {
 	if v != nil {
-		_c.SetBadgeContent(*v)
+		_c.SetBadge(*v)
 	}
 	return _c
 }
 
-// SetBadgeStyle sets the "badge_style" field.
-func (_c *MenuCreate) SetBadgeStyle(v string) *MenuCreate {
-	_c.mutation.SetBadgeStyle(v)
+// SetBadgeVariants sets the "badge_variants" field.
+func (_c *MenuCreate) SetBadgeVariants(v string) *MenuCreate {
+	_c.mutation.SetBadgeVariants(v)
 	return _c
 }
 
-// SetNillableBadgeStyle sets the "badge_style" field if the given value is not nil.
-func (_c *MenuCreate) SetNillableBadgeStyle(v *string) *MenuCreate {
+// SetNillableBadgeVariants sets the "badge_variants" field if the given value is not nil.
+func (_c *MenuCreate) SetNillableBadgeVariants(v *string) *MenuCreate {
 	if v != nil {
-		_c.SetBadgeStyle(*v)
+		_c.SetBadgeVariants(*v)
 	}
 	return _c
 }
@@ -395,13 +395,13 @@ func (_c *MenuCreate) defaults() {
 		v := menu.DefaultBadgeType
 		_c.mutation.SetBadgeType(v)
 	}
-	if _, ok := _c.mutation.BadgeContent(); !ok {
-		v := menu.DefaultBadgeContent
-		_c.mutation.SetBadgeContent(v)
+	if _, ok := _c.mutation.Badge(); !ok {
+		v := menu.DefaultBadge
+		_c.mutation.SetBadge(v)
 	}
-	if _, ok := _c.mutation.BadgeStyle(); !ok {
-		v := menu.DefaultBadgeStyle
-		_c.mutation.SetBadgeStyle(v)
+	if _, ok := _c.mutation.BadgeVariants(); !ok {
+		v := menu.DefaultBadgeVariants
+		_c.mutation.SetBadgeVariants(v)
 	}
 	if _, ok := _c.mutation.Weight(); !ok {
 		v := menu.DefaultWeight
@@ -519,20 +519,20 @@ func (_c *MenuCreate) check() error {
 			return &ValidationError{Name: "badge_type", err: fmt.Errorf(`ent: validator failed for field "Menu.badge_type": %w`, err)}
 		}
 	}
-	if _, ok := _c.mutation.BadgeContent(); !ok {
-		return &ValidationError{Name: "badge_content", err: errors.New(`ent: missing required field "Menu.badge_content"`)}
+	if _, ok := _c.mutation.Badge(); !ok {
+		return &ValidationError{Name: "badge", err: errors.New(`ent: missing required field "Menu.badge"`)}
 	}
-	if v, ok := _c.mutation.BadgeContent(); ok {
-		if err := menu.BadgeContentValidator(v); err != nil {
-			return &ValidationError{Name: "badge_content", err: fmt.Errorf(`ent: validator failed for field "Menu.badge_content": %w`, err)}
+	if v, ok := _c.mutation.Badge(); ok {
+		if err := menu.BadgeValidator(v); err != nil {
+			return &ValidationError{Name: "badge", err: fmt.Errorf(`ent: validator failed for field "Menu.badge": %w`, err)}
 		}
 	}
-	if _, ok := _c.mutation.BadgeStyle(); !ok {
-		return &ValidationError{Name: "badge_style", err: errors.New(`ent: missing required field "Menu.badge_style"`)}
+	if _, ok := _c.mutation.BadgeVariants(); !ok {
+		return &ValidationError{Name: "badge_variants", err: errors.New(`ent: missing required field "Menu.badge_variants"`)}
 	}
-	if v, ok := _c.mutation.BadgeStyle(); ok {
-		if err := menu.BadgeStyleValidator(v); err != nil {
-			return &ValidationError{Name: "badge_style", err: fmt.Errorf(`ent: validator failed for field "Menu.badge_style": %w`, err)}
+	if v, ok := _c.mutation.BadgeVariants(); ok {
+		if err := menu.BadgeVariantsValidator(v); err != nil {
+			return &ValidationError{Name: "badge_variants", err: fmt.Errorf(`ent: validator failed for field "Menu.badge_variants": %w`, err)}
 		}
 	}
 	if _, ok := _c.mutation.Weight(); !ok {
@@ -644,13 +644,13 @@ func (_c *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 		_spec.SetField(menu.FieldBadgeType, field.TypeString, value)
 		_node.BadgeType = value
 	}
-	if value, ok := _c.mutation.BadgeContent(); ok {
-		_spec.SetField(menu.FieldBadgeContent, field.TypeString, value)
-		_node.BadgeContent = value
+	if value, ok := _c.mutation.Badge(); ok {
+		_spec.SetField(menu.FieldBadge, field.TypeString, value)
+		_node.Badge = value
 	}
-	if value, ok := _c.mutation.BadgeStyle(); ok {
-		_spec.SetField(menu.FieldBadgeStyle, field.TypeString, value)
-		_node.BadgeStyle = value
+	if value, ok := _c.mutation.BadgeVariants(); ok {
+		_spec.SetField(menu.FieldBadgeVariants, field.TypeString, value)
+		_node.BadgeVariants = value
 	}
 	if value, ok := _c.mutation.Weight(); ok {
 		_spec.SetField(menu.FieldWeight, field.TypeInt, value)

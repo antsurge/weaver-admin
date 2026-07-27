@@ -41,10 +41,10 @@ const (
 	FieldAuthCode = "auth_code"
 	// FieldBadgeType holds the string denoting the badge_type field in the database.
 	FieldBadgeType = "badge_type"
-	// FieldBadgeContent holds the string denoting the badge_content field in the database.
-	FieldBadgeContent = "badge_content"
-	// FieldBadgeStyle holds the string denoting the badge_style field in the database.
-	FieldBadgeStyle = "badge_style"
+	// FieldBadge holds the string denoting the badge field in the database.
+	FieldBadge = "badge"
+	// FieldBadgeVariants holds the string denoting the badge_variants field in the database.
+	FieldBadgeVariants = "badge_variants"
 	// FieldWeight holds the string denoting the weight field in the database.
 	FieldWeight = "weight"
 	// FieldStatus holds the string denoting the status field in the database.
@@ -89,8 +89,8 @@ var Columns = []string{
 	FieldComponent,
 	FieldAuthCode,
 	FieldBadgeType,
-	FieldBadgeContent,
-	FieldBadgeStyle,
+	FieldBadge,
+	FieldBadgeVariants,
 	FieldWeight,
 	FieldStatus,
 	FieldCreatedAt,
@@ -152,14 +152,14 @@ var (
 	DefaultBadgeType string
 	// BadgeTypeValidator is a validator for the "badge_type" field. It is called by the builders before save.
 	BadgeTypeValidator func(string) error
-	// DefaultBadgeContent holds the default value on creation for the "badge_content" field.
-	DefaultBadgeContent string
-	// BadgeContentValidator is a validator for the "badge_content" field. It is called by the builders before save.
-	BadgeContentValidator func(string) error
-	// DefaultBadgeStyle holds the default value on creation for the "badge_style" field.
-	DefaultBadgeStyle string
-	// BadgeStyleValidator is a validator for the "badge_style" field. It is called by the builders before save.
-	BadgeStyleValidator func(string) error
+	// DefaultBadge holds the default value on creation for the "badge" field.
+	DefaultBadge string
+	// BadgeValidator is a validator for the "badge" field. It is called by the builders before save.
+	BadgeValidator func(string) error
+	// DefaultBadgeVariants holds the default value on creation for the "badge_variants" field.
+	DefaultBadgeVariants string
+	// BadgeVariantsValidator is a validator for the "badge_variants" field. It is called by the builders before save.
+	BadgeVariantsValidator func(string) error
 	// DefaultWeight holds the default value on creation for the "weight" field.
 	DefaultWeight int
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
@@ -329,14 +329,14 @@ func ByBadgeType(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldBadgeType, opts...).ToFunc()
 }
 
-// ByBadgeContent orders the results by the badge_content field.
-func ByBadgeContent(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldBadgeContent, opts...).ToFunc()
+// ByBadge orders the results by the badge field.
+func ByBadge(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldBadge, opts...).ToFunc()
 }
 
-// ByBadgeStyle orders the results by the badge_style field.
-func ByBadgeStyle(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldBadgeStyle, opts...).ToFunc()
+// ByBadgeVariants orders the results by the badge_variants field.
+func ByBadgeVariants(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldBadgeVariants, opts...).ToFunc()
 }
 
 // ByWeight orders the results by the weight field.
