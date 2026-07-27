@@ -98,23 +98,8 @@ export function useColumns(
       align: 'center',
       title: $t('permission.menu.fields.title'),
       treeNode: true,
+      slots: { default: 'title' },
       width: 200,
-      formatter: ({ cellValue }) => {
-        return $t(cellValue);
-      },
-    },
-    {
-      field: 'icon',
-      align: 'center',
-      title: $t('permission.menu.fields.icon'),
-      width: 60,
-      cellRender: {
-        name: 'CellIcon', // 使用 Vben 封装的图标渲染器
-        props: {
-          // 如果图标字段名不是直接的 icon，可能需要映射，但这里 field 已经是 permission.icon
-          // 通常 CellIcon 会自动读取当前单元格的值作为 icon name
-        }
-      },
     },
     {
       field: 'name',

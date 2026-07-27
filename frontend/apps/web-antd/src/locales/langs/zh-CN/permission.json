@@ -55,6 +55,10 @@
       "permissionAndStatus": "权限与状态",
       "badgeConfiguration": "徽标配置",
       "otherConfiguration": "其他配置"
+    },
+    "actionTitle": {
+      "expandAll": "展开全部",
+      "collapseAll": "折叠全部"
     }
   },
   "role": {

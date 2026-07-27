@@ -11,7 +11,7 @@ import { Page, useVbenModal } from '@vben/common-ui';
 import { IconifyIcon, Plus } from '@vben/icons';
 import { $t } from '@vben/locales';
 
-// import { MenuBadge } from '@vben-core/menu-ui';
+import { MenuBadge } from '@vben-core/menu-ui';
 
 import { Button, message, Modal } from 'ant-design-vue';
 
@@ -25,7 +25,7 @@ import type {
   PermissionMenuApi
 } from '#/api/permission/menu';
 
-import { useColumns, useFormOptions } from './data';
+import { PermissionTypeOptionsValueAction, useColumns, useFormOptions } from './data';
 import Form from './modules/form/index.vue';
 
 const [FormModel, formModelApi] = useVbenModal({
@@ -47,7 +47,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     proxyConfig: {
       autoLoad: true,
       ajax: {
-        query: async ({},formValues) => {
+        query: async ({ }, formValues) => {
           let res = await getMenuTreeApi(formValues);
           return res?.items ?? []
         },
@@ -180,6 +180,16 @@ function onDelete(row: PermissionMenuApi.PermissionMenu) {
     });
 }
 
+// 展开全部
+function onExpandAll() {
+  gridApi.grid?.setAllTreeExpand(true);
+}
+
+// 折叠全部
+function onCollapseAll() {
+  gridApi.grid?.clearTreeExpand();
+}
+
 // 批量删除
 function onBatchDelete() {
   const rows = selectedRows.value;
@@ -222,7 +232,16 @@ function onBatchDelete() {
     <Grid>
       <template #toolbar-tools>
         <div class="flex gap-2">
-          <Button type="primary" class="inline-flex items-center" danger @click="onBatchDelete" :disabled="!selectedRows.length">
+          <Button type="primary" class="inline-flex items-center" @click="onExpandAll">
+            <IconifyIcon icon="ant-design:column-height-outlined" class="size-5" />
+            {{ $t('permission.menu.actionTitle.expandAll') }}
+          </Button>
+          <Button type="primary" class="inline-flex items-center" @click="onCollapseAll">
+            <IconifyIcon icon="ant-design:column-width-outlined" class="size-5" />
+            {{ $t('permission.menu.actionTitle.collapseAll') }}
+          </Button>
+          <Button type="primary" class="inline-flex items-center" danger @click="onBatchDelete"
+            :disabled="!selectedRows.length">
             <IconifyIcon icon="ant-design:delete-outlined" class="size-5" />
             {{ $t('ui.actionTitle.delete') }}
           </Button>
@@ -233,21 +252,22 @@ function onBatchDelete() {
         </div>
       </template>
       <template #title="{ row }">
-        <div class="flex w-full items-center gap-1">
-          <div class="size-5 shrink-0">
-            <IconifyIcon v-if="row.type === 'button'" icon="carbon:security" class="size-full" />
-            <IconifyIcon v-else-if="row.meta?.icon" :icon="row.meta?.icon || 'carbon:circle-dash'" class="size-full" />
+        <div class="flex w-full items-center justify-between">
+          <!-- 左侧 icon + title -->
+          <div class="flex items-center gap-2">
+            <div class="size-5 shrink-0">
+              <IconifyIcon v-if="row.type === PermissionTypeOptionsValueAction" icon="carbon:security"
+                class="size-full" />
+              <IconifyIcon v-else-if="row?.icon" :icon="row.icon || 'carbon:circle-dash'" class="size-full" />
+            </div>
+            <span>
+              {{ $t(row?.title) }}
+            </span>
           </div>
-          <span class="flex-auto">{{ $t(row.meta?.title) }}</span>
-          <div class="items-center justify-end"></div>
+          <!-- 右侧 Badge -->
+          <MenuBadge v-if="row?.badgeType" class="menu-badge" :badge="row.badge" :badge-type="row.badgeType"
+            :badge-variants="row.badgeVariants" />
         </div>
-        <!-- <MenuBadge
-          v-if="row.meta?.badgeType"
-          class="menu-badge"
-          :badge="row.meta.badge"
-          :badge-type="row.meta.badgeType"
-          :badge-variants="row.meta.badgeVariants"
-        /> -->
       </template>
     </Grid>
   </Page>
