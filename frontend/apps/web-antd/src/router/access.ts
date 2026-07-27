@@ -13,6 +13,11 @@ import { getAllMenusApi } from '#/api';
 import { BasicLayout, IFrameView } from '#/layouts';
 import { $t } from '#/locales';
 
+import {
+    PermissionTypeOptionsValueIframe,
+    PermissionTypeOptionsValueLink,
+} from '#/views/permission/menu/data';
+
 const forbiddenComponent = () => import('#/views/_core/fallback/forbidden.vue');
 
 /**
@@ -75,6 +80,62 @@ function getViewComponent(component?: string) {
     return undefined
 }
 
+/**
+ * 为特殊类型菜单（外链 / 内嵌）构造占位路由
+ *
+ * 为什么不直接用后端 linkUrl 作为 path？
+ * - 外链/iframe 的 URL 是绝对地址（https://...），直接塞进 vue-router 会污染
+ *   useRoute().path、侧边栏高亮、面包屑、Tab 栏等所有依赖路由的逻辑。
+ * - 用占位 path + meta 标识字段（meta.link / meta.iframeSrc）能保持 Vben 框架约定，
+ *   use-navigation / IFrameRouterView 各自基于 meta 字段触发对应行为。
+ *
+ * @param menu 后端返回的菜单项
+ * @param type 特殊类型：'link' | 'iframe'
+ * @returns 占位路由配置；非特殊类型或缺 linkUrl 时返回 null
+ */
+type SpecialMenuType = 'link' | 'iframe'
+
+interface SpecialRouteOverride {
+    name: string
+    path: string
+    meta: Record<string, unknown>
+    component: any
+}
+
+function buildSpecialRoute(
+    menu: PermissionMenuApi.PermissionMenu,
+    type: SpecialMenuType,
+): SpecialRouteOverride | null {
+    const linkUrl = menu.linkUrl
+    if (!linkUrl) {
+        return null
+    }
+
+    const code = menu.code || menu.name || String(menu.id ?? '')
+
+    if (type === 'link') {
+        return {
+            name: `Link_${code}`,
+            path: `/link/${code}`,
+            meta: {
+                link: linkUrl,
+                openInNewWindow: true,
+            },
+            component: undefined,
+        }
+    }
+
+    // iframe
+    return {
+        name: `Iframe_${code}`,
+        path: `/iframe/${code}`,
+        meta: {
+            iframeSrc: linkUrl,
+        },
+        component: IFrameView,
+    }
+}
+
 function transformAccessRoutes(
     menus: PermissionMenuApi.PermissionMenu[],
     menuPaths: string[] = [],
@@ -93,6 +154,10 @@ function transformAccessRoutes(
 
             // 判断是否为目录类型
             const isDirectory = menu.type === 'menu_dir' || menu.type === 'catalog'
+            // 判断是否为外链类型
+            const isLink = menu.type === PermissionTypeOptionsValueLink
+            // 判断是否为内嵌类型
+            const isIframe = menu.type === PermissionTypeOptionsValueIframe
 
             const route: any = {
                 name: menu.code || menu.name,
@@ -109,6 +174,20 @@ function transformAccessRoutes(
                 component: isDirectory
                     ? BasicLayout
                     : getViewComponent(menu.component),
+            }
+
+            // 特殊类型（外链 / 内嵌）走占位路由，避免污染 vue-router
+            if (isLink || isIframe) {
+                const override = buildSpecialRoute(
+                    menu,
+                    isLink ? 'link' : 'iframe',
+                )
+                if (override) {
+                    route.name = override.name
+                    route.path = override.path
+                    route.component = override.component
+                    Object.assign(route.meta, override.meta)
+                }
             }
 
             // 递归处理子菜单
