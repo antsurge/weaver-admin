@@ -1,21 +1,24 @@
 {
+  "title": "权限管理",
+  "name": "权限",
   "menu": {
+    "title": "菜单管理",
     "name": "菜单",
     "fields": {
       "parentID": "上级菜单",
       "type": "类型",
       "name": "名称",
-      "title":"标题",
+      "title": "标题",
       "path": "路由路径",
-      "component":"页面组件",
-       "linkUrl":"链接地址",
-      "authCode":"权限标识",
+      "component": "页面组件",
+      "linkUrl": "链接地址",
+      "authCode": "权限标识",
       "icon": "图标",
       "status": "状态",
-      "weight": "权重", 
-      "badgeType":"徽标类型", 
-      "badgeContent":"徽标内容", 
-      "badgeStyle":"徽标样式",
+      "weight": "权重",
+      "badgeType": "徽标类型",
+      "badgeContent": "徽标内容",
+      "badgeStyle": "徽标样式",
       "remark": "备注",
       "operation": "操作"
     },
@@ -29,9 +32,9 @@
       "iframe": "内嵌",
       "link": "外链"
     },
-    "badgeType_options":{
-      "dot":"点",
-      "text":"文字"
+    "badgeType_options": {
+      "dot": "点",
+      "text": "文字"
     },
     "menu_type_options": {
       "tab": "选项卡",
@@ -42,19 +45,20 @@
       "parentID": "点击选择",
       "path": "web端路由路径(path)，如:/system/permission",
       "component": "web端页面组件，如组件路径为#/views/permission/menu/index.vue，填permission/menu/index",
-      "authCode":"请输入权限标识[唯一]",
+      "authCode": "请输入权限标识[唯一]",
       "url": "请输入链接或Iframe的URL地址",
-      "title": "国际化的路径，如:pages.permission.menu.title"
+      "title": "国际化的路径，如:permission.menu.title"
     },
-    "form_group":{
+    "form_group": {
       "basicInfo": "基本信息",
-      "routeConfiguration":"路由配置",
-      "permissionAndStatus":"权限与状态",
-      "badgeConfiguration":"徽标配置",
+      "routeConfiguration": "路由配置",
+      "permissionAndStatus": "权限与状态",
+      "badgeConfiguration": "徽标配置",
       "otherConfiguration": "其他配置"
     }
   },
   "role": {
+    "title": "角色管理",
     "name": "角色",
     "fields": {
       "name": "角色名称",

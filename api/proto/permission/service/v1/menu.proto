@@ -32,85 +32,110 @@ message Menu {
   repeated Menu children = 30;
 }
 
-// 创建权限请求
+// 创建菜单请求
 message CreateMenuRequest {
+  // 前端表单已不再提交 code、description（备注统一使用 remark）
+  reserved 2, 3;
+  reserved "code", "description";
+
   string name = 1 [
     (buf.validate.field).cel = {
-      id: "CREATE_PERMISSION_NAME_REQUIRED"
-      message: "权限名称不能为空"
-      expression: "this.size() > 0 && this.size() <= 64"
+      id: "CREATE_MENU_NAME_LENGTH"
+      message: "菜单名称长度必须在 2-30 个字符之间"
+      expression: "this.size() >= 2 && this.size() <= 30"
     },
-    (gnostic.openapi.v3.property) = {description: "权限名称"}
-  ];
-
-  string code = 2 [
-    (buf.validate.field).cel = {
-      id: "CREATE_PERMISSION_CODE_REQUIRED"
-      message: "权限编码不能为空"
-      expression: "this.size() > 0 && this.size() <= 64"
-    },
-    (gnostic.openapi.v3.property) = {description: "权限唯一编码"}
-  ];
-
-  string description = 3 [
-    (buf.validate.field).cel = {
-      id: "CREATE_PERMISSION_DESCRIPTION_MAX"
-      expression: "this.size() <= 256"
-    },
-    (gnostic.openapi.v3.property) = {description: "权限描述"}
+    (gnostic.openapi.v3.property) = {description: "菜单名称"}
   ];
 
   string parentID = 4 [
     (buf.validate.field).cel = {
-      id: "CREATE_PERMISSION_PARENTID_MAX"
+      id: "CREATE_MENU_PARENTID_MAX"
       expression: "this.size() <= 36"
     },
-    (gnostic.openapi.v3.property) = {description: "父权限ID，空表示根节点"}
+    (gnostic.openapi.v3.property) = {description: "上级菜单ID，空表示根节点"}
   ];
 
-  string type = 5 [(gnostic.openapi.v3.property) = {description: "权限类型: menuDirectory / menuItem / button"}];
+  string type = 5 [
+    (buf.validate.field).cel = {
+      id: "CREATE_MENU_TYPE_REQUIRED"
+      message: "菜单类型不能为空"
+      expression: "this.size() > 0"
+    },
+    (gnostic.openapi.v3.property) = {description: "类型: catalog / menu / iframe / link / action"}
+  ];
 
   string path = 6 [
     (buf.validate.field).cel = {
-      id: "CREATE_PERMISSION_PATH_MAX"
-      expression: "this.size() <= 256"
+      id: "CREATE_MENU_PATH_MAX"
+      expression: "this.size() <= 100"
     },
     (gnostic.openapi.v3.property) = {description: "路由路径"}
   ];
 
   string icon = 7 [
     (buf.validate.field).cel = {
-      id: "CREATE_PERMISSION_ICON_MAX"
+      id: "CREATE_MENU_ICON_MAX"
       expression: "this.size() <= 128"
     },
     (gnostic.openapi.v3.property) = {description: "图标"}
   ];
 
-  string url = 8 [
+  string linkUrl = 8 [
     (buf.validate.field).cel = {
-      id: "CREATE_PERMISSION_URL_MAX"
-      expression: "this.size() <= 256"
+      id: "CREATE_MENU_LINK_URL_MAX"
+      expression: "this.size() <= 100"
     },
-    (gnostic.openapi.v3.property) = {description: "URL"}
+    (gnostic.openapi.v3.property) = {description: "链接地址（iframe/外链）"}
   ];
 
   string component = 9 [
     (buf.validate.field).cel = {
-      id: "CREATE_PERMISSION_COMPONENT_MAX"
-      expression: "this.size() <= 256"
+      id: "CREATE_MENU_COMPONENT_MAX"
+      expression: "this.size() <= 100"
     },
-    (gnostic.openapi.v3.property) = {description: "组件路径"}
+    (gnostic.openapi.v3.property) = {description: "页面组件路径"}
   ];
 
   int32 weight = 10 [
     (buf.validate.field).cel = {
-      id: "CREATE_PERMISSION_WEIGH_MIN"
+      id: "CREATE_MENU_WEIGHT_MIN"
       expression: "this >= 0"
     },
     (gnostic.openapi.v3.property) = {description: "权重"}
   ];
 
   string status = 11 [(gnostic.openapi.v3.property) = {description: "状态: enabled / disabled"}];
+
+  string title = 12 [
+    (buf.validate.field).cel = {
+      id: "CREATE_MENU_TITLE_LENGTH"
+      message: "菜单标题长度必须在 2-30 个字符之间"
+      expression: "this.size() >= 2 && this.size() <= 30"
+    },
+    (gnostic.openapi.v3.property) = {description: "标题（国际化 key）"}
+  ];
+
+  string authCode = 13 [
+    (buf.validate.field).cel = {
+      id: "CREATE_MENU_AUTH_CODE_MAX"
+      expression: "this.size() <= 100"
+    },
+    (gnostic.openapi.v3.property) = {description: "权限标识"}
+  ];
+
+  string badgeType = 14 [(gnostic.openapi.v3.property) = {description: "徽标类型: dot / text"}];
+
+  string badgeContent = 15 [
+    (buf.validate.field).cel = {
+      id: "CREATE_MENU_BADGE_CONTENT_MAX"
+      expression: "this.size() <= 10"
+    },
+    (gnostic.openapi.v3.property) = {description: "徽标内容"}
+  ];
+
+  string badgeStyle = 16 [(gnostic.openapi.v3.property) = {description: "徽标样式: default / destructive / primary / success / warning"}];
+
+  string remark = 17 [(gnostic.openapi.v3.property) = {description: "备注"}];
 }
 
 // 创建权限响应
@@ -118,92 +143,112 @@ message CreateMenuResponse {
   Menu permission = 1;
 }
 
-// 更新权限
+// 更新菜单请求
 message UpdateMenuRequest {
+  // 前端表单已不再提交 code、description（备注统一使用 remark）
+  reserved 3, 4;
+  reserved "code", "description";
+
   string id = 1 [
     (buf.validate.field).cel = {
-      id: "UPDATE_PERMISSION_ID_REQUIRED"
-      message: "权限ID不能为空"
+      id: "UPDATE_MENU_ID_REQUIRED"
+      message: "菜单ID不能为空"
       expression: "this.size() > 0"
     },
-    (gnostic.openapi.v3.property) = {description: "权限ID"}
+    (gnostic.openapi.v3.property) = {description: "菜单ID"}
   ];
 
   optional string name = 2 [
     (buf.validate.field).cel = {
-      id: "UPDATE_PERMISSION_NAME_MAX"
-      expression: "this.size() <= 64"
+      id: "UPDATE_MENU_NAME_LENGTH"
+      message: "菜单名称长度必须在 2-30 个字符之间"
+      expression: "this.size() >= 2 && this.size() <= 30"
     },
-    (gnostic.openapi.v3.property) = {description: "权限名称"}
-  ];
-
-  optional string code = 3 [
-    (buf.validate.field).cel = {
-      id: "UPDATE_PERMISSION_CODE_MAX"
-      expression: "this.size() <= 64"
-    },
-    (gnostic.openapi.v3.property) = {description: "权限唯一编码"}
-  ];
-
-  optional string description = 4 [
-    (buf.validate.field).cel = {
-      id: "UPDATE_PERMISSION_DESCRIPTION_MAX"
-      expression: "this.size() <= 256"
-    },
-    (gnostic.openapi.v3.property) = {description: "权限描述"}
+    (gnostic.openapi.v3.property) = {description: "菜单名称"}
   ];
 
   optional string parentID = 5 [
     (buf.validate.field).cel = {
-      id: "UPDATE_PERMISSION_PARENTID_MAX"
+      id: "UPDATE_MENU_PARENTID_MAX"
       expression: "this.size() <= 36"
     },
-    (gnostic.openapi.v3.property) = {description: "父权限ID，空表示根节点"}
+    (gnostic.openapi.v3.property) = {description: "上级菜单ID，空表示根节点"}
   ];
 
-  optional string type = 6 [(gnostic.openapi.v3.property) = {description: "权限类型: menuDirectory / menuItem / button"}];
+  optional string type = 6 [(gnostic.openapi.v3.property) = {description: "类型: catalog / menu / iframe / link / action"}];
 
   optional string path = 7 [
     (buf.validate.field).cel = {
-      id: "UPDATE_PERMISSION_PATH_MAX"
-      expression: "this.size() <= 256"
+      id: "UPDATE_MENU_PATH_MAX"
+      expression: "this.size() <= 100"
     },
     (gnostic.openapi.v3.property) = {description: "路由路径"}
   ];
 
   optional string icon = 8 [
     (buf.validate.field).cel = {
-      id: "UPDATE_PERMISSION_ICON_MAX"
+      id: "UPDATE_MENU_ICON_MAX"
       expression: "this.size() <= 128"
     },
     (gnostic.openapi.v3.property) = {description: "图标"}
   ];
 
-  optional string url = 9 [
+  optional string linkUrl = 9 [
     (buf.validate.field).cel = {
-      id: "UPDATE_PERMISSION_URL_MAX"
-      expression: "this.size() <= 256"
+      id: "UPDATE_MENU_LINK_URL_MAX"
+      expression: "this.size() <= 100"
     },
-    (gnostic.openapi.v3.property) = {description: "URL"}
+    (gnostic.openapi.v3.property) = {description: "链接地址（iframe/外链）"}
   ];
 
   optional string component = 10 [
     (buf.validate.field).cel = {
-      id: "UPDATE_PERMISSION_COMPONENT_MAX"
-      expression: "this.size() <= 256"
+      id: "UPDATE_MENU_COMPONENT_MAX"
+      expression: "this.size() <= 100"
     },
-    (gnostic.openapi.v3.property) = {description: "组件路径"}
+    (gnostic.openapi.v3.property) = {description: "页面组件路径"}
   ];
 
   optional int32 weight = 11 [
     (buf.validate.field).cel = {
-      id: "UPDATE_PERMISSION_WEIGH_MIN"
+      id: "UPDATE_MENU_WEIGHT_MIN"
       expression: "this >= 0"
     },
     (gnostic.openapi.v3.property) = {description: "权重"}
   ];
 
   optional string status = 12 [(gnostic.openapi.v3.property) = {description: "状态: enabled / disabled"}];
+
+  optional string title = 13 [
+    (buf.validate.field).cel = {
+      id: "UPDATE_MENU_TITLE_LENGTH"
+      message: "菜单标题长度必须在 2-30 个字符之间"
+      expression: "this.size() >= 2 && this.size() <= 30"
+    },
+    (gnostic.openapi.v3.property) = {description: "标题（国际化 key）"}
+  ];
+
+  optional string authCode = 14 [
+    (buf.validate.field).cel = {
+      id: "UPDATE_MENU_AUTH_CODE_MAX"
+      expression: "this.size() <= 100"
+    },
+    (gnostic.openapi.v3.property) = {description: "权限标识"}
+  ];
+
+  optional string badgeType = 15 [(gnostic.openapi.v3.property) = {description: "徽标类型: dot / text"}];
+
+  optional string badgeContent = 16 [
+    (buf.validate.field).cel = {
+      id: "UPDATE_MENU_BADGE_CONTENT_MAX"
+      expression: "this.size() <= 10"
+    },
+    (gnostic.openapi.v3.property) = {description: "徽标内容"}
+  ];
+
+  optional string badgeStyle = 17 [(gnostic.openapi.v3.property) = {description: "徽标样式: default / destructive / primary / success / warning"}];
+
+  optional string remark = 18 [(gnostic.openapi.v3.property) = {description: "备注"}];
 }
 
 message UpdateMenuResponse {

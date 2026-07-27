@@ -80,6 +80,11 @@ func Code(v string) predicate.Menu {
 	return predicate.Menu(sql.FieldEQ(FieldCode, v))
 }
 
+// Title applies equality check predicate on the "title" field. It's identical to TitleEQ.
+func Title(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldEQ(FieldTitle, v))
+}
+
 // Remark applies equality check predicate on the "remark" field. It's identical to RemarkEQ.
 func Remark(v string) predicate.Menu {
 	return predicate.Menu(sql.FieldEQ(FieldRemark, v))
@@ -103,6 +108,26 @@ func URL(v string) predicate.Menu {
 // Component applies equality check predicate on the "component" field. It's identical to ComponentEQ.
 func Component(v string) predicate.Menu {
 	return predicate.Menu(sql.FieldEQ(FieldComponent, v))
+}
+
+// AuthCode applies equality check predicate on the "auth_code" field. It's identical to AuthCodeEQ.
+func AuthCode(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldEQ(FieldAuthCode, v))
+}
+
+// BadgeType applies equality check predicate on the "badge_type" field. It's identical to BadgeTypeEQ.
+func BadgeType(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldEQ(FieldBadgeType, v))
+}
+
+// BadgeContent applies equality check predicate on the "badge_content" field. It's identical to BadgeContentEQ.
+func BadgeContent(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldEQ(FieldBadgeContent, v))
+}
+
+// BadgeStyle applies equality check predicate on the "badge_style" field. It's identical to BadgeStyleEQ.
+func BadgeStyle(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldEQ(FieldBadgeStyle, v))
 }
 
 // Weight applies equality check predicate on the "weight" field. It's identical to WeightEQ.
@@ -313,6 +338,71 @@ func CodeEqualFold(v string) predicate.Menu {
 // CodeContainsFold applies the ContainsFold predicate on the "code" field.
 func CodeContainsFold(v string) predicate.Menu {
 	return predicate.Menu(sql.FieldContainsFold(FieldCode, v))
+}
+
+// TitleEQ applies the EQ predicate on the "title" field.
+func TitleEQ(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldEQ(FieldTitle, v))
+}
+
+// TitleNEQ applies the NEQ predicate on the "title" field.
+func TitleNEQ(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldNEQ(FieldTitle, v))
+}
+
+// TitleIn applies the In predicate on the "title" field.
+func TitleIn(vs ...string) predicate.Menu {
+	return predicate.Menu(sql.FieldIn(FieldTitle, vs...))
+}
+
+// TitleNotIn applies the NotIn predicate on the "title" field.
+func TitleNotIn(vs ...string) predicate.Menu {
+	return predicate.Menu(sql.FieldNotIn(FieldTitle, vs...))
+}
+
+// TitleGT applies the GT predicate on the "title" field.
+func TitleGT(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldGT(FieldTitle, v))
+}
+
+// TitleGTE applies the GTE predicate on the "title" field.
+func TitleGTE(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldGTE(FieldTitle, v))
+}
+
+// TitleLT applies the LT predicate on the "title" field.
+func TitleLT(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldLT(FieldTitle, v))
+}
+
+// TitleLTE applies the LTE predicate on the "title" field.
+func TitleLTE(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldLTE(FieldTitle, v))
+}
+
+// TitleContains applies the Contains predicate on the "title" field.
+func TitleContains(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldContains(FieldTitle, v))
+}
+
+// TitleHasPrefix applies the HasPrefix predicate on the "title" field.
+func TitleHasPrefix(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldHasPrefix(FieldTitle, v))
+}
+
+// TitleHasSuffix applies the HasSuffix predicate on the "title" field.
+func TitleHasSuffix(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldHasSuffix(FieldTitle, v))
+}
+
+// TitleEqualFold applies the EqualFold predicate on the "title" field.
+func TitleEqualFold(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldEqualFold(FieldTitle, v))
+}
+
+// TitleContainsFold applies the ContainsFold predicate on the "title" field.
+func TitleContainsFold(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldContainsFold(FieldTitle, v))
 }
 
 // RemarkEQ applies the EQ predicate on the "remark" field.
@@ -688,6 +778,266 @@ func ComponentEqualFold(v string) predicate.Menu {
 // ComponentContainsFold applies the ContainsFold predicate on the "component" field.
 func ComponentContainsFold(v string) predicate.Menu {
 	return predicate.Menu(sql.FieldContainsFold(FieldComponent, v))
+}
+
+// AuthCodeEQ applies the EQ predicate on the "auth_code" field.
+func AuthCodeEQ(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldEQ(FieldAuthCode, v))
+}
+
+// AuthCodeNEQ applies the NEQ predicate on the "auth_code" field.
+func AuthCodeNEQ(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldNEQ(FieldAuthCode, v))
+}
+
+// AuthCodeIn applies the In predicate on the "auth_code" field.
+func AuthCodeIn(vs ...string) predicate.Menu {
+	return predicate.Menu(sql.FieldIn(FieldAuthCode, vs...))
+}
+
+// AuthCodeNotIn applies the NotIn predicate on the "auth_code" field.
+func AuthCodeNotIn(vs ...string) predicate.Menu {
+	return predicate.Menu(sql.FieldNotIn(FieldAuthCode, vs...))
+}
+
+// AuthCodeGT applies the GT predicate on the "auth_code" field.
+func AuthCodeGT(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldGT(FieldAuthCode, v))
+}
+
+// AuthCodeGTE applies the GTE predicate on the "auth_code" field.
+func AuthCodeGTE(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldGTE(FieldAuthCode, v))
+}
+
+// AuthCodeLT applies the LT predicate on the "auth_code" field.
+func AuthCodeLT(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldLT(FieldAuthCode, v))
+}
+
+// AuthCodeLTE applies the LTE predicate on the "auth_code" field.
+func AuthCodeLTE(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldLTE(FieldAuthCode, v))
+}
+
+// AuthCodeContains applies the Contains predicate on the "auth_code" field.
+func AuthCodeContains(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldContains(FieldAuthCode, v))
+}
+
+// AuthCodeHasPrefix applies the HasPrefix predicate on the "auth_code" field.
+func AuthCodeHasPrefix(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldHasPrefix(FieldAuthCode, v))
+}
+
+// AuthCodeHasSuffix applies the HasSuffix predicate on the "auth_code" field.
+func AuthCodeHasSuffix(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldHasSuffix(FieldAuthCode, v))
+}
+
+// AuthCodeEqualFold applies the EqualFold predicate on the "auth_code" field.
+func AuthCodeEqualFold(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldEqualFold(FieldAuthCode, v))
+}
+
+// AuthCodeContainsFold applies the ContainsFold predicate on the "auth_code" field.
+func AuthCodeContainsFold(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldContainsFold(FieldAuthCode, v))
+}
+
+// BadgeTypeEQ applies the EQ predicate on the "badge_type" field.
+func BadgeTypeEQ(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldEQ(FieldBadgeType, v))
+}
+
+// BadgeTypeNEQ applies the NEQ predicate on the "badge_type" field.
+func BadgeTypeNEQ(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldNEQ(FieldBadgeType, v))
+}
+
+// BadgeTypeIn applies the In predicate on the "badge_type" field.
+func BadgeTypeIn(vs ...string) predicate.Menu {
+	return predicate.Menu(sql.FieldIn(FieldBadgeType, vs...))
+}
+
+// BadgeTypeNotIn applies the NotIn predicate on the "badge_type" field.
+func BadgeTypeNotIn(vs ...string) predicate.Menu {
+	return predicate.Menu(sql.FieldNotIn(FieldBadgeType, vs...))
+}
+
+// BadgeTypeGT applies the GT predicate on the "badge_type" field.
+func BadgeTypeGT(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldGT(FieldBadgeType, v))
+}
+
+// BadgeTypeGTE applies the GTE predicate on the "badge_type" field.
+func BadgeTypeGTE(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldGTE(FieldBadgeType, v))
+}
+
+// BadgeTypeLT applies the LT predicate on the "badge_type" field.
+func BadgeTypeLT(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldLT(FieldBadgeType, v))
+}
+
+// BadgeTypeLTE applies the LTE predicate on the "badge_type" field.
+func BadgeTypeLTE(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldLTE(FieldBadgeType, v))
+}
+
+// BadgeTypeContains applies the Contains predicate on the "badge_type" field.
+func BadgeTypeContains(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldContains(FieldBadgeType, v))
+}
+
+// BadgeTypeHasPrefix applies the HasPrefix predicate on the "badge_type" field.
+func BadgeTypeHasPrefix(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldHasPrefix(FieldBadgeType, v))
+}
+
+// BadgeTypeHasSuffix applies the HasSuffix predicate on the "badge_type" field.
+func BadgeTypeHasSuffix(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldHasSuffix(FieldBadgeType, v))
+}
+
+// BadgeTypeEqualFold applies the EqualFold predicate on the "badge_type" field.
+func BadgeTypeEqualFold(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldEqualFold(FieldBadgeType, v))
+}
+
+// BadgeTypeContainsFold applies the ContainsFold predicate on the "badge_type" field.
+func BadgeTypeContainsFold(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldContainsFold(FieldBadgeType, v))
+}
+
+// BadgeContentEQ applies the EQ predicate on the "badge_content" field.
+func BadgeContentEQ(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldEQ(FieldBadgeContent, v))
+}
+
+// BadgeContentNEQ applies the NEQ predicate on the "badge_content" field.
+func BadgeContentNEQ(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldNEQ(FieldBadgeContent, v))
+}
+
+// BadgeContentIn applies the In predicate on the "badge_content" field.
+func BadgeContentIn(vs ...string) predicate.Menu {
+	return predicate.Menu(sql.FieldIn(FieldBadgeContent, vs...))
+}
+
+// BadgeContentNotIn applies the NotIn predicate on the "badge_content" field.
+func BadgeContentNotIn(vs ...string) predicate.Menu {
+	return predicate.Menu(sql.FieldNotIn(FieldBadgeContent, vs...))
+}
+
+// BadgeContentGT applies the GT predicate on the "badge_content" field.
+func BadgeContentGT(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldGT(FieldBadgeContent, v))
+}
+
+// BadgeContentGTE applies the GTE predicate on the "badge_content" field.
+func BadgeContentGTE(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldGTE(FieldBadgeContent, v))
+}
+
+// BadgeContentLT applies the LT predicate on the "badge_content" field.
+func BadgeContentLT(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldLT(FieldBadgeContent, v))
+}
+
+// BadgeContentLTE applies the LTE predicate on the "badge_content" field.
+func BadgeContentLTE(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldLTE(FieldBadgeContent, v))
+}
+
+// BadgeContentContains applies the Contains predicate on the "badge_content" field.
+func BadgeContentContains(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldContains(FieldBadgeContent, v))
+}
+
+// BadgeContentHasPrefix applies the HasPrefix predicate on the "badge_content" field.
+func BadgeContentHasPrefix(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldHasPrefix(FieldBadgeContent, v))
+}
+
+// BadgeContentHasSuffix applies the HasSuffix predicate on the "badge_content" field.
+func BadgeContentHasSuffix(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldHasSuffix(FieldBadgeContent, v))
+}
+
+// BadgeContentEqualFold applies the EqualFold predicate on the "badge_content" field.
+func BadgeContentEqualFold(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldEqualFold(FieldBadgeContent, v))
+}
+
+// BadgeContentContainsFold applies the ContainsFold predicate on the "badge_content" field.
+func BadgeContentContainsFold(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldContainsFold(FieldBadgeContent, v))
+}
+
+// BadgeStyleEQ applies the EQ predicate on the "badge_style" field.
+func BadgeStyleEQ(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldEQ(FieldBadgeStyle, v))
+}
+
+// BadgeStyleNEQ applies the NEQ predicate on the "badge_style" field.
+func BadgeStyleNEQ(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldNEQ(FieldBadgeStyle, v))
+}
+
+// BadgeStyleIn applies the In predicate on the "badge_style" field.
+func BadgeStyleIn(vs ...string) predicate.Menu {
+	return predicate.Menu(sql.FieldIn(FieldBadgeStyle, vs...))
+}
+
+// BadgeStyleNotIn applies the NotIn predicate on the "badge_style" field.
+func BadgeStyleNotIn(vs ...string) predicate.Menu {
+	return predicate.Menu(sql.FieldNotIn(FieldBadgeStyle, vs...))
+}
+
+// BadgeStyleGT applies the GT predicate on the "badge_style" field.
+func BadgeStyleGT(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldGT(FieldBadgeStyle, v))
+}
+
+// BadgeStyleGTE applies the GTE predicate on the "badge_style" field.
+func BadgeStyleGTE(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldGTE(FieldBadgeStyle, v))
+}
+
+// BadgeStyleLT applies the LT predicate on the "badge_style" field.
+func BadgeStyleLT(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldLT(FieldBadgeStyle, v))
+}
+
+// BadgeStyleLTE applies the LTE predicate on the "badge_style" field.
+func BadgeStyleLTE(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldLTE(FieldBadgeStyle, v))
+}
+
+// BadgeStyleContains applies the Contains predicate on the "badge_style" field.
+func BadgeStyleContains(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldContains(FieldBadgeStyle, v))
+}
+
+// BadgeStyleHasPrefix applies the HasPrefix predicate on the "badge_style" field.
+func BadgeStyleHasPrefix(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldHasPrefix(FieldBadgeStyle, v))
+}
+
+// BadgeStyleHasSuffix applies the HasSuffix predicate on the "badge_style" field.
+func BadgeStyleHasSuffix(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldHasSuffix(FieldBadgeStyle, v))
+}
+
+// BadgeStyleEqualFold applies the EqualFold predicate on the "badge_style" field.
+func BadgeStyleEqualFold(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldEqualFold(FieldBadgeStyle, v))
+}
+
+// BadgeStyleContainsFold applies the ContainsFold predicate on the "badge_style" field.
+func BadgeStyleContainsFold(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldContainsFold(FieldBadgeStyle, v))
 }
 
 // WeightEQ applies the EQ predicate on the "weight" field.

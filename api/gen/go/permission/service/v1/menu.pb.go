@@ -27,20 +27,26 @@ const (
 // 菜单
 type Menu struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	ParentID      string                 `protobuf:"bytes,2,opt,name=parentID,proto3" json:"parentID,omitempty"` // null 表示根
-	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
-	Code          string                 `protobuf:"bytes,4,opt,name=code,proto3" json:"code,omitempty"`
-	Description   string                 `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
-	Type          string                 `protobuf:"bytes,6,opt,name=type,proto3" json:"type,omitempty"`
-	Path          string                 `protobuf:"bytes,7,opt,name=path,proto3" json:"path,omitempty"`
-	Icon          string                 `protobuf:"bytes,8,opt,name=icon,proto3" json:"icon,omitempty"`
-	Url           string                 `protobuf:"bytes,9,opt,name=url,proto3" json:"url,omitempty"`
-	Component     string                 `protobuf:"bytes,10,opt,name=component,proto3" json:"component,omitempty"`
-	Weight        int32                  `protobuf:"varint,11,opt,name=weight,proto3" json:"weight,omitempty"`
-	Status        string                 `protobuf:"bytes,12,opt,name=status,proto3" json:"status,omitempty"`
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,13,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
-	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,14,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                      // ID
+	ParentID      string                 `protobuf:"bytes,2,opt,name=parentID,proto3" json:"parentID,omitempty"`          // 上级菜单
+	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`                  // 名称
+	Code          string                 `protobuf:"bytes,4,opt,name=code,proto3" json:"code,omitempty"`                  // 编码
+	Description   string                 `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`    // 描述
+	Type          string                 `protobuf:"bytes,6,opt,name=type,proto3" json:"type,omitempty"`                  // 类型
+	Path          string                 `protobuf:"bytes,7,opt,name=path,proto3" json:"path,omitempty"`                  // 路由路径
+	Icon          string                 `protobuf:"bytes,8,opt,name=icon,proto3" json:"icon,omitempty"`                  // 图标
+	LinkUrl       string                 `protobuf:"bytes,9,opt,name=linkUrl,proto3" json:"linkUrl,omitempty"`            // 链接地址
+	Component     string                 `protobuf:"bytes,10,opt,name=component,proto3" json:"component,omitempty"`       // 页面组件
+	Weight        int32                  `protobuf:"varint,11,opt,name=weight,proto3" json:"weight,omitempty"`            // 权重
+	Status        string                 `protobuf:"bytes,12,opt,name=status,proto3" json:"status,omitempty"`             // 状态
+	Title         string                 `protobuf:"bytes,13,opt,name=title,proto3" json:"title,omitempty"`               // 标题
+	AuthCode      string                 `protobuf:"bytes,14,opt,name=authCode,proto3" json:"authCode,omitempty"`         // 权限标识
+	BadgeType     string                 `protobuf:"bytes,15,opt,name=badgeType,proto3" json:"badgeType,omitempty"`       // 徽标类型
+	BadgeContent  string                 `protobuf:"bytes,16,opt,name=badgeContent,proto3" json:"badgeContent,omitempty"` // 徽标内容
+	BadgeStyle    string                 `protobuf:"bytes,17,opt,name=badgeStyle,proto3" json:"badgeStyle,omitempty"`     // 徽标样式
+	Remark        string                 `protobuf:"bytes,18,opt,name=remark,proto3" json:"remark,omitempty"`             // 备注
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,19,opt,name=createdAt,proto3" json:"createdAt,omitempty"`       // 创建时间
+	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,20,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`       // 更新时间
 	Children      []*Menu                `protobuf:"bytes,30,rep,name=children,proto3" json:"children,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -132,9 +138,9 @@ func (x *Menu) GetIcon() string {
 	return ""
 }
 
-func (x *Menu) GetUrl() string {
+func (x *Menu) GetLinkUrl() string {
 	if x != nil {
-		return x.Url
+		return x.LinkUrl
 	}
 	return ""
 }
@@ -160,6 +166,48 @@ func (x *Menu) GetStatus() string {
 	return ""
 }
 
+func (x *Menu) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *Menu) GetAuthCode() string {
+	if x != nil {
+		return x.AuthCode
+	}
+	return ""
+}
+
+func (x *Menu) GetBadgeType() string {
+	if x != nil {
+		return x.BadgeType
+	}
+	return ""
+}
+
+func (x *Menu) GetBadgeContent() string {
+	if x != nil {
+		return x.BadgeContent
+	}
+	return ""
+}
+
+func (x *Menu) GetBadgeStyle() string {
+	if x != nil {
+		return x.BadgeStyle
+	}
+	return ""
+}
+
+func (x *Menu) GetRemark() string {
+	if x != nil {
+		return x.Remark
+	}
+	return ""
+}
+
 func (x *Menu) GetCreatedAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.CreatedAt
@@ -181,20 +229,24 @@ func (x *Menu) GetChildren() []*Menu {
 	return nil
 }
 
-// 创建权限请求
+// 创建菜单请求
 type CreateMenuRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Code          string                 `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"`
-	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
 	ParentID      string                 `protobuf:"bytes,4,opt,name=parentID,proto3" json:"parentID,omitempty"`
 	Type          string                 `protobuf:"bytes,5,opt,name=type,proto3" json:"type,omitempty"`
 	Path          string                 `protobuf:"bytes,6,opt,name=path,proto3" json:"path,omitempty"`
 	Icon          string                 `protobuf:"bytes,7,opt,name=icon,proto3" json:"icon,omitempty"`
-	Url           string                 `protobuf:"bytes,8,opt,name=url,proto3" json:"url,omitempty"`
+	LinkUrl       string                 `protobuf:"bytes,8,opt,name=linkUrl,proto3" json:"linkUrl,omitempty"`
 	Component     string                 `protobuf:"bytes,9,opt,name=component,proto3" json:"component,omitempty"`
 	Weight        int32                  `protobuf:"varint,10,opt,name=weight,proto3" json:"weight,omitempty"`
 	Status        string                 `protobuf:"bytes,11,opt,name=status,proto3" json:"status,omitempty"`
+	Title         string                 `protobuf:"bytes,12,opt,name=title,proto3" json:"title,omitempty"`
+	AuthCode      string                 `protobuf:"bytes,13,opt,name=authCode,proto3" json:"authCode,omitempty"`
+	BadgeType     string                 `protobuf:"bytes,14,opt,name=badgeType,proto3" json:"badgeType,omitempty"`
+	BadgeContent  string                 `protobuf:"bytes,15,opt,name=badgeContent,proto3" json:"badgeContent,omitempty"`
+	BadgeStyle    string                 `protobuf:"bytes,16,opt,name=badgeStyle,proto3" json:"badgeStyle,omitempty"`
+	Remark        string                 `protobuf:"bytes,17,opt,name=remark,proto3" json:"remark,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -236,20 +288,6 @@ func (x *CreateMenuRequest) GetName() string {
 	return ""
 }
 
-func (x *CreateMenuRequest) GetCode() string {
-	if x != nil {
-		return x.Code
-	}
-	return ""
-}
-
-func (x *CreateMenuRequest) GetDescription() string {
-	if x != nil {
-		return x.Description
-	}
-	return ""
-}
-
 func (x *CreateMenuRequest) GetParentID() string {
 	if x != nil {
 		return x.ParentID
@@ -278,9 +316,9 @@ func (x *CreateMenuRequest) GetIcon() string {
 	return ""
 }
 
-func (x *CreateMenuRequest) GetUrl() string {
+func (x *CreateMenuRequest) GetLinkUrl() string {
 	if x != nil {
-		return x.Url
+		return x.LinkUrl
 	}
 	return ""
 }
@@ -302,6 +340,48 @@ func (x *CreateMenuRequest) GetWeight() int32 {
 func (x *CreateMenuRequest) GetStatus() string {
 	if x != nil {
 		return x.Status
+	}
+	return ""
+}
+
+func (x *CreateMenuRequest) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *CreateMenuRequest) GetAuthCode() string {
+	if x != nil {
+		return x.AuthCode
+	}
+	return ""
+}
+
+func (x *CreateMenuRequest) GetBadgeType() string {
+	if x != nil {
+		return x.BadgeType
+	}
+	return ""
+}
+
+func (x *CreateMenuRequest) GetBadgeContent() string {
+	if x != nil {
+		return x.BadgeContent
+	}
+	return ""
+}
+
+func (x *CreateMenuRequest) GetBadgeStyle() string {
+	if x != nil {
+		return x.BadgeStyle
+	}
+	return ""
+}
+
+func (x *CreateMenuRequest) GetRemark() string {
+	if x != nil {
+		return x.Remark
 	}
 	return ""
 }
@@ -351,21 +431,25 @@ func (x *CreateMenuResponse) GetPermission() *Menu {
 	return nil
 }
 
-// 更新权限
+// 更新菜单请求
 type UpdateMenuRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Name          *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
-	Code          *string                `protobuf:"bytes,3,opt,name=code,proto3,oneof" json:"code,omitempty"`
-	Description   *string                `protobuf:"bytes,4,opt,name=description,proto3,oneof" json:"description,omitempty"`
 	ParentID      *string                `protobuf:"bytes,5,opt,name=parentID,proto3,oneof" json:"parentID,omitempty"`
 	Type          *string                `protobuf:"bytes,6,opt,name=type,proto3,oneof" json:"type,omitempty"`
 	Path          *string                `protobuf:"bytes,7,opt,name=path,proto3,oneof" json:"path,omitempty"`
 	Icon          *string                `protobuf:"bytes,8,opt,name=icon,proto3,oneof" json:"icon,omitempty"`
-	Url           *string                `protobuf:"bytes,9,opt,name=url,proto3,oneof" json:"url,omitempty"`
+	LinkUrl       *string                `protobuf:"bytes,9,opt,name=linkUrl,proto3,oneof" json:"linkUrl,omitempty"`
 	Component     *string                `protobuf:"bytes,10,opt,name=component,proto3,oneof" json:"component,omitempty"`
 	Weight        *int32                 `protobuf:"varint,11,opt,name=weight,proto3,oneof" json:"weight,omitempty"`
 	Status        *string                `protobuf:"bytes,12,opt,name=status,proto3,oneof" json:"status,omitempty"`
+	Title         *string                `protobuf:"bytes,13,opt,name=title,proto3,oneof" json:"title,omitempty"`
+	AuthCode      *string                `protobuf:"bytes,14,opt,name=authCode,proto3,oneof" json:"authCode,omitempty"`
+	BadgeType     *string                `protobuf:"bytes,15,opt,name=badgeType,proto3,oneof" json:"badgeType,omitempty"`
+	BadgeContent  *string                `protobuf:"bytes,16,opt,name=badgeContent,proto3,oneof" json:"badgeContent,omitempty"`
+	BadgeStyle    *string                `protobuf:"bytes,17,opt,name=badgeStyle,proto3,oneof" json:"badgeStyle,omitempty"`
+	Remark        *string                `protobuf:"bytes,18,opt,name=remark,proto3,oneof" json:"remark,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -414,20 +498,6 @@ func (x *UpdateMenuRequest) GetName() string {
 	return ""
 }
 
-func (x *UpdateMenuRequest) GetCode() string {
-	if x != nil && x.Code != nil {
-		return *x.Code
-	}
-	return ""
-}
-
-func (x *UpdateMenuRequest) GetDescription() string {
-	if x != nil && x.Description != nil {
-		return *x.Description
-	}
-	return ""
-}
-
 func (x *UpdateMenuRequest) GetParentID() string {
 	if x != nil && x.ParentID != nil {
 		return *x.ParentID
@@ -456,9 +526,9 @@ func (x *UpdateMenuRequest) GetIcon() string {
 	return ""
 }
 
-func (x *UpdateMenuRequest) GetUrl() string {
-	if x != nil && x.Url != nil {
-		return *x.Url
+func (x *UpdateMenuRequest) GetLinkUrl() string {
+	if x != nil && x.LinkUrl != nil {
+		return *x.LinkUrl
 	}
 	return ""
 }
@@ -480,6 +550,48 @@ func (x *UpdateMenuRequest) GetWeight() int32 {
 func (x *UpdateMenuRequest) GetStatus() string {
 	if x != nil && x.Status != nil {
 		return *x.Status
+	}
+	return ""
+}
+
+func (x *UpdateMenuRequest) GetTitle() string {
+	if x != nil && x.Title != nil {
+		return *x.Title
+	}
+	return ""
+}
+
+func (x *UpdateMenuRequest) GetAuthCode() string {
+	if x != nil && x.AuthCode != nil {
+		return *x.AuthCode
+	}
+	return ""
+}
+
+func (x *UpdateMenuRequest) GetBadgeType() string {
+	if x != nil && x.BadgeType != nil {
+		return *x.BadgeType
+	}
+	return ""
+}
+
+func (x *UpdateMenuRequest) GetBadgeContent() string {
+	if x != nil && x.BadgeContent != nil {
+		return *x.BadgeContent
+	}
+	return ""
+}
+
+func (x *UpdateMenuRequest) GetBadgeStyle() string {
+	if x != nil && x.BadgeStyle != nil {
+		return *x.BadgeStyle
+	}
+	return ""
+}
+
+func (x *UpdateMenuRequest) GetRemark() string {
+	if x != nil && x.Remark != nil {
+		return *x.Remark
 	}
 	return ""
 }
@@ -917,7 +1029,7 @@ var File_permission_service_v1_menu_proto protoreflect.FileDescriptor
 
 const file_permission_service_v1_menu_proto_rawDesc = "" +
 	"\n" +
-	" permission/service/v1/menu.proto\x12\x15permission.service.v1\x1a\x1bbuf/validate/validate.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xc5\x03\n" +
+	" permission/service/v1/menu.proto\x12\x15permission.service.v1\x1a\x1bbuf/validate/validate.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xf9\x04\n" +
 	"\x04Menu\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
 	"\bparentID\x18\x02 \x01(\tR\bparentID\x12\x12\n" +
@@ -926,79 +1038,107 @@ const file_permission_service_v1_menu_proto_rawDesc = "" +
 	"\vdescription\x18\x05 \x01(\tR\vdescription\x12\x12\n" +
 	"\x04type\x18\x06 \x01(\tR\x04type\x12\x12\n" +
 	"\x04path\x18\a \x01(\tR\x04path\x12\x12\n" +
-	"\x04icon\x18\b \x01(\tR\x04icon\x12\x10\n" +
-	"\x03url\x18\t \x01(\tR\x03url\x12\x1c\n" +
+	"\x04icon\x18\b \x01(\tR\x04icon\x12\x18\n" +
+	"\alinkUrl\x18\t \x01(\tR\alinkUrl\x12\x1c\n" +
 	"\tcomponent\x18\n" +
 	" \x01(\tR\tcomponent\x12\x16\n" +
 	"\x06weight\x18\v \x01(\x05R\x06weight\x12\x16\n" +
-	"\x06status\x18\f \x01(\tR\x06status\x128\n" +
-	"\tcreatedAt\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x128\n" +
-	"\tupdatedAt\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x127\n" +
-	"\bchildren\x18\x1e \x03(\v2\x1b.permission.service.v1.MenuR\bchildren\"\xf7\b\n" +
-	"\x11CreateMenuRequest\x12\x8d\x01\n" +
-	"\x04name\x18\x01 \x01(\tBy\xbaG\x0f\x92\x02\f权限名称\xbaHd\xba\x01a\n" +
-	"\x1fCREATE_PERMISSION_NAME_REQUIRED\x12\x18权限名称不能为空\x1a$this.size() > 0 && this.size() <= 64R\x04name\x12\x93\x01\n" +
-	"\x04code\x18\x02 \x01(\tB\x7f\xbaG\x15\x92\x02\x12权限唯一编码\xbaHd\xba\x01a\n" +
-	"\x1fCREATE_PERMISSION_CODE_REQUIRED\x12\x18权限编码不能为空\x1a$this.size() > 0 && this.size() <= 64R\x04code\x12q\n" +
-	"\vdescription\x18\x03 \x01(\tBO\xbaG\x0f\x92\x02\f权限描述\xbaH:\xba\x017\n" +
-	"!CREATE_PERMISSION_DESCRIPTION_MAX\x1a\x12this.size() <= 256R\vdescription\x12{\n" +
-	"\bparentID\x18\x04 \x01(\tB_\xbaG#\x92\x02 父权限ID，空表示根节点\xbaH6\xba\x013\n" +
-	"\x1eCREATE_PERMISSION_PARENTID_MAX\x1a\x11this.size() <= 36R\bparentID\x12I\n" +
-	"\x04type\x18\x05 \x01(\tB5\xbaG2\x92\x02/权限类型: menuDirectory / menuItem / buttonR\x04type\x12\\\n" +
-	"\x04path\x18\x06 \x01(\tBH\xbaG\x0f\x92\x02\f路由路径\xbaH3\xba\x010\n" +
-	"\x1aCREATE_PERMISSION_PATH_MAX\x1a\x12this.size() <= 256R\x04path\x12V\n" +
-	"\x04icon\x18\a \x01(\tBB\xbaG\t\x92\x02\x06图标\xbaH3\xba\x010\n" +
-	"\x1aCREATE_PERMISSION_ICON_MAX\x1a\x12this.size() <= 128R\x04icon\x12P\n" +
-	"\x03url\x18\b \x01(\tB>\xbaG\x06\x92\x02\x03URL\xbaH2\xba\x01/\n" +
-	"\x19CREATE_PERMISSION_URL_MAX\x1a\x12this.size() <= 256R\x03url\x12k\n" +
-	"\tcomponent\x18\t \x01(\tBM\xbaG\x0f\x92\x02\f组件路径\xbaH8\xba\x015\n" +
-	"\x1fCREATE_PERMISSION_COMPONENT_MAX\x1a\x12this.size() <= 256R\tcomponent\x12R\n" +
+	"\x06status\x18\f \x01(\tR\x06status\x12\x14\n" +
+	"\x05title\x18\r \x01(\tR\x05title\x12\x1a\n" +
+	"\bauthCode\x18\x0e \x01(\tR\bauthCode\x12\x1c\n" +
+	"\tbadgeType\x18\x0f \x01(\tR\tbadgeType\x12\"\n" +
+	"\fbadgeContent\x18\x10 \x01(\tR\fbadgeContent\x12\x1e\n" +
+	"\n" +
+	"badgeStyle\x18\x11 \x01(\tR\n" +
+	"badgeStyle\x12\x16\n" +
+	"\x06remark\x18\x12 \x01(\tR\x06remark\x128\n" +
+	"\tcreatedAt\x18\x13 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x128\n" +
+	"\tupdatedAt\x18\x14 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x127\n" +
+	"\bchildren\x18\x1e \x03(\v2\x1b.permission.service.v1.MenuR\bchildren\"\xd0\f\n" +
+	"\x11CreateMenuRequest\x12\x9f\x01\n" +
+	"\x04name\x18\x01 \x01(\tB\x8a\x01\xbaG\x0f\x92\x02\f菜单名称\xbaHu\xba\x01r\n" +
+	"\x17CREATE_MENU_NAME_LENGTH\x120菜单名称长度必须在 2-30 个字符之间\x1a%this.size() >= 2 && this.size() <= 30R\x04name\x12x\n" +
+	"\bparentID\x18\x04 \x01(\tB\\\xbaG&\x92\x02#上级菜单ID，空表示根节点\xbaH0\xba\x01-\n" +
+	"\x18CREATE_MENU_PARENTID_MAX\x1a\x11this.size() <= 36R\bparentID\x12\x96\x01\n" +
+	"\x04type\x18\x05 \x01(\tB\x81\x01\xbaG2\x92\x02/类型: catalog / menu / iframe / link / action\xbaHI\xba\x01F\n" +
+	"\x19CREATE_MENU_TYPE_REQUIRED\x12\x18菜单类型不能为空\x1a\x0fthis.size() > 0R\x04type\x12V\n" +
+	"\x04path\x18\x06 \x01(\tBB\xbaG\x0f\x92\x02\f路由路径\xbaH-\xba\x01*\n" +
+	"\x14CREATE_MENU_PATH_MAX\x1a\x12this.size() <= 100R\x04path\x12P\n" +
+	"\x04icon\x18\a \x01(\tB<\xbaG\t\x92\x02\x06图标\xbaH-\xba\x01*\n" +
+	"\x14CREATE_MENU_ICON_MAX\x1a\x12this.size() <= 128R\x04icon\x12s\n" +
+	"\alinkUrl\x18\b \x01(\tBY\xbaG\"\x92\x02\x1f链接地址（iframe/外链）\xbaH1\xba\x01.\n" +
+	"\x18CREATE_MENU_LINK_URL_MAX\x1a\x12this.size() <= 100R\alinkUrl\x12k\n" +
+	"\tcomponent\x18\t \x01(\tBM\xbaG\x15\x92\x02\x12页面组件路径\xbaH2\xba\x01/\n" +
+	"\x19CREATE_MENU_COMPONENT_MAX\x1a\x12this.size() <= 100R\tcomponent\x12M\n" +
 	"\x06weight\x18\n" +
-	" \x01(\x05B:\xbaG\t\x92\x02\x06权重\xbaH+\xba\x01(\n" +
-	"\x1bCREATE_PERMISSION_WEIGH_MIN\x1a\tthis >= 0R\x06weight\x128\n" +
-	"\x06status\x18\v \x01(\tB \xbaG\x1d\x92\x02\x1a状态: enabled / disabledR\x06status\"Q\n" +
+	" \x01(\x05B5\xbaG\t\x92\x02\x06权重\xbaH&\xba\x01#\n" +
+	"\x16CREATE_MENU_WEIGHT_MIN\x1a\tthis >= 0R\x06weight\x128\n" +
+	"\x06status\x18\v \x01(\tB \xbaG\x1d\x92\x02\x1a状态: enabled / disabledR\x06status\x12\xaf\x01\n" +
+	"\x05title\x18\f \x01(\tB\x98\x01\xbaG\x1c\x92\x02\x19标题（国际化 key）\xbaHv\xba\x01s\n" +
+	"\x18CREATE_MENU_TITLE_LENGTH\x120菜单标题长度必须在 2-30 个字符之间\x1a%this.size() >= 2 && this.size() <= 30R\x05title\x12c\n" +
+	"\bauthCode\x18\r \x01(\tBG\xbaG\x0f\x92\x02\f权限标识\xbaH2\xba\x01/\n" +
+	"\x19CREATE_MENU_AUTH_CODE_MAX\x1a\x12this.size() <= 100R\bauthCode\x12<\n" +
+	"\tbadgeType\x18\x0e \x01(\tB\x1e\xbaG\x1b\x92\x02\x18徽标类型: dot / textR\tbadgeType\x12n\n" +
+	"\fbadgeContent\x18\x0f \x01(\tBJ\xbaG\x0f\x92\x02\f徽标内容\xbaH5\xba\x012\n" +
+	"\x1dCREATE_MENU_BADGE_CONTENT_MAX\x1a\x11this.size() <= 10R\fbadgeContent\x12g\n" +
+	"\n" +
+	"badgeStyle\x18\x10 \x01(\tBG\xbaGD\x92\x02A徽标样式: default / destructive / primary / success / warningR\n" +
+	"badgeStyle\x12$\n" +
+	"\x06remark\x18\x11 \x01(\tB\f\xbaG\t\x92\x02\x06备注R\x06remarkJ\x04\b\x02\x10\x03J\x04\b\x03\x10\x04R\x04codeR\vdescription\"Q\n" +
 	"\x12CreateMenuResponse\x12;\n" +
 	"\n" +
 	"permission\x18\x01 \x01(\v2\x1b.permission.service.v1.MenuR\n" +
-	"permission\"\xab\n" +
-	"\n" +
-	"\x11UpdateMenuRequest\x12j\n" +
-	"\x02id\x18\x01 \x01(\tBZ\xbaG\v\x92\x02\b权限ID\xbaHI\xba\x01F\n" +
-	"\x1dUPDATE_PERMISSION_ID_REQUIRED\x12\x14权限ID不能为空\x1a\x0fthis.size() > 0R\x02id\x12`\n" +
-	"\x04name\x18\x02 \x01(\tBG\xbaG\x0f\x92\x02\f权限名称\xbaH2\xba\x01/\n" +
-	"\x1aUPDATE_PERMISSION_NAME_MAX\x1a\x11this.size() <= 64H\x00R\x04name\x88\x01\x01\x12f\n" +
-	"\x04code\x18\x03 \x01(\tBM\xbaG\x15\x92\x02\x12权限唯一编码\xbaH2\xba\x01/\n" +
-	"\x1aUPDATE_PERMISSION_CODE_MAX\x1a\x11this.size() <= 64H\x01R\x04code\x88\x01\x01\x12v\n" +
-	"\vdescription\x18\x04 \x01(\tBO\xbaG\x0f\x92\x02\f权限描述\xbaH:\xba\x017\n" +
-	"!UPDATE_PERMISSION_DESCRIPTION_MAX\x1a\x12this.size() <= 256H\x02R\vdescription\x88\x01\x01\x12\x80\x01\n" +
-	"\bparentID\x18\x05 \x01(\tB_\xbaG#\x92\x02 父权限ID，空表示根节点\xbaH6\xba\x013\n" +
-	"\x1eUPDATE_PERMISSION_PARENTID_MAX\x1a\x11this.size() <= 36H\x03R\bparentID\x88\x01\x01\x12N\n" +
-	"\x04type\x18\x06 \x01(\tB5\xbaG2\x92\x02/权限类型: menuDirectory / menuItem / buttonH\x04R\x04type\x88\x01\x01\x12a\n" +
-	"\x04path\x18\a \x01(\tBH\xbaG\x0f\x92\x02\f路由路径\xbaH3\xba\x010\n" +
-	"\x1aUPDATE_PERMISSION_PATH_MAX\x1a\x12this.size() <= 256H\x05R\x04path\x88\x01\x01\x12[\n" +
-	"\x04icon\x18\b \x01(\tBB\xbaG\t\x92\x02\x06图标\xbaH3\xba\x010\n" +
-	"\x1aUPDATE_PERMISSION_ICON_MAX\x1a\x12this.size() <= 128H\x06R\x04icon\x88\x01\x01\x12U\n" +
-	"\x03url\x18\t \x01(\tB>\xbaG\x06\x92\x02\x03URL\xbaH2\xba\x01/\n" +
-	"\x19UPDATE_PERMISSION_URL_MAX\x1a\x12this.size() <= 256H\aR\x03url\x88\x01\x01\x12p\n" +
+	"permission\"\xe4\x0e\n" +
+	"\x11UpdateMenuRequest\x12d\n" +
+	"\x02id\x18\x01 \x01(\tBT\xbaG\v\x92\x02\b菜单ID\xbaHC\xba\x01@\n" +
+	"\x17UPDATE_MENU_ID_REQUIRED\x12\x14菜单ID不能为空\x1a\x0fthis.size() > 0R\x02id\x12\xa4\x01\n" +
+	"\x04name\x18\x02 \x01(\tB\x8a\x01\xbaG\x0f\x92\x02\f菜单名称\xbaHu\xba\x01r\n" +
+	"\x17UPDATE_MENU_NAME_LENGTH\x120菜单名称长度必须在 2-30 个字符之间\x1a%this.size() >= 2 && this.size() <= 30H\x00R\x04name\x88\x01\x01\x12}\n" +
+	"\bparentID\x18\x05 \x01(\tB\\\xbaG&\x92\x02#上级菜单ID，空表示根节点\xbaH0\xba\x01-\n" +
+	"\x18UPDATE_MENU_PARENTID_MAX\x1a\x11this.size() <= 36H\x01R\bparentID\x88\x01\x01\x12N\n" +
+	"\x04type\x18\x06 \x01(\tB5\xbaG2\x92\x02/类型: catalog / menu / iframe / link / actionH\x02R\x04type\x88\x01\x01\x12[\n" +
+	"\x04path\x18\a \x01(\tBB\xbaG\x0f\x92\x02\f路由路径\xbaH-\xba\x01*\n" +
+	"\x14UPDATE_MENU_PATH_MAX\x1a\x12this.size() <= 100H\x03R\x04path\x88\x01\x01\x12U\n" +
+	"\x04icon\x18\b \x01(\tB<\xbaG\t\x92\x02\x06图标\xbaH-\xba\x01*\n" +
+	"\x14UPDATE_MENU_ICON_MAX\x1a\x12this.size() <= 128H\x04R\x04icon\x88\x01\x01\x12x\n" +
+	"\alinkUrl\x18\t \x01(\tBY\xbaG\"\x92\x02\x1f链接地址（iframe/外链）\xbaH1\xba\x01.\n" +
+	"\x18UPDATE_MENU_LINK_URL_MAX\x1a\x12this.size() <= 100H\x05R\alinkUrl\x88\x01\x01\x12p\n" +
 	"\tcomponent\x18\n" +
-	" \x01(\tBM\xbaG\x0f\x92\x02\f组件路径\xbaH8\xba\x015\n" +
-	"\x1fUPDATE_PERMISSION_COMPONENT_MAX\x1a\x12this.size() <= 256H\bR\tcomponent\x88\x01\x01\x12W\n" +
-	"\x06weight\x18\v \x01(\x05B:\xbaG\t\x92\x02\x06权重\xbaH+\xba\x01(\n" +
-	"\x1bUPDATE_PERMISSION_WEIGH_MIN\x1a\tthis >= 0H\tR\x06weight\x88\x01\x01\x12=\n" +
-	"\x06status\x18\f \x01(\tB \xbaG\x1d\x92\x02\x1a状态: enabled / disabledH\n" +
-	"R\x06status\x88\x01\x01B\a\n" +
-	"\x05_nameB\a\n" +
-	"\x05_codeB\x0e\n" +
-	"\f_descriptionB\v\n" +
+	" \x01(\tBM\xbaG\x15\x92\x02\x12页面组件路径\xbaH2\xba\x01/\n" +
+	"\x19UPDATE_MENU_COMPONENT_MAX\x1a\x12this.size() <= 100H\x06R\tcomponent\x88\x01\x01\x12R\n" +
+	"\x06weight\x18\v \x01(\x05B5\xbaG\t\x92\x02\x06权重\xbaH&\xba\x01#\n" +
+	"\x16UPDATE_MENU_WEIGHT_MIN\x1a\tthis >= 0H\aR\x06weight\x88\x01\x01\x12=\n" +
+	"\x06status\x18\f \x01(\tB \xbaG\x1d\x92\x02\x1a状态: enabled / disabledH\bR\x06status\x88\x01\x01\x12\xb4\x01\n" +
+	"\x05title\x18\r \x01(\tB\x98\x01\xbaG\x1c\x92\x02\x19标题（国际化 key）\xbaHv\xba\x01s\n" +
+	"\x18UPDATE_MENU_TITLE_LENGTH\x120菜单标题长度必须在 2-30 个字符之间\x1a%this.size() >= 2 && this.size() <= 30H\tR\x05title\x88\x01\x01\x12h\n" +
+	"\bauthCode\x18\x0e \x01(\tBG\xbaG\x0f\x92\x02\f权限标识\xbaH2\xba\x01/\n" +
+	"\x19UPDATE_MENU_AUTH_CODE_MAX\x1a\x12this.size() <= 100H\n" +
+	"R\bauthCode\x88\x01\x01\x12A\n" +
+	"\tbadgeType\x18\x0f \x01(\tB\x1e\xbaG\x1b\x92\x02\x18徽标类型: dot / textH\vR\tbadgeType\x88\x01\x01\x12s\n" +
+	"\fbadgeContent\x18\x10 \x01(\tBJ\xbaG\x0f\x92\x02\f徽标内容\xbaH5\xba\x012\n" +
+	"\x1dUPDATE_MENU_BADGE_CONTENT_MAX\x1a\x11this.size() <= 10H\fR\fbadgeContent\x88\x01\x01\x12l\n" +
+	"\n" +
+	"badgeStyle\x18\x11 \x01(\tBG\xbaGD\x92\x02A徽标样式: default / destructive / primary / success / warningH\rR\n" +
+	"badgeStyle\x88\x01\x01\x12)\n" +
+	"\x06remark\x18\x12 \x01(\tB\f\xbaG\t\x92\x02\x06备注H\x0eR\x06remark\x88\x01\x01B\a\n" +
+	"\x05_nameB\v\n" +
 	"\t_parentIDB\a\n" +
 	"\x05_typeB\a\n" +
 	"\x05_pathB\a\n" +
-	"\x05_iconB\x06\n" +
-	"\x04_urlB\f\n" +
+	"\x05_iconB\n" +
+	"\n" +
+	"\b_linkUrlB\f\n" +
 	"\n" +
 	"_componentB\t\n" +
 	"\a_weightB\t\n" +
-	"\a_status\"Q\n" +
+	"\a_statusB\b\n" +
+	"\x06_titleB\v\n" +
+	"\t_authCodeB\f\n" +
+	"\n" +
+	"_badgeTypeB\x0f\n" +
+	"\r_badgeContentB\r\n" +
+	"\v_badgeStyleB\t\n" +
+	"\a_remarkJ\x04\b\x03\x10\x04J\x04\b\x04\x10\x05R\x04codeR\vdescription\"Q\n" +
 	"\x12UpdateMenuResponse\x12;\n" +
 	"\n" +
 	"permission\x18\x01 \x01(\v2\x1b.permission.service.v1.MenuR\n" +

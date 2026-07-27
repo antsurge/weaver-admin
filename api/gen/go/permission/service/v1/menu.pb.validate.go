@@ -72,13 +72,25 @@ func (m *Menu) validate(all bool) error {
 
 	// no validation rules for Icon
 
-	// no validation rules for Url
+	// no validation rules for LinkUrl
 
 	// no validation rules for Component
 
 	// no validation rules for Weight
 
 	// no validation rules for Status
+
+	// no validation rules for Title
+
+	// no validation rules for AuthCode
+
+	// no validation rules for BadgeType
+
+	// no validation rules for BadgeContent
+
+	// no validation rules for BadgeStyle
+
+	// no validation rules for Remark
 
 	if all {
 		switch v := interface{}(m.GetCreatedAt()).(type) {
@@ -273,10 +285,6 @@ func (m *CreateMenuRequest) validate(all bool) error {
 
 	// no validation rules for Name
 
-	// no validation rules for Code
-
-	// no validation rules for Description
-
 	// no validation rules for ParentID
 
 	// no validation rules for Type
@@ -285,13 +293,25 @@ func (m *CreateMenuRequest) validate(all bool) error {
 
 	// no validation rules for Icon
 
-	// no validation rules for Url
+	// no validation rules for LinkUrl
 
 	// no validation rules for Component
 
 	// no validation rules for Weight
 
 	// no validation rules for Status
+
+	// no validation rules for Title
+
+	// no validation rules for AuthCode
+
+	// no validation rules for BadgeType
+
+	// no validation rules for BadgeContent
+
+	// no validation rules for BadgeStyle
+
+	// no validation rules for Remark
 
 	if len(errors) > 0 {
 		return CreateMenuRequestMultiError(errors)
@@ -532,14 +552,6 @@ func (m *UpdateMenuRequest) validate(all bool) error {
 		// no validation rules for Name
 	}
 
-	if m.Code != nil {
-		// no validation rules for Code
-	}
-
-	if m.Description != nil {
-		// no validation rules for Description
-	}
-
 	if m.ParentID != nil {
 		// no validation rules for ParentID
 	}
@@ -556,8 +568,8 @@ func (m *UpdateMenuRequest) validate(all bool) error {
 		// no validation rules for Icon
 	}
 
-	if m.Url != nil {
-		// no validation rules for Url
+	if m.LinkUrl != nil {
+		// no validation rules for LinkUrl
 	}
 
 	if m.Component != nil {
@@ -570,6 +582,30 @@ func (m *UpdateMenuRequest) validate(all bool) error {
 
 	if m.Status != nil {
 		// no validation rules for Status
+	}
+
+	if m.Title != nil {
+		// no validation rules for Title
+	}
+
+	if m.AuthCode != nil {
+		// no validation rules for AuthCode
+	}
+
+	if m.BadgeType != nil {
+		// no validation rules for BadgeType
+	}
+
+	if m.BadgeContent != nil {
+		// no validation rules for BadgeContent
+	}
+
+	if m.BadgeStyle != nil {
+		// no validation rules for BadgeStyle
+	}
+
+	if m.Remark != nil {
+		// no validation rules for Remark
 	}
 
 	if len(errors) > 0 {

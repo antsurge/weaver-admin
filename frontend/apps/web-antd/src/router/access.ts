@@ -98,7 +98,7 @@ function transformAccessRoutes(
                 name: menu.code || menu.name,
                 path: menu.path,
                 meta: {
-                    title: menu.name,
+                    title: $t(menu.title),
                     icon: menu.icon,
                     order: menu.weight ?? 0,
                 },
@@ -153,4 +153,4 @@ async function generateAccess(options: GenerateMenuAndRoutesOptions) {
     });
 }
 
-export { transformAccessRoutes,generateAccess };
+export { transformAccessRoutes, generateAccess };

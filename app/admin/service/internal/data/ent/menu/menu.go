@@ -21,6 +21,8 @@ const (
 	FieldName = "name"
 	// FieldCode holds the string denoting the code field in the database.
 	FieldCode = "code"
+	// FieldTitle holds the string denoting the title field in the database.
+	FieldTitle = "title"
 	// FieldRemark holds the string denoting the remark field in the database.
 	FieldRemark = "remark"
 	// FieldPath holds the string denoting the path field in the database.
@@ -35,6 +37,14 @@ const (
 	FieldURL = "url"
 	// FieldComponent holds the string denoting the component field in the database.
 	FieldComponent = "component"
+	// FieldAuthCode holds the string denoting the auth_code field in the database.
+	FieldAuthCode = "auth_code"
+	// FieldBadgeType holds the string denoting the badge_type field in the database.
+	FieldBadgeType = "badge_type"
+	// FieldBadgeContent holds the string denoting the badge_content field in the database.
+	FieldBadgeContent = "badge_content"
+	// FieldBadgeStyle holds the string denoting the badge_style field in the database.
+	FieldBadgeStyle = "badge_style"
 	// FieldWeight holds the string denoting the weight field in the database.
 	FieldWeight = "weight"
 	// FieldStatus holds the string denoting the status field in the database.
@@ -69,6 +79,7 @@ var Columns = []string{
 	FieldParentID,
 	FieldName,
 	FieldCode,
+	FieldTitle,
 	FieldRemark,
 	FieldPath,
 	FieldIcon,
@@ -76,6 +87,10 @@ var Columns = []string{
 	FieldMenuType,
 	FieldURL,
 	FieldComponent,
+	FieldAuthCode,
+	FieldBadgeType,
+	FieldBadgeContent,
+	FieldBadgeStyle,
 	FieldWeight,
 	FieldStatus,
 	FieldCreatedAt,
@@ -103,8 +118,14 @@ var (
 	DefaultParentID string
 	// NameValidator is a validator for the "name" field. It is called by the builders before save.
 	NameValidator func(string) error
+	// DefaultCode holds the default value on creation for the "code" field.
+	DefaultCode string
 	// CodeValidator is a validator for the "code" field. It is called by the builders before save.
 	CodeValidator func(string) error
+	// DefaultTitle holds the default value on creation for the "title" field.
+	DefaultTitle string
+	// TitleValidator is a validator for the "title" field. It is called by the builders before save.
+	TitleValidator func(string) error
 	// RemarkValidator is a validator for the "remark" field. It is called by the builders before save.
 	RemarkValidator func(string) error
 	// DefaultPath holds the default value on creation for the "path" field.
@@ -123,6 +144,22 @@ var (
 	DefaultComponent string
 	// ComponentValidator is a validator for the "component" field. It is called by the builders before save.
 	ComponentValidator func(string) error
+	// DefaultAuthCode holds the default value on creation for the "auth_code" field.
+	DefaultAuthCode string
+	// AuthCodeValidator is a validator for the "auth_code" field. It is called by the builders before save.
+	AuthCodeValidator func(string) error
+	// DefaultBadgeType holds the default value on creation for the "badge_type" field.
+	DefaultBadgeType string
+	// BadgeTypeValidator is a validator for the "badge_type" field. It is called by the builders before save.
+	BadgeTypeValidator func(string) error
+	// DefaultBadgeContent holds the default value on creation for the "badge_content" field.
+	DefaultBadgeContent string
+	// BadgeContentValidator is a validator for the "badge_content" field. It is called by the builders before save.
+	BadgeContentValidator func(string) error
+	// DefaultBadgeStyle holds the default value on creation for the "badge_style" field.
+	DefaultBadgeStyle string
+	// BadgeStyleValidator is a validator for the "badge_style" field. It is called by the builders before save.
+	BadgeStyleValidator func(string) error
 	// DefaultWeight holds the default value on creation for the "weight" field.
 	DefaultWeight int
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
@@ -144,7 +181,11 @@ const DefaultType = TypeMenuDir
 // Type values.
 const (
 	TypeMenuDir Type = "menu_dir"
+	TypeCatalog Type = "catalog"
 	TypeMenu    Type = "menu"
+	TypeIframe  Type = "iframe"
+	TypeLink    Type = "link"
+	TypeAction  Type = "action"
 	TypeButton  Type = "button"
 )
 
@@ -155,7 +196,7 @@ func (_type Type) String() string {
 // TypeValidator is a validator for the "type" field enum values. It is called by the builders before save.
 func TypeValidator(_type Type) error {
 	switch _type {
-	case TypeMenuDir, TypeMenu, TypeButton:
+	case TypeMenuDir, TypeCatalog, TypeMenu, TypeIframe, TypeLink, TypeAction, TypeButton:
 		return nil
 	default:
 		return fmt.Errorf("menu: invalid enum value for type field: %q", _type)
@@ -238,6 +279,11 @@ func ByCode(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCode, opts...).ToFunc()
 }
 
+// ByTitle orders the results by the title field.
+func ByTitle(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTitle, opts...).ToFunc()
+}
+
 // ByRemark orders the results by the remark field.
 func ByRemark(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldRemark, opts...).ToFunc()
@@ -271,6 +317,26 @@ func ByURL(opts ...sql.OrderTermOption) OrderOption {
 // ByComponent orders the results by the component field.
 func ByComponent(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldComponent, opts...).ToFunc()
+}
+
+// ByAuthCode orders the results by the auth_code field.
+func ByAuthCode(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldAuthCode, opts...).ToFunc()
+}
+
+// ByBadgeType orders the results by the badge_type field.
+func ByBadgeType(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldBadgeType, opts...).ToFunc()
+}
+
+// ByBadgeContent orders the results by the badge_content field.
+func ByBadgeContent(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldBadgeContent, opts...).ToFunc()
+}
+
+// ByBadgeStyle orders the results by the badge_style field.
+func ByBadgeStyle(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldBadgeStyle, opts...).ToFunc()
 }
 
 // ByWeight orders the results by the weight field.

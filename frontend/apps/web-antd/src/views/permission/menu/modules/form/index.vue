@@ -96,7 +96,7 @@ const schema: VbenFormSchema[] = [
         const convert = (list: any[]): any[] =>
           list.map((item) => ({
             id: item.id,
-            label: item.name,
+            label: $t(item.title),
             icon: item.icon,
             children: convert(item.children || []),
           }));
@@ -450,7 +450,9 @@ const [Modal, modalApi] = useVbenModal({
       formData.value = data;
       formApi.setValues(data);
 
-      titleSuffix.value = data.meta?.title ? $t(data.meta.title) : '';
+      // title 是顶级字段（后端 proto/ent 均为顶级），从 data.title 读取 i18n key
+      const titleVal = data.title as string;
+      titleSuffix.value = titleVal && $te(titleVal) ? $t(titleVal) : '';
     } else {
       formApi.resetForm();
       titleSuffix.value = '';
@@ -475,15 +477,6 @@ async function onSubmit() {
     delete data.icon;
     delete data.menuType;
     delete data.component;
-    delete data.url;
-  }
-
-  // if (data.menuType !== PermissionTypeOptionsValueTab) {
-  //   delete data.component;
-  // }
-
-  if (![PermissionTypeOptionsValueLink, PermissionTypeOptionsValueIframe]
-    .includes(data.menuType)) {
     delete data.url;
   }
 

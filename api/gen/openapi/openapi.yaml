@@ -1598,31 +1598,25 @@ components:
             properties:
                 name:
                     type: string
-                    description: 权限名称
-                code:
-                    type: string
-                    description: 权限唯一编码
-                description:
-                    type: string
-                    description: 权限描述
+                    description: 菜单名称
                 parentID:
                     type: string
-                    description: 父权限ID，空表示根节点
+                    description: 上级菜单ID，空表示根节点
                 type:
                     type: string
-                    description: '权限类型: menuDirectory / menuItem / button'
+                    description: '类型: catalog / menu / iframe / link / action'
                 path:
                     type: string
                     description: 路由路径
                 icon:
                     type: string
                     description: 图标
-                url:
+                linkUrl:
                     type: string
-                    description: URL
+                    description: 链接地址（iframe/外链）
                 component:
                     type: string
-                    description: 组件路径
+                    description: 页面组件路径
                 weight:
                     type: integer
                     description: 权重
@@ -1630,7 +1624,25 @@ components:
                 status:
                     type: string
                     description: '状态: enabled / disabled'
-            description: 创建权限请求
+                title:
+                    type: string
+                    description: 标题（国际化 key）
+                authCode:
+                    type: string
+                    description: 权限标识
+                badgeType:
+                    type: string
+                    description: '徽标类型: dot / text'
+                badgeContent:
+                    type: string
+                    description: 徽标内容
+                badgeStyle:
+                    type: string
+                    description: '徽标样式: default / destructive / primary / success / warning'
+                remark:
+                    type: string
+                    description: 备注
+            description: 创建菜单请求
         CreatePositionRequest:
             required:
                 - name
@@ -1971,7 +1983,7 @@ components:
                     type: string
                 icon:
                     type: string
-                url:
+                linkUrl:
                     type: string
                 component:
                     type: string
@@ -1979,6 +1991,18 @@ components:
                     type: integer
                     format: int32
                 status:
+                    type: string
+                title:
+                    type: string
+                authCode:
+                    type: string
+                badgeType:
+                    type: string
+                badgeContent:
+                    type: string
+                badgeStyle:
+                    type: string
+                remark:
                     type: string
                 createdAt:
                     type: string
@@ -2248,34 +2272,28 @@ components:
             properties:
                 id:
                     type: string
-                    description: 权限ID
+                    description: 菜单ID
                 name:
                     type: string
-                    description: 权限名称
-                code:
-                    type: string
-                    description: 权限唯一编码
-                description:
-                    type: string
-                    description: 权限描述
+                    description: 菜单名称
                 parentID:
                     type: string
-                    description: 父权限ID，空表示根节点
+                    description: 上级菜单ID，空表示根节点
                 type:
                     type: string
-                    description: '权限类型: menuDirectory / menuItem / button'
+                    description: '类型: catalog / menu / iframe / link / action'
                 path:
                     type: string
                     description: 路由路径
                 icon:
                     type: string
                     description: 图标
-                url:
+                linkUrl:
                     type: string
-                    description: URL
+                    description: 链接地址（iframe/外链）
                 component:
                     type: string
-                    description: 组件路径
+                    description: 页面组件路径
                 weight:
                     type: integer
                     description: 权重
@@ -2283,7 +2301,25 @@ components:
                 status:
                     type: string
                     description: '状态: enabled / disabled'
-            description: 更新权限
+                title:
+                    type: string
+                    description: 标题（国际化 key）
+                authCode:
+                    type: string
+                    description: 权限标识
+                badgeType:
+                    type: string
+                    description: '徽标类型: dot / text'
+                badgeContent:
+                    type: string
+                    description: 徽标内容
+                badgeStyle:
+                    type: string
+                    description: '徽标样式: default / destructive / primary / success / warning'
+                remark:
+                    type: string
+                    description: 备注
+            description: 更新菜单请求
         UpdateMenuStatusRequest:
             type: object
             properties:

@@ -46,7 +46,7 @@ function generateMenus(
     } = meta;
 
     // 确保菜单名称不为空
-    const name = (title || routeName || '') as string;
+    const name = (title ? title : '') as string;
 
     // 处理子菜单
     const resultChildren = hideChildrenInMenu

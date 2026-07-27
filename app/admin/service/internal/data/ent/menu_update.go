@@ -72,6 +72,20 @@ func (_u *MenuUpdate) SetNillableCode(v *string) *MenuUpdate {
 	return _u
 }
 
+// SetTitle sets the "title" field.
+func (_u *MenuUpdate) SetTitle(v string) *MenuUpdate {
+	_u.mutation.SetTitle(v)
+	return _u
+}
+
+// SetNillableTitle sets the "title" field if the given value is not nil.
+func (_u *MenuUpdate) SetNillableTitle(v *string) *MenuUpdate {
+	if v != nil {
+		_u.SetTitle(*v)
+	}
+	return _u
+}
+
 // SetRemark sets the "remark" field.
 func (_u *MenuUpdate) SetRemark(v string) *MenuUpdate {
 	_u.mutation.SetRemark(v)
@@ -172,6 +186,62 @@ func (_u *MenuUpdate) SetComponent(v string) *MenuUpdate {
 func (_u *MenuUpdate) SetNillableComponent(v *string) *MenuUpdate {
 	if v != nil {
 		_u.SetComponent(*v)
+	}
+	return _u
+}
+
+// SetAuthCode sets the "auth_code" field.
+func (_u *MenuUpdate) SetAuthCode(v string) *MenuUpdate {
+	_u.mutation.SetAuthCode(v)
+	return _u
+}
+
+// SetNillableAuthCode sets the "auth_code" field if the given value is not nil.
+func (_u *MenuUpdate) SetNillableAuthCode(v *string) *MenuUpdate {
+	if v != nil {
+		_u.SetAuthCode(*v)
+	}
+	return _u
+}
+
+// SetBadgeType sets the "badge_type" field.
+func (_u *MenuUpdate) SetBadgeType(v string) *MenuUpdate {
+	_u.mutation.SetBadgeType(v)
+	return _u
+}
+
+// SetNillableBadgeType sets the "badge_type" field if the given value is not nil.
+func (_u *MenuUpdate) SetNillableBadgeType(v *string) *MenuUpdate {
+	if v != nil {
+		_u.SetBadgeType(*v)
+	}
+	return _u
+}
+
+// SetBadgeContent sets the "badge_content" field.
+func (_u *MenuUpdate) SetBadgeContent(v string) *MenuUpdate {
+	_u.mutation.SetBadgeContent(v)
+	return _u
+}
+
+// SetNillableBadgeContent sets the "badge_content" field if the given value is not nil.
+func (_u *MenuUpdate) SetNillableBadgeContent(v *string) *MenuUpdate {
+	if v != nil {
+		_u.SetBadgeContent(*v)
+	}
+	return _u
+}
+
+// SetBadgeStyle sets the "badge_style" field.
+func (_u *MenuUpdate) SetBadgeStyle(v string) *MenuUpdate {
+	_u.mutation.SetBadgeStyle(v)
+	return _u
+}
+
+// SetNillableBadgeStyle sets the "badge_style" field if the given value is not nil.
+func (_u *MenuUpdate) SetNillableBadgeStyle(v *string) *MenuUpdate {
+	if v != nil {
+		_u.SetBadgeStyle(*v)
 	}
 	return _u
 }
@@ -342,6 +412,11 @@ func (_u *MenuUpdate) check() error {
 			return &ValidationError{Name: "code", err: fmt.Errorf(`ent: validator failed for field "Menu.code": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.Title(); ok {
+		if err := menu.TitleValidator(v); err != nil {
+			return &ValidationError{Name: "title", err: fmt.Errorf(`ent: validator failed for field "Menu.title": %w`, err)}
+		}
+	}
 	if v, ok := _u.mutation.Remark(); ok {
 		if err := menu.RemarkValidator(v); err != nil {
 			return &ValidationError{Name: "remark", err: fmt.Errorf(`ent: validator failed for field "Menu.remark": %w`, err)}
@@ -377,6 +452,26 @@ func (_u *MenuUpdate) check() error {
 			return &ValidationError{Name: "component", err: fmt.Errorf(`ent: validator failed for field "Menu.component": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.AuthCode(); ok {
+		if err := menu.AuthCodeValidator(v); err != nil {
+			return &ValidationError{Name: "auth_code", err: fmt.Errorf(`ent: validator failed for field "Menu.auth_code": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.BadgeType(); ok {
+		if err := menu.BadgeTypeValidator(v); err != nil {
+			return &ValidationError{Name: "badge_type", err: fmt.Errorf(`ent: validator failed for field "Menu.badge_type": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.BadgeContent(); ok {
+		if err := menu.BadgeContentValidator(v); err != nil {
+			return &ValidationError{Name: "badge_content", err: fmt.Errorf(`ent: validator failed for field "Menu.badge_content": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.BadgeStyle(); ok {
+		if err := menu.BadgeStyleValidator(v); err != nil {
+			return &ValidationError{Name: "badge_style", err: fmt.Errorf(`ent: validator failed for field "Menu.badge_style": %w`, err)}
+		}
+	}
 	if v, ok := _u.mutation.Status(); ok {
 		if err := menu.StatusValidator(v); err != nil {
 			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Menu.status": %w`, err)}
@@ -406,6 +501,9 @@ func (_u *MenuUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.Code(); ok {
 		_spec.SetField(menu.FieldCode, field.TypeString, value)
 	}
+	if value, ok := _u.mutation.Title(); ok {
+		_spec.SetField(menu.FieldTitle, field.TypeString, value)
+	}
 	if value, ok := _u.mutation.Remark(); ok {
 		_spec.SetField(menu.FieldRemark, field.TypeString, value)
 	}
@@ -429,6 +527,18 @@ func (_u *MenuUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if value, ok := _u.mutation.Component(); ok {
 		_spec.SetField(menu.FieldComponent, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.AuthCode(); ok {
+		_spec.SetField(menu.FieldAuthCode, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.BadgeType(); ok {
+		_spec.SetField(menu.FieldBadgeType, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.BadgeContent(); ok {
+		_spec.SetField(menu.FieldBadgeContent, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.BadgeStyle(); ok {
+		_spec.SetField(menu.FieldBadgeStyle, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Weight(); ok {
 		_spec.SetField(menu.FieldWeight, field.TypeInt, value)
@@ -606,6 +716,20 @@ func (_u *MenuUpdateOne) SetNillableCode(v *string) *MenuUpdateOne {
 	return _u
 }
 
+// SetTitle sets the "title" field.
+func (_u *MenuUpdateOne) SetTitle(v string) *MenuUpdateOne {
+	_u.mutation.SetTitle(v)
+	return _u
+}
+
+// SetNillableTitle sets the "title" field if the given value is not nil.
+func (_u *MenuUpdateOne) SetNillableTitle(v *string) *MenuUpdateOne {
+	if v != nil {
+		_u.SetTitle(*v)
+	}
+	return _u
+}
+
 // SetRemark sets the "remark" field.
 func (_u *MenuUpdateOne) SetRemark(v string) *MenuUpdateOne {
 	_u.mutation.SetRemark(v)
@@ -706,6 +830,62 @@ func (_u *MenuUpdateOne) SetComponent(v string) *MenuUpdateOne {
 func (_u *MenuUpdateOne) SetNillableComponent(v *string) *MenuUpdateOne {
 	if v != nil {
 		_u.SetComponent(*v)
+	}
+	return _u
+}
+
+// SetAuthCode sets the "auth_code" field.
+func (_u *MenuUpdateOne) SetAuthCode(v string) *MenuUpdateOne {
+	_u.mutation.SetAuthCode(v)
+	return _u
+}
+
+// SetNillableAuthCode sets the "auth_code" field if the given value is not nil.
+func (_u *MenuUpdateOne) SetNillableAuthCode(v *string) *MenuUpdateOne {
+	if v != nil {
+		_u.SetAuthCode(*v)
+	}
+	return _u
+}
+
+// SetBadgeType sets the "badge_type" field.
+func (_u *MenuUpdateOne) SetBadgeType(v string) *MenuUpdateOne {
+	_u.mutation.SetBadgeType(v)
+	return _u
+}
+
+// SetNillableBadgeType sets the "badge_type" field if the given value is not nil.
+func (_u *MenuUpdateOne) SetNillableBadgeType(v *string) *MenuUpdateOne {
+	if v != nil {
+		_u.SetBadgeType(*v)
+	}
+	return _u
+}
+
+// SetBadgeContent sets the "badge_content" field.
+func (_u *MenuUpdateOne) SetBadgeContent(v string) *MenuUpdateOne {
+	_u.mutation.SetBadgeContent(v)
+	return _u
+}
+
+// SetNillableBadgeContent sets the "badge_content" field if the given value is not nil.
+func (_u *MenuUpdateOne) SetNillableBadgeContent(v *string) *MenuUpdateOne {
+	if v != nil {
+		_u.SetBadgeContent(*v)
+	}
+	return _u
+}
+
+// SetBadgeStyle sets the "badge_style" field.
+func (_u *MenuUpdateOne) SetBadgeStyle(v string) *MenuUpdateOne {
+	_u.mutation.SetBadgeStyle(v)
+	return _u
+}
+
+// SetNillableBadgeStyle sets the "badge_style" field if the given value is not nil.
+func (_u *MenuUpdateOne) SetNillableBadgeStyle(v *string) *MenuUpdateOne {
+	if v != nil {
+		_u.SetBadgeStyle(*v)
 	}
 	return _u
 }
@@ -889,6 +1069,11 @@ func (_u *MenuUpdateOne) check() error {
 			return &ValidationError{Name: "code", err: fmt.Errorf(`ent: validator failed for field "Menu.code": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.Title(); ok {
+		if err := menu.TitleValidator(v); err != nil {
+			return &ValidationError{Name: "title", err: fmt.Errorf(`ent: validator failed for field "Menu.title": %w`, err)}
+		}
+	}
 	if v, ok := _u.mutation.Remark(); ok {
 		if err := menu.RemarkValidator(v); err != nil {
 			return &ValidationError{Name: "remark", err: fmt.Errorf(`ent: validator failed for field "Menu.remark": %w`, err)}
@@ -922,6 +1107,26 @@ func (_u *MenuUpdateOne) check() error {
 	if v, ok := _u.mutation.Component(); ok {
 		if err := menu.ComponentValidator(v); err != nil {
 			return &ValidationError{Name: "component", err: fmt.Errorf(`ent: validator failed for field "Menu.component": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.AuthCode(); ok {
+		if err := menu.AuthCodeValidator(v); err != nil {
+			return &ValidationError{Name: "auth_code", err: fmt.Errorf(`ent: validator failed for field "Menu.auth_code": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.BadgeType(); ok {
+		if err := menu.BadgeTypeValidator(v); err != nil {
+			return &ValidationError{Name: "badge_type", err: fmt.Errorf(`ent: validator failed for field "Menu.badge_type": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.BadgeContent(); ok {
+		if err := menu.BadgeContentValidator(v); err != nil {
+			return &ValidationError{Name: "badge_content", err: fmt.Errorf(`ent: validator failed for field "Menu.badge_content": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.BadgeStyle(); ok {
+		if err := menu.BadgeStyleValidator(v); err != nil {
+			return &ValidationError{Name: "badge_style", err: fmt.Errorf(`ent: validator failed for field "Menu.badge_style": %w`, err)}
 		}
 	}
 	if v, ok := _u.mutation.Status(); ok {
@@ -970,6 +1175,9 @@ func (_u *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) {
 	if value, ok := _u.mutation.Code(); ok {
 		_spec.SetField(menu.FieldCode, field.TypeString, value)
 	}
+	if value, ok := _u.mutation.Title(); ok {
+		_spec.SetField(menu.FieldTitle, field.TypeString, value)
+	}
 	if value, ok := _u.mutation.Remark(); ok {
 		_spec.SetField(menu.FieldRemark, field.TypeString, value)
 	}
@@ -993,6 +1201,18 @@ func (_u *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) {
 	}
 	if value, ok := _u.mutation.Component(); ok {
 		_spec.SetField(menu.FieldComponent, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.AuthCode(); ok {
+		_spec.SetField(menu.FieldAuthCode, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.BadgeType(); ok {
+		_spec.SetField(menu.FieldBadgeType, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.BadgeContent(); ok {
+		_spec.SetField(menu.FieldBadgeContent, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.BadgeStyle(); ok {
+		_spec.SetField(menu.FieldBadgeStyle, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Weight(); ok {
 		_spec.SetField(menu.FieldWeight, field.TypeInt, value)

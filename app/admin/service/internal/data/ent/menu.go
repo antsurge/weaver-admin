@@ -23,23 +23,33 @@ type Menu struct {
 	Name string `json:"name,omitempty"`
 	// 菜单唯一编码
 	Code string `json:"code,omitempty"`
+	// 标题（国际化 key）
+	Title string `json:"title,omitempty"`
 	// 备注
 	Remark string `json:"remark,omitempty"`
 	// 路由路径
 	Path string `json:"path,omitempty"`
 	// 图标
 	Icon string `json:"icon,omitempty"`
-	// 类型:menu_dir=菜单目录,menu=菜单项,button=页面按钮
+	// 类型:catalog=菜单目录,menu=菜单项,iframe=内嵌,link=外链,action=页面按钮
 	Type menu.Type `json:"type,omitempty"`
 	// 菜单类型:tab=选项卡,link=链接(站外),iframe=Iframe
 	MenuType menu.MenuType `json:"menu_type,omitempty"`
-	// URL
+	// 链接地址（iframe/外链）
 	URL string `json:"url,omitempty"`
 	// 组件路径
 	Component string `json:"component,omitempty"`
+	// 权限标识
+	AuthCode string `json:"auth_code,omitempty"`
+	// 徽标类型:dot=圆点,text=文本
+	BadgeType string `json:"badge_type,omitempty"`
+	// 徽标内容
+	BadgeContent string `json:"badge_content,omitempty"`
+	// 徽标样式:default/destructive/primary/success/warning
+	BadgeStyle string `json:"badge_style,omitempty"`
 	// 权重
 	Weight int `json:"weight,omitempty"`
-	// 状态：enabled=启用 disabled=禁用=禁用
+	// 状态：enabled=启用 disabled=禁用
 	Status menu.Status `json:"status,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
@@ -87,7 +97,7 @@ func (*Menu) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case menu.FieldWeight:
 			values[i] = new(sql.NullInt64)
-		case menu.FieldID, menu.FieldParentID, menu.FieldName, menu.FieldCode, menu.FieldRemark, menu.FieldPath, menu.FieldIcon, menu.FieldType, menu.FieldMenuType, menu.FieldURL, menu.FieldComponent, menu.FieldStatus:
+		case menu.FieldID, menu.FieldParentID, menu.FieldName, menu.FieldCode, menu.FieldTitle, menu.FieldRemark, menu.FieldPath, menu.FieldIcon, menu.FieldType, menu.FieldMenuType, menu.FieldURL, menu.FieldComponent, menu.FieldAuthCode, menu.FieldBadgeType, menu.FieldBadgeContent, menu.FieldBadgeStyle, menu.FieldStatus:
 			values[i] = new(sql.NullString)
 		case menu.FieldCreatedAt, menu.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -130,6 +140,12 @@ func (_m *Menu) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.Code = value.String
 			}
+		case menu.FieldTitle:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field title", values[i])
+			} else if value.Valid {
+				_m.Title = value.String
+			}
 		case menu.FieldRemark:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field remark", values[i])
@@ -171,6 +187,30 @@ func (_m *Menu) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field component", values[i])
 			} else if value.Valid {
 				_m.Component = value.String
+			}
+		case menu.FieldAuthCode:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field auth_code", values[i])
+			} else if value.Valid {
+				_m.AuthCode = value.String
+			}
+		case menu.FieldBadgeType:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field badge_type", values[i])
+			} else if value.Valid {
+				_m.BadgeType = value.String
+			}
+		case menu.FieldBadgeContent:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field badge_content", values[i])
+			} else if value.Valid {
+				_m.BadgeContent = value.String
+			}
+		case menu.FieldBadgeStyle:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field badge_style", values[i])
+			} else if value.Valid {
+				_m.BadgeStyle = value.String
 			}
 		case menu.FieldWeight:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -251,6 +291,9 @@ func (_m *Menu) String() string {
 	builder.WriteString("code=")
 	builder.WriteString(_m.Code)
 	builder.WriteString(", ")
+	builder.WriteString("title=")
+	builder.WriteString(_m.Title)
+	builder.WriteString(", ")
 	builder.WriteString("remark=")
 	builder.WriteString(_m.Remark)
 	builder.WriteString(", ")
@@ -271,6 +314,18 @@ func (_m *Menu) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("component=")
 	builder.WriteString(_m.Component)
+	builder.WriteString(", ")
+	builder.WriteString("auth_code=")
+	builder.WriteString(_m.AuthCode)
+	builder.WriteString(", ")
+	builder.WriteString("badge_type=")
+	builder.WriteString(_m.BadgeType)
+	builder.WriteString(", ")
+	builder.WriteString("badge_content=")
+	builder.WriteString(_m.BadgeContent)
+	builder.WriteString(", ")
+	builder.WriteString("badge_style=")
+	builder.WriteString(_m.BadgeStyle)
 	builder.WriteString(", ")
 	builder.WriteString("weight=")
 	builder.WriteString(fmt.Sprintf("%v", _m.Weight))

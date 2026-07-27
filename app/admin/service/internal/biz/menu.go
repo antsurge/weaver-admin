@@ -9,20 +9,25 @@ import (
 )
 
 type Menu struct {
-	ID        string    `json:"id"`
-	ParentID  string    `json:"parentID"`
-	Name      string    `json:"name"`
-	Code      string    `json:"code"`
-	Remark    string    `json:"remark"`
-	Path      string    `json:"path"`
-	Icon      string    `json:"icon"`
-	Type      string    `json:"type"`
-	Url       string    `json:"url"`
-	Component string    `json:"component"`
-	Weight    int       `json:"weight"`
-	Status    string    `json:"status"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt"`
+	ID           string    `json:"id"`
+	ParentID     string    `json:"parentID"`
+	Name         string    `json:"name"`
+	Code         string    `json:"code"`
+	Title        string    `json:"title"`        // 标题（国际化 key）
+	Type         string    `json:"type"`         // 类型: catalog / menu / iframe / link / action
+	Path         string    `json:"path"`
+	Icon         string    `json:"icon"`
+	LinkUrl      string    `json:"linkUrl"`      // 链接地址（iframe/外链）
+	Component    string    `json:"component"`
+	Weight       int       `json:"weight"`
+	Status       string    `json:"status"`
+	AuthCode     string    `json:"authCode"`     // 权限标识
+	BadgeType    string    `json:"badgeType"`    // 徽标类型: dot / text
+	BadgeContent string    `json:"badgeContent"` // 徽标内容
+	BadgeStyle   string    `json:"badgeStyle"`   // 徽标样式
+	Remark       string    `json:"remark"`
+	CreatedAt    time.Time `json:"createdAt"`
+	UpdatedAt    time.Time `json:"updatedAt"`
 
 	Children []*Menu `json:"children"`
 }

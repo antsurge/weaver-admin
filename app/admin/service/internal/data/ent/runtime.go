@@ -288,60 +288,78 @@ func init() {
 	}()
 	// menuDescCode is the schema descriptor for code field.
 	menuDescCode := menuFields[3].Descriptor()
+	// menu.DefaultCode holds the default value on creation for the code field.
+	menu.DefaultCode = menuDescCode.Default.(string)
 	// menu.CodeValidator is a validator for the "code" field. It is called by the builders before save.
-	menu.CodeValidator = func() func(string) error {
-		validators := menuDescCode.Validators
-		fns := [...]func(string) error{
-			validators[0].(func(string) error),
-			validators[1].(func(string) error),
-		}
-		return func(code string) error {
-			for _, fn := range fns {
-				if err := fn(code); err != nil {
-					return err
-				}
-			}
-			return nil
-		}
-	}()
+	menu.CodeValidator = menuDescCode.Validators[0].(func(string) error)
+	// menuDescTitle is the schema descriptor for title field.
+	menuDescTitle := menuFields[4].Descriptor()
+	// menu.DefaultTitle holds the default value on creation for the title field.
+	menu.DefaultTitle = menuDescTitle.Default.(string)
+	// menu.TitleValidator is a validator for the "title" field. It is called by the builders before save.
+	menu.TitleValidator = menuDescTitle.Validators[0].(func(string) error)
 	// menuDescRemark is the schema descriptor for remark field.
-	menuDescRemark := menuFields[4].Descriptor()
+	menuDescRemark := menuFields[5].Descriptor()
 	// menu.RemarkValidator is a validator for the "remark" field. It is called by the builders before save.
 	menu.RemarkValidator = menuDescRemark.Validators[0].(func(string) error)
 	// menuDescPath is the schema descriptor for path field.
-	menuDescPath := menuFields[5].Descriptor()
+	menuDescPath := menuFields[6].Descriptor()
 	// menu.DefaultPath holds the default value on creation for the path field.
 	menu.DefaultPath = menuDescPath.Default.(string)
 	// menu.PathValidator is a validator for the "path" field. It is called by the builders before save.
 	menu.PathValidator = menuDescPath.Validators[0].(func(string) error)
 	// menuDescIcon is the schema descriptor for icon field.
-	menuDescIcon := menuFields[6].Descriptor()
+	menuDescIcon := menuFields[7].Descriptor()
 	// menu.DefaultIcon holds the default value on creation for the icon field.
 	menu.DefaultIcon = menuDescIcon.Default.(string)
 	// menu.IconValidator is a validator for the "icon" field. It is called by the builders before save.
 	menu.IconValidator = menuDescIcon.Validators[0].(func(string) error)
 	// menuDescURL is the schema descriptor for url field.
-	menuDescURL := menuFields[9].Descriptor()
+	menuDescURL := menuFields[10].Descriptor()
 	// menu.DefaultURL holds the default value on creation for the url field.
 	menu.DefaultURL = menuDescURL.Default.(string)
 	// menu.URLValidator is a validator for the "url" field. It is called by the builders before save.
 	menu.URLValidator = menuDescURL.Validators[0].(func(string) error)
 	// menuDescComponent is the schema descriptor for component field.
-	menuDescComponent := menuFields[10].Descriptor()
+	menuDescComponent := menuFields[11].Descriptor()
 	// menu.DefaultComponent holds the default value on creation for the component field.
 	menu.DefaultComponent = menuDescComponent.Default.(string)
 	// menu.ComponentValidator is a validator for the "component" field. It is called by the builders before save.
 	menu.ComponentValidator = menuDescComponent.Validators[0].(func(string) error)
+	// menuDescAuthCode is the schema descriptor for auth_code field.
+	menuDescAuthCode := menuFields[12].Descriptor()
+	// menu.DefaultAuthCode holds the default value on creation for the auth_code field.
+	menu.DefaultAuthCode = menuDescAuthCode.Default.(string)
+	// menu.AuthCodeValidator is a validator for the "auth_code" field. It is called by the builders before save.
+	menu.AuthCodeValidator = menuDescAuthCode.Validators[0].(func(string) error)
+	// menuDescBadgeType is the schema descriptor for badge_type field.
+	menuDescBadgeType := menuFields[13].Descriptor()
+	// menu.DefaultBadgeType holds the default value on creation for the badge_type field.
+	menu.DefaultBadgeType = menuDescBadgeType.Default.(string)
+	// menu.BadgeTypeValidator is a validator for the "badge_type" field. It is called by the builders before save.
+	menu.BadgeTypeValidator = menuDescBadgeType.Validators[0].(func(string) error)
+	// menuDescBadgeContent is the schema descriptor for badge_content field.
+	menuDescBadgeContent := menuFields[14].Descriptor()
+	// menu.DefaultBadgeContent holds the default value on creation for the badge_content field.
+	menu.DefaultBadgeContent = menuDescBadgeContent.Default.(string)
+	// menu.BadgeContentValidator is a validator for the "badge_content" field. It is called by the builders before save.
+	menu.BadgeContentValidator = menuDescBadgeContent.Validators[0].(func(string) error)
+	// menuDescBadgeStyle is the schema descriptor for badge_style field.
+	menuDescBadgeStyle := menuFields[15].Descriptor()
+	// menu.DefaultBadgeStyle holds the default value on creation for the badge_style field.
+	menu.DefaultBadgeStyle = menuDescBadgeStyle.Default.(string)
+	// menu.BadgeStyleValidator is a validator for the "badge_style" field. It is called by the builders before save.
+	menu.BadgeStyleValidator = menuDescBadgeStyle.Validators[0].(func(string) error)
 	// menuDescWeight is the schema descriptor for weight field.
-	menuDescWeight := menuFields[11].Descriptor()
+	menuDescWeight := menuFields[16].Descriptor()
 	// menu.DefaultWeight holds the default value on creation for the weight field.
 	menu.DefaultWeight = menuDescWeight.Default.(int)
 	// menuDescCreatedAt is the schema descriptor for created_at field.
-	menuDescCreatedAt := menuFields[13].Descriptor()
+	menuDescCreatedAt := menuFields[18].Descriptor()
 	// menu.DefaultCreatedAt holds the default value on creation for the created_at field.
 	menu.DefaultCreatedAt = menuDescCreatedAt.Default.(func() time.Time)
 	// menuDescUpdatedAt is the schema descriptor for updated_at field.
-	menuDescUpdatedAt := menuFields[14].Descriptor()
+	menuDescUpdatedAt := menuFields[19].Descriptor()
 	// menu.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	menu.DefaultUpdatedAt = menuDescUpdatedAt.Default.(func() time.Time)
 	// menu.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.

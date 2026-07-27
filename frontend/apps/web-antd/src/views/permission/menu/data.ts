@@ -90,21 +90,24 @@ export function useColumns(
       field: 'id',
       align: 'center',
       type: 'checkbox',
-      width: 100,
+      width: 60,
       fixed: 'left'
     },
     {
-      field: 'name',
+      field: 'title',
       align: 'center',
-      title: $t('permission.menu.fields.name'),
+      title: $t('permission.menu.fields.title'),
       treeNode: true,
-      width: 250,
+      width: 200,
+      formatter: ({ cellValue }) => {
+        return $t(cellValue);
+      },
     },
     {
       field: 'icon',
       align: 'center',
       title: $t('permission.menu.fields.icon'),
-      width: 80,
+      width: 60,
       cellRender: {
         name: 'CellIcon', // 使用 Vben 封装的图标渲染器
         props: {
@@ -114,9 +117,15 @@ export function useColumns(
       },
     },
     {
-      field: 'code',
+      field: 'name',
       align: 'center',
-      title: $t('permission.menu.fields.code'),
+      title: $t('permission.menu.fields.name'),
+      width: 200,
+    },
+    {
+      field: 'authCode',
+      align: 'center',
+      title: $t('permission.menu.fields.authCode'),
       width: 200,
     },
     {
@@ -124,7 +133,7 @@ export function useColumns(
       cellRender: { name: 'CellTag', options: getPermissionTypeOptions() },
       field: 'type',
       title: $t('permission.menu.fields.type'),
-      width: 160,
+      width: 80,
     },
     {
       align: 'center',
@@ -139,7 +148,7 @@ export function useColumns(
       },
       align: 'center',
       title: $t('permission.menu.fields.status'),
-      width: 160,
+      width: 100,
     },
     {
       align: 'center',

@@ -28,12 +28,17 @@ func (r *menuRepo) CreateMenu(ctx context.Context, p *biz.Menu) error {
 		SetParentID(p.ParentID).
 		SetName(p.Name).
 		SetCode(p.Code).
+		SetTitle(p.Title).
 		SetNillableRemark(&p.Remark).
 		SetPath(p.Path).
 		SetIcon(p.Icon).
 		SetType(menu.Type(p.Type)).
-		//SetURL(p.URL).
+		SetURL(p.LinkUrl).
 		SetComponent(p.Component).
+		SetAuthCode(p.AuthCode).
+		SetBadgeType(p.BadgeType).
+		SetBadgeContent(p.BadgeContent).
+		SetBadgeStyle(p.BadgeStyle).
 		SetWeight(p.Weight).
 		SetStatus(menu.Status(p.Status)).
 		SetCreatedAt(p.CreatedAt).
@@ -47,12 +52,17 @@ func (r *menuRepo) UpdateMenu(ctx context.Context, p *biz.Menu) error {
 		SetParentID(p.ParentID).
 		SetName(p.Name).
 		SetCode(p.Code).
+		SetTitle(p.Title).
 		SetNillableRemark(&p.Remark).
 		SetPath(p.Path).
 		SetIcon(p.Icon).
 		SetType(menu.Type(p.Type)).
-		//SetURL(p.URL).
+		SetURL(p.LinkUrl).
 		SetComponent(p.Component).
+		SetAuthCode(p.AuthCode).
+		SetBadgeType(p.BadgeType).
+		SetBadgeContent(p.BadgeContent).
+		SetBadgeStyle(p.BadgeStyle).
 		SetWeight(p.Weight).
 		SetStatus(menu.Status(p.Status)).
 		SetUpdatedAt(p.UpdatedAt).
@@ -137,20 +147,25 @@ func (r *menuRepo) ListMenu(
 
 	for _, v := range list {
 		res = append(res, &biz.Menu{
-			ID:        v.ID,
-			ParentID:  v.ParentID,
-			Name:      v.Name,
-			Code:      v.Code,
-			Remark:    v.Remark,
-			Path:      v.Path,
-			Icon:      v.Icon,
-			Type:      string(v.Type),
-			Url:       v.URL,
-			Component: v.Component,
-			Weight:    v.Weight,
-			Status:    string(v.Status),
-			CreatedAt: v.CreatedAt,
-			UpdatedAt: v.UpdatedAt,
+			ID:           v.ID,
+			ParentID:     v.ParentID,
+			Name:         v.Name,
+			Code:         v.Code,
+			Title:        v.Title,
+			Remark:       v.Remark,
+			Path:         v.Path,
+			Icon:         v.Icon,
+			Type:         string(v.Type),
+			LinkUrl:      v.URL,
+			Component:    v.Component,
+			AuthCode:     v.AuthCode,
+			BadgeType:    v.BadgeType,
+			BadgeContent: v.BadgeContent,
+			BadgeStyle:   v.BadgeStyle,
+			Weight:       v.Weight,
+			Status:       string(v.Status),
+			CreatedAt:    v.CreatedAt,
+			UpdatedAt:    v.UpdatedAt,
 		})
 	}
 
@@ -182,20 +197,25 @@ func (r *menuRepo) GetMenusByIDs(ctx context.Context, ids []string) ([]*biz.Menu
 	res := make([]*biz.Menu, 0, len(list))
 	for _, v := range list {
 		res = append(res, &biz.Menu{
-			ID:        v.ID,
-			ParentID:  v.ParentID,
-			Name:      v.Name,
-			Code:      v.Code,
-			Remark:    v.Remark,
-			Path:      v.Path,
-			Icon:      v.Icon,
-			Type:      string(v.Type),
-			Url:       v.URL,
-			Component: v.Component,
-			Weight:    v.Weight,
-			Status:    string(v.Status),
-			CreatedAt: v.CreatedAt,
-			UpdatedAt: v.UpdatedAt,
+			ID:           v.ID,
+			ParentID:     v.ParentID,
+			Name:         v.Name,
+			Code:         v.Code,
+			Title:        v.Title,
+			Remark:       v.Remark,
+			Path:         v.Path,
+			Icon:         v.Icon,
+			Type:         string(v.Type),
+			LinkUrl:      v.URL,
+			Component:    v.Component,
+			AuthCode:     v.AuthCode,
+			BadgeType:    v.BadgeType,
+			BadgeContent: v.BadgeContent,
+			BadgeStyle:   v.BadgeStyle,
+			Weight:       v.Weight,
+			Status:       string(v.Status),
+			CreatedAt:    v.CreatedAt,
+			UpdatedAt:    v.UpdatedAt,
 		})
 	}
 
