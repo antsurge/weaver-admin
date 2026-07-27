@@ -5,9 +5,10 @@ import type { Recordable } from '@vben/types';
 
 import { computed, onMounted, ref } from 'vue';
 
-import { Tree,useVbenModal } from '@vben/common-ui';
+import { Tree, useVbenModal } from '@vben/common-ui';
+import { IconifyIcon } from '@vben/icons';
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
-import { message } from 'ant-design-vue';
+import { Spin, message } from 'ant-design-vue';
 
 import {
   getRoleApi,
@@ -21,6 +22,7 @@ import type { PermissionRoleApi } from '#/api/permission/role';
 import { useVbenForm } from '#/adapter/form';
 
 import { $t } from '#/locales';
+import { $te } from '@vben/locales';
 
 import { nameRule, codeRule } from './rules';
 
@@ -57,32 +59,41 @@ async function loadMenuTree() {
 }
 
 function getNodeClass(node: Recordable<any>) {
-  const classes: string[] = [];
-  if (node.value?.type === PermissionTypeOptionsValueAction) {
-    classes.push('inline-flex');
+  // node 是 reka-ui 的 InnerFlattenItem，原始菜单节点在 node.value
+  const type = node?.value?.type
+  if (type === PermissionTypeOptionsValueAction) {
+    return 'role-menu-action'
   }
-
-  return classes.join(' ');
+  return ''
 }
 
 // 转换后端数据为 Tree 组件格式
+// 注意：treeData 项会被原样塞进 reka-ui InnerFlattenItem.value（见
+// packages/@core/ui-kit/shadcn-ui/src/ui/tree/tree.vue flatten 函数），
+// 所以这里直接平铺原对象即可，模板插槽可通过 value.value.* 访问原字段。
 function transformToTreeData(items: any[]): TreeDataItem[] {
-  return items.map(item => ({
+  return items.map((item) => ({
     key: item.id,
-    title: item.name,
+    title: item.title,
+    // 兼容框架默认 labelField
+    label: item.title,
+    // action 类型不显示图标
+    icon: item.type === PermissionTypeOptionsValueAction ? '' : item.icon,
     children: item.children ? transformToTreeData(item.children) : undefined,
-  }));
+  }))
 }
 
 // 树节点选中变化
-function onTreeCheck(keys: string[], info: any) {
-  checkedKeys.value = keys;
-  halfCheckedKeys.value = info.halfCheckedKeys;
+function onTreeCheck(keys: (number | string)[], info: any) {
+  checkedKeys.value = keys as string[]
+  halfCheckedKeys.value = info?.halfCheckedKeys ?? []
+  // 同步到 form 字段（如果 schema 启用了字段绑定）
+  formApi.setFieldValue('menuPermission', checkedKeys.value)
 
   // 当用户选择了菜单时，清除错误状态
-  if (keys.length > 0) {
-    menuValidateStatus.value = '';
-    menuHelpText.value = '';
+  if (checkedKeys.value.length > 0) {
+    menuValidateStatus.value = ''
+    menuHelpText.value = ''
   }
 }
 
@@ -290,11 +301,19 @@ onMounted(() => {
     <Form class="mx-4" :layout="isHorizontal ? 'horizontal' : 'vertical'">
       <template #menuPermission="slotProps">
         <Spin :spinning="menuTreeLoading" :classes="{ root: 'w-full' }">
-          <Tree :tree-data="menuTreeData" multiple bordered :default-expanded-level="2" :get-node-class="getNodeClass"
-            v-bind="slotProps" value-field="id" label-field="title" icon-field="icon">
+          <Tree :tree-data="menuTreeData" multiple bordered :default-expanded-level="2"
+            v-bind="slotProps"
+            :model-value="checkedKeys"
+            value-field="key" label-field="title" icon-field="icon"
+            :get-node-class="getNodeClass"
+            @update:model-value="onTreeCheck">
             <template #node="{ value }">
-              <IconifyIcon v-if="value.icon" :icon="value.icon" />
-              {{ $t(value.title) }}
+              <IconifyIcon
+                v-if="value?.type !== PermissionTypeOptionsValueAction && value?.icon"
+                :icon="value.icon"
+                class="mr-1 size-4"
+              />
+              {{ $te(value.title) ? $t(value.title) : (value.title ?? '') }}
             </template>
           </Tree>
         </Spin>
@@ -314,5 +333,11 @@ onMounted(() => {
   .tree-actions {
     @apply ml-5 flex flex-auto justify-end;
   }
+}
+
+// action 类型（按钮权限）样式：去除图标位置，用细体区分
+:deep(.role-menu-action) {
+  font-style: italic;
+  color: hsl(var(--muted-foreground));
 }
 </style>
