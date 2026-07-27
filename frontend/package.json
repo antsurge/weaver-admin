@@ -106,6 +106,7 @@
   },
   "packageManager": "pnpm@10.28.2",
   "dependencies": {
+    "antdv-next": "catalog:",
     "bootstrap-icons": "^1.13.1"
   }
 }

@@ -1,20 +1,21 @@
 <script lang="ts" setup>
 import type { VbenFormSchema } from '#/adapter/form';
 import type { TreeDataItem } from 'ant-design-vue/es/tree/Tree';
+import type { Recordable } from '@vben/types';
 
 import { computed, onMounted, ref } from 'vue';
 
-import { useVbenModal } from '@vben/common-ui';
+import { Tree,useVbenModal } from '@vben/common-ui';
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
 import { message } from 'ant-design-vue';
 
-import { Tree } from 'ant-design-vue';
 import {
   getRoleApi,
   createRoleApi,
   updateRoleApi,
   bindMenusForRoleApi,
 } from '#/api/permission/role';
+import { PermissionTypeOptionsValueAction } from "#/views/permission/menu/data"
 import { getMenuTreeApi } from '#/api/permission/menu';
 import type { PermissionRoleApi } from '#/api/permission/role';
 import { useVbenForm } from '#/adapter/form';
@@ -39,6 +40,8 @@ const menuTreeLoading = ref(false);
 const menuValidateStatus = ref<'' | 'error'>('');
 const menuHelpText = ref('');
 
+
+
 // 加载菜单树
 async function loadMenuTree() {
   menuTreeLoading.value = true;
@@ -51,6 +54,15 @@ async function loadMenuTree() {
   } finally {
     menuTreeLoading.value = false;
   }
+}
+
+function getNodeClass(node: Recordable<any>) {
+  const classes: string[] = [];
+  if (node.value?.type === PermissionTypeOptionsValueAction) {
+    classes.push('inline-flex');
+  }
+
+  return classes.join(' ');
 }
 
 // 转换后端数据为 Tree 组件格式
@@ -87,6 +99,16 @@ function validateMenuSelection(): boolean {
 }
 
 const schema: VbenFormSchema[] = [
+  {
+    fieldName: '',
+    component: 'FormTitle',
+    label: '',
+    labelWidth: 0,
+    formItemClass: 'col-span-2 md:col-span-2',
+    componentProps: {
+      title: $t('permission.role.form_group.basicInfo'),
+    },
+  },
   {
     fieldName: 'name',
     label: $t('permission.role.fields.name'),
@@ -146,6 +168,23 @@ const schema: VbenFormSchema[] = [
       placeholder: $t('permission.role.form_placeholder.remark'),
     },
   },
+  {
+    fieldName: '',
+    component: 'FormTitle',
+    label: '',
+    labelWidth: 0,
+    formItemClass: 'col-span-2 md:col-span-2',
+    componentProps: {
+      title: $t('permission.role.form_group.authorizedMenu'),
+    },
+  },
+  {
+    component: 'Input',
+    fieldName: 'menuPermission',
+    formItemClass: 'items-start',
+    labelWidth: 0,
+    modelPropName: 'modelValue',
+  },
 ];
 
 const breakpoints = useBreakpoints(breakpointsTailwind);
@@ -164,7 +203,7 @@ const [Form, formApi] = useVbenForm({
 
 const [Modal, modalApi] = useVbenModal({
   onConfirm: onSubmit,
-  onOpenChange:async (isOpen) => {
+  onOpenChange: async (isOpen) => {
     if (!isOpen) return;
 
     // 重置菜单校验状态
@@ -248,45 +287,32 @@ onMounted(() => {
 
 <template>
   <Modal class="w-full max-w-[800px]" :title="getModalTitle">
-    <div class="mx-4">
-      <!-- 基本信息表单 -->
-      <Form class="mb-6" :layout="isHorizontal ? 'horizontal' : 'vertical'" />
-
-      <!-- 菜单权限选择（必填） -->
-      <div class="border-t pt-4">
-        <div class="text-base font-medium mb-3 text-gray-700 flex items-center gap-1">
-          {{ $t('permission.role.fields.menuPermission') || '菜单权限' }}
-          <span class="text-red-500">*</span>
-        </div>
-        <div v-if="menuTreeLoading" class="flex justify-center py-8">
-          <a-spin tip="加载菜单树..." />
-        </div>
-        <div
-          v-else-if="menuTreeData.length > 0"
-          class="max-h-[400px] overflow-auto rounded p-4"
-          :class="menuValidateStatus === 'error' ? 'border-red-500 border bg-red-50' : 'border border-gray-200'"
-        >
-          <Tree
-            v-model:checkedKeys="checkedKeys"
-            :tree-data="menuTreeData"
-            :checkable="true"
-            :default-expand-all="true"
-            :selectable="false"
-            @check="onTreeCheck"
-          >
-            <template #title="{ title }">
-              <span>{{ title }}</span>
+    <Form class="mx-4" :layout="isHorizontal ? 'horizontal' : 'vertical'">
+      <template #menuPermission="slotProps">
+        <Spin :spinning="menuTreeLoading" :classes="{ root: 'w-full' }">
+          <Tree :tree-data="menuTreeData" multiple bordered :default-expanded-level="2" :get-node-class="getNodeClass"
+            v-bind="slotProps" value-field="id" label-field="title" icon-field="icon">
+            <template #node="{ value }">
+              <IconifyIcon v-if="value.icon" :icon="value.icon" />
+              {{ $t(value.title) }}
             </template>
           </Tree>
-          <!-- 错误提示 -->
-          <div v-if="menuValidateStatus === 'error'" class="mt-2 text-red-500 text-sm">
-            {{ menuHelpText }}
-          </div>
-        </div>
-        <div v-else class="text-center py-8 text-gray-400">
-          暂无菜单数据
-        </div>
-      </div>
-    </div>
+        </Spin>
+      </template>
+    </Form>
   </Modal>
 </template>
+
+<style lang="scss" scoped>
+:deep(.ant-tree-title) {
+  .tree-actions {
+    @apply ml-5 hidden;
+  }
+}
+
+:deep(.ant-tree-title:hover) {
+  .tree-actions {
+    @apply ml-5 flex flex-auto justify-end;
+  }
+}
+</style>

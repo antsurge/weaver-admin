@@ -81,6 +81,10 @@
     },
     "form_placeholder": {
       "remark": "请输入备注"
+    },
+     "form_group": {
+      "basicInfo": "基本信息",
+      "authorizedMenu": "授权菜单"
     }
   }
 }

@@ -59,7 +59,7 @@ const titleSuffix = ref<string>();
  * 表单 schema
  */
 const schema: VbenFormSchema[] = [
-  // ==================== 基础设置 ====================
+  // ==================== 基础信息 ====================
   {
     fieldName: '',
     component: 'FormTitle',
