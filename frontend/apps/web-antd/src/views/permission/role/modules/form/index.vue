@@ -59,12 +59,12 @@ async function loadMenuTree() {
 }
 
 function getNodeClass(node: Recordable<any>) {
-  // node 是 reka-ui 的 InnerFlattenItem，原始菜单节点在 node.value
-  const type = node?.value?.type
-  if (type === PermissionTypeOptionsValueAction) {
-    return 'role-menu-action'
+ const classes: string[] = [];
+  if (node.value?.type === PermissionTypeOptionsValueAction) {
+    classes.push('inline-flex');
   }
-  return ''
+
+  return classes.join(' ');
 }
 
 // 转换后端数据为 Tree 组件格式
@@ -79,6 +79,7 @@ function transformToTreeData(items: any[]): TreeDataItem[] {
     label: item.title,
     // action 类型不显示图标
     icon: item.type === PermissionTypeOptionsValueAction ? '' : item.icon,
+    type:item.type,
     children: item.children ? transformToTreeData(item.children) : undefined,
   }))
 }
@@ -192,7 +193,7 @@ const schema: VbenFormSchema[] = [
   {
     component: 'Input',
     fieldName: 'menuPermission',
-    formItemClass: 'items-start',
+    formItemClass: 'col-span-2 md:col-span-2 items-start',
     labelWidth: 0,
     modelPropName: 'modelValue',
   },
@@ -300,23 +301,19 @@ onMounted(() => {
   <Modal class="w-full max-w-[800px]" :title="getModalTitle">
     <Form class="mx-4" :layout="isHorizontal ? 'horizontal' : 'vertical'">
       <template #menuPermission="slotProps">
-        <Spin :spinning="menuTreeLoading" :classes="{ root: 'w-full' }">
-          <Tree :tree-data="menuTreeData" multiple bordered :default-expanded-level="2"
-            v-bind="slotProps"
-            :model-value="checkedKeys"
-            value-field="key" label-field="title" icon-field="icon"
-            :get-node-class="getNodeClass"
-            @update:model-value="onTreeCheck">
-            <template #node="{ value }">
-              <IconifyIcon
-                v-if="value?.type !== PermissionTypeOptionsValueAction && value?.icon"
-                :icon="value.icon"
-                class="mr-1 size-4"
-              />
-              {{ $te(value.title) ? $t(value.title) : (value.title ?? '') }}
-            </template>
-          </Tree>
-        </Spin>
+        <div class="w-full">
+          <Spin :spinning="menuTreeLoading" class="w-full">
+            <Tree :tree-data="menuTreeData" multiple bordered class="w-full" :default-expanded-level="2"
+              v-bind="slotProps" :model-value="checkedKeys" value-field="key" label-field="title" icon-field="icon"
+              :get-node-class="getNodeClass" @update:model-value="onTreeCheck">
+              <template #node="{ value }">
+                <IconifyIcon v-if="value?.type !== PermissionTypeOptionsValueAction && value?.icon" :icon="value.icon"
+                  class="mr-1 size-4" />
+                {{ $te(value.title) ? $t(value.title) : (value.title ?? '') }}
+              </template>
+            </Tree>
+          </Spin>
+        </div>
       </template>
     </Form>
   </Modal>

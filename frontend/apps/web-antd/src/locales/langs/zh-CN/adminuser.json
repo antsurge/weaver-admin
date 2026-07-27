@@ -1,5 +1,7 @@
 {
+  "title":"管理员",
   "admin": {
+    "title":"用户管理",
     "name": "用户",
     "fields": {
       "username": "用户名",

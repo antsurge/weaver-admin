@@ -16,6 +16,8 @@ import { $t } from '#/locales';
 import {
     PermissionTypeOptionsValueIframe,
     PermissionTypeOptionsValueLink,
+    PermissionTypeOptionsValueCatalog,
+    PermissionTypeOptionsValueAction,
 } from '#/views/permission/menu/data';
 
 const forbiddenComponent = () => import('#/views/_core/fallback/forbidden.vue');
@@ -113,7 +115,7 @@ function buildSpecialRoute(
 
     const code = menu.code || menu.name || String(menu.id ?? '')
 
-    if (type === 'link') {
+    if (type === PermissionTypeOptionsValueLink) {
         return {
             name: `Link_${code}`,
             path: `/link/${code}`,
@@ -145,7 +147,7 @@ function transformAccessRoutes(
         return []
     }
     return menus
-        .filter(menu => menu.type !== 'button' && menu.type !== 'menu_btn')
+        .filter(menu => menu.type !== PermissionTypeOptionsValueAction)
         .map(menu => {
             // 收集菜单页面路径（仅收集有实际页面的菜单）
             if ((menu.type === 'menu' || !menu.type) && menu.path) {
@@ -153,7 +155,7 @@ function transformAccessRoutes(
             }
 
             // 判断是否为目录类型
-            const isDirectory = menu.type === 'menu_dir' || menu.type === 'catalog'
+            const isDirectory = menu.type === PermissionTypeOptionsValueCatalog 
             // 判断是否为外链类型
             const isLink = menu.type === PermissionTypeOptionsValueLink
             // 判断是否为内嵌类型

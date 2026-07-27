@@ -1,8 +1,14 @@
 {
-  "fields":{
-    "seq":"序号",
-    "operation":"操作",
-    "createdAt":"创建时间",
-    "updatedAt":"更新时间"
+  "fields": {
+    "seq": "序号",
+    "operation": "操作",
+    "createdAt": "创建时间",
+    "updatedAt": "更新时间"
+  },
+  "actions": {
+    "list": "列表",
+    "info": "详情",
+    "edit": "编辑",
+    "delete": "删除"
   }
 }
