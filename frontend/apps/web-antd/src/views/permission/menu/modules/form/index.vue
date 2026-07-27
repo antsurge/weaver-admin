@@ -461,6 +461,44 @@ const [Modal, modalApi] = useVbenModal({
 });
 
 /**
+ * 根据菜单类型清理表单中隐藏的字段
+ */
+function cleanHiddenFields(data: Record<string, any>) {
+  switch (data.type) {
+    case PermissionTypeOptionsValueCatalog:
+      // 目录：隐藏 component、linkUrl
+      delete data.component;
+      delete data.linkUrl;
+      break;
+    case PermissionTypeOptionsValueMenu:
+      // 菜单：隐藏 linkUrl
+      delete data.linkUrl;
+      break;
+    case PermissionTypeOptionsValueAction:
+      // 按钮：隐藏 icon、path、component、linkUrl 及徽标相关
+      delete data.icon;
+      delete data.path;
+      delete data.component;
+      delete data.linkUrl;
+      delete data.badgeType;
+      delete data.badgeContent;
+      delete data.badgeStyle;
+      break;
+    case PermissionTypeOptionsValueIframe:
+      // iframe：隐藏 component、authCode
+      delete data.component;
+      delete data.authCode;
+      break;
+    case PermissionTypeOptionsValueLink:
+      // 外链：隐藏 path、component、authCode
+      delete data.path;
+      delete data.component;
+      delete data.authCode;
+      break;
+  }
+}
+
+/**
  * 提交
  */
 async function onSubmit() {
@@ -471,14 +509,8 @@ async function onSubmit() {
 
   const data = await formApi.getValues();
 
-  // 清理隐藏字段
-  if (data.type === PermissionTypeOptionsValueAction) {
-    delete data.path;
-    delete data.icon;
-    delete data.menuType;
-    delete data.component;
-    delete data.url;
-  }
+  // 清理隐藏字段：根据 type 删除 schema 中通过 dependencies.show 隐藏的字段
+  cleanHiddenFields(data);
 
   try {
     if (formData.value?.id) {

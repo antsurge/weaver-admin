@@ -192,16 +192,6 @@ export function useFormOptions(): VbenFormProps {
         label: $t('permission.menu.fields.name'),
       },
       {
-        component: 'Input',
-        componentProps: {
-          placeholder: $t('ui.formRules.required', [
-            $t('permission.menu.fields.code'),
-          ]),
-        },
-        fieldName: 'code',
-        label: $t('permission.menu.fields.code'),
-      },
-      {
         component: 'Select',
         fieldName: 'status',
         label: $t('permission.menu.fields.status'),

@@ -29,19 +29,6 @@ export const titleRule = z
     $t('ui.formRules.maxLength', [$t('permission.menu.fields.title'), 30]),
   );  
 
-/**
- * 权限编码
- */
-export const codeRule = z
-  .string()
-  .min(
-    2,
-    $t('ui.formRules.minLength', [$t('permission.menu.fields.code'), 2]),
-  )
-  .max(
-    30,
-    $t('ui.formRules.maxLength', [$t('permission.menu.fields.code'), 30]),
-  );
 
 /**
  * 路由路径
