@@ -13,7 +13,7 @@ var (
 	AdminColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true},
 		{Name: "real_name", Type: field.TypeString, Default: ""},
-		{Name: "username", Type: field.TypeString, Unique: true},
+		{Name: "username", Type: field.TypeString},
 		{Name: "email", Type: field.TypeString, Nullable: true},
 		{Name: "phone", Type: field.TypeString, Nullable: true},
 		{Name: "avatar", Type: field.TypeString, Nullable: true},

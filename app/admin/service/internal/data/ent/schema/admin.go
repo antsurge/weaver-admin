@@ -29,7 +29,7 @@ func (Admin) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("id").Unique(),           // 对应 Proto id
 		field.String("real_name").Default(""), // 对应 Proto name
-		field.String("username").Unique(),     // 对应 Proto username
+		field.String("username"),              // 对应 Proto username
 		field.String("email").Optional(),      // 对应 Proto email
 		field.String("phone").Optional(),      // 对应 Proto phone
 		field.String("avatar").Optional(),     // 对应 Proto avatar

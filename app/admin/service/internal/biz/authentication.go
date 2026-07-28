@@ -273,7 +273,7 @@ func (uc *AuthenticationUsecase) CurrentUserInfo(ctx context.Context) (*CurrentU
 			return nil, err
 		}
 	}
-	
+
 	// menus 按照 weight 降序排序
 	sort.Slice(menus, func(i, j int) bool {
 		return menus[i].Weight > menus[j].Weight

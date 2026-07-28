@@ -1,2 +1,5 @@
 [BAD_REQUEST]
 other = "错误请求"
+
+[NOT_FOUND_RECORD]
+other = "未找到记录"

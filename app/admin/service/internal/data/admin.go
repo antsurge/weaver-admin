@@ -114,7 +114,10 @@ func (r *adminRepo) UpdateAdmin(ctx context.Context, admin *biz.Admin) error {
 // FindByUsername 根据用户名查找管理员
 func (r *adminRepo) FindByUsername(ctx context.Context, username string) (*biz.Admin, error) {
 	entAdmin, err := r.data.db.Admin.Query().
-		Where(admin.UsernameEQ(username)).
+		Where(
+			admin.UsernameEQ(username),
+			admin.DeletedAtIsNil(),
+		).
 		Only(ctx)
 	if err != nil {
 		if ent.IsNotFound(err) {

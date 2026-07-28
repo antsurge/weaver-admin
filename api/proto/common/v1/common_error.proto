@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package common.v1;
+
+import "errors/errors.proto";
+
+enum CommonErrorReason {
+    option (errors.default_code) = 500;
+
+    NOT_FOUND_RECORD = 0 [(errors.code) = 400];
+}

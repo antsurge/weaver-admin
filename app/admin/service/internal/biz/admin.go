@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	commonV1 "github.com/antsurge/weaver-admin/api/gen/go/common/v1"
 	"github.com/antsurge/weaver-admin/pkg/enthelper"
 	"github.com/antsurge/weaver-admin/pkg/utils/uuid"
 	"github.com/go-kratos/kratos/v2/log"
@@ -111,15 +112,25 @@ func (uc *AdminUseCase) UpdateAdmin(ctx context.Context, admin *Admin) (*Admin, 
 }
 
 // GetAdminWithRoles 获取用户详情（包含角色ID列表）
-func (uc *AdminUseCase) GetAdminWithRoles(ctx context.Context, id string) (*[]Role, error) {
-	// 填充角色ID列表
-	//roleIDs, err := uc.repo.GetRoleIDsByAdmin(ctx, id)
-	//if err != nil {
-	//	uc.log.Warnf("获取用户角色失败: %v", err)
-	//	roleIDs = []string{}
-	//}
+func (uc *AdminUseCase) GetAdminWithRoles(ctx context.Context, id string) (*Admin, error) {
+	admin, err := uc.repo.FindByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	if admin == nil {
+		return nil, commonV1.ErrorNotFoundRecord("NOT_FOUND_RECORD")
+	}
 
-	return nil, nil
+	// 填充角色ID列表
+	roleIDs, err := uc.repo.GetRoleIDsByAdmin(ctx, id)
+	if err != nil {
+		uc.log.Warnf("获取用户角色失败: %v", err)
+		roleIDs = []string{}
+	}
+
+	admin.RoleIDs = roleIDs
+
+	return admin, nil
 }
 
 // DeleteAdmin 删除用户（软删除）
