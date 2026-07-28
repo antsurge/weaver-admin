@@ -64,6 +64,41 @@ var (
 			},
 		},
 	}
+	// APIInterfaceColumns holds the columns for the "api_interface" table.
+	APIInterfaceColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
+		{Name: "service", Type: field.TypeString, Size: 128, Comment: "服务全限定名，如 admin.service.v1.PermissionService"},
+		{Name: "tag", Type: field.TypeString, Size: 64, Comment: "OpenAPI 标签，如 Permission", Default: ""},
+		{Name: "method", Type: field.TypeString, Size: 10, Comment: "HTTP method: GET/POST/PUT/DELETE"},
+		{Name: "path", Type: field.TypeString, Size: 256, Comment: "接口路径，如 /admin/v1/menu"},
+		{Name: "summary", Type: field.TypeString, Size: 256, Comment: "接口描述", Default: ""},
+		{Name: "code", Type: field.TypeString, Unique: true, Size: 512, Comment: "业务唯一键 service|method|path"},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
+	}
+	// APIInterfaceTable holds the schema information for the "api_interface" table.
+	APIInterfaceTable = &schema.Table{
+		Name:       "api_interface",
+		Comment:    "API 接口表（从 openapi.yaml 导入）",
+		Columns:    APIInterfaceColumns,
+		PrimaryKey: []*schema.Column{APIInterfaceColumns[0]},
+	}
+	// APIPermissionColumns holds the columns for the "api_permission" table.
+	APIPermissionColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
+		{Name: "service", Type: field.TypeString, Size: 128, Comment: "服务全限定名，如 admin.service.v1.PermissionService"},
+		{Name: "method", Type: field.TypeString, Size: 10, Comment: "HTTP method: GET/POST/PUT/DELETE"},
+		{Name: "path", Type: field.TypeString, Size: 256, Comment: "接口路径，如 /admin/v1/menu"},
+		{Name: "summary", Type: field.TypeString, Size: 256, Comment: "接口描述", Default: ""},
+		{Name: "code", Type: field.TypeString, Unique: true, Size: 512, Comment: "业务唯一键 service|method|path"},
+	}
+	// APIPermissionTable holds the schema information for the "api_permission" table.
+	APIPermissionTable = &schema.Table{
+		Name:       "api_permission",
+		Comment:    "接口权限表（菜单按钮绑定）",
+		Columns:    APIPermissionColumns,
+		PrimaryKey: []*schema.Column{APIPermissionColumns[0]},
+	}
 	// DepartmentColumns holds the columns for the "department" table.
 	DepartmentColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
@@ -267,10 +302,37 @@ var (
 		Columns:    RolePermissionColumns,
 		PrimaryKey: []*schema.Column{RolePermissionColumns[0]},
 	}
+	// MenuAPIPermissionsColumns holds the columns for the "menu_api_permissions" table.
+	MenuAPIPermissionsColumns = []*schema.Column{
+		{Name: "menu_id", Type: field.TypeString, Size: 36},
+		{Name: "api_permission_id", Type: field.TypeString, Size: 36},
+	}
+	// MenuAPIPermissionsTable holds the schema information for the "menu_api_permissions" table.
+	MenuAPIPermissionsTable = &schema.Table{
+		Name:       "menu_api_permissions",
+		Columns:    MenuAPIPermissionsColumns,
+		PrimaryKey: []*schema.Column{MenuAPIPermissionsColumns[0], MenuAPIPermissionsColumns[1]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "menu_api_permissions_menu_id",
+				Columns:    []*schema.Column{MenuAPIPermissionsColumns[0]},
+				RefColumns: []*schema.Column{MenuColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:     "menu_api_permissions_api_permission_id",
+				Columns:    []*schema.Column{MenuAPIPermissionsColumns[1]},
+				RefColumns: []*schema.Column{APIPermissionColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		AdminTable,
 		AdminRoleTable,
+		APIInterfaceTable,
+		APIPermissionTable,
 		DepartmentTable,
 		DictDataTable,
 		DictTypeTable,
@@ -279,6 +341,7 @@ var (
 		RoleTable,
 		RoleMenuTable,
 		RolePermissionTable,
+		MenuAPIPermissionsTable,
 	}
 )
 
@@ -290,6 +353,12 @@ func init() {
 	AdminRoleTable.ForeignKeys[1].RefTable = RoleTable
 	AdminRoleTable.Annotation = &entsql.Annotation{
 		Table: "admin_role",
+	}
+	APIInterfaceTable.Annotation = &entsql.Annotation{
+		Table: "api_interface",
+	}
+	APIPermissionTable.Annotation = &entsql.Annotation{
+		Table: "api_permission",
 	}
 	DepartmentTable.Annotation = &entsql.Annotation{
 		Table: "department",
@@ -317,4 +386,6 @@ func init() {
 	RolePermissionTable.Annotation = &entsql.Annotation{
 		Table: "role_permission",
 	}
+	MenuAPIPermissionsTable.ForeignKeys[0].RefTable = MenuTable
+	MenuAPIPermissionsTable.ForeignKeys[1].RefTable = APIPermissionTable
 }

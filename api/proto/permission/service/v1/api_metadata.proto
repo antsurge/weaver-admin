@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package permission.service.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+// 接口元数据（按 service 分组），用于菜单按钮的接口权限选择器
+message ApiMetadata {
+  string service = 1 [(gnostic.openapi.v3.property) = {description: "服务名，如 AuthenticationService"}];
+  string tag = 2 [(gnostic.openapi.v3.property) = {description: "OpenAPI tag"}];
+  repeated ApiEndpoint endpoints = 3 [(gnostic.openapi.v3.property) = {description: "该 service 下的接口列表"}];
+}
+
+// 单个接口
+message ApiEndpoint {
+  string method = 1 [(gnostic.openapi.v3.property) = {description: "HTTP method: GET/POST/PUT/DELETE"}];
+  string path = 2 [(gnostic.openapi.v3.property) = {description: "接口路径，如 /admin/v1/menu"}];
+  string summary = 3 [(gnostic.openapi.v3.property) = {description: "接口描述"}];
+}
+
+// 查询接口元数据请求
+message ListApiMetadataRequest {}
+
+// 查询接口元数据响应
+message ListApiMetadataResponse {
+  repeated ApiMetadata items = 1;
+}

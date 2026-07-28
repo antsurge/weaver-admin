@@ -417,6 +417,32 @@ const schema: VbenFormSchema[] = [
     },
     label: $t('permission.menu.fields.remark'),
   },
+
+   {
+    fieldName: '',
+    component: 'FormTitle',
+    label: '',
+    labelWidth: 0,
+    formItemClass: 'col-span-2 md:col-span-2',
+    componentProps: {
+      title: $t('permission.menu.form_group.apiPermissions'),
+    },
+    dependencies: {
+      triggerFields: ['type'],
+      show: (values) => values.type === PermissionTypeOptionsValueAction,
+    },
+  },
+  // 接口权限（仅按钮类型）
+  {
+    fieldName: 'apiPermissions',
+    component: 'ApiPermissionPicker',
+    labelWidth:0,
+    formItemClass: 'col-span-2 md:col-span-2',
+    dependencies: {
+      triggerFields: ['type'],
+      show: (values) => values.type === PermissionTypeOptionsValueAction,
+    },
+  },
 ];
 
 const breakpoints = useBreakpoints(breakpointsTailwind);

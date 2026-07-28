@@ -18,6 +18,7 @@ func NewGRPCServer(
 	organizationService *service.OrganizationService,
 	dictionaryService *service.DictionaryService,
 	identityService *service.IdentityService,
+	systemService *service.SystemService,
 
 	logger log.Logger,
 ) *grpc.Server {
@@ -42,6 +43,7 @@ func NewGRPCServer(
 	adminV1.RegisterOrganizationServer(srv, organizationService)
 	adminV1.RegisterDictionaryServer(srv, dictionaryService)
 	adminV1.RegisterIdentityServer(srv, identityService)
+	adminV1.RegisterSystemServer(srv, systemService)
 
 	return srv
 }

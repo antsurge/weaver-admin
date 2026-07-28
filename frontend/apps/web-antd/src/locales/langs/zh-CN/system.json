@@ -1,5 +1,25 @@
 {
   "title":"系统管理",
+  "api_interface": {
+    "title":"接口管理",
+    "name":"接口",
+    "fields": {
+      "service": "服务名",
+      "tag": "标签",
+      "method": "方法",
+      "path": "路径",
+      "summary": "描述",
+      "code": "唯一键",
+      "createdAt": "创建时间",
+      "updatedAt": "更新时间",
+      "operation": "操作"
+    },
+    "import": "导入 OpenAPI",
+    "importing": "导入中...",
+    "importSuccess": "导入成功，已导入 {0} 个，跳过 {1} 个",
+    "importFailed": "导入失败",
+    "uploadOnlyYaml": "只能上传 .yaml 或 .yml 文件"
+  },
   "dict_type": {
     "title":"字典管理",
     "name":"字典类型",

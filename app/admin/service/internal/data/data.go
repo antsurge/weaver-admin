@@ -3,6 +3,7 @@ package data
 import (
 	"context"
 	"fmt"
+	"os"
 	"time"
 
 	"entgo.io/ent/dialect/sql/schema"
@@ -10,6 +11,7 @@ import (
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent"
 	_ "github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/runtime"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/mq/rabbitmq"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/openapi_scanner"
 	"github.com/go-kratos/kratos/v2/log"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/wire"
@@ -21,6 +23,7 @@ var ProviderSet = wire.NewSet(
 	NewData,
 	NewEntClient,
 	NewRedisClient,
+	NewOpenAPIScanner,
 
 	NewAdminRepo,
 	NewCaptchaRepo,
@@ -30,12 +33,15 @@ var ProviderSet = wire.NewSet(
 	NewRoleRepo,
 	NewAdminRoleRepo,
 	NewRoleMenuRepo,
+	NewApiPermissionRepo,
 
 	NewDepartmentRepo,
 	NewPositionRepo,
 
 	NewDictTypeRepo,
 	NewDictDataRepo,
+
+	NewApiInterfaceRepo,
 
 	rabbitmq.ProviderSet,
 )
@@ -145,6 +151,62 @@ func NewData(
 			l.Error(err)
 		}
 	}, nil
+}
+
+// defaultOpenAPIPath 默认 openapi.yaml 位置（项目根相对路径）。
+const defaultOpenAPIPath = "api/gen/openapi/openapi.yaml"
+
+// fallbackPaths 尝试顺序——按优先级从高到低。
+var fallbackPaths = []string{
+	defaultOpenAPIPath,                              // 项目根相对路径
+	"../" + defaultOpenAPIPath,                      // cmd/service/ 相对路径
+	"../../" + defaultOpenAPIPath,                   // 再往上一级
+	"/app/" + defaultOpenAPIPath,                    // Docker 镜像路径
+}
+
+// resolveOpenAPIPath 解析 openapi.yaml 路径，按优先级依次尝试。
+// 返回第一个存在的文件路径；全部失败则返回空字符串。
+func resolveOpenAPIPath(cfgPath string) string {
+	// 1. 优先使用配置指定的路径
+	if cfgPath != "" {
+		if _, err := os.Stat(cfgPath); err == nil {
+			return cfgPath
+		}
+	}
+	// 2. fallback 尝试
+	for _, p := range fallbackPaths {
+		if _, err := os.Stat(p); err == nil {
+			return p
+		}
+	}
+	return ""
+}
+
+// NewOpenAPIScanner 创建 openapi 扫描器并立即扫描一次。
+// 失败仅记日志不阻塞启动，便于开发期缺 openapi.yaml 的情况。
+func NewOpenAPIScanner(c *conf.OpenAPI, logger log.Logger) *openapi_scanner.Service {
+	l := log.NewHelper(logger)
+	scanner := openapi_scanner.New()
+
+	// 从配置或 fallback 路径解析
+	cfgPath := ""
+	if c != nil {
+		cfgPath = c.Path
+	}
+	path := resolveOpenAPIPath(cfgPath)
+	if path == "" {
+		l.Warnf("openapi scanner: no openapi.yaml found (config=%q), api-metadata will be empty", cfgPath)
+		return scanner
+	}
+
+	if err := scanner.Scan(path); err != nil {
+		// 启动阶段失败应当被关注但不应阻塞进程，
+		// 这样开发期缺少 openapi.yaml 也能把服务起来。
+		l.Errorf("openapi scanner init failed, path=%s err=%v", path, err)
+		return scanner
+	}
+	l.Infof("openapi scanner initialized, path=%s", path)
+	return scanner
 }
 
 // GetRedis 获取 Redis 客户端

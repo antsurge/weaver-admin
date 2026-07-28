@@ -20,10 +20,21 @@
       "badge": "徽标内容",
       "badgeVariants": "徽标样式",
       "remark": "备注",
-      "operation": "操作"
+      "operation": "操作",
+      "apiPermissions": "接口权限"
     },
     "operation": {
       "appendChildren": "新增下级"
+    },
+    "apiPermission": {
+      "pickerTitle": "选择接口权限",
+      "addButton": "新增接口权限",
+      "searchPlaceholder": "搜索路径、method、描述、服务名",
+      "selectedCount": "已选 {0} 个接口",
+      "selectedEmpty": "尚未选择任何接口",
+      "empty": "暂无可选接口",
+      "tip": "同一接口可在多个按钮中重复绑定",
+      "remove": "移除"
     },
     "type_options": {
       "catalog": "目录",
@@ -54,7 +65,8 @@
       "routeConfiguration": "路由配置",
       "permissionAndStatus": "权限与状态",
       "badgeConfiguration": "徽标配置",
-      "otherConfiguration": "其他配置"
+      "otherConfiguration": "其他配置",
+      "apiPermissions": "接口权限"
     },
     "actionTitle": {
       "expandAll": "展开全部",

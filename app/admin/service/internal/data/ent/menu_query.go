@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/apipermission"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/menu"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/predicate"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/role"
@@ -21,12 +22,13 @@ import (
 // MenuQuery is the builder for querying Menu entities.
 type MenuQuery struct {
 	config
-	ctx           *QueryContext
-	order         []menu.OrderOption
-	inters        []Interceptor
-	predicates    []predicate.Menu
-	withRoles     *RoleQuery
-	withRoleMenus *RoleMenuQuery
+	ctx                *QueryContext
+	order              []menu.OrderOption
+	inters             []Interceptor
+	predicates         []predicate.Menu
+	withRoles          *RoleQuery
+	withAPIPermissions *ApiPermissionQuery
+	withRoleMenus      *RoleMenuQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -78,6 +80,28 @@ func (_q *MenuQuery) QueryRoles() *RoleQuery {
 			sqlgraph.From(menu.Table, menu.FieldID, selector),
 			sqlgraph.To(role.Table, role.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, menu.RolesTable, menu.RolesPrimaryKey...),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryAPIPermissions chains the current query on the "api_permissions" edge.
+func (_q *MenuQuery) QueryAPIPermissions() *ApiPermissionQuery {
+	query := (&ApiPermissionClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(menu.Table, menu.FieldID, selector),
+			sqlgraph.To(apipermission.Table, apipermission.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, menu.APIPermissionsTable, menu.APIPermissionsPrimaryKey...),
 		)
 		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
 		return fromU, nil
@@ -294,13 +318,14 @@ func (_q *MenuQuery) Clone() *MenuQuery {
 		return nil
 	}
 	return &MenuQuery{
-		config:        _q.config,
-		ctx:           _q.ctx.Clone(),
-		order:         append([]menu.OrderOption{}, _q.order...),
-		inters:        append([]Interceptor{}, _q.inters...),
-		predicates:    append([]predicate.Menu{}, _q.predicates...),
-		withRoles:     _q.withRoles.Clone(),
-		withRoleMenus: _q.withRoleMenus.Clone(),
+		config:             _q.config,
+		ctx:                _q.ctx.Clone(),
+		order:              append([]menu.OrderOption{}, _q.order...),
+		inters:             append([]Interceptor{}, _q.inters...),
+		predicates:         append([]predicate.Menu{}, _q.predicates...),
+		withRoles:          _q.withRoles.Clone(),
+		withAPIPermissions: _q.withAPIPermissions.Clone(),
+		withRoleMenus:      _q.withRoleMenus.Clone(),
 		// clone intermediate query.
 		sql:  _q.sql.Clone(),
 		path: _q.path,
@@ -315,6 +340,17 @@ func (_q *MenuQuery) WithRoles(opts ...func(*RoleQuery)) *MenuQuery {
 		opt(query)
 	}
 	_q.withRoles = query
+	return _q
+}
+
+// WithAPIPermissions tells the query-builder to eager-load the nodes that are connected to
+// the "api_permissions" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *MenuQuery) WithAPIPermissions(opts ...func(*ApiPermissionQuery)) *MenuQuery {
+	query := (&ApiPermissionClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withAPIPermissions = query
 	return _q
 }
 
@@ -407,8 +443,9 @@ func (_q *MenuQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Menu, e
 	var (
 		nodes       = []*Menu{}
 		_spec       = _q.querySpec()
-		loadedTypes = [2]bool{
+		loadedTypes = [3]bool{
 			_q.withRoles != nil,
+			_q.withAPIPermissions != nil,
 			_q.withRoleMenus != nil,
 		}
 	)
@@ -434,6 +471,13 @@ func (_q *MenuQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Menu, e
 		if err := _q.loadRoles(ctx, query, nodes,
 			func(n *Menu) { n.Edges.Roles = []*Role{} },
 			func(n *Menu, e *Role) { n.Edges.Roles = append(n.Edges.Roles, e) }); err != nil {
+			return nil, err
+		}
+	}
+	if query := _q.withAPIPermissions; query != nil {
+		if err := _q.loadAPIPermissions(ctx, query, nodes,
+			func(n *Menu) { n.Edges.APIPermissions = []*ApiPermission{} },
+			func(n *Menu, e *ApiPermission) { n.Edges.APIPermissions = append(n.Edges.APIPermissions, e) }); err != nil {
 			return nil, err
 		}
 	}
@@ -501,6 +545,67 @@ func (_q *MenuQuery) loadRoles(ctx context.Context, query *RoleQuery, nodes []*M
 		nodes, ok := nids[n.ID]
 		if !ok {
 			return fmt.Errorf(`unexpected "roles" node returned %v`, n.ID)
+		}
+		for kn := range nodes {
+			assign(kn, n)
+		}
+	}
+	return nil
+}
+func (_q *MenuQuery) loadAPIPermissions(ctx context.Context, query *ApiPermissionQuery, nodes []*Menu, init func(*Menu), assign func(*Menu, *ApiPermission)) error {
+	edgeIDs := make([]driver.Value, len(nodes))
+	byID := make(map[string]*Menu)
+	nids := make(map[string]map[*Menu]struct{})
+	for i, node := range nodes {
+		edgeIDs[i] = node.ID
+		byID[node.ID] = node
+		if init != nil {
+			init(node)
+		}
+	}
+	query.Where(func(s *sql.Selector) {
+		joinT := sql.Table(menu.APIPermissionsTable)
+		s.Join(joinT).On(s.C(apipermission.FieldID), joinT.C(menu.APIPermissionsPrimaryKey[1]))
+		s.Where(sql.InValues(joinT.C(menu.APIPermissionsPrimaryKey[0]), edgeIDs...))
+		columns := s.SelectedColumns()
+		s.Select(joinT.C(menu.APIPermissionsPrimaryKey[0]))
+		s.AppendSelect(columns...)
+		s.SetDistinct(false)
+	})
+	if err := query.prepareQuery(ctx); err != nil {
+		return err
+	}
+	qr := QuerierFunc(func(ctx context.Context, q Query) (Value, error) {
+		return query.sqlAll(ctx, func(_ context.Context, spec *sqlgraph.QuerySpec) {
+			assign := spec.Assign
+			values := spec.ScanValues
+			spec.ScanValues = func(columns []string) ([]any, error) {
+				values, err := values(columns[1:])
+				if err != nil {
+					return nil, err
+				}
+				return append([]any{new(sql.NullString)}, values...), nil
+			}
+			spec.Assign = func(columns []string, values []any) error {
+				outValue := values[0].(*sql.NullString).String
+				inValue := values[1].(*sql.NullString).String
+				if nids[inValue] == nil {
+					nids[inValue] = map[*Menu]struct{}{byID[outValue]: {}}
+					return assign(columns[1:], values[1:])
+				}
+				nids[inValue][byID[outValue]] = struct{}{}
+				return nil
+			}
+		})
+	})
+	neighbors, err := withInterceptors[[]*ApiPermission](ctx, query, qr, query.inters)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected "api_permissions" node returned %v`, n.ID)
 		}
 		for kn := range nodes {
 			assign(kn, n)

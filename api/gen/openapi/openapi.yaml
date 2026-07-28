@@ -159,6 +159,128 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /admin/v1/api-interface:
+        get:
+            tags:
+                - System
+                - System
+            summary: 接口列表-分页
+            description: 分页查询 API 接口列表
+            operationId: System_ListApiInterface
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: service
+                  in: query
+                  schema:
+                    type: string
+                - name: tag
+                  in: query
+                  schema:
+                    type: string
+                - name: method
+                  in: query
+                  schema:
+                    type: string
+                - name: path
+                  in: query
+                  schema:
+                    type: string
+                - name: summary
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListApiInterfaceResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - System
+                - System
+            summary: 接口-删除(批量)
+            description: 批量删除 API 接口
+            operationId: System_DeleteApiInterface
+            parameters:
+                - name: ids
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/api-interface/import:
+        post:
+            tags:
+                - System
+                - System
+            summary: 导入接口-上传 openapi.yaml
+            description: 上传 openapi.yaml 文件，解析并导入接口信息到数据库
+            operationId: System_ImportApiInterface
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ImportApiInterfaceRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ImportApiInterfaceResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/api-metadata:
+        get:
+            tags:
+                - PermissionService
+                - Permission
+            summary: 接口元数据-查询
+            description: 查询所有可用的接口元数据（按 service 分组）
+            operationId: PermissionService_ListApiMetadata
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListApiMetadataResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /admin/v1/current-user/menus:
         get:
             tags:
@@ -1468,6 +1590,81 @@ components:
                         type: string
                     description: 关联的角色ID列表
             description: 后台用户信息
+        ApiEndpoint:
+            type: object
+            properties:
+                method:
+                    type: string
+                    description: 'HTTP method: GET/POST/PUT/DELETE'
+                path:
+                    type: string
+                    description: 接口路径，如 /admin/v1/menu
+                summary:
+                    type: string
+                    description: 接口描述
+            description: 单个接口
+        ApiInterface:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: ID
+                service:
+                    type: string
+                    description: 服务全限定名，如 admin.service.v1.PermissionService
+                tag:
+                    type: string
+                    description: OpenAPI 标签，如 Permission
+                method:
+                    type: string
+                    description: 'HTTP method: GET/POST/PUT/DELETE'
+                path:
+                    type: string
+                    description: 接口路径，如 /admin/v1/menu
+                summary:
+                    type: string
+                    description: 接口描述
+                code:
+                    type: string
+                    description: 业务唯一键 service|method|path
+                createdAt:
+                    type: string
+                    description: 创建时间
+                    format: date-time
+                updatedAt:
+                    type: string
+                    description: 更新时间
+                    format: date-time
+            description: ApiInterface 从 openapi.yaml 导入的接口信息
+        ApiMetadata:
+            type: object
+            properties:
+                service:
+                    type: string
+                    description: 服务名，如 AuthenticationService
+                tag:
+                    type: string
+                    description: OpenAPI tag
+                endpoints:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ApiEndpoint'
+                    description: 该 service 下的接口列表
+            description: 接口元数据（按 service 分组），用于菜单按钮的接口权限选择器
+        ApiPermission:
+            type: object
+            properties:
+                id:
+                    type: string
+                service:
+                    type: string
+                method:
+                    type: string
+                path:
+                    type: string
+                summary:
+                    type: string
+            description: 单个接口权限（绑定到按钮菜单）
         BindMenusForRoleRequest:
             type: object
             properties:
@@ -1642,6 +1839,11 @@ components:
                 remark:
                     type: string
                     description: 备注
+                apiPermissions:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ApiPermission'
+                    description: 接口权限列表（仅按钮类型 action 使用）
             description: 创建菜单请求
         CreatePositionRequest:
             required:
@@ -1868,6 +2070,27 @@ components:
                     description: The type of the serialized message.
             additionalProperties: true
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        ImportApiInterfaceRequest:
+            type: object
+            properties:
+                file:
+                    type: string
+                    description: openapi.yaml 文件内容
+                    format: bytes
+            description: 导入请求
+        ImportApiInterfaceResponse:
+            type: object
+            properties:
+                total:
+                    type: string
+                    description: 文件中的接口总数
+                imported:
+                    type: string
+                    description: 成功导入的接口数
+                skipped:
+                    type: string
+                    description: 跳过的重复接口数
+            description: 导入响应
         IsPositionFieldExistsResponse:
             type: object
             properties:
@@ -1885,6 +2108,24 @@ components:
                         $ref: '#/components/schemas/Admin'
                     description: 列表
             description: 后台用户分页结果
+        ListApiInterfaceResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ApiInterface'
+                total:
+                    type: string
+            description: 分页列表响应
+        ListApiMetadataResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ApiMetadata'
+            description: 查询接口元数据响应
         ListDictDataResponse:
             type: object
             properties:
@@ -2010,6 +2251,10 @@ components:
                 updatedAt:
                     type: string
                     format: date-time
+                apiPermissions:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ApiPermission'
                 children:
                     type: array
                     items:
@@ -2322,6 +2567,11 @@ components:
                 remark:
                     type: string
                     description: 备注
+                apiPermissions:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ApiPermission'
+                    description: 接口权限列表（仅按钮类型 action 使用）
             description: 更新菜单请求
         UpdateMenuStatusRequest:
             type: object
@@ -2412,3 +2662,4 @@ tags:
     - name: Identity
     - name: Organization
     - name: PermissionService
+    - name: System

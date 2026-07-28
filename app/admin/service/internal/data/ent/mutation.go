@@ -13,6 +13,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/admin"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/adminrole"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/apiinterface"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/apipermission"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/department"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/dictdata"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/dicttype"
@@ -35,6 +37,8 @@ const (
 	// Node types.
 	TypeAdmin          = "Admin"
 	TypeAdminRole      = "AdminRole"
+	TypeApiInterface   = "ApiInterface"
+	TypeApiPermission  = "ApiPermission"
 	TypeDepartment     = "Department"
 	TypeDictData       = "DictData"
 	TypeDictType       = "DictType"
@@ -1602,6 +1606,1357 @@ func (m *AdminRoleMutation) ResetEdge(name string) error {
 		return nil
 	}
 	return fmt.Errorf("unknown AdminRole edge %s", name)
+}
+
+// ApiInterfaceMutation represents an operation that mutates the ApiInterface nodes in the graph.
+type ApiInterfaceMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *string
+	service       *string
+	tag           *string
+	method        *string
+	_path         *string
+	summary       *string
+	code          *string
+	created_at    *time.Time
+	updated_at    *time.Time
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*ApiInterface, error)
+	predicates    []predicate.ApiInterface
+}
+
+var _ ent.Mutation = (*ApiInterfaceMutation)(nil)
+
+// apiinterfaceOption allows management of the mutation configuration using functional options.
+type apiinterfaceOption func(*ApiInterfaceMutation)
+
+// newApiInterfaceMutation creates new mutation for the ApiInterface entity.
+func newApiInterfaceMutation(c config, op Op, opts ...apiinterfaceOption) *ApiInterfaceMutation {
+	m := &ApiInterfaceMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeApiInterface,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withApiInterfaceID sets the ID field of the mutation.
+func withApiInterfaceID(id string) apiinterfaceOption {
+	return func(m *ApiInterfaceMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *ApiInterface
+		)
+		m.oldValue = func(ctx context.Context) (*ApiInterface, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().ApiInterface.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withApiInterface sets the old ApiInterface of the mutation.
+func withApiInterface(node *ApiInterface) apiinterfaceOption {
+	return func(m *ApiInterfaceMutation) {
+		m.oldValue = func(context.Context) (*ApiInterface, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m ApiInterfaceMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m ApiInterfaceMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of ApiInterface entities.
+func (m *ApiInterfaceMutation) SetID(id string) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *ApiInterfaceMutation) ID() (id string, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *ApiInterfaceMutation) IDs(ctx context.Context) ([]string, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []string{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().ApiInterface.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetService sets the "service" field.
+func (m *ApiInterfaceMutation) SetService(s string) {
+	m.service = &s
+}
+
+// Service returns the value of the "service" field in the mutation.
+func (m *ApiInterfaceMutation) Service() (r string, exists bool) {
+	v := m.service
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldService returns the old "service" field's value of the ApiInterface entity.
+// If the ApiInterface object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiInterfaceMutation) OldService(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldService is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldService requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldService: %w", err)
+	}
+	return oldValue.Service, nil
+}
+
+// ResetService resets all changes to the "service" field.
+func (m *ApiInterfaceMutation) ResetService() {
+	m.service = nil
+}
+
+// SetTag sets the "tag" field.
+func (m *ApiInterfaceMutation) SetTag(s string) {
+	m.tag = &s
+}
+
+// Tag returns the value of the "tag" field in the mutation.
+func (m *ApiInterfaceMutation) Tag() (r string, exists bool) {
+	v := m.tag
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTag returns the old "tag" field's value of the ApiInterface entity.
+// If the ApiInterface object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiInterfaceMutation) OldTag(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTag is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTag requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTag: %w", err)
+	}
+	return oldValue.Tag, nil
+}
+
+// ResetTag resets all changes to the "tag" field.
+func (m *ApiInterfaceMutation) ResetTag() {
+	m.tag = nil
+}
+
+// SetMethod sets the "method" field.
+func (m *ApiInterfaceMutation) SetMethod(s string) {
+	m.method = &s
+}
+
+// Method returns the value of the "method" field in the mutation.
+func (m *ApiInterfaceMutation) Method() (r string, exists bool) {
+	v := m.method
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMethod returns the old "method" field's value of the ApiInterface entity.
+// If the ApiInterface object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiInterfaceMutation) OldMethod(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMethod is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMethod requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMethod: %w", err)
+	}
+	return oldValue.Method, nil
+}
+
+// ResetMethod resets all changes to the "method" field.
+func (m *ApiInterfaceMutation) ResetMethod() {
+	m.method = nil
+}
+
+// SetPath sets the "path" field.
+func (m *ApiInterfaceMutation) SetPath(s string) {
+	m._path = &s
+}
+
+// Path returns the value of the "path" field in the mutation.
+func (m *ApiInterfaceMutation) Path() (r string, exists bool) {
+	v := m._path
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPath returns the old "path" field's value of the ApiInterface entity.
+// If the ApiInterface object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiInterfaceMutation) OldPath(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPath is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPath requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPath: %w", err)
+	}
+	return oldValue.Path, nil
+}
+
+// ResetPath resets all changes to the "path" field.
+func (m *ApiInterfaceMutation) ResetPath() {
+	m._path = nil
+}
+
+// SetSummary sets the "summary" field.
+func (m *ApiInterfaceMutation) SetSummary(s string) {
+	m.summary = &s
+}
+
+// Summary returns the value of the "summary" field in the mutation.
+func (m *ApiInterfaceMutation) Summary() (r string, exists bool) {
+	v := m.summary
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSummary returns the old "summary" field's value of the ApiInterface entity.
+// If the ApiInterface object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiInterfaceMutation) OldSummary(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSummary is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSummary requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSummary: %w", err)
+	}
+	return oldValue.Summary, nil
+}
+
+// ResetSummary resets all changes to the "summary" field.
+func (m *ApiInterfaceMutation) ResetSummary() {
+	m.summary = nil
+}
+
+// SetCode sets the "code" field.
+func (m *ApiInterfaceMutation) SetCode(s string) {
+	m.code = &s
+}
+
+// Code returns the value of the "code" field in the mutation.
+func (m *ApiInterfaceMutation) Code() (r string, exists bool) {
+	v := m.code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCode returns the old "code" field's value of the ApiInterface entity.
+// If the ApiInterface object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiInterfaceMutation) OldCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCode: %w", err)
+	}
+	return oldValue.Code, nil
+}
+
+// ResetCode resets all changes to the "code" field.
+func (m *ApiInterfaceMutation) ResetCode() {
+	m.code = nil
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *ApiInterfaceMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *ApiInterfaceMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the ApiInterface entity.
+// If the ApiInterface object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiInterfaceMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *ApiInterfaceMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *ApiInterfaceMutation) SetUpdatedAt(t time.Time) {
+	m.updated_at = &t
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *ApiInterfaceMutation) UpdatedAt() (r time.Time, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the ApiInterface entity.
+// If the ApiInterface object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiInterfaceMutation) OldUpdatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *ApiInterfaceMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+}
+
+// Where appends a list predicates to the ApiInterfaceMutation builder.
+func (m *ApiInterfaceMutation) Where(ps ...predicate.ApiInterface) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the ApiInterfaceMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *ApiInterfaceMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.ApiInterface, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *ApiInterfaceMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *ApiInterfaceMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (ApiInterface).
+func (m *ApiInterfaceMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *ApiInterfaceMutation) Fields() []string {
+	fields := make([]string, 0, 8)
+	if m.service != nil {
+		fields = append(fields, apiinterface.FieldService)
+	}
+	if m.tag != nil {
+		fields = append(fields, apiinterface.FieldTag)
+	}
+	if m.method != nil {
+		fields = append(fields, apiinterface.FieldMethod)
+	}
+	if m._path != nil {
+		fields = append(fields, apiinterface.FieldPath)
+	}
+	if m.summary != nil {
+		fields = append(fields, apiinterface.FieldSummary)
+	}
+	if m.code != nil {
+		fields = append(fields, apiinterface.FieldCode)
+	}
+	if m.created_at != nil {
+		fields = append(fields, apiinterface.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, apiinterface.FieldUpdatedAt)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *ApiInterfaceMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case apiinterface.FieldService:
+		return m.Service()
+	case apiinterface.FieldTag:
+		return m.Tag()
+	case apiinterface.FieldMethod:
+		return m.Method()
+	case apiinterface.FieldPath:
+		return m.Path()
+	case apiinterface.FieldSummary:
+		return m.Summary()
+	case apiinterface.FieldCode:
+		return m.Code()
+	case apiinterface.FieldCreatedAt:
+		return m.CreatedAt()
+	case apiinterface.FieldUpdatedAt:
+		return m.UpdatedAt()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *ApiInterfaceMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case apiinterface.FieldService:
+		return m.OldService(ctx)
+	case apiinterface.FieldTag:
+		return m.OldTag(ctx)
+	case apiinterface.FieldMethod:
+		return m.OldMethod(ctx)
+	case apiinterface.FieldPath:
+		return m.OldPath(ctx)
+	case apiinterface.FieldSummary:
+		return m.OldSummary(ctx)
+	case apiinterface.FieldCode:
+		return m.OldCode(ctx)
+	case apiinterface.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case apiinterface.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	}
+	return nil, fmt.Errorf("unknown ApiInterface field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ApiInterfaceMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case apiinterface.FieldService:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetService(v)
+		return nil
+	case apiinterface.FieldTag:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTag(v)
+		return nil
+	case apiinterface.FieldMethod:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMethod(v)
+		return nil
+	case apiinterface.FieldPath:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPath(v)
+		return nil
+	case apiinterface.FieldSummary:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSummary(v)
+		return nil
+	case apiinterface.FieldCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCode(v)
+		return nil
+	case apiinterface.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case apiinterface.FieldUpdatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown ApiInterface field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *ApiInterfaceMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *ApiInterfaceMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ApiInterfaceMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown ApiInterface numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *ApiInterfaceMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *ApiInterfaceMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *ApiInterfaceMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown ApiInterface nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *ApiInterfaceMutation) ResetField(name string) error {
+	switch name {
+	case apiinterface.FieldService:
+		m.ResetService()
+		return nil
+	case apiinterface.FieldTag:
+		m.ResetTag()
+		return nil
+	case apiinterface.FieldMethod:
+		m.ResetMethod()
+		return nil
+	case apiinterface.FieldPath:
+		m.ResetPath()
+		return nil
+	case apiinterface.FieldSummary:
+		m.ResetSummary()
+		return nil
+	case apiinterface.FieldCode:
+		m.ResetCode()
+		return nil
+	case apiinterface.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case apiinterface.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	}
+	return fmt.Errorf("unknown ApiInterface field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *ApiInterfaceMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *ApiInterfaceMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *ApiInterfaceMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *ApiInterfaceMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *ApiInterfaceMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *ApiInterfaceMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *ApiInterfaceMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown ApiInterface unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *ApiInterfaceMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown ApiInterface edge %s", name)
+}
+
+// ApiPermissionMutation represents an operation that mutates the ApiPermission nodes in the graph.
+type ApiPermissionMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *string
+	service       *string
+	method        *string
+	_path         *string
+	summary       *string
+	code          *string
+	clearedFields map[string]struct{}
+	menus         map[string]struct{}
+	removedmenus  map[string]struct{}
+	clearedmenus  bool
+	done          bool
+	oldValue      func(context.Context) (*ApiPermission, error)
+	predicates    []predicate.ApiPermission
+}
+
+var _ ent.Mutation = (*ApiPermissionMutation)(nil)
+
+// apipermissionOption allows management of the mutation configuration using functional options.
+type apipermissionOption func(*ApiPermissionMutation)
+
+// newApiPermissionMutation creates new mutation for the ApiPermission entity.
+func newApiPermissionMutation(c config, op Op, opts ...apipermissionOption) *ApiPermissionMutation {
+	m := &ApiPermissionMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeApiPermission,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withApiPermissionID sets the ID field of the mutation.
+func withApiPermissionID(id string) apipermissionOption {
+	return func(m *ApiPermissionMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *ApiPermission
+		)
+		m.oldValue = func(ctx context.Context) (*ApiPermission, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().ApiPermission.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withApiPermission sets the old ApiPermission of the mutation.
+func withApiPermission(node *ApiPermission) apipermissionOption {
+	return func(m *ApiPermissionMutation) {
+		m.oldValue = func(context.Context) (*ApiPermission, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m ApiPermissionMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m ApiPermissionMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of ApiPermission entities.
+func (m *ApiPermissionMutation) SetID(id string) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *ApiPermissionMutation) ID() (id string, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *ApiPermissionMutation) IDs(ctx context.Context) ([]string, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []string{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().ApiPermission.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetService sets the "service" field.
+func (m *ApiPermissionMutation) SetService(s string) {
+	m.service = &s
+}
+
+// Service returns the value of the "service" field in the mutation.
+func (m *ApiPermissionMutation) Service() (r string, exists bool) {
+	v := m.service
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldService returns the old "service" field's value of the ApiPermission entity.
+// If the ApiPermission object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiPermissionMutation) OldService(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldService is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldService requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldService: %w", err)
+	}
+	return oldValue.Service, nil
+}
+
+// ResetService resets all changes to the "service" field.
+func (m *ApiPermissionMutation) ResetService() {
+	m.service = nil
+}
+
+// SetMethod sets the "method" field.
+func (m *ApiPermissionMutation) SetMethod(s string) {
+	m.method = &s
+}
+
+// Method returns the value of the "method" field in the mutation.
+func (m *ApiPermissionMutation) Method() (r string, exists bool) {
+	v := m.method
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMethod returns the old "method" field's value of the ApiPermission entity.
+// If the ApiPermission object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiPermissionMutation) OldMethod(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMethod is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMethod requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMethod: %w", err)
+	}
+	return oldValue.Method, nil
+}
+
+// ResetMethod resets all changes to the "method" field.
+func (m *ApiPermissionMutation) ResetMethod() {
+	m.method = nil
+}
+
+// SetPath sets the "path" field.
+func (m *ApiPermissionMutation) SetPath(s string) {
+	m._path = &s
+}
+
+// Path returns the value of the "path" field in the mutation.
+func (m *ApiPermissionMutation) Path() (r string, exists bool) {
+	v := m._path
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPath returns the old "path" field's value of the ApiPermission entity.
+// If the ApiPermission object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiPermissionMutation) OldPath(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPath is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPath requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPath: %w", err)
+	}
+	return oldValue.Path, nil
+}
+
+// ResetPath resets all changes to the "path" field.
+func (m *ApiPermissionMutation) ResetPath() {
+	m._path = nil
+}
+
+// SetSummary sets the "summary" field.
+func (m *ApiPermissionMutation) SetSummary(s string) {
+	m.summary = &s
+}
+
+// Summary returns the value of the "summary" field in the mutation.
+func (m *ApiPermissionMutation) Summary() (r string, exists bool) {
+	v := m.summary
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSummary returns the old "summary" field's value of the ApiPermission entity.
+// If the ApiPermission object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiPermissionMutation) OldSummary(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSummary is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSummary requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSummary: %w", err)
+	}
+	return oldValue.Summary, nil
+}
+
+// ResetSummary resets all changes to the "summary" field.
+func (m *ApiPermissionMutation) ResetSummary() {
+	m.summary = nil
+}
+
+// SetCode sets the "code" field.
+func (m *ApiPermissionMutation) SetCode(s string) {
+	m.code = &s
+}
+
+// Code returns the value of the "code" field in the mutation.
+func (m *ApiPermissionMutation) Code() (r string, exists bool) {
+	v := m.code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCode returns the old "code" field's value of the ApiPermission entity.
+// If the ApiPermission object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiPermissionMutation) OldCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCode: %w", err)
+	}
+	return oldValue.Code, nil
+}
+
+// ResetCode resets all changes to the "code" field.
+func (m *ApiPermissionMutation) ResetCode() {
+	m.code = nil
+}
+
+// AddMenuIDs adds the "menus" edge to the Menu entity by ids.
+func (m *ApiPermissionMutation) AddMenuIDs(ids ...string) {
+	if m.menus == nil {
+		m.menus = make(map[string]struct{})
+	}
+	for i := range ids {
+		m.menus[ids[i]] = struct{}{}
+	}
+}
+
+// ClearMenus clears the "menus" edge to the Menu entity.
+func (m *ApiPermissionMutation) ClearMenus() {
+	m.clearedmenus = true
+}
+
+// MenusCleared reports if the "menus" edge to the Menu entity was cleared.
+func (m *ApiPermissionMutation) MenusCleared() bool {
+	return m.clearedmenus
+}
+
+// RemoveMenuIDs removes the "menus" edge to the Menu entity by IDs.
+func (m *ApiPermissionMutation) RemoveMenuIDs(ids ...string) {
+	if m.removedmenus == nil {
+		m.removedmenus = make(map[string]struct{})
+	}
+	for i := range ids {
+		delete(m.menus, ids[i])
+		m.removedmenus[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedMenus returns the removed IDs of the "menus" edge to the Menu entity.
+func (m *ApiPermissionMutation) RemovedMenusIDs() (ids []string) {
+	for id := range m.removedmenus {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// MenusIDs returns the "menus" edge IDs in the mutation.
+func (m *ApiPermissionMutation) MenusIDs() (ids []string) {
+	for id := range m.menus {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetMenus resets all changes to the "menus" edge.
+func (m *ApiPermissionMutation) ResetMenus() {
+	m.menus = nil
+	m.clearedmenus = false
+	m.removedmenus = nil
+}
+
+// Where appends a list predicates to the ApiPermissionMutation builder.
+func (m *ApiPermissionMutation) Where(ps ...predicate.ApiPermission) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the ApiPermissionMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *ApiPermissionMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.ApiPermission, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *ApiPermissionMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *ApiPermissionMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (ApiPermission).
+func (m *ApiPermissionMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *ApiPermissionMutation) Fields() []string {
+	fields := make([]string, 0, 5)
+	if m.service != nil {
+		fields = append(fields, apipermission.FieldService)
+	}
+	if m.method != nil {
+		fields = append(fields, apipermission.FieldMethod)
+	}
+	if m._path != nil {
+		fields = append(fields, apipermission.FieldPath)
+	}
+	if m.summary != nil {
+		fields = append(fields, apipermission.FieldSummary)
+	}
+	if m.code != nil {
+		fields = append(fields, apipermission.FieldCode)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *ApiPermissionMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case apipermission.FieldService:
+		return m.Service()
+	case apipermission.FieldMethod:
+		return m.Method()
+	case apipermission.FieldPath:
+		return m.Path()
+	case apipermission.FieldSummary:
+		return m.Summary()
+	case apipermission.FieldCode:
+		return m.Code()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *ApiPermissionMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case apipermission.FieldService:
+		return m.OldService(ctx)
+	case apipermission.FieldMethod:
+		return m.OldMethod(ctx)
+	case apipermission.FieldPath:
+		return m.OldPath(ctx)
+	case apipermission.FieldSummary:
+		return m.OldSummary(ctx)
+	case apipermission.FieldCode:
+		return m.OldCode(ctx)
+	}
+	return nil, fmt.Errorf("unknown ApiPermission field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ApiPermissionMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case apipermission.FieldService:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetService(v)
+		return nil
+	case apipermission.FieldMethod:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMethod(v)
+		return nil
+	case apipermission.FieldPath:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPath(v)
+		return nil
+	case apipermission.FieldSummary:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSummary(v)
+		return nil
+	case apipermission.FieldCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCode(v)
+		return nil
+	}
+	return fmt.Errorf("unknown ApiPermission field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *ApiPermissionMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *ApiPermissionMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ApiPermissionMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown ApiPermission numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *ApiPermissionMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *ApiPermissionMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *ApiPermissionMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown ApiPermission nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *ApiPermissionMutation) ResetField(name string) error {
+	switch name {
+	case apipermission.FieldService:
+		m.ResetService()
+		return nil
+	case apipermission.FieldMethod:
+		m.ResetMethod()
+		return nil
+	case apipermission.FieldPath:
+		m.ResetPath()
+		return nil
+	case apipermission.FieldSummary:
+		m.ResetSummary()
+		return nil
+	case apipermission.FieldCode:
+		m.ResetCode()
+		return nil
+	}
+	return fmt.Errorf("unknown ApiPermission field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *ApiPermissionMutation) AddedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.menus != nil {
+		edges = append(edges, apipermission.EdgeMenus)
+	}
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *ApiPermissionMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case apipermission.EdgeMenus:
+		ids := make([]ent.Value, 0, len(m.menus))
+		for id := range m.menus {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *ApiPermissionMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.removedmenus != nil {
+		edges = append(edges, apipermission.EdgeMenus)
+	}
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *ApiPermissionMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case apipermission.EdgeMenus:
+		ids := make([]ent.Value, 0, len(m.removedmenus))
+		for id := range m.removedmenus {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *ApiPermissionMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.clearedmenus {
+		edges = append(edges, apipermission.EdgeMenus)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *ApiPermissionMutation) EdgeCleared(name string) bool {
+	switch name {
+	case apipermission.EdgeMenus:
+		return m.clearedmenus
+	}
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *ApiPermissionMutation) ClearEdge(name string) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown ApiPermission unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *ApiPermissionMutation) ResetEdge(name string) error {
+	switch name {
+	case apipermission.EdgeMenus:
+		m.ResetMenus()
+		return nil
+	}
+	return fmt.Errorf("unknown ApiPermission edge %s", name)
 }
 
 // DepartmentMutation represents an operation that mutates the Department nodes in the graph.
@@ -4259,39 +5614,42 @@ func (m *DictTypeMutation) ResetEdge(name string) error {
 // MenuMutation represents an operation that mutates the Menu nodes in the graph.
 type MenuMutation struct {
 	config
-	op                Op
-	typ               string
-	id                *string
-	parent_id         *string
-	name              *string
-	code              *string
-	title             *string
-	remark            *string
-	_path             *string
-	icon              *string
-	_type             *menu.Type
-	menu_type         *menu.MenuType
-	url               *string
-	component         *string
-	auth_code         *string
-	badge_type        *string
-	badge             *string
-	badge_variants    *string
-	weight            *int
-	addweight         *int
-	status            *menu.Status
-	created_at        *time.Time
-	updated_at        *time.Time
-	clearedFields     map[string]struct{}
-	roles             map[string]struct{}
-	removedroles      map[string]struct{}
-	clearedroles      bool
-	role_menus        map[string]struct{}
-	removedrole_menus map[string]struct{}
-	clearedrole_menus bool
-	done              bool
-	oldValue          func(context.Context) (*Menu, error)
-	predicates        []predicate.Menu
+	op                     Op
+	typ                    string
+	id                     *string
+	parent_id              *string
+	name                   *string
+	code                   *string
+	title                  *string
+	remark                 *string
+	_path                  *string
+	icon                   *string
+	_type                  *menu.Type
+	menu_type              *menu.MenuType
+	url                    *string
+	component              *string
+	auth_code              *string
+	badge_type             *string
+	badge                  *string
+	badge_variants         *string
+	weight                 *int
+	addweight              *int
+	status                 *menu.Status
+	created_at             *time.Time
+	updated_at             *time.Time
+	clearedFields          map[string]struct{}
+	roles                  map[string]struct{}
+	removedroles           map[string]struct{}
+	clearedroles           bool
+	api_permissions        map[string]struct{}
+	removedapi_permissions map[string]struct{}
+	clearedapi_permissions bool
+	role_menus             map[string]struct{}
+	removedrole_menus      map[string]struct{}
+	clearedrole_menus      bool
+	done                   bool
+	oldValue               func(context.Context) (*Menu, error)
+	predicates             []predicate.Menu
 }
 
 var _ ent.Mutation = (*MenuMutation)(nil)
@@ -5169,6 +6527,60 @@ func (m *MenuMutation) ResetRoles() {
 	m.removedroles = nil
 }
 
+// AddAPIPermissionIDs adds the "api_permissions" edge to the ApiPermission entity by ids.
+func (m *MenuMutation) AddAPIPermissionIDs(ids ...string) {
+	if m.api_permissions == nil {
+		m.api_permissions = make(map[string]struct{})
+	}
+	for i := range ids {
+		m.api_permissions[ids[i]] = struct{}{}
+	}
+}
+
+// ClearAPIPermissions clears the "api_permissions" edge to the ApiPermission entity.
+func (m *MenuMutation) ClearAPIPermissions() {
+	m.clearedapi_permissions = true
+}
+
+// APIPermissionsCleared reports if the "api_permissions" edge to the ApiPermission entity was cleared.
+func (m *MenuMutation) APIPermissionsCleared() bool {
+	return m.clearedapi_permissions
+}
+
+// RemoveAPIPermissionIDs removes the "api_permissions" edge to the ApiPermission entity by IDs.
+func (m *MenuMutation) RemoveAPIPermissionIDs(ids ...string) {
+	if m.removedapi_permissions == nil {
+		m.removedapi_permissions = make(map[string]struct{})
+	}
+	for i := range ids {
+		delete(m.api_permissions, ids[i])
+		m.removedapi_permissions[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedAPIPermissions returns the removed IDs of the "api_permissions" edge to the ApiPermission entity.
+func (m *MenuMutation) RemovedAPIPermissionsIDs() (ids []string) {
+	for id := range m.removedapi_permissions {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// APIPermissionsIDs returns the "api_permissions" edge IDs in the mutation.
+func (m *MenuMutation) APIPermissionsIDs() (ids []string) {
+	for id := range m.api_permissions {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetAPIPermissions resets all changes to the "api_permissions" edge.
+func (m *MenuMutation) ResetAPIPermissions() {
+	m.api_permissions = nil
+	m.clearedapi_permissions = false
+	m.removedapi_permissions = nil
+}
+
 // AddRoleMenuIDs adds the "role_menus" edge to the RoleMenu entity by ids.
 func (m *MenuMutation) AddRoleMenuIDs(ids ...string) {
 	if m.role_menus == nil {
@@ -5686,9 +7098,12 @@ func (m *MenuMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *MenuMutation) AddedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 3)
 	if m.roles != nil {
 		edges = append(edges, menu.EdgeRoles)
+	}
+	if m.api_permissions != nil {
+		edges = append(edges, menu.EdgeAPIPermissions)
 	}
 	if m.role_menus != nil {
 		edges = append(edges, menu.EdgeRoleMenus)
@@ -5706,6 +7121,12 @@ func (m *MenuMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case menu.EdgeAPIPermissions:
+		ids := make([]ent.Value, 0, len(m.api_permissions))
+		for id := range m.api_permissions {
+			ids = append(ids, id)
+		}
+		return ids
 	case menu.EdgeRoleMenus:
 		ids := make([]ent.Value, 0, len(m.role_menus))
 		for id := range m.role_menus {
@@ -5718,9 +7139,12 @@ func (m *MenuMutation) AddedIDs(name string) []ent.Value {
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *MenuMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 3)
 	if m.removedroles != nil {
 		edges = append(edges, menu.EdgeRoles)
+	}
+	if m.removedapi_permissions != nil {
+		edges = append(edges, menu.EdgeAPIPermissions)
 	}
 	if m.removedrole_menus != nil {
 		edges = append(edges, menu.EdgeRoleMenus)
@@ -5738,6 +7162,12 @@ func (m *MenuMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case menu.EdgeAPIPermissions:
+		ids := make([]ent.Value, 0, len(m.removedapi_permissions))
+		for id := range m.removedapi_permissions {
+			ids = append(ids, id)
+		}
+		return ids
 	case menu.EdgeRoleMenus:
 		ids := make([]ent.Value, 0, len(m.removedrole_menus))
 		for id := range m.removedrole_menus {
@@ -5750,9 +7180,12 @@ func (m *MenuMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *MenuMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 3)
 	if m.clearedroles {
 		edges = append(edges, menu.EdgeRoles)
+	}
+	if m.clearedapi_permissions {
+		edges = append(edges, menu.EdgeAPIPermissions)
 	}
 	if m.clearedrole_menus {
 		edges = append(edges, menu.EdgeRoleMenus)
@@ -5766,6 +7199,8 @@ func (m *MenuMutation) EdgeCleared(name string) bool {
 	switch name {
 	case menu.EdgeRoles:
 		return m.clearedroles
+	case menu.EdgeAPIPermissions:
+		return m.clearedapi_permissions
 	case menu.EdgeRoleMenus:
 		return m.clearedrole_menus
 	}
@@ -5786,6 +7221,9 @@ func (m *MenuMutation) ResetEdge(name string) error {
 	switch name {
 	case menu.EdgeRoles:
 		m.ResetRoles()
+		return nil
+	case menu.EdgeAPIPermissions:
+		m.ResetAPIPermissions()
 		return nil
 	case menu.EdgeRoleMenus:
 		m.ResetRoleMenus()

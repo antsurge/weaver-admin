@@ -17,6 +17,8 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/admin"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/adminrole"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/apiinterface"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/apipermission"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/department"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/dictdata"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/dicttype"
@@ -36,6 +38,10 @@ type Client struct {
 	Admin *AdminClient
 	// AdminRole is the client for interacting with the AdminRole builders.
 	AdminRole *AdminRoleClient
+	// ApiInterface is the client for interacting with the ApiInterface builders.
+	ApiInterface *ApiInterfaceClient
+	// ApiPermission is the client for interacting with the ApiPermission builders.
+	ApiPermission *ApiPermissionClient
 	// Department is the client for interacting with the Department builders.
 	Department *DepartmentClient
 	// DictData is the client for interacting with the DictData builders.
@@ -65,6 +71,8 @@ func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.Admin = NewAdminClient(c.config)
 	c.AdminRole = NewAdminRoleClient(c.config)
+	c.ApiInterface = NewApiInterfaceClient(c.config)
+	c.ApiPermission = NewApiPermissionClient(c.config)
 	c.Department = NewDepartmentClient(c.config)
 	c.DictData = NewDictDataClient(c.config)
 	c.DictType = NewDictTypeClient(c.config)
@@ -167,6 +175,8 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		config:         cfg,
 		Admin:          NewAdminClient(cfg),
 		AdminRole:      NewAdminRoleClient(cfg),
+		ApiInterface:   NewApiInterfaceClient(cfg),
+		ApiPermission:  NewApiPermissionClient(cfg),
 		Department:     NewDepartmentClient(cfg),
 		DictData:       NewDictDataClient(cfg),
 		DictType:       NewDictTypeClient(cfg),
@@ -196,6 +206,8 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		config:         cfg,
 		Admin:          NewAdminClient(cfg),
 		AdminRole:      NewAdminRoleClient(cfg),
+		ApiInterface:   NewApiInterfaceClient(cfg),
+		ApiPermission:  NewApiPermissionClient(cfg),
 		Department:     NewDepartmentClient(cfg),
 		DictData:       NewDictDataClient(cfg),
 		DictType:       NewDictTypeClient(cfg),
@@ -233,8 +245,8 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
-		c.Admin, c.AdminRole, c.Department, c.DictData, c.DictType, c.Menu, c.Position,
-		c.Role, c.RoleMenu, c.RolePermission,
+		c.Admin, c.AdminRole, c.ApiInterface, c.ApiPermission, c.Department, c.DictData,
+		c.DictType, c.Menu, c.Position, c.Role, c.RoleMenu, c.RolePermission,
 	} {
 		n.Use(hooks...)
 	}
@@ -244,8 +256,8 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.Admin, c.AdminRole, c.Department, c.DictData, c.DictType, c.Menu, c.Position,
-		c.Role, c.RoleMenu, c.RolePermission,
+		c.Admin, c.AdminRole, c.ApiInterface, c.ApiPermission, c.Department, c.DictData,
+		c.DictType, c.Menu, c.Position, c.Role, c.RoleMenu, c.RolePermission,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -258,6 +270,10 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.Admin.mutate(ctx, m)
 	case *AdminRoleMutation:
 		return c.AdminRole.mutate(ctx, m)
+	case *ApiInterfaceMutation:
+		return c.ApiInterface.mutate(ctx, m)
+	case *ApiPermissionMutation:
+		return c.ApiPermission.mutate(ctx, m)
 	case *DepartmentMutation:
 		return c.Department.mutate(ctx, m)
 	case *DictDataMutation:
@@ -606,6 +622,288 @@ func (c *AdminRoleClient) mutate(ctx context.Context, m *AdminRoleMutation) (Val
 		return (&AdminRoleDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown AdminRole mutation op: %q", m.Op())
+	}
+}
+
+// ApiInterfaceClient is a client for the ApiInterface schema.
+type ApiInterfaceClient struct {
+	config
+}
+
+// NewApiInterfaceClient returns a client for the ApiInterface from the given config.
+func NewApiInterfaceClient(c config) *ApiInterfaceClient {
+	return &ApiInterfaceClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `apiinterface.Hooks(f(g(h())))`.
+func (c *ApiInterfaceClient) Use(hooks ...Hook) {
+	c.hooks.ApiInterface = append(c.hooks.ApiInterface, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `apiinterface.Intercept(f(g(h())))`.
+func (c *ApiInterfaceClient) Intercept(interceptors ...Interceptor) {
+	c.inters.ApiInterface = append(c.inters.ApiInterface, interceptors...)
+}
+
+// Create returns a builder for creating a ApiInterface entity.
+func (c *ApiInterfaceClient) Create() *ApiInterfaceCreate {
+	mutation := newApiInterfaceMutation(c.config, OpCreate)
+	return &ApiInterfaceCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of ApiInterface entities.
+func (c *ApiInterfaceClient) CreateBulk(builders ...*ApiInterfaceCreate) *ApiInterfaceCreateBulk {
+	return &ApiInterfaceCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *ApiInterfaceClient) MapCreateBulk(slice any, setFunc func(*ApiInterfaceCreate, int)) *ApiInterfaceCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &ApiInterfaceCreateBulk{err: fmt.Errorf("calling to ApiInterfaceClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*ApiInterfaceCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &ApiInterfaceCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for ApiInterface.
+func (c *ApiInterfaceClient) Update() *ApiInterfaceUpdate {
+	mutation := newApiInterfaceMutation(c.config, OpUpdate)
+	return &ApiInterfaceUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *ApiInterfaceClient) UpdateOne(_m *ApiInterface) *ApiInterfaceUpdateOne {
+	mutation := newApiInterfaceMutation(c.config, OpUpdateOne, withApiInterface(_m))
+	return &ApiInterfaceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *ApiInterfaceClient) UpdateOneID(id string) *ApiInterfaceUpdateOne {
+	mutation := newApiInterfaceMutation(c.config, OpUpdateOne, withApiInterfaceID(id))
+	return &ApiInterfaceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for ApiInterface.
+func (c *ApiInterfaceClient) Delete() *ApiInterfaceDelete {
+	mutation := newApiInterfaceMutation(c.config, OpDelete)
+	return &ApiInterfaceDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *ApiInterfaceClient) DeleteOne(_m *ApiInterface) *ApiInterfaceDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *ApiInterfaceClient) DeleteOneID(id string) *ApiInterfaceDeleteOne {
+	builder := c.Delete().Where(apiinterface.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &ApiInterfaceDeleteOne{builder}
+}
+
+// Query returns a query builder for ApiInterface.
+func (c *ApiInterfaceClient) Query() *ApiInterfaceQuery {
+	return &ApiInterfaceQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeApiInterface},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a ApiInterface entity by its id.
+func (c *ApiInterfaceClient) Get(ctx context.Context, id string) (*ApiInterface, error) {
+	return c.Query().Where(apiinterface.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *ApiInterfaceClient) GetX(ctx context.Context, id string) *ApiInterface {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *ApiInterfaceClient) Hooks() []Hook {
+	return c.hooks.ApiInterface
+}
+
+// Interceptors returns the client interceptors.
+func (c *ApiInterfaceClient) Interceptors() []Interceptor {
+	return c.inters.ApiInterface
+}
+
+func (c *ApiInterfaceClient) mutate(ctx context.Context, m *ApiInterfaceMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&ApiInterfaceCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&ApiInterfaceUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&ApiInterfaceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&ApiInterfaceDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown ApiInterface mutation op: %q", m.Op())
+	}
+}
+
+// ApiPermissionClient is a client for the ApiPermission schema.
+type ApiPermissionClient struct {
+	config
+}
+
+// NewApiPermissionClient returns a client for the ApiPermission from the given config.
+func NewApiPermissionClient(c config) *ApiPermissionClient {
+	return &ApiPermissionClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `apipermission.Hooks(f(g(h())))`.
+func (c *ApiPermissionClient) Use(hooks ...Hook) {
+	c.hooks.ApiPermission = append(c.hooks.ApiPermission, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `apipermission.Intercept(f(g(h())))`.
+func (c *ApiPermissionClient) Intercept(interceptors ...Interceptor) {
+	c.inters.ApiPermission = append(c.inters.ApiPermission, interceptors...)
+}
+
+// Create returns a builder for creating a ApiPermission entity.
+func (c *ApiPermissionClient) Create() *ApiPermissionCreate {
+	mutation := newApiPermissionMutation(c.config, OpCreate)
+	return &ApiPermissionCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of ApiPermission entities.
+func (c *ApiPermissionClient) CreateBulk(builders ...*ApiPermissionCreate) *ApiPermissionCreateBulk {
+	return &ApiPermissionCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *ApiPermissionClient) MapCreateBulk(slice any, setFunc func(*ApiPermissionCreate, int)) *ApiPermissionCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &ApiPermissionCreateBulk{err: fmt.Errorf("calling to ApiPermissionClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*ApiPermissionCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &ApiPermissionCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for ApiPermission.
+func (c *ApiPermissionClient) Update() *ApiPermissionUpdate {
+	mutation := newApiPermissionMutation(c.config, OpUpdate)
+	return &ApiPermissionUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *ApiPermissionClient) UpdateOne(_m *ApiPermission) *ApiPermissionUpdateOne {
+	mutation := newApiPermissionMutation(c.config, OpUpdateOne, withApiPermission(_m))
+	return &ApiPermissionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *ApiPermissionClient) UpdateOneID(id string) *ApiPermissionUpdateOne {
+	mutation := newApiPermissionMutation(c.config, OpUpdateOne, withApiPermissionID(id))
+	return &ApiPermissionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for ApiPermission.
+func (c *ApiPermissionClient) Delete() *ApiPermissionDelete {
+	mutation := newApiPermissionMutation(c.config, OpDelete)
+	return &ApiPermissionDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *ApiPermissionClient) DeleteOne(_m *ApiPermission) *ApiPermissionDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *ApiPermissionClient) DeleteOneID(id string) *ApiPermissionDeleteOne {
+	builder := c.Delete().Where(apipermission.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &ApiPermissionDeleteOne{builder}
+}
+
+// Query returns a query builder for ApiPermission.
+func (c *ApiPermissionClient) Query() *ApiPermissionQuery {
+	return &ApiPermissionQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeApiPermission},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a ApiPermission entity by its id.
+func (c *ApiPermissionClient) Get(ctx context.Context, id string) (*ApiPermission, error) {
+	return c.Query().Where(apipermission.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *ApiPermissionClient) GetX(ctx context.Context, id string) *ApiPermission {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryMenus queries the menus edge of a ApiPermission.
+func (c *ApiPermissionClient) QueryMenus(_m *ApiPermission) *MenuQuery {
+	query := (&MenuClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(apipermission.Table, apipermission.FieldID, id),
+			sqlgraph.To(menu.Table, menu.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, apipermission.MenusTable, apipermission.MenusPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *ApiPermissionClient) Hooks() []Hook {
+	return c.hooks.ApiPermission
+}
+
+// Interceptors returns the client interceptors.
+func (c *ApiPermissionClient) Interceptors() []Interceptor {
+	return c.inters.ApiPermission
+}
+
+func (c *ApiPermissionClient) mutate(ctx context.Context, m *ApiPermissionMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&ApiPermissionCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&ApiPermissionUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&ApiPermissionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&ApiPermissionDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown ApiPermission mutation op: %q", m.Op())
 	}
 }
 
@@ -1125,6 +1423,22 @@ func (c *MenuClient) QueryRoles(_m *Menu) *RoleQuery {
 			sqlgraph.From(menu.Table, menu.FieldID, id),
 			sqlgraph.To(role.Table, role.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, menu.RolesTable, menu.RolesPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryAPIPermissions queries the api_permissions edge of a Menu.
+func (c *MenuClient) QueryAPIPermissions(_m *Menu) *ApiPermissionQuery {
+	query := (&ApiPermissionClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(menu.Table, menu.FieldID, id),
+			sqlgraph.To(apipermission.Table, apipermission.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, menu.APIPermissionsTable, menu.APIPermissionsPrimaryKey...),
 		)
 		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
@@ -1804,11 +2118,11 @@ func (c *RolePermissionClient) mutate(ctx context.Context, m *RolePermissionMuta
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Admin, AdminRole, Department, DictData, DictType, Menu, Position, Role,
-		RoleMenu, RolePermission []ent.Hook
+		Admin, AdminRole, ApiInterface, ApiPermission, Department, DictData, DictType,
+		Menu, Position, Role, RoleMenu, RolePermission []ent.Hook
 	}
 	inters struct {
-		Admin, AdminRole, Department, DictData, DictType, Menu, Position, Role,
-		RoleMenu, RolePermission []ent.Interceptor
+		Admin, AdminRole, ApiInterface, ApiPermission, Department, DictData, DictType,
+		Menu, Position, Role, RoleMenu, RolePermission []ent.Interceptor
 	}
 )

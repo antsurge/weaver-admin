@@ -150,6 +150,40 @@ func (m *Menu) validate(all bool) error {
 		}
 	}
 
+	for idx, item := range m.GetApiPermissions() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, MenuValidationError{
+						field:  fmt.Sprintf("ApiPermissions[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, MenuValidationError{
+						field:  fmt.Sprintf("ApiPermissions[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return MenuValidationError{
+					field:  fmt.Sprintf("ApiPermissions[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
 	for idx, item := range m.GetChildren() {
 		_, _ = idx, item
 
@@ -261,6 +295,116 @@ var _ interface {
 	ErrorName() string
 } = MenuValidationError{}
 
+// Validate checks the field values on ApiPermission with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *ApiPermission) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ApiPermission with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in ApiPermissionMultiError, or
+// nil if none found.
+func (m *ApiPermission) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ApiPermission) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Service
+
+	// no validation rules for Method
+
+	// no validation rules for Path
+
+	// no validation rules for Summary
+
+	if len(errors) > 0 {
+		return ApiPermissionMultiError(errors)
+	}
+
+	return nil
+}
+
+// ApiPermissionMultiError is an error wrapping multiple validation errors
+// returned by ApiPermission.ValidateAll() if the designated constraints
+// aren't met.
+type ApiPermissionMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ApiPermissionMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ApiPermissionMultiError) AllErrors() []error { return m }
+
+// ApiPermissionValidationError is the validation error returned by
+// ApiPermission.Validate if the designated constraints aren't met.
+type ApiPermissionValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ApiPermissionValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ApiPermissionValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ApiPermissionValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ApiPermissionValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ApiPermissionValidationError) ErrorName() string { return "ApiPermissionValidationError" }
+
+// Error satisfies the builtin error interface
+func (e ApiPermissionValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sApiPermission.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ApiPermissionValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ApiPermissionValidationError{}
+
 // Validate checks the field values on CreateMenuRequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.
@@ -312,6 +456,40 @@ func (m *CreateMenuRequest) validate(all bool) error {
 	// no validation rules for BadgeVariants
 
 	// no validation rules for Remark
+
+	for idx, item := range m.GetApiPermissions() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, CreateMenuRequestValidationError{
+						field:  fmt.Sprintf("ApiPermissions[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, CreateMenuRequestValidationError{
+						field:  fmt.Sprintf("ApiPermissions[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return CreateMenuRequestValidationError{
+					field:  fmt.Sprintf("ApiPermissions[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return CreateMenuRequestMultiError(errors)
@@ -547,6 +725,40 @@ func (m *UpdateMenuRequest) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
+
+	for idx, item := range m.GetApiPermissions() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, UpdateMenuRequestValidationError{
+						field:  fmt.Sprintf("ApiPermissions[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, UpdateMenuRequestValidationError{
+						field:  fmt.Sprintf("ApiPermissions[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UpdateMenuRequestValidationError{
+					field:  fmt.Sprintf("ApiPermissions[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if m.Name != nil {
 		// no validation rules for Name

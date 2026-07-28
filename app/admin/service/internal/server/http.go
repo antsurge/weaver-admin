@@ -56,8 +56,10 @@ func NewHTTPServer(
 	organizationService *service.OrganizationService,
 	dictionaryService *service.DictionaryService,
 	identityService *service.IdentityService,
+	systemService *service.SystemService,
 
 	organizationHandler *handler.OrganizationHandler,
+	systemHandler *handler.SystemHandler,
 
 	logger log.Logger,
 ) *http.Server {
@@ -90,8 +92,10 @@ func NewHTTPServer(
 	adminV1.RegisterOrganizationHTTPServer(srv, organizationService)
 	adminV1.RegisterDictionaryHTTPServer(srv, dictionaryService)
 	adminV1.RegisterIdentityHTTPServer(srv, identityService)
+	adminV1.RegisterSystemHTTPServer(srv, systemService)
 
 	pb.RegisterOrganizationHandlerServer(srv, organizationHandler)
+	pb.RegisterSystemHandlerServer(srv, systemHandler)
 
 	return srv
 }

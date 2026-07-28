@@ -24,7 +24,7 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(confServer *conf.Server, confData *conf.Data, jwt *conf.JWT, app *conf.App, mq *conf.MQ, logger log.Logger) (*kratos.App, func(), error) {
+func wireApp(confServer *conf.Server, confData *conf.Data, jwt *conf.JWT, app *conf.App, mq *conf.MQ, openAPI *conf.OpenAPI, logger log.Logger) (*kratos.App, func(), error) {
 	client := data.NewEntClient(confData, logger)
 	redisClient := data.NewRedisClient(confData, logger)
 	dataData, cleanup, err := data.NewData(confData, logger, client, redisClient)
@@ -35,7 +35,8 @@ func wireApp(confServer *conf.Server, confData *conf.Data, jwt *conf.JWT, app *c
 	captchaRepo := data.NewCaptchaRepo(dataData, logger, confData)
 	tokenRepo := data.NewTokenRepo(dataData, logger, confData)
 	roleRepo := data.NewRoleRepo(dataData, logger)
-	menuRepo := data.NewMenuRepo(dataData, logger)
+	apiPermissionRepo := data.NewApiPermissionRepo(dataData, logger)
+	menuRepo := data.NewMenuRepo(dataData, logger, apiPermissionRepo)
 	adminRoleRepo := data.NewAdminRoleRepo(dataData, logger)
 	roleMenuRepo := data.NewRoleMenuRepo(dataData, logger)
 	authenticationUsecase := biz.NewAuthenticationUsecase(logger, adminRepo, captchaRepo, tokenRepo, roleRepo, menuRepo, adminRoleRepo, roleMenuRepo, jwt, app)
@@ -43,7 +44,8 @@ func wireApp(confServer *conf.Server, confData *conf.Data, jwt *conf.JWT, app *c
 	authenticationService := service.NewAuthenticationService(authenticationUsecase, captchaUsecase)
 	menuUsecase := biz.NewMenuUsecase(menuRepo, logger)
 	roleUsecase := biz.NewRoleUsecase(roleRepo, menuRepo, logger)
-	permissionService := service.NewPermissionService(menuUsecase, roleUsecase)
+	openapi_scannerService := data.NewOpenAPIScanner(openAPI, logger)
+	permissionService := service.NewPermissionService(menuUsecase, roleUsecase, openapi_scannerService)
 	departmentRepo := data.NewDepartmentRepo(dataData, logger)
 	departmentUsecase := biz.NewDepartmentUsecase(departmentRepo, logger)
 	positionRepo := data.NewPositionRepo(dataData, logger)
@@ -56,9 +58,13 @@ func wireApp(confServer *conf.Server, confData *conf.Data, jwt *conf.JWT, app *c
 	dictionaryService := service.NewDictionaryService(dictTypeUsecase, dictDataUsecase)
 	adminUseCase := biz.NewAdminUseCase(adminRepo, roleRepo, logger)
 	identityService := service.NewIdentityService(adminUseCase)
-	grpcServer := server.NewGRPCServer(confServer, authenticationService, permissionService, organizationService, dictionaryService, identityService, logger)
+	apiInterfaceRepo := data.NewApiInterfaceRepo(dataData, logger)
+	apiInterfaceUsecase := biz.NewApiInterfaceUsecase(apiInterfaceRepo, logger)
+	systemService := service.NewSystemService(apiInterfaceUsecase, logger)
+	grpcServer := server.NewGRPCServer(confServer, authenticationService, permissionService, organizationService, dictionaryService, identityService, systemService, logger)
 	organizationHandler := handler.NewOrganizationHandler(positionUsecase)
-	httpServer := server.NewHTTPServer(confServer, jwt, app, authenticationService, permissionService, organizationService, dictionaryService, identityService, organizationHandler, logger)
+	systemHandler := handler.NewSystemHandler(apiInterfaceUsecase)
+	httpServer := server.NewHTTPServer(confServer, jwt, app, authenticationService, permissionService, organizationService, dictionaryService, identityService, systemService, organizationHandler, systemHandler, logger)
 	kratosApp := newApp(logger, grpcServer, httpServer)
 	return kratosApp, func() {
 		cleanup()

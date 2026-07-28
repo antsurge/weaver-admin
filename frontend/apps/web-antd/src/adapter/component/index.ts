@@ -42,6 +42,7 @@ import { message, Modal, notification } from 'ant-design-vue';
 // 导入自定义表单组件
 import FormTitle from '#/components/form/title/index.vue';
 import EnhancedIconPicker from '#/components/icon-picker/enhanced-icon-picker.vue';
+import ApiPermissionPicker from '#/components/form/api-permission-picker/index.vue';
 
 const AutoComplete = defineAsyncComponent(
   () => import('ant-design-vue/es/auto-complete'),
@@ -489,6 +490,7 @@ const withPreviewUpload = () => {
 // 这里需要自行根据业务组件库进行适配，需要用到的组件都需要在这里类型说明
 export type ComponentType =
   | 'ApiCascader'
+  | 'ApiPermissionPicker'
   | 'ApiSelect'
   | 'ApiTreeSelect'
   | 'AutoComplete'
@@ -533,6 +535,7 @@ async function initComponentAdapter() {
       modelPropName: 'value',
       visibleEvent: 'onVisibleChange',
     }),
+    ApiPermissionPicker,
     ApiSelect: withDefaultPlaceholder(ApiComponent, 'select', {
       component: Select,
       loadingSlot: 'suffixIcon',

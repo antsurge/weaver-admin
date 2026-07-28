@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package admin.service.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "system/service/v1/api_interface.proto";
+
+service System {
+  // 分页查询接口列表
+  rpc ListApiInterface(system.service.v1.ListApiInterfaceRequest) returns (system.service.v1.ListApiInterfaceResponse) {
+    option (google.api.http) = {get: "/admin/v1/api-interface"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "System"
+      summary: "接口列表-分页"
+      description: "分页查询 API 接口列表"
+    };
+  }
+
+  // 导入 openapi.yaml 文件
+  rpc ImportApiInterface(system.service.v1.ImportApiInterfaceRequest) returns (system.service.v1.ImportApiInterfaceResponse) {
+    option (gnostic.openapi.v3.operation) = {
+      tags: "System"
+      summary: "导入接口-上传 openapi.yaml"
+      description: "上传 openapi.yaml 文件，解析并导入接口信息到数据库"
+    };
+  }
+
+  // 批量删除接口
+  rpc DeleteApiInterface(system.service.v1.DeleteApiInterfaceRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/admin/v1/api-interface"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "System"
+      summary: "接口-删除(批量)"
+      description: "批量删除 API 接口"
+    };
+  }
+}

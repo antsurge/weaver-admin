@@ -55,5 +55,8 @@ func (Menu) Edges() []ent.Edge {
 		edge.From("roles", Role.Type).
 			Ref("menus").
 			Through("role_menus", RoleMenu.Type),
+
+		// Menu ↔ ApiPermissions (按钮类型多对多，不使用 join table)
+		edge.To("api_permissions", ApiPermission.Type),
 	}
 }

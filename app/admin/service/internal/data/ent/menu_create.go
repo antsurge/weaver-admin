@@ -10,6 +10,7 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/apipermission"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/menu"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/role"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/rolemenu"
@@ -299,6 +300,21 @@ func (_c *MenuCreate) AddRoles(v ...*Role) *MenuCreate {
 		ids[i] = v[i].ID
 	}
 	return _c.AddRoleIDs(ids...)
+}
+
+// AddAPIPermissionIDs adds the "api_permissions" edge to the ApiPermission entity by IDs.
+func (_c *MenuCreate) AddAPIPermissionIDs(ids ...string) *MenuCreate {
+	_c.mutation.AddAPIPermissionIDs(ids...)
+	return _c
+}
+
+// AddAPIPermissions adds the "api_permissions" edges to the ApiPermission entity.
+func (_c *MenuCreate) AddAPIPermissions(v ...*ApiPermission) *MenuCreate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddAPIPermissionIDs(ids...)
 }
 
 // AddRoleMenuIDs adds the "role_menus" edge to the RoleMenu entity by IDs.
@@ -686,6 +702,22 @@ func (_c *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 		createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.APIPermissionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   menu.APIPermissionsTable,
+			Columns: menu.APIPermissionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(apipermission.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := _c.mutation.RoleMenusIDs(); len(nodes) > 0 {

@@ -8,6 +8,7 @@ import "google/protobuf/empty.proto";
 import "organization/service/v1/department.proto";
 import "permission/service/v1/menu.proto";
 import "permission/service/v1/role.proto";
+import "permission/service/v1/api_metadata.proto";
 
 service PermissionService {
   // 菜单
@@ -144,6 +145,16 @@ service PermissionService {
       tags: "Permission"
       summary: "角色-查询菜单"
       description: "查询角色关联的菜单树"
+    };
+  }
+
+  // 查询接口元数据（用于菜单按钮的接口权限选择器）
+  rpc ListApiMetadata(permission.service.v1.ListApiMetadataRequest) returns (permission.service.v1.ListApiMetadataResponse) {
+    option (google.api.http) = {get: "/admin/v1/api-metadata"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Permission"
+      summary: "接口元数据-查询"
+      description: "查询所有可用的接口元数据（按 service 分组）"
     };
   }
 }

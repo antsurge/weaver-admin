@@ -11,6 +11,7 @@ message Bootstrap {
   JWT jwt = 3;
   MQ mq = 4;
   App app = 5;
+  OpenAPI openapi = 6;
 }
 
 message App {
@@ -76,6 +77,14 @@ message MQ {
   string driver = 1;
 
   RabbitMQ rabbitmq = 2;
+}
+
+/**
+OpenAPI 配置
+ */
+message OpenAPI {
+  // openapi.yaml 文件路径（绝对路径或相对工作目录路径）
+  string path = 1;
 }
 
 // Rabbitmq 配置

@@ -27,6 +27,7 @@ const OperationPermissionServiceCreateRole = "/admin.service.v1.PermissionServic
 const OperationPermissionServiceDeleteMenu = "/admin.service.v1.PermissionService/DeleteMenu"
 const OperationPermissionServiceDeleteRole = "/admin.service.v1.PermissionService/DeleteRole"
 const OperationPermissionServiceGetRole = "/admin.service.v1.PermissionService/GetRole"
+const OperationPermissionServiceListApiMetadata = "/admin.service.v1.PermissionService/ListApiMetadata"
 const OperationPermissionServiceListMenusByRole = "/admin.service.v1.PermissionService/ListMenusByRole"
 const OperationPermissionServiceListRole = "/admin.service.v1.PermissionService/ListRole"
 const OperationPermissionServiceMenuTree = "/admin.service.v1.PermissionService/MenuTree"
@@ -45,6 +46,8 @@ type PermissionServiceHTTPServer interface {
 	DeleteMenu(context.Context, *v1.DeleteMenuRequest) (*emptypb.Empty, error)
 	DeleteRole(context.Context, *v1.DeleteRoleRequest) (*emptypb.Empty, error)
 	GetRole(context.Context, *v1.GetRoleRequest) (*v1.Role, error)
+	// ListApiMetadata 查询接口元数据（用于菜单按钮的接口权限选择器）
+	ListApiMetadata(context.Context, *v1.ListApiMetadataRequest) (*v1.ListApiMetadataResponse, error)
 	// ListMenusByRole 查询角色的菜单列表（树形结构）
 	ListMenusByRole(context.Context, *v1.ListMenusByRoleRequest) (*v1.ListMenusByRoleResponse, error)
 	// ListRole 角色
@@ -75,6 +78,7 @@ func RegisterPermissionServiceHTTPServer(s *http.Server, srv PermissionServiceHT
 	r.DELETE("/admin/v1/role", _PermissionService_DeleteRole0_HTTP_Handler(srv))
 	r.PUT("/admin/v1/role/{roleId}/menus", _PermissionService_BindMenusForRole0_HTTP_Handler(srv))
 	r.GET("/admin/v1/role/{roleId}/menus", _PermissionService_ListMenusByRole0_HTTP_Handler(srv))
+	r.GET("/admin/v1/api-metadata", _PermissionService_ListApiMetadata0_HTTP_Handler(srv))
 }
 
 func _PermissionService_MenuTree0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
@@ -363,6 +367,25 @@ func _PermissionService_ListMenusByRole0_HTTP_Handler(srv PermissionServiceHTTPS
 	}
 }
 
+func _PermissionService_ListApiMetadata0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.ListApiMetadataRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationPermissionServiceListApiMetadata)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListApiMetadata(ctx, req.(*v1.ListApiMetadataRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.ListApiMetadataResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
 type PermissionServiceHTTPClient interface {
 	// BindMenusForRole 为角色绑定菜单（全量替换）
 	BindMenusForRole(ctx context.Context, req *v1.BindMenusForRoleRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
@@ -373,6 +396,8 @@ type PermissionServiceHTTPClient interface {
 	DeleteMenu(ctx context.Context, req *v1.DeleteMenuRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DeleteRole(ctx context.Context, req *v1.DeleteRoleRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	GetRole(ctx context.Context, req *v1.GetRoleRequest, opts ...http.CallOption) (rsp *v1.Role, err error)
+	// ListApiMetadata 查询接口元数据（用于菜单按钮的接口权限选择器）
+	ListApiMetadata(ctx context.Context, req *v1.ListApiMetadataRequest, opts ...http.CallOption) (rsp *v1.ListApiMetadataResponse, err error)
 	// ListMenusByRole 查询角色的菜单列表（树形结构）
 	ListMenusByRole(ctx context.Context, req *v1.ListMenusByRoleRequest, opts ...http.CallOption) (rsp *v1.ListMenusByRoleResponse, err error)
 	// ListRole 角色
@@ -469,6 +494,20 @@ func (c *PermissionServiceHTTPClientImpl) GetRole(ctx context.Context, in *v1.Ge
 	pattern := "/admin/v1/role/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationPermissionServiceGetRole))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// ListApiMetadata 查询接口元数据（用于菜单按钮的接口权限选择器）
+func (c *PermissionServiceHTTPClientImpl) ListApiMetadata(ctx context.Context, in *v1.ListApiMetadataRequest, opts ...http.CallOption) (*v1.ListApiMetadataResponse, error) {
+	var out v1.ListApiMetadataResponse
+	pattern := "/admin/v1/api-metadata"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationPermissionServiceListApiMetadata))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

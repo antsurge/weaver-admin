@@ -12,6 +12,12 @@ type Admin func(*sql.Selector)
 // AdminRole is the predicate function for adminrole builders.
 type AdminRole func(*sql.Selector)
 
+// ApiInterface is the predicate function for apiinterface builders.
+type ApiInterface func(*sql.Selector)
+
+// ApiPermission is the predicate function for apipermission builders.
+type ApiPermission func(*sql.Selector)
+
 // Department is the predicate function for department builders.
 type Department func(*sql.Selector)
 

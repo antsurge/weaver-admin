@@ -16,6 +16,10 @@ type Tx struct {
 	Admin *AdminClient
 	// AdminRole is the client for interacting with the AdminRole builders.
 	AdminRole *AdminRoleClient
+	// ApiInterface is the client for interacting with the ApiInterface builders.
+	ApiInterface *ApiInterfaceClient
+	// ApiPermission is the client for interacting with the ApiPermission builders.
+	ApiPermission *ApiPermissionClient
 	// Department is the client for interacting with the Department builders.
 	Department *DepartmentClient
 	// DictData is the client for interacting with the DictData builders.
@@ -165,6 +169,8 @@ func (tx *Tx) Client() *Client {
 func (tx *Tx) init() {
 	tx.Admin = NewAdminClient(tx.config)
 	tx.AdminRole = NewAdminRoleClient(tx.config)
+	tx.ApiInterface = NewApiInterfaceClient(tx.config)
+	tx.ApiPermission = NewApiPermissionClient(tx.config)
 	tx.Department = NewDepartmentClient(tx.config)
 	tx.DictData = NewDictDataClient(tx.config)
 	tx.DictType = NewDictTypeClient(tx.config)

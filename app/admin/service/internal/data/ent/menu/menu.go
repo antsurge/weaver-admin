@@ -55,6 +55,8 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// EdgeRoles holds the string denoting the roles edge name in mutations.
 	EdgeRoles = "roles"
+	// EdgeAPIPermissions holds the string denoting the api_permissions edge name in mutations.
+	EdgeAPIPermissions = "api_permissions"
 	// EdgeRoleMenus holds the string denoting the role_menus edge name in mutations.
 	EdgeRoleMenus = "role_menus"
 	// Table holds the table name of the menu in the database.
@@ -64,6 +66,11 @@ const (
 	// RolesInverseTable is the table name for the Role entity.
 	// It exists in this package in order to avoid circular dependency with the "role" package.
 	RolesInverseTable = "role"
+	// APIPermissionsTable is the table that holds the api_permissions relation/edge. The primary key declared below.
+	APIPermissionsTable = "menu_api_permissions"
+	// APIPermissionsInverseTable is the table name for the ApiPermission entity.
+	// It exists in this package in order to avoid circular dependency with the "apipermission" package.
+	APIPermissionsInverseTable = "api_permission"
 	// RoleMenusTable is the table that holds the role_menus relation/edge.
 	RoleMenusTable = "role_menu"
 	// RoleMenusInverseTable is the table name for the RoleMenu entity.
@@ -101,6 +108,9 @@ var (
 	// RolesPrimaryKey and RolesColumn2 are the table columns denoting the
 	// primary key for the roles relation (M2M).
 	RolesPrimaryKey = []string{"role_id", "menu_id"}
+	// APIPermissionsPrimaryKey and APIPermissionsColumn2 are the table columns denoting the
+	// primary key for the api_permissions relation (M2M).
+	APIPermissionsPrimaryKey = []string{"menu_id", "api_permission_id"}
 )
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -373,6 +383,20 @@ func ByRoles(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	}
 }
 
+// ByAPIPermissionsCount orders the results by api_permissions count.
+func ByAPIPermissionsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newAPIPermissionsStep(), opts...)
+	}
+}
+
+// ByAPIPermissions orders the results by api_permissions terms.
+func ByAPIPermissions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newAPIPermissionsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
 // ByRoleMenusCount orders the results by role_menus count.
 func ByRoleMenusCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
@@ -391,6 +415,13 @@ func newRolesStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(RolesInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.M2M, true, RolesTable, RolesPrimaryKey...),
+	)
+}
+func newAPIPermissionsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(APIPermissionsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, false, APIPermissionsTable, APIPermissionsPrimaryKey...),
 	)
 }
 func newRoleMenusStep() *sqlgraph.Step {

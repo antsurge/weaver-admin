@@ -23,6 +23,9 @@ managed:
       path: identity/service/v1
       value: github.com/antsurge/weaver-admin/api/gen/go/identity/service/v1;identityypb
     - file_option: go_package
+      path: system/service/v1
+      value: github.com/antsurge/weaver-admin/api/gen/go/system/service/v1;systempb
+    - file_option: go_package
       path: common/v1
       value: github.com/antsurge/weaver-admin/api/gen/go/common/v1;commonpb
   disable:

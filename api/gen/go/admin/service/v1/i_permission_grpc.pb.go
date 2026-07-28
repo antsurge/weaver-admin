@@ -34,6 +34,7 @@ const (
 	PermissionService_DeleteRole_FullMethodName       = "/admin.service.v1.PermissionService/DeleteRole"
 	PermissionService_BindMenusForRole_FullMethodName = "/admin.service.v1.PermissionService/BindMenusForRole"
 	PermissionService_ListMenusByRole_FullMethodName  = "/admin.service.v1.PermissionService/ListMenusByRole"
+	PermissionService_ListApiMetadata_FullMethodName  = "/admin.service.v1.PermissionService/ListApiMetadata"
 )
 
 // PermissionServiceClient is the client API for PermissionService service.
@@ -62,6 +63,8 @@ type PermissionServiceClient interface {
 	BindMenusForRole(ctx context.Context, in *v1.BindMenusForRoleRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 查询角色的菜单列表（树形结构）
 	ListMenusByRole(ctx context.Context, in *v1.ListMenusByRoleRequest, opts ...grpc.CallOption) (*v1.ListMenusByRoleResponse, error)
+	// 查询接口元数据（用于菜单按钮的接口权限选择器）
+	ListApiMetadata(ctx context.Context, in *v1.ListApiMetadataRequest, opts ...grpc.CallOption) (*v1.ListApiMetadataResponse, error)
 }
 
 type permissionServiceClient struct {
@@ -202,6 +205,16 @@ func (c *permissionServiceClient) ListMenusByRole(ctx context.Context, in *v1.Li
 	return out, nil
 }
 
+func (c *permissionServiceClient) ListApiMetadata(ctx context.Context, in *v1.ListApiMetadataRequest, opts ...grpc.CallOption) (*v1.ListApiMetadataResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v1.ListApiMetadataResponse)
+	err := c.cc.Invoke(ctx, PermissionService_ListApiMetadata_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PermissionServiceServer is the server API for PermissionService service.
 // All implementations must embed UnimplementedPermissionServiceServer
 // for forward compatibility.
@@ -228,6 +241,8 @@ type PermissionServiceServer interface {
 	BindMenusForRole(context.Context, *v1.BindMenusForRoleRequest) (*emptypb.Empty, error)
 	// 查询角色的菜单列表（树形结构）
 	ListMenusByRole(context.Context, *v1.ListMenusByRoleRequest) (*v1.ListMenusByRoleResponse, error)
+	// 查询接口元数据（用于菜单按钮的接口权限选择器）
+	ListApiMetadata(context.Context, *v1.ListApiMetadataRequest) (*v1.ListApiMetadataResponse, error)
 	mustEmbedUnimplementedPermissionServiceServer()
 }
 
@@ -276,6 +291,9 @@ func (UnimplementedPermissionServiceServer) BindMenusForRole(context.Context, *v
 }
 func (UnimplementedPermissionServiceServer) ListMenusByRole(context.Context, *v1.ListMenusByRoleRequest) (*v1.ListMenusByRoleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMenusByRole not implemented")
+}
+func (UnimplementedPermissionServiceServer) ListApiMetadata(context.Context, *v1.ListApiMetadataRequest) (*v1.ListApiMetadataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListApiMetadata not implemented")
 }
 func (UnimplementedPermissionServiceServer) mustEmbedUnimplementedPermissionServiceServer() {}
 func (UnimplementedPermissionServiceServer) testEmbeddedByValue()                           {}
@@ -532,6 +550,24 @@ func _PermissionService_ListMenusByRole_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PermissionService_ListApiMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.ListApiMetadataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PermissionServiceServer).ListApiMetadata(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PermissionService_ListApiMetadata_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PermissionServiceServer).ListApiMetadata(ctx, req.(*v1.ListApiMetadataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PermissionService_ServiceDesc is the grpc.ServiceDesc for PermissionService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -590,6 +626,10 @@ var PermissionService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListMenusByRole",
 			Handler:    _PermissionService_ListMenusByRole_Handler,
+		},
+		{
+			MethodName: "ListApiMetadata",
+			Handler:    _PermissionService_ListApiMetadata_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

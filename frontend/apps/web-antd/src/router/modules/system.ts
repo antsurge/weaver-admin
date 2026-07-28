@@ -13,6 +13,15 @@ const routes: RouteRecordRaw[] = [
     path: '/system',
     children: [
       {
+        name: 'ApiInterface',
+        path: '/api-interface',
+        component: () => import('#/views/system/api-interface/index.vue'),
+        meta: {
+          icon: 'lucide:list-restart',
+          title: $t('page.system.apiInterface'),
+        },
+      },
+      {
         name: 'Dictionary',
         path: '/dictionary',
         component: () => import('#/views/system/dictionary/dict-type/index.vue'),

@@ -23,9 +23,41 @@ export namespace PermissionMenuApi {
     'link',
     'button',
   ] as const;
+  /** 单条接口权限（按钮绑定） */
+  export interface ApiPermission {
+    /** 后端主键（回显用，新建时可为空） */
+    id?: string;
+    /** 服务全限定名 */
+    service: string;
+    /** HTTP method，如 GET/POST */
+    method: string;
+    /** 接口路径 */
+    path: string;
+    /** 接口描述 */
+    summary?: string;
+  }
+  /** 单条接口端点 */
+  export interface ApiEndpoint {
+    /** HTTP method，如 GET/POST */
+    method: string;
+    /** 接口路径，如 /admin/v1/menu */
+    path: string;
+    /** 接口描述 */
+    summary: string;
+  }
+  /** 按 service 分组的接口元数据 */
+  export interface ApiMetadata {
+    /** 服务名，如 PermissionService */
+    service: string;
+    /** OpenAPI tag */
+    tag: string;
+    endpoints: ApiEndpoint[];
+  }
   /** 系统权限 */
   export interface PermissionMenu {
     [key: string]: any;
+    /** 按钮绑定的接口权限列表（仅 action 类型） */
+    apiPermissions?: ApiPermission[];
     /** 后端权限标识 */
     authCode: string;
     /** 子级 */
@@ -180,12 +212,25 @@ async function isMenuPathExists(
   });
 }
 
+// ========== 接口元数据（按钮绑定 API 用） ==========
+
+/**
+ * 列出所有接口元数据（按 service 分组）
+ */
+async function listApiMetadataApi(): Promise<PermissionMenuApi.ApiMetadata[]> {
+  const res = await requestClient.get<{
+    items: PermissionMenuApi.ApiMetadata[];
+  }>('/admin/v1/api-metadata');
+  return res?.items ?? [];
+}
+
 export {
   createMenuApi,
   deleteMenuApi,
   getMenuTreeApi,
   isMenuCodeExists,
   isMenuPathExists,
+  listApiMetadataApi,
   updateMenuApi,
   updateMenuStatusApi,
 };

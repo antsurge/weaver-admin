@@ -19,7 +19,8 @@
     "permission": "权限管理",
     "organization": "组织管理",
     "position": "职务管理",
-    "dictionary": "字典管理"
+    "dictionary": "字典管理",
+    "apiInterface": "接口管理"
   },
   "organization": {
     "title": "组织管理",

@@ -11,19 +11,29 @@ import (
 )
 
 type menuRepo struct {
-	data *Data
-	log  *log.Helper
+	data    *Data
+	log     *log.Helper
+	apiPerm biz.ApiPermissionRepo
 }
 
-func NewMenuRepo(data *Data, logger log.Logger) biz.MenuRepo {
+func NewMenuRepo(data *Data, logger log.Logger, apiPerm biz.ApiPermissionRepo) biz.MenuRepo {
 	return &menuRepo{
-		data: data,
-		log:  log.NewHelper(logger),
+		data:    data,
+		log:     log.NewHelper(logger),
+		apiPerm: apiPerm,
 	}
 }
 
+// resolveAPIPermissions 将 biz.ApiPermission 列表 upsert 到数据库并返回带 ID 的 biz 实体
+func (r *menuRepo) resolveAPIPermissions(ctx context.Context, items []*biz.ApiPermission) ([]*biz.ApiPermission, error) {
+	if len(items) == 0 {
+		return nil, nil
+	}
+	return r.apiPerm.UpsertByCodes(ctx, items)
+}
+
 func (r *menuRepo) CreateMenu(ctx context.Context, p *biz.Menu) error {
-	_, err := r.data.db.Menu.Create().
+	builder := r.data.db.Menu.Create().
 		SetID(p.ID).
 		SetParentID(p.ParentID).
 		SetName(p.Name).
@@ -42,13 +52,27 @@ func (r *menuRepo) CreateMenu(ctx context.Context, p *biz.Menu) error {
 		SetWeight(p.Weight).
 		SetStatus(menu.Status(p.Status)).
 		SetCreatedAt(p.CreatedAt).
-		SetUpdatedAt(p.UpdatedAt).
-		Save(ctx)
+		SetUpdatedAt(p.UpdatedAt)
+
+	// 绑定接口权限（仅 action 类型携带）
+	if len(p.APIPermissions) > 0 {
+		ents, err := r.resolveAPIPermissions(ctx, p.APIPermissions)
+		if err != nil {
+			return err
+		}
+		ids := make([]string, len(ents))
+		for i, e := range ents {
+			ids[i] = e.ID
+		}
+		builder = builder.AddAPIPermissionIDs(ids...)
+	}
+
+	_, err := builder.Save(ctx)
 	return err
 }
 
 func (r *menuRepo) UpdateMenu(ctx context.Context, p *biz.Menu) error {
-	_, err := r.data.db.Menu.UpdateOneID(p.ID).
+	builder := r.data.db.Menu.UpdateOneID(p.ID).
 		SetParentID(p.ParentID).
 		SetName(p.Name).
 		SetCode(p.Code).
@@ -65,8 +89,20 @@ func (r *menuRepo) UpdateMenu(ctx context.Context, p *biz.Menu) error {
 		SetBadgeVariants(p.BadgeVariants).
 		SetWeight(p.Weight).
 		SetStatus(menu.Status(p.Status)).
-		SetUpdatedAt(p.UpdatedAt).
-		Save(ctx)
+		SetUpdatedAt(p.UpdatedAt)
+
+	// 接口权限全量替换：清空 + 重新绑定
+	ents, err := r.resolveAPIPermissions(ctx, p.APIPermissions)
+	if err != nil {
+		return err
+	}
+	ids := make([]string, len(ents))
+	for i, e := range ents {
+		ids[i] = e.ID
+	}
+	builder = builder.ClearAPIPermissions().AddAPIPermissionIDs(ids...)
+
+	_, err = builder.Save(ctx)
 	return err
 }
 
@@ -137,7 +173,9 @@ func (r *menuRepo) ListMenu(
 		query = query.Where(menu.StatusEQ(menu.Status(v)))
 	}
 
-	list, err := query.All(ctx)
+	list, err := query.
+		WithAPIPermissions().
+		All(ctx)
 
 	if err != nil {
 		return nil, err
@@ -146,27 +184,7 @@ func (r *menuRepo) ListMenu(
 	res := make([]*biz.Menu, 0, len(list))
 
 	for _, v := range list {
-		res = append(res, &biz.Menu{
-			ID:           v.ID,
-			ParentID:     v.ParentID,
-			Name:         v.Name,
-			Code:         v.Code,
-			Title:        v.Title,
-			Remark:       v.Remark,
-			Path:         v.Path,
-			Icon:         v.Icon,
-			Type:         string(v.Type),
-			LinkUrl:      v.URL,
-			Component:    v.Component,
-			AuthCode:     v.AuthCode,
-			BadgeType:    v.BadgeType,
-			Badge:        v.Badge,
-			BadgeVariants: v.BadgeVariants,
-			Weight:       v.Weight,
-			Status:       string(v.Status),
-			CreatedAt:    v.CreatedAt,
-			UpdatedAt:    v.UpdatedAt,
-		})
+		res = append(res, r.toBizMenu(v))
 	}
 
 	return res, nil
@@ -189,6 +207,7 @@ func (r *menuRepo) GetMenusByIDs(ctx context.Context, ids []string) ([]*biz.Menu
 	list, err := r.data.db.Menu.Query().
 		Where(menu.IDIn(ids...)).
 		Order(ent.Asc(menu.FieldWeight)).
+		WithAPIPermissions().
 		All(ctx)
 	if err != nil {
 		return nil, err
@@ -196,28 +215,43 @@ func (r *menuRepo) GetMenusByIDs(ctx context.Context, ids []string) ([]*biz.Menu
 
 	res := make([]*biz.Menu, 0, len(list))
 	for _, v := range list {
-		res = append(res, &biz.Menu{
-			ID:           v.ID,
-			ParentID:     v.ParentID,
-			Name:         v.Name,
-			Code:         v.Code,
-			Title:        v.Title,
-			Remark:       v.Remark,
-			Path:         v.Path,
-			Icon:         v.Icon,
-			Type:         string(v.Type),
-			LinkUrl:      v.URL,
-			Component:    v.Component,
-			AuthCode:     v.AuthCode,
-			BadgeType:    v.BadgeType,
-			Badge:        v.Badge,
-			BadgeVariants: v.BadgeVariants,
-			Weight:       v.Weight,
-			Status:       string(v.Status),
-			CreatedAt:    v.CreatedAt,
-			UpdatedAt:    v.UpdatedAt,
-		})
+		res = append(res, r.toBizMenu(v))
 	}
 
 	return res, nil
+}
+
+// toBizMenu 把 ent.Menu 转成 biz.Menu（含 apiPermissions 转换）
+func (r *menuRepo) toBizMenu(v *ent.Menu) *biz.Menu {
+	m := &biz.Menu{
+		ID:            v.ID,
+		ParentID:      v.ParentID,
+		Name:          v.Name,
+		Code:          v.Code,
+		Title:         v.Title,
+		Remark:        v.Remark,
+		Path:          v.Path,
+		Icon:          v.Icon,
+		Type:          string(v.Type),
+		LinkUrl:       v.URL,
+		Component:     v.Component,
+		AuthCode:      v.AuthCode,
+		BadgeType:     v.BadgeType,
+		Badge:         v.Badge,
+		BadgeVariants: v.BadgeVariants,
+		Weight:        v.Weight,
+		Status:        string(v.Status),
+		CreatedAt:     v.CreatedAt,
+		UpdatedAt:     v.UpdatedAt,
+	}
+	for _, ap := range v.Edges.APIPermissions {
+		m.APIPermissions = append(m.APIPermissions, &biz.ApiPermission{
+			ID:      ap.ID,
+			Service: ap.Service,
+			Method:  ap.Method,
+			Path:    ap.Path,
+			Summary: ap.Summary,
+		})
+	}
+	return m
 }

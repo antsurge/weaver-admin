@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package system.service.v1;
+
+option go_package = "weaver-admin/api/system/service/v1;v1";
+
+service SystemService {}

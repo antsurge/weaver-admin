@@ -14,6 +14,8 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/admin"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/adminrole"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/apiinterface"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/apipermission"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/department"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/dictdata"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/dicttype"
@@ -84,6 +86,8 @@ func checkColumn(t, c string) error {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
 			admin.Table:          admin.ValidColumn,
 			adminrole.Table:      adminrole.ValidColumn,
+			apiinterface.Table:   apiinterface.ValidColumn,
+			apipermission.Table:  apipermission.ValidColumn,
 			department.Table:     department.ValidColumn,
 			dictdata.Table:       dictdata.ValidColumn,
 			dicttype.Table:       dicttype.ValidColumn,

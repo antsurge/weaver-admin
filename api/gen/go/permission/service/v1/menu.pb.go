@@ -26,30 +26,31 @@ const (
 
 // 菜单
 type Menu struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                        // ID
-	ParentID      string                 `protobuf:"bytes,2,opt,name=parentID,proto3" json:"parentID,omitempty"`            // 上级菜单
-	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`                    // 名称
-	Code          string                 `protobuf:"bytes,4,opt,name=code,proto3" json:"code,omitempty"`                    // 编码
-	Description   string                 `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`      // 描述
-	Type          string                 `protobuf:"bytes,6,opt,name=type,proto3" json:"type,omitempty"`                    // 类型
-	Path          string                 `protobuf:"bytes,7,opt,name=path,proto3" json:"path,omitempty"`                    // 路由路径
-	Icon          string                 `protobuf:"bytes,8,opt,name=icon,proto3" json:"icon,omitempty"`                    // 图标
-	LinkUrl       string                 `protobuf:"bytes,9,opt,name=linkUrl,proto3" json:"linkUrl,omitempty"`              // 链接地址
-	Component     string                 `protobuf:"bytes,10,opt,name=component,proto3" json:"component,omitempty"`         // 页面组件
-	Weight        int32                  `protobuf:"varint,11,opt,name=weight,proto3" json:"weight,omitempty"`              // 权重
-	Status        string                 `protobuf:"bytes,12,opt,name=status,proto3" json:"status,omitempty"`               // 状态
-	Title         string                 `protobuf:"bytes,13,opt,name=title,proto3" json:"title,omitempty"`                 // 标题
-	AuthCode      string                 `protobuf:"bytes,14,opt,name=authCode,proto3" json:"authCode,omitempty"`           // 权限标识
-	BadgeType     string                 `protobuf:"bytes,15,opt,name=badgeType,proto3" json:"badgeType,omitempty"`         // 徽标类型
-	Badge         string                 `protobuf:"bytes,16,opt,name=badge,proto3" json:"badge,omitempty"`                 // 徽标内容
-	BadgeVariants string                 `protobuf:"bytes,17,opt,name=badgeVariants,proto3" json:"badgeVariants,omitempty"` // 徽标样式
-	Remark        string                 `protobuf:"bytes,18,opt,name=remark,proto3" json:"remark,omitempty"`               // 备注
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,19,opt,name=createdAt,proto3" json:"createdAt,omitempty"`         // 创建时间
-	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,20,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`         // 更新时间
-	Children      []*Menu                `protobuf:"bytes,30,rep,name=children,proto3" json:"children,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Id             string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                          // ID
+	ParentID       string                 `protobuf:"bytes,2,opt,name=parentID,proto3" json:"parentID,omitempty"`              // 上级菜单
+	Name           string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`                      // 名称
+	Code           string                 `protobuf:"bytes,4,opt,name=code,proto3" json:"code,omitempty"`                      // 编码
+	Description    string                 `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`        // 描述
+	Type           string                 `protobuf:"bytes,6,opt,name=type,proto3" json:"type,omitempty"`                      // 类型
+	Path           string                 `protobuf:"bytes,7,opt,name=path,proto3" json:"path,omitempty"`                      // 路由路径
+	Icon           string                 `protobuf:"bytes,8,opt,name=icon,proto3" json:"icon,omitempty"`                      // 图标
+	LinkUrl        string                 `protobuf:"bytes,9,opt,name=linkUrl,proto3" json:"linkUrl,omitempty"`                // 链接地址
+	Component      string                 `protobuf:"bytes,10,opt,name=component,proto3" json:"component,omitempty"`           // 页面组件
+	Weight         int32                  `protobuf:"varint,11,opt,name=weight,proto3" json:"weight,omitempty"`                // 权重
+	Status         string                 `protobuf:"bytes,12,opt,name=status,proto3" json:"status,omitempty"`                 // 状态
+	Title          string                 `protobuf:"bytes,13,opt,name=title,proto3" json:"title,omitempty"`                   // 标题
+	AuthCode       string                 `protobuf:"bytes,14,opt,name=authCode,proto3" json:"authCode,omitempty"`             // 权限标识
+	BadgeType      string                 `protobuf:"bytes,15,opt,name=badgeType,proto3" json:"badgeType,omitempty"`           // 徽标类型
+	Badge          string                 `protobuf:"bytes,16,opt,name=badge,proto3" json:"badge,omitempty"`                   // 徽标内容
+	BadgeVariants  string                 `protobuf:"bytes,17,opt,name=badgeVariants,proto3" json:"badgeVariants,omitempty"`   // 徽标样式
+	Remark         string                 `protobuf:"bytes,18,opt,name=remark,proto3" json:"remark,omitempty"`                 // 备注
+	CreatedAt      *timestamppb.Timestamp `protobuf:"bytes,19,opt,name=createdAt,proto3" json:"createdAt,omitempty"`           // 创建时间
+	UpdatedAt      *timestamppb.Timestamp `protobuf:"bytes,20,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`           // 更新时间
+	ApiPermissions []*ApiPermission       `protobuf:"bytes,21,rep,name=apiPermissions,proto3" json:"apiPermissions,omitempty"` // 接口权限（仅按钮类型 action 使用）
+	Children       []*Menu                `protobuf:"bytes,30,rep,name=children,proto3" json:"children,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *Menu) Reset() {
@@ -222,6 +223,13 @@ func (x *Menu) GetUpdatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
+func (x *Menu) GetApiPermissions() []*ApiPermission {
+	if x != nil {
+		return x.ApiPermissions
+	}
+	return nil
+}
+
 func (x *Menu) GetChildren() []*Menu {
 	if x != nil {
 		return x.Children
@@ -229,31 +237,109 @@ func (x *Menu) GetChildren() []*Menu {
 	return nil
 }
 
-// 创建菜单请求
-type CreateMenuRequest struct {
+// 单个接口权限（绑定到按钮菜单）
+type ApiPermission struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	ParentID      string                 `protobuf:"bytes,4,opt,name=parentID,proto3" json:"parentID,omitempty"`
-	Type          string                 `protobuf:"bytes,5,opt,name=type,proto3" json:"type,omitempty"`
-	Path          string                 `protobuf:"bytes,6,opt,name=path,proto3" json:"path,omitempty"`
-	Icon          string                 `protobuf:"bytes,7,opt,name=icon,proto3" json:"icon,omitempty"`
-	LinkUrl       string                 `protobuf:"bytes,8,opt,name=linkUrl,proto3" json:"linkUrl,omitempty"`
-	Component     string                 `protobuf:"bytes,9,opt,name=component,proto3" json:"component,omitempty"`
-	Weight        int32                  `protobuf:"varint,10,opt,name=weight,proto3" json:"weight,omitempty"`
-	Status        string                 `protobuf:"bytes,11,opt,name=status,proto3" json:"status,omitempty"`
-	Title         string                 `protobuf:"bytes,12,opt,name=title,proto3" json:"title,omitempty"`
-	AuthCode      string                 `protobuf:"bytes,13,opt,name=authCode,proto3" json:"authCode,omitempty"`
-	BadgeType     string                 `protobuf:"bytes,14,opt,name=badgeType,proto3" json:"badgeType,omitempty"`
-	Badge         string                 `protobuf:"bytes,15,opt,name=badge,proto3" json:"badge,omitempty"`
-	BadgeVariants string                 `protobuf:"bytes,16,opt,name=badgeVariants,proto3" json:"badgeVariants,omitempty"`
-	Remark        string                 `protobuf:"bytes,17,opt,name=remark,proto3" json:"remark,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`           // ID（数据库主键，回显用）
+	Service       string                 `protobuf:"bytes,2,opt,name=service,proto3" json:"service,omitempty"` // 服务全限定名
+	Method        string                 `protobuf:"bytes,3,opt,name=method,proto3" json:"method,omitempty"`   // HTTP method
+	Path          string                 `protobuf:"bytes,4,opt,name=path,proto3" json:"path,omitempty"`       // 接口路径
+	Summary       string                 `protobuf:"bytes,5,opt,name=summary,proto3" json:"summary,omitempty"` // 接口描述
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
+func (x *ApiPermission) Reset() {
+	*x = ApiPermission{}
+	mi := &file_permission_service_v1_menu_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ApiPermission) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ApiPermission) ProtoMessage() {}
+
+func (x *ApiPermission) ProtoReflect() protoreflect.Message {
+	mi := &file_permission_service_v1_menu_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ApiPermission.ProtoReflect.Descriptor instead.
+func (*ApiPermission) Descriptor() ([]byte, []int) {
+	return file_permission_service_v1_menu_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *ApiPermission) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *ApiPermission) GetService() string {
+	if x != nil {
+		return x.Service
+	}
+	return ""
+}
+
+func (x *ApiPermission) GetMethod() string {
+	if x != nil {
+		return x.Method
+	}
+	return ""
+}
+
+func (x *ApiPermission) GetPath() string {
+	if x != nil {
+		return x.Path
+	}
+	return ""
+}
+
+func (x *ApiPermission) GetSummary() string {
+	if x != nil {
+		return x.Summary
+	}
+	return ""
+}
+
+// 创建菜单请求
+type CreateMenuRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Name           string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	ParentID       string                 `protobuf:"bytes,4,opt,name=parentID,proto3" json:"parentID,omitempty"`
+	Type           string                 `protobuf:"bytes,5,opt,name=type,proto3" json:"type,omitempty"`
+	Path           string                 `protobuf:"bytes,6,opt,name=path,proto3" json:"path,omitempty"`
+	Icon           string                 `protobuf:"bytes,7,opt,name=icon,proto3" json:"icon,omitempty"`
+	LinkUrl        string                 `protobuf:"bytes,8,opt,name=linkUrl,proto3" json:"linkUrl,omitempty"`
+	Component      string                 `protobuf:"bytes,9,opt,name=component,proto3" json:"component,omitempty"`
+	Weight         int32                  `protobuf:"varint,10,opt,name=weight,proto3" json:"weight,omitempty"`
+	Status         string                 `protobuf:"bytes,11,opt,name=status,proto3" json:"status,omitempty"`
+	Title          string                 `protobuf:"bytes,12,opt,name=title,proto3" json:"title,omitempty"`
+	AuthCode       string                 `protobuf:"bytes,13,opt,name=authCode,proto3" json:"authCode,omitempty"`
+	BadgeType      string                 `protobuf:"bytes,14,opt,name=badgeType,proto3" json:"badgeType,omitempty"`
+	Badge          string                 `protobuf:"bytes,15,opt,name=badge,proto3" json:"badge,omitempty"`
+	BadgeVariants  string                 `protobuf:"bytes,16,opt,name=badgeVariants,proto3" json:"badgeVariants,omitempty"`
+	Remark         string                 `protobuf:"bytes,17,opt,name=remark,proto3" json:"remark,omitempty"`
+	ApiPermissions []*ApiPermission       `protobuf:"bytes,18,rep,name=apiPermissions,proto3" json:"apiPermissions,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
 func (x *CreateMenuRequest) Reset() {
 	*x = CreateMenuRequest{}
-	mi := &file_permission_service_v1_menu_proto_msgTypes[1]
+	mi := &file_permission_service_v1_menu_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -265,7 +351,7 @@ func (x *CreateMenuRequest) String() string {
 func (*CreateMenuRequest) ProtoMessage() {}
 
 func (x *CreateMenuRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_permission_service_v1_menu_proto_msgTypes[1]
+	mi := &file_permission_service_v1_menu_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -278,7 +364,7 @@ func (x *CreateMenuRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateMenuRequest.ProtoReflect.Descriptor instead.
 func (*CreateMenuRequest) Descriptor() ([]byte, []int) {
-	return file_permission_service_v1_menu_proto_rawDescGZIP(), []int{1}
+	return file_permission_service_v1_menu_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *CreateMenuRequest) GetName() string {
@@ -386,6 +472,13 @@ func (x *CreateMenuRequest) GetRemark() string {
 	return ""
 }
 
+func (x *CreateMenuRequest) GetApiPermissions() []*ApiPermission {
+	if x != nil {
+		return x.ApiPermissions
+	}
+	return nil
+}
+
 // 创建权限响应
 type CreateMenuResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -396,7 +489,7 @@ type CreateMenuResponse struct {
 
 func (x *CreateMenuResponse) Reset() {
 	*x = CreateMenuResponse{}
-	mi := &file_permission_service_v1_menu_proto_msgTypes[2]
+	mi := &file_permission_service_v1_menu_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -408,7 +501,7 @@ func (x *CreateMenuResponse) String() string {
 func (*CreateMenuResponse) ProtoMessage() {}
 
 func (x *CreateMenuResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_permission_service_v1_menu_proto_msgTypes[2]
+	mi := &file_permission_service_v1_menu_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -421,7 +514,7 @@ func (x *CreateMenuResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateMenuResponse.ProtoReflect.Descriptor instead.
 func (*CreateMenuResponse) Descriptor() ([]byte, []int) {
-	return file_permission_service_v1_menu_proto_rawDescGZIP(), []int{2}
+	return file_permission_service_v1_menu_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *CreateMenuResponse) GetPermission() *Menu {
@@ -433,30 +526,31 @@ func (x *CreateMenuResponse) GetPermission() *Menu {
 
 // 更新菜单请求
 type UpdateMenuRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name          *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
-	ParentID      *string                `protobuf:"bytes,5,opt,name=parentID,proto3,oneof" json:"parentID,omitempty"`
-	Type          *string                `protobuf:"bytes,6,opt,name=type,proto3,oneof" json:"type,omitempty"`
-	Path          *string                `protobuf:"bytes,7,opt,name=path,proto3,oneof" json:"path,omitempty"`
-	Icon          *string                `protobuf:"bytes,8,opt,name=icon,proto3,oneof" json:"icon,omitempty"`
-	LinkUrl       *string                `protobuf:"bytes,9,opt,name=linkUrl,proto3,oneof" json:"linkUrl,omitempty"`
-	Component     *string                `protobuf:"bytes,10,opt,name=component,proto3,oneof" json:"component,omitempty"`
-	Weight        *int32                 `protobuf:"varint,11,opt,name=weight,proto3,oneof" json:"weight,omitempty"`
-	Status        *string                `protobuf:"bytes,12,opt,name=status,proto3,oneof" json:"status,omitempty"`
-	Title         *string                `protobuf:"bytes,13,opt,name=title,proto3,oneof" json:"title,omitempty"`
-	AuthCode      *string                `protobuf:"bytes,14,opt,name=authCode,proto3,oneof" json:"authCode,omitempty"`
-	BadgeType     *string                `protobuf:"bytes,15,opt,name=badgeType,proto3,oneof" json:"badgeType,omitempty"`
-	Badge         *string                `protobuf:"bytes,16,opt,name=badge,proto3,oneof" json:"badge,omitempty"`
-	BadgeVariants *string                `protobuf:"bytes,17,opt,name=badgeVariants,proto3,oneof" json:"badgeVariants,omitempty"`
-	Remark        *string                `protobuf:"bytes,18,opt,name=remark,proto3,oneof" json:"remark,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Id             string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name           *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	ParentID       *string                `protobuf:"bytes,5,opt,name=parentID,proto3,oneof" json:"parentID,omitempty"`
+	Type           *string                `protobuf:"bytes,6,opt,name=type,proto3,oneof" json:"type,omitempty"`
+	Path           *string                `protobuf:"bytes,7,opt,name=path,proto3,oneof" json:"path,omitempty"`
+	Icon           *string                `protobuf:"bytes,8,opt,name=icon,proto3,oneof" json:"icon,omitempty"`
+	LinkUrl        *string                `protobuf:"bytes,9,opt,name=linkUrl,proto3,oneof" json:"linkUrl,omitempty"`
+	Component      *string                `protobuf:"bytes,10,opt,name=component,proto3,oneof" json:"component,omitempty"`
+	Weight         *int32                 `protobuf:"varint,11,opt,name=weight,proto3,oneof" json:"weight,omitempty"`
+	Status         *string                `protobuf:"bytes,12,opt,name=status,proto3,oneof" json:"status,omitempty"`
+	Title          *string                `protobuf:"bytes,13,opt,name=title,proto3,oneof" json:"title,omitempty"`
+	AuthCode       *string                `protobuf:"bytes,14,opt,name=authCode,proto3,oneof" json:"authCode,omitempty"`
+	BadgeType      *string                `protobuf:"bytes,15,opt,name=badgeType,proto3,oneof" json:"badgeType,omitempty"`
+	Badge          *string                `protobuf:"bytes,16,opt,name=badge,proto3,oneof" json:"badge,omitempty"`
+	BadgeVariants  *string                `protobuf:"bytes,17,opt,name=badgeVariants,proto3,oneof" json:"badgeVariants,omitempty"`
+	Remark         *string                `protobuf:"bytes,18,opt,name=remark,proto3,oneof" json:"remark,omitempty"`
+	ApiPermissions []*ApiPermission       `protobuf:"bytes,19,rep,name=apiPermissions,proto3" json:"apiPermissions,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *UpdateMenuRequest) Reset() {
 	*x = UpdateMenuRequest{}
-	mi := &file_permission_service_v1_menu_proto_msgTypes[3]
+	mi := &file_permission_service_v1_menu_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -468,7 +562,7 @@ func (x *UpdateMenuRequest) String() string {
 func (*UpdateMenuRequest) ProtoMessage() {}
 
 func (x *UpdateMenuRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_permission_service_v1_menu_proto_msgTypes[3]
+	mi := &file_permission_service_v1_menu_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -481,7 +575,7 @@ func (x *UpdateMenuRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateMenuRequest.ProtoReflect.Descriptor instead.
 func (*UpdateMenuRequest) Descriptor() ([]byte, []int) {
-	return file_permission_service_v1_menu_proto_rawDescGZIP(), []int{3}
+	return file_permission_service_v1_menu_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *UpdateMenuRequest) GetId() string {
@@ -596,6 +690,13 @@ func (x *UpdateMenuRequest) GetRemark() string {
 	return ""
 }
 
+func (x *UpdateMenuRequest) GetApiPermissions() []*ApiPermission {
+	if x != nil {
+		return x.ApiPermissions
+	}
+	return nil
+}
+
 type UpdateMenuResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Permission    *Menu                  `protobuf:"bytes,1,opt,name=permission,proto3" json:"permission,omitempty"`
@@ -605,7 +706,7 @@ type UpdateMenuResponse struct {
 
 func (x *UpdateMenuResponse) Reset() {
 	*x = UpdateMenuResponse{}
-	mi := &file_permission_service_v1_menu_proto_msgTypes[4]
+	mi := &file_permission_service_v1_menu_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -617,7 +718,7 @@ func (x *UpdateMenuResponse) String() string {
 func (*UpdateMenuResponse) ProtoMessage() {}
 
 func (x *UpdateMenuResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_permission_service_v1_menu_proto_msgTypes[4]
+	mi := &file_permission_service_v1_menu_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -630,7 +731,7 @@ func (x *UpdateMenuResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateMenuResponse.ProtoReflect.Descriptor instead.
 func (*UpdateMenuResponse) Descriptor() ([]byte, []int) {
-	return file_permission_service_v1_menu_proto_rawDescGZIP(), []int{4}
+	return file_permission_service_v1_menu_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *UpdateMenuResponse) GetPermission() *Menu {
@@ -650,7 +751,7 @@ type GetMenuRequest struct {
 
 func (x *GetMenuRequest) Reset() {
 	*x = GetMenuRequest{}
-	mi := &file_permission_service_v1_menu_proto_msgTypes[5]
+	mi := &file_permission_service_v1_menu_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -662,7 +763,7 @@ func (x *GetMenuRequest) String() string {
 func (*GetMenuRequest) ProtoMessage() {}
 
 func (x *GetMenuRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_permission_service_v1_menu_proto_msgTypes[5]
+	mi := &file_permission_service_v1_menu_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -675,7 +776,7 @@ func (x *GetMenuRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMenuRequest.ProtoReflect.Descriptor instead.
 func (*GetMenuRequest) Descriptor() ([]byte, []int) {
-	return file_permission_service_v1_menu_proto_rawDescGZIP(), []int{5}
+	return file_permission_service_v1_menu_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *GetMenuRequest) GetId() string {
@@ -699,7 +800,7 @@ type ListMenuRequest struct {
 
 func (x *ListMenuRequest) Reset() {
 	*x = ListMenuRequest{}
-	mi := &file_permission_service_v1_menu_proto_msgTypes[6]
+	mi := &file_permission_service_v1_menu_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -711,7 +812,7 @@ func (x *ListMenuRequest) String() string {
 func (*ListMenuRequest) ProtoMessage() {}
 
 func (x *ListMenuRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_permission_service_v1_menu_proto_msgTypes[6]
+	mi := &file_permission_service_v1_menu_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -724,7 +825,7 @@ func (x *ListMenuRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListMenuRequest.ProtoReflect.Descriptor instead.
 func (*ListMenuRequest) Descriptor() ([]byte, []int) {
-	return file_permission_service_v1_menu_proto_rawDescGZIP(), []int{6}
+	return file_permission_service_v1_menu_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ListMenuRequest) GetPage() int32 {
@@ -772,7 +873,7 @@ type ListMenuResponse struct {
 
 func (x *ListMenuResponse) Reset() {
 	*x = ListMenuResponse{}
-	mi := &file_permission_service_v1_menu_proto_msgTypes[7]
+	mi := &file_permission_service_v1_menu_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -784,7 +885,7 @@ func (x *ListMenuResponse) String() string {
 func (*ListMenuResponse) ProtoMessage() {}
 
 func (x *ListMenuResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_permission_service_v1_menu_proto_msgTypes[7]
+	mi := &file_permission_service_v1_menu_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -797,7 +898,7 @@ func (x *ListMenuResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListMenuResponse.ProtoReflect.Descriptor instead.
 func (*ListMenuResponse) Descriptor() ([]byte, []int) {
-	return file_permission_service_v1_menu_proto_rawDescGZIP(), []int{7}
+	return file_permission_service_v1_menu_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ListMenuResponse) GetItems() []*Menu {
@@ -827,7 +928,7 @@ type MenuTreeRequest struct {
 
 func (x *MenuTreeRequest) Reset() {
 	*x = MenuTreeRequest{}
-	mi := &file_permission_service_v1_menu_proto_msgTypes[8]
+	mi := &file_permission_service_v1_menu_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -839,7 +940,7 @@ func (x *MenuTreeRequest) String() string {
 func (*MenuTreeRequest) ProtoMessage() {}
 
 func (x *MenuTreeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_permission_service_v1_menu_proto_msgTypes[8]
+	mi := &file_permission_service_v1_menu_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -852,7 +953,7 @@ func (x *MenuTreeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MenuTreeRequest.ProtoReflect.Descriptor instead.
 func (*MenuTreeRequest) Descriptor() ([]byte, []int) {
-	return file_permission_service_v1_menu_proto_rawDescGZIP(), []int{8}
+	return file_permission_service_v1_menu_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *MenuTreeRequest) GetType() string {
@@ -893,7 +994,7 @@ type MenuTreeResponse struct {
 
 func (x *MenuTreeResponse) Reset() {
 	*x = MenuTreeResponse{}
-	mi := &file_permission_service_v1_menu_proto_msgTypes[9]
+	mi := &file_permission_service_v1_menu_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -905,7 +1006,7 @@ func (x *MenuTreeResponse) String() string {
 func (*MenuTreeResponse) ProtoMessage() {}
 
 func (x *MenuTreeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_permission_service_v1_menu_proto_msgTypes[9]
+	mi := &file_permission_service_v1_menu_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -918,7 +1019,7 @@ func (x *MenuTreeResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MenuTreeResponse.ProtoReflect.Descriptor instead.
 func (*MenuTreeResponse) Descriptor() ([]byte, []int) {
-	return file_permission_service_v1_menu_proto_rawDescGZIP(), []int{9}
+	return file_permission_service_v1_menu_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *MenuTreeResponse) GetItems() []*Menu {
@@ -938,7 +1039,7 @@ type DeleteMenuRequest struct {
 
 func (x *DeleteMenuRequest) Reset() {
 	*x = DeleteMenuRequest{}
-	mi := &file_permission_service_v1_menu_proto_msgTypes[10]
+	mi := &file_permission_service_v1_menu_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -950,7 +1051,7 @@ func (x *DeleteMenuRequest) String() string {
 func (*DeleteMenuRequest) ProtoMessage() {}
 
 func (x *DeleteMenuRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_permission_service_v1_menu_proto_msgTypes[10]
+	mi := &file_permission_service_v1_menu_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -963,7 +1064,7 @@ func (x *DeleteMenuRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteMenuRequest.ProtoReflect.Descriptor instead.
 func (*DeleteMenuRequest) Descriptor() ([]byte, []int) {
-	return file_permission_service_v1_menu_proto_rawDescGZIP(), []int{10}
+	return file_permission_service_v1_menu_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *DeleteMenuRequest) GetIds() []string {
@@ -983,7 +1084,7 @@ type UpdateMenuStatusRequest struct {
 
 func (x *UpdateMenuStatusRequest) Reset() {
 	*x = UpdateMenuStatusRequest{}
-	mi := &file_permission_service_v1_menu_proto_msgTypes[11]
+	mi := &file_permission_service_v1_menu_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -995,7 +1096,7 @@ func (x *UpdateMenuStatusRequest) String() string {
 func (*UpdateMenuStatusRequest) ProtoMessage() {}
 
 func (x *UpdateMenuStatusRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_permission_service_v1_menu_proto_msgTypes[11]
+	mi := &file_permission_service_v1_menu_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1008,7 +1109,7 @@ func (x *UpdateMenuStatusRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateMenuStatusRequest.ProtoReflect.Descriptor instead.
 func (*UpdateMenuStatusRequest) Descriptor() ([]byte, []int) {
-	return file_permission_service_v1_menu_proto_rawDescGZIP(), []int{11}
+	return file_permission_service_v1_menu_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *UpdateMenuStatusRequest) GetId() string {
@@ -1029,7 +1130,7 @@ var File_permission_service_v1_menu_proto protoreflect.FileDescriptor
 
 const file_permission_service_v1_menu_proto_rawDesc = "" +
 	"\n" +
-	" permission/service/v1/menu.proto\x12\x15permission.service.v1\x1a\x1bbuf/validate/validate.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xf1\x04\n" +
+	" permission/service/v1/menu.proto\x12\x15permission.service.v1\x1a\x1bbuf/validate/validate.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xbf\x05\n" +
 	"\x04Menu\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
 	"\bparentID\x18\x02 \x01(\tR\bparentID\x12\x12\n" +
@@ -1051,8 +1152,15 @@ const file_permission_service_v1_menu_proto_rawDesc = "" +
 	"\rbadgeVariants\x18\x11 \x01(\tR\rbadgeVariants\x12\x16\n" +
 	"\x06remark\x18\x12 \x01(\tR\x06remark\x128\n" +
 	"\tcreatedAt\x18\x13 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x128\n" +
-	"\tupdatedAt\x18\x14 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x127\n" +
-	"\bchildren\x18\x1e \x03(\v2\x1b.permission.service.v1.MenuR\bchildren\"\xc8\f\n" +
+	"\tupdatedAt\x18\x14 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12L\n" +
+	"\x0eapiPermissions\x18\x15 \x03(\v2$.permission.service.v1.ApiPermissionR\x0eapiPermissions\x127\n" +
+	"\bchildren\x18\x1e \x03(\v2\x1b.permission.service.v1.MenuR\bchildren\"\x7f\n" +
+	"\rApiPermission\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x18\n" +
+	"\aservice\x18\x02 \x01(\tR\aservice\x12\x16\n" +
+	"\x06method\x18\x03 \x01(\tR\x06method\x12\x12\n" +
+	"\x04path\x18\x04 \x01(\tR\x04path\x12\x18\n" +
+	"\asummary\x18\x05 \x01(\tR\asummary\"\xd4\r\n" +
 	"\x11CreateMenuRequest\x12\x9f\x01\n" +
 	"\x04name\x18\x01 \x01(\tB\x8a\x01\xbaG\x0f\x92\x02\f菜单名称\xbaHu\xba\x01r\n" +
 	"\x17CREATE_MENU_NAME_LENGTH\x120菜单名称长度必须在 2-30 个字符之间\x1a%this.size() >= 2 && this.size() <= 30R\x04name\x12x\n" +
@@ -1080,11 +1188,12 @@ const file_permission_service_v1_menu_proto_rawDesc = "" +
 	"\x05badge\x18\x0f \x01(\tBJ\xbaG\x0f\x92\x02\f徽标内容\xbaH5\xba\x012\n" +
 	"\x1dCREATE_MENU_BADGE_CONTENT_MAX\x1a\x11this.size() <= 10R\x05badge\x12m\n" +
 	"\rbadgeVariants\x18\x10 \x01(\tBG\xbaGD\x92\x02A徽标样式: default / destructive / primary / success / warningR\rbadgeVariants\x12$\n" +
-	"\x06remark\x18\x11 \x01(\tB\f\xbaG\t\x92\x02\x06备注R\x06remarkJ\x04\b\x02\x10\x03J\x04\b\x03\x10\x04R\x04codeR\vdescription\"Q\n" +
+	"\x06remark\x18\x11 \x01(\tB\f\xbaG\t\x92\x02\x06备注R\x06remark\x12\x89\x01\n" +
+	"\x0eapiPermissions\x18\x12 \x03(\v2$.permission.service.v1.ApiPermissionB;\xbaG8\x92\x025接口权限列表（仅按钮类型 action 使用）R\x0eapiPermissionsJ\x04\b\x02\x10\x03J\x04\b\x03\x10\x04R\x04codeR\vdescription\"Q\n" +
 	"\x12CreateMenuResponse\x12;\n" +
 	"\n" +
 	"permission\x18\x01 \x01(\v2\x1b.permission.service.v1.MenuR\n" +
-	"permission\"\xd8\x0e\n" +
+	"permission\"\xe4\x0f\n" +
 	"\x11UpdateMenuRequest\x12d\n" +
 	"\x02id\x18\x01 \x01(\tBT\xbaG\v\x92\x02\b菜单ID\xbaHC\xba\x01@\n" +
 	"\x17UPDATE_MENU_ID_REQUIRED\x12\x14菜单ID不能为空\x1a\x0fthis.size() > 0R\x02id\x12\xa4\x01\n" +
@@ -1114,7 +1223,8 @@ const file_permission_service_v1_menu_proto_rawDesc = "" +
 	"\x05badge\x18\x10 \x01(\tBJ\xbaG\x0f\x92\x02\f徽标内容\xbaH5\xba\x012\n" +
 	"\x1dUPDATE_MENU_BADGE_CONTENT_MAX\x1a\x11this.size() <= 10H\fR\x05badge\x88\x01\x01\x12r\n" +
 	"\rbadgeVariants\x18\x11 \x01(\tBG\xbaGD\x92\x02A徽标样式: default / destructive / primary / success / warningH\rR\rbadgeVariants\x88\x01\x01\x12)\n" +
-	"\x06remark\x18\x12 \x01(\tB\f\xbaG\t\x92\x02\x06备注H\x0eR\x06remark\x88\x01\x01B\a\n" +
+	"\x06remark\x18\x12 \x01(\tB\f\xbaG\t\x92\x02\x06备注H\x0eR\x06remark\x88\x01\x01\x12\x89\x01\n" +
+	"\x0eapiPermissions\x18\x13 \x03(\v2$.permission.service.v1.ApiPermissionB;\xbaG8\x92\x025接口权限列表（仅按钮类型 action 使用）R\x0eapiPermissionsB\a\n" +
 	"\x05_nameB\v\n" +
 	"\t_parentIDB\a\n" +
 	"\x05_typeB\a\n" +
@@ -1178,35 +1288,39 @@ func file_permission_service_v1_menu_proto_rawDescGZIP() []byte {
 	return file_permission_service_v1_menu_proto_rawDescData
 }
 
-var file_permission_service_v1_menu_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_permission_service_v1_menu_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_permission_service_v1_menu_proto_goTypes = []any{
 	(*Menu)(nil),                    // 0: permission.service.v1.Menu
-	(*CreateMenuRequest)(nil),       // 1: permission.service.v1.CreateMenuRequest
-	(*CreateMenuResponse)(nil),      // 2: permission.service.v1.CreateMenuResponse
-	(*UpdateMenuRequest)(nil),       // 3: permission.service.v1.UpdateMenuRequest
-	(*UpdateMenuResponse)(nil),      // 4: permission.service.v1.UpdateMenuResponse
-	(*GetMenuRequest)(nil),          // 5: permission.service.v1.GetMenuRequest
-	(*ListMenuRequest)(nil),         // 6: permission.service.v1.ListMenuRequest
-	(*ListMenuResponse)(nil),        // 7: permission.service.v1.ListMenuResponse
-	(*MenuTreeRequest)(nil),         // 8: permission.service.v1.MenuTreeRequest
-	(*MenuTreeResponse)(nil),        // 9: permission.service.v1.MenuTreeResponse
-	(*DeleteMenuRequest)(nil),       // 10: permission.service.v1.DeleteMenuRequest
-	(*UpdateMenuStatusRequest)(nil), // 11: permission.service.v1.UpdateMenuStatusRequest
-	(*timestamppb.Timestamp)(nil),   // 12: google.protobuf.Timestamp
+	(*ApiPermission)(nil),           // 1: permission.service.v1.ApiPermission
+	(*CreateMenuRequest)(nil),       // 2: permission.service.v1.CreateMenuRequest
+	(*CreateMenuResponse)(nil),      // 3: permission.service.v1.CreateMenuResponse
+	(*UpdateMenuRequest)(nil),       // 4: permission.service.v1.UpdateMenuRequest
+	(*UpdateMenuResponse)(nil),      // 5: permission.service.v1.UpdateMenuResponse
+	(*GetMenuRequest)(nil),          // 6: permission.service.v1.GetMenuRequest
+	(*ListMenuRequest)(nil),         // 7: permission.service.v1.ListMenuRequest
+	(*ListMenuResponse)(nil),        // 8: permission.service.v1.ListMenuResponse
+	(*MenuTreeRequest)(nil),         // 9: permission.service.v1.MenuTreeRequest
+	(*MenuTreeResponse)(nil),        // 10: permission.service.v1.MenuTreeResponse
+	(*DeleteMenuRequest)(nil),       // 11: permission.service.v1.DeleteMenuRequest
+	(*UpdateMenuStatusRequest)(nil), // 12: permission.service.v1.UpdateMenuStatusRequest
+	(*timestamppb.Timestamp)(nil),   // 13: google.protobuf.Timestamp
 }
 var file_permission_service_v1_menu_proto_depIdxs = []int32{
-	12, // 0: permission.service.v1.Menu.createdAt:type_name -> google.protobuf.Timestamp
-	12, // 1: permission.service.v1.Menu.updatedAt:type_name -> google.protobuf.Timestamp
-	0,  // 2: permission.service.v1.Menu.children:type_name -> permission.service.v1.Menu
-	0,  // 3: permission.service.v1.CreateMenuResponse.permission:type_name -> permission.service.v1.Menu
-	0,  // 4: permission.service.v1.UpdateMenuResponse.permission:type_name -> permission.service.v1.Menu
-	0,  // 5: permission.service.v1.ListMenuResponse.items:type_name -> permission.service.v1.Menu
-	0,  // 6: permission.service.v1.MenuTreeResponse.items:type_name -> permission.service.v1.Menu
-	7,  // [7:7] is the sub-list for method output_type
-	7,  // [7:7] is the sub-list for method input_type
-	7,  // [7:7] is the sub-list for extension type_name
-	7,  // [7:7] is the sub-list for extension extendee
-	0,  // [0:7] is the sub-list for field type_name
+	13, // 0: permission.service.v1.Menu.createdAt:type_name -> google.protobuf.Timestamp
+	13, // 1: permission.service.v1.Menu.updatedAt:type_name -> google.protobuf.Timestamp
+	1,  // 2: permission.service.v1.Menu.apiPermissions:type_name -> permission.service.v1.ApiPermission
+	0,  // 3: permission.service.v1.Menu.children:type_name -> permission.service.v1.Menu
+	1,  // 4: permission.service.v1.CreateMenuRequest.apiPermissions:type_name -> permission.service.v1.ApiPermission
+	0,  // 5: permission.service.v1.CreateMenuResponse.permission:type_name -> permission.service.v1.Menu
+	1,  // 6: permission.service.v1.UpdateMenuRequest.apiPermissions:type_name -> permission.service.v1.ApiPermission
+	0,  // 7: permission.service.v1.UpdateMenuResponse.permission:type_name -> permission.service.v1.Menu
+	0,  // 8: permission.service.v1.ListMenuResponse.items:type_name -> permission.service.v1.Menu
+	0,  // 9: permission.service.v1.MenuTreeResponse.items:type_name -> permission.service.v1.Menu
+	10, // [10:10] is the sub-list for method output_type
+	10, // [10:10] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_permission_service_v1_menu_proto_init() }
@@ -1214,14 +1328,14 @@ func file_permission_service_v1_menu_proto_init() {
 	if File_permission_service_v1_menu_proto != nil {
 		return
 	}
-	file_permission_service_v1_menu_proto_msgTypes[3].OneofWrappers = []any{}
+	file_permission_service_v1_menu_proto_msgTypes[4].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_permission_service_v1_menu_proto_rawDesc), len(file_permission_service_v1_menu_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   12,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

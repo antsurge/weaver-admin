@@ -28,8 +28,18 @@ message Menu {
   string remark = 18; // 备注
   google.protobuf.Timestamp createdAt = 19; // 创建时间
   google.protobuf.Timestamp updatedAt = 20; // 更新时间
+  repeated ApiPermission apiPermissions = 21; // 接口权限（仅按钮类型 action 使用）
 
   repeated Menu children = 30;
+}
+
+// 单个接口权限（绑定到按钮菜单）
+message ApiPermission {
+  string id = 1; // ID（数据库主键，回显用）
+  string service = 2; // 服务全限定名
+  string method = 3; // HTTP method
+  string path = 4; // 接口路径
+  string summary = 5; // 接口描述
 }
 
 // 创建菜单请求
@@ -136,6 +146,8 @@ message CreateMenuRequest {
   string badgeVariants = 16 [(gnostic.openapi.v3.property) = {description: "徽标样式: default / destructive / primary / success / warning"}];
 
   string remark = 17 [(gnostic.openapi.v3.property) = {description: "备注"}];
+
+  repeated ApiPermission apiPermissions = 18 [(gnostic.openapi.v3.property) = {description: "接口权限列表（仅按钮类型 action 使用）"}];
 }
 
 // 创建权限响应
@@ -249,6 +261,8 @@ message UpdateMenuRequest {
   optional string badgeVariants = 17 [(gnostic.openapi.v3.property) = {description: "徽标样式: default / destructive / primary / success / warning"}];
 
   optional string remark = 18 [(gnostic.openapi.v3.property) = {description: "备注"}];
+
+  repeated ApiPermission apiPermissions = 19 [(gnostic.openapi.v3.property) = {description: "接口权限列表（仅按钮类型 action 使用）"}];
 }
 
 message UpdateMenuResponse {

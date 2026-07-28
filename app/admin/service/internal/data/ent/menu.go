@@ -65,11 +65,13 @@ type Menu struct {
 type MenuEdges struct {
 	// Roles holds the value of the roles edge.
 	Roles []*Role `json:"roles,omitempty"`
+	// APIPermissions holds the value of the api_permissions edge.
+	APIPermissions []*ApiPermission `json:"api_permissions,omitempty"`
 	// RoleMenus holds the value of the role_menus edge.
 	RoleMenus []*RoleMenu `json:"role_menus,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [3]bool
 }
 
 // RolesOrErr returns the Roles value or an error if the edge
@@ -81,10 +83,19 @@ func (e MenuEdges) RolesOrErr() ([]*Role, error) {
 	return nil, &NotLoadedError{edge: "roles"}
 }
 
+// APIPermissionsOrErr returns the APIPermissions value or an error if the edge
+// was not loaded in eager-loading.
+func (e MenuEdges) APIPermissionsOrErr() ([]*ApiPermission, error) {
+	if e.loadedTypes[1] {
+		return e.APIPermissions, nil
+	}
+	return nil, &NotLoadedError{edge: "api_permissions"}
+}
+
 // RoleMenusOrErr returns the RoleMenus value or an error if the edge
 // was not loaded in eager-loading.
 func (e MenuEdges) RoleMenusOrErr() ([]*RoleMenu, error) {
-	if e.loadedTypes[1] {
+	if e.loadedTypes[2] {
 		return e.RoleMenus, nil
 	}
 	return nil, &NotLoadedError{edge: "role_menus"}
@@ -252,6 +263,11 @@ func (_m *Menu) Value(name string) (ent.Value, error) {
 // QueryRoles queries the "roles" edge of the Menu entity.
 func (_m *Menu) QueryRoles() *RoleQuery {
 	return NewMenuClient(_m.config).QueryRoles(_m)
+}
+
+// QueryAPIPermissions queries the "api_permissions" edge of the Menu entity.
+func (_m *Menu) QueryAPIPermissions() *ApiPermissionQuery {
+	return NewMenuClient(_m.config).QueryAPIPermissions(_m)
 }
 
 // QueryRoleMenus queries the "role_menus" edge of the Menu entity.

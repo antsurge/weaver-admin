@@ -33,3 +33,5 @@ mq:
     prefetch: 10 # 消费限流
     pool_size: 2
     durable: true
+openapi:
+  path: "" # 为空时自动尝试 fallback 路径

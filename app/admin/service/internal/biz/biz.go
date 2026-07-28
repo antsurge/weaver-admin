@@ -16,4 +16,6 @@ var ProviderSet = wire.NewSet(
 
 	NewDictTypeUsecase,
 	NewDictDataUsecase,
+
+	NewApiInterfaceUsecase,
 )

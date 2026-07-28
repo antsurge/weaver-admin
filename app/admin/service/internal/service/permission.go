@@ -6,6 +6,7 @@ import (
 	adminV1 "github.com/antsurge/weaver-admin/api/gen/go/admin/service/v1"
 	permissionV1 "github.com/antsurge/weaver-admin/api/gen/go/permission/service/v1"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/biz"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/openapi_scanner"
 	"github.com/antsurge/weaver-admin/pkg/utils/copierx"
 	"github.com/jinzhu/copier"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -14,17 +15,20 @@ import (
 type PermissionService struct {
 	adminV1.UnimplementedPermissionServiceServer
 
-	menuUc *biz.MenuUsecase
-	roleUc *biz.RoleUsecase
+	menuUc      *biz.MenuUsecase
+	roleUc      *biz.RoleUsecase
+	apiMetadata *openapi_scanner.Service
 }
 
 func NewPermissionService(
 	menuUc *biz.MenuUsecase,
 	roleUc *biz.RoleUsecase,
+	apiMetadata *openapi_scanner.Service,
 ) *PermissionService {
 	return &PermissionService{
-		menuUc: menuUc,
-		roleUc: roleUc,
+		menuUc:      menuUc,
+		roleUc:      roleUc,
+		apiMetadata: apiMetadata,
 	}
 }
 
@@ -225,4 +229,29 @@ func (s *PermissionService) ListMenusByRole(
 	}
 
 	return &permissionV1.ListMenusByRoleResponse{Items: output}, nil
+}
+
+// ListApiMetadata 查询所有接口元数据（来自 openapi.yaml 扫描）
+func (s *PermissionService) ListApiMetadata(
+	ctx context.Context,
+	req *permissionV1.ListApiMetadataRequest,
+) (*permissionV1.ListApiMetadataResponse, error) {
+	groups := s.apiMetadata.Metadata()
+	items := make([]*permissionV1.ApiMetadata, 0, len(groups))
+	for _, g := range groups {
+		endpoints := make([]*permissionV1.ApiEndpoint, 0, len(g.Endpoints))
+		for _, e := range g.Endpoints {
+			endpoints = append(endpoints, &permissionV1.ApiEndpoint{
+				Method:  e.Method,
+				Path:    e.Path,
+				Summary: e.Summary,
+			})
+		}
+		items = append(items, &permissionV1.ApiMetadata{
+			Service:   g.Service,
+			Tag:       g.Tag,
+			Endpoints: endpoints,
+		})
+	}
+	return &permissionV1.ListApiMetadataResponse{Items: items}, nil
 }

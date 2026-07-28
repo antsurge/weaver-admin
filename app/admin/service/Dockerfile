@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         && apt-get autoremove -y && apt-get autoclean -y
 
 COPY --from=builder /src/bin /app
+COPY --from=builder /src/api/gen/openapi/openapi.yaml /app/api/gen/openapi/openapi.yaml
 
 WORKDIR /app
 

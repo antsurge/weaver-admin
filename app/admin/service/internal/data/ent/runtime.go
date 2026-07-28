@@ -7,6 +7,8 @@ import (
 
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/admin"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/adminrole"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/apiinterface"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/apipermission"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/department"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/dictdata"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/dicttype"
@@ -56,6 +58,190 @@ func init() {
 	adminroleDescID := adminroleFields[0].Descriptor()
 	// adminrole.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	adminrole.IDValidator = adminroleDescID.Validators[0].(func(string) error)
+	apiinterfaceFields := schema.ApiInterface{}.Fields()
+	_ = apiinterfaceFields
+	// apiinterfaceDescService is the schema descriptor for service field.
+	apiinterfaceDescService := apiinterfaceFields[1].Descriptor()
+	// apiinterface.ServiceValidator is a validator for the "service" field. It is called by the builders before save.
+	apiinterface.ServiceValidator = func() func(string) error {
+		validators := apiinterfaceDescService.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(service string) error {
+			for _, fn := range fns {
+				if err := fn(service); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// apiinterfaceDescTag is the schema descriptor for tag field.
+	apiinterfaceDescTag := apiinterfaceFields[2].Descriptor()
+	// apiinterface.DefaultTag holds the default value on creation for the tag field.
+	apiinterface.DefaultTag = apiinterfaceDescTag.Default.(string)
+	// apiinterface.TagValidator is a validator for the "tag" field. It is called by the builders before save.
+	apiinterface.TagValidator = apiinterfaceDescTag.Validators[0].(func(string) error)
+	// apiinterfaceDescMethod is the schema descriptor for method field.
+	apiinterfaceDescMethod := apiinterfaceFields[3].Descriptor()
+	// apiinterface.MethodValidator is a validator for the "method" field. It is called by the builders before save.
+	apiinterface.MethodValidator = func() func(string) error {
+		validators := apiinterfaceDescMethod.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(method string) error {
+			for _, fn := range fns {
+				if err := fn(method); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// apiinterfaceDescPath is the schema descriptor for path field.
+	apiinterfaceDescPath := apiinterfaceFields[4].Descriptor()
+	// apiinterface.PathValidator is a validator for the "path" field. It is called by the builders before save.
+	apiinterface.PathValidator = func() func(string) error {
+		validators := apiinterfaceDescPath.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(_path string) error {
+			for _, fn := range fns {
+				if err := fn(_path); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// apiinterfaceDescSummary is the schema descriptor for summary field.
+	apiinterfaceDescSummary := apiinterfaceFields[5].Descriptor()
+	// apiinterface.DefaultSummary holds the default value on creation for the summary field.
+	apiinterface.DefaultSummary = apiinterfaceDescSummary.Default.(string)
+	// apiinterface.SummaryValidator is a validator for the "summary" field. It is called by the builders before save.
+	apiinterface.SummaryValidator = apiinterfaceDescSummary.Validators[0].(func(string) error)
+	// apiinterfaceDescCode is the schema descriptor for code field.
+	apiinterfaceDescCode := apiinterfaceFields[6].Descriptor()
+	// apiinterface.CodeValidator is a validator for the "code" field. It is called by the builders before save.
+	apiinterface.CodeValidator = func() func(string) error {
+		validators := apiinterfaceDescCode.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(code string) error {
+			for _, fn := range fns {
+				if err := fn(code); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// apiinterfaceDescCreatedAt is the schema descriptor for created_at field.
+	apiinterfaceDescCreatedAt := apiinterfaceFields[7].Descriptor()
+	// apiinterface.DefaultCreatedAt holds the default value on creation for the created_at field.
+	apiinterface.DefaultCreatedAt = apiinterfaceDescCreatedAt.Default.(func() time.Time)
+	// apiinterfaceDescUpdatedAt is the schema descriptor for updated_at field.
+	apiinterfaceDescUpdatedAt := apiinterfaceFields[8].Descriptor()
+	// apiinterface.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	apiinterface.DefaultUpdatedAt = apiinterfaceDescUpdatedAt.Default.(func() time.Time)
+	// apiinterface.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	apiinterface.UpdateDefaultUpdatedAt = apiinterfaceDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// apiinterfaceDescID is the schema descriptor for id field.
+	apiinterfaceDescID := apiinterfaceFields[0].Descriptor()
+	// apiinterface.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	apiinterface.IDValidator = apiinterfaceDescID.Validators[0].(func(string) error)
+	apipermissionFields := schema.ApiPermission{}.Fields()
+	_ = apipermissionFields
+	// apipermissionDescService is the schema descriptor for service field.
+	apipermissionDescService := apipermissionFields[1].Descriptor()
+	// apipermission.ServiceValidator is a validator for the "service" field. It is called by the builders before save.
+	apipermission.ServiceValidator = func() func(string) error {
+		validators := apipermissionDescService.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(service string) error {
+			for _, fn := range fns {
+				if err := fn(service); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// apipermissionDescMethod is the schema descriptor for method field.
+	apipermissionDescMethod := apipermissionFields[2].Descriptor()
+	// apipermission.MethodValidator is a validator for the "method" field. It is called by the builders before save.
+	apipermission.MethodValidator = func() func(string) error {
+		validators := apipermissionDescMethod.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(method string) error {
+			for _, fn := range fns {
+				if err := fn(method); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// apipermissionDescPath is the schema descriptor for path field.
+	apipermissionDescPath := apipermissionFields[3].Descriptor()
+	// apipermission.PathValidator is a validator for the "path" field. It is called by the builders before save.
+	apipermission.PathValidator = func() func(string) error {
+		validators := apipermissionDescPath.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(_path string) error {
+			for _, fn := range fns {
+				if err := fn(_path); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// apipermissionDescSummary is the schema descriptor for summary field.
+	apipermissionDescSummary := apipermissionFields[4].Descriptor()
+	// apipermission.DefaultSummary holds the default value on creation for the summary field.
+	apipermission.DefaultSummary = apipermissionDescSummary.Default.(string)
+	// apipermission.SummaryValidator is a validator for the "summary" field. It is called by the builders before save.
+	apipermission.SummaryValidator = apipermissionDescSummary.Validators[0].(func(string) error)
+	// apipermissionDescCode is the schema descriptor for code field.
+	apipermissionDescCode := apipermissionFields[5].Descriptor()
+	// apipermission.CodeValidator is a validator for the "code" field. It is called by the builders before save.
+	apipermission.CodeValidator = func() func(string) error {
+		validators := apipermissionDescCode.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(code string) error {
+			for _, fn := range fns {
+				if err := fn(code); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// apipermissionDescID is the schema descriptor for id field.
+	apipermissionDescID := apipermissionFields[0].Descriptor()
+	// apipermission.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	apipermission.IDValidator = apipermissionDescID.Validators[0].(func(string) error)
 	departmentFields := schema.Department{}.Fields()
 	_ = departmentFields
 	// departmentDescParentID is the schema descriptor for parent_id field.

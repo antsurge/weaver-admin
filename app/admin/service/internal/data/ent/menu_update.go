@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/apipermission"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/menu"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/predicate"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/role"
@@ -302,6 +303,21 @@ func (_u *MenuUpdate) AddRoles(v ...*Role) *MenuUpdate {
 	return _u.AddRoleIDs(ids...)
 }
 
+// AddAPIPermissionIDs adds the "api_permissions" edge to the ApiPermission entity by IDs.
+func (_u *MenuUpdate) AddAPIPermissionIDs(ids ...string) *MenuUpdate {
+	_u.mutation.AddAPIPermissionIDs(ids...)
+	return _u
+}
+
+// AddAPIPermissions adds the "api_permissions" edges to the ApiPermission entity.
+func (_u *MenuUpdate) AddAPIPermissions(v ...*ApiPermission) *MenuUpdate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddAPIPermissionIDs(ids...)
+}
+
 // AddRoleMenuIDs adds the "role_menus" edge to the RoleMenu entity by IDs.
 func (_u *MenuUpdate) AddRoleMenuIDs(ids ...string) *MenuUpdate {
 	_u.mutation.AddRoleMenuIDs(ids...)
@@ -341,6 +357,27 @@ func (_u *MenuUpdate) RemoveRoles(v ...*Role) *MenuUpdate {
 		ids[i] = v[i].ID
 	}
 	return _u.RemoveRoleIDs(ids...)
+}
+
+// ClearAPIPermissions clears all "api_permissions" edges to the ApiPermission entity.
+func (_u *MenuUpdate) ClearAPIPermissions() *MenuUpdate {
+	_u.mutation.ClearAPIPermissions()
+	return _u
+}
+
+// RemoveAPIPermissionIDs removes the "api_permissions" edge to ApiPermission entities by IDs.
+func (_u *MenuUpdate) RemoveAPIPermissionIDs(ids ...string) *MenuUpdate {
+	_u.mutation.RemoveAPIPermissionIDs(ids...)
+	return _u
+}
+
+// RemoveAPIPermissions removes "api_permissions" edges to ApiPermission entities.
+func (_u *MenuUpdate) RemoveAPIPermissions(v ...*ApiPermission) *MenuUpdate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveAPIPermissionIDs(ids...)
 }
 
 // ClearRoleMenus clears all "role_menus" edges to the RoleMenu entity.
@@ -607,6 +644,51 @@ func (_u *MenuUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 		createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.APIPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   menu.APIPermissionsTable,
+			Columns: menu.APIPermissionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(apipermission.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedAPIPermissionsIDs(); len(nodes) > 0 && !_u.mutation.APIPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   menu.APIPermissionsTable,
+			Columns: menu.APIPermissionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(apipermission.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.APIPermissionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   menu.APIPermissionsTable,
+			Columns: menu.APIPermissionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(apipermission.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if _u.mutation.RoleMenusCleared() {
@@ -946,6 +1028,21 @@ func (_u *MenuUpdateOne) AddRoles(v ...*Role) *MenuUpdateOne {
 	return _u.AddRoleIDs(ids...)
 }
 
+// AddAPIPermissionIDs adds the "api_permissions" edge to the ApiPermission entity by IDs.
+func (_u *MenuUpdateOne) AddAPIPermissionIDs(ids ...string) *MenuUpdateOne {
+	_u.mutation.AddAPIPermissionIDs(ids...)
+	return _u
+}
+
+// AddAPIPermissions adds the "api_permissions" edges to the ApiPermission entity.
+func (_u *MenuUpdateOne) AddAPIPermissions(v ...*ApiPermission) *MenuUpdateOne {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddAPIPermissionIDs(ids...)
+}
+
 // AddRoleMenuIDs adds the "role_menus" edge to the RoleMenu entity by IDs.
 func (_u *MenuUpdateOne) AddRoleMenuIDs(ids ...string) *MenuUpdateOne {
 	_u.mutation.AddRoleMenuIDs(ids...)
@@ -985,6 +1082,27 @@ func (_u *MenuUpdateOne) RemoveRoles(v ...*Role) *MenuUpdateOne {
 		ids[i] = v[i].ID
 	}
 	return _u.RemoveRoleIDs(ids...)
+}
+
+// ClearAPIPermissions clears all "api_permissions" edges to the ApiPermission entity.
+func (_u *MenuUpdateOne) ClearAPIPermissions() *MenuUpdateOne {
+	_u.mutation.ClearAPIPermissions()
+	return _u
+}
+
+// RemoveAPIPermissionIDs removes the "api_permissions" edge to ApiPermission entities by IDs.
+func (_u *MenuUpdateOne) RemoveAPIPermissionIDs(ids ...string) *MenuUpdateOne {
+	_u.mutation.RemoveAPIPermissionIDs(ids...)
+	return _u
+}
+
+// RemoveAPIPermissions removes "api_permissions" edges to ApiPermission entities.
+func (_u *MenuUpdateOne) RemoveAPIPermissions(v ...*ApiPermission) *MenuUpdateOne {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveAPIPermissionIDs(ids...)
 }
 
 // ClearRoleMenus clears all "role_menus" edges to the RoleMenu entity.
@@ -1281,6 +1399,51 @@ func (_u *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) {
 		createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.APIPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   menu.APIPermissionsTable,
+			Columns: menu.APIPermissionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(apipermission.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedAPIPermissionsIDs(); len(nodes) > 0 && !_u.mutation.APIPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   menu.APIPermissionsTable,
+			Columns: menu.APIPermissionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(apipermission.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.APIPermissionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   menu.APIPermissionsTable,
+			Columns: menu.APIPermissionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(apipermission.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if _u.mutation.RoleMenusCleared() {

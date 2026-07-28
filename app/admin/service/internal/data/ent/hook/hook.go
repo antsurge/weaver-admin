@@ -33,6 +33,30 @@ func (f AdminRoleFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, e
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AdminRoleMutation", m)
 }
 
+// The ApiInterfaceFunc type is an adapter to allow the use of ordinary
+// function as ApiInterface mutator.
+type ApiInterfaceFunc func(context.Context, *ent.ApiInterfaceMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f ApiInterfaceFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.ApiInterfaceMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ApiInterfaceMutation", m)
+}
+
+// The ApiPermissionFunc type is an adapter to allow the use of ordinary
+// function as ApiPermission mutator.
+type ApiPermissionFunc func(context.Context, *ent.ApiPermissionMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f ApiPermissionFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.ApiPermissionMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ApiPermissionMutation", m)
+}
+
 // The DepartmentFunc type is an adapter to allow the use of ordinary
 // function as Department mutator.
 type DepartmentFunc func(context.Context, *ent.DepartmentMutation) (ent.Value, error)

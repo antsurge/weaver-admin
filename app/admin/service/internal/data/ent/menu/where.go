@@ -1203,6 +1203,29 @@ func HasRolesWith(preds ...predicate.Role) predicate.Menu {
 	})
 }
 
+// HasAPIPermissions applies the HasEdge predicate on the "api_permissions" edge.
+func HasAPIPermissions() predicate.Menu {
+	return predicate.Menu(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, APIPermissionsTable, APIPermissionsPrimaryKey...),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasAPIPermissionsWith applies the HasEdge predicate on the "api_permissions" edge with a given conditions (other predicates).
+func HasAPIPermissionsWith(preds ...predicate.ApiPermission) predicate.Menu {
+	return predicate.Menu(func(s *sql.Selector) {
+		step := newAPIPermissionsStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // HasRoleMenus applies the HasEdge predicate on the "role_menus" edge.
 func HasRoleMenus() predicate.Menu {
 	return predicate.Menu(func(s *sql.Selector) {
