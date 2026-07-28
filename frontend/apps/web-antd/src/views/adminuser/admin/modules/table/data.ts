@@ -4,6 +4,10 @@ import type { OrganizationPositionApi } from '#/api/organization/position';
 
 import { $t } from '#/locales';
 
+import { useAccess } from '@vben/access';
+
+const { hasAccessByCodes } = useAccess();
+
 export function useColumns(
   onActionClick: OnActionClickFn<OrganizationPositionApi.Position>,
   onStatusChange?: (
@@ -72,7 +76,17 @@ export function useColumns(
           nameField: 'name',
           onClick: onActionClick,
         },
-        options: ['edit', 'delete'],
+        // options: ['edit', 'delete'],
+        options: [
+          {
+            code: 'edit',
+            show: hasAccessByCodes(['Adminuser:Admin:Edit']),
+          },
+          {
+            code: 'delete',
+            show: hasAccessByCodes(['Adminuser:Admin:Delete']),
+          },
+        ],
       },
     },
   ];

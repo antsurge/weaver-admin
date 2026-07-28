@@ -212,10 +212,6 @@ function onBatchDelete() {
           <Plus class="size-5" />
           {{ $t('ui.actionTitle.create') }}
         </Button>
-        <Button type="primary" @click="onCreate" class="inline-flex items-center">
-          <Plus class="size-5" />
-          测试1
-        </Button>
       </div>
     </template>
   </Grid>
