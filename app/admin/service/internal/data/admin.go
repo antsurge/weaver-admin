@@ -97,17 +97,21 @@ func (r *adminRepo) CreateAdmin(ctx context.Context, admin *biz.Admin) error {
 }
 
 func (r *adminRepo) UpdateAdmin(ctx context.Context, admin *biz.Admin) error {
-	_, err := r.data.db.Admin.
+	updateOne := r.data.db.Admin.
 		UpdateOneID(admin.ID).
 		SetRealName(admin.RealName).
 		SetUsername(admin.Username).
 		SetEmail(admin.Email).
 		SetPhone(admin.Phone).
 		SetAvatar(admin.Avatar).
-		SetPassword(admin.Password).
-		SetUpdatedAt(time.Now()).
-		Save(ctx)
+		SetUpdatedAt(time.Now())
 
+	// 密码非空才更新（空字符串表示不修改密码）
+	if admin.Password != "" {
+		updateOne = updateOne.SetPassword(admin.Password)
+	}
+
+	_, err := updateOne.Save(ctx)
 	return err
 }
 

@@ -357,6 +357,8 @@ func (m *UpdateAdminRequest) validate(all bool) error {
 
 	// no validation rules for Username
 
+	// no validation rules for Password
+
 	if len(errors) > 0 {
 		return UpdateAdminRequestMultiError(errors)
 	}

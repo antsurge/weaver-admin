@@ -106,6 +106,15 @@ async function loadRoleList() {
       unCheckedValue: 'disabled',
     },
   },
+  {
+    fieldName: 'password',
+    label: '密码',
+    component: 'VbenInputPassword',
+    componentProps: {
+      placeholder: '编辑时留空则不修改；创建时留空使用默认密码 123456',
+      allowClear: true,
+    },
+  },
 ];
 
 const breakpoints = useBreakpoints(breakpointsTailwind);

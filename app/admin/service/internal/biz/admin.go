@@ -10,6 +10,9 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 )
 
+// AdminDefaultPassword 新建管理员时若未指定密码，则使用此默认密码
+const AdminDefaultPassword = "123456"
+
 // Admin 是 biz 层的领域模型 (Domain Object)
 // 这里的字段对应你 Proto 中定义的 Admin 消息
 type Admin struct {
@@ -79,6 +82,11 @@ func (uc *AdminUseCase) CreateAdmin(ctx context.Context, admin *Admin) (*Admin, 
 	admin.ID = uuid.GenerateXID()
 	admin.CreatedAt = now
 	admin.UpdatedAt = now
+
+	// 密码为空则使用默认密码
+	if admin.Password == "" {
+		admin.Password = AdminDefaultPassword
+	}
 
 	err := uc.repo.CreateAdmin(ctx, admin)
 	if err != nil {

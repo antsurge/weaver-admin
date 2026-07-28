@@ -18,6 +18,10 @@ export namespace AdminuserAdminApi {
     avatar?: string;
     /** 状态 */
     status: 'enabled' | 'disabled';
+    /**
+     * 密码（创建时可选，留空使用后端默认密码；编辑时可选，留空不修改密码，非空则更新）
+     */
+    password?: string;
     /** 关联的角色ID列表 */
     roleIds?: string[];
     /** 创建时间 */

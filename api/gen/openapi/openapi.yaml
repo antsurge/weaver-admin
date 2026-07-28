@@ -2144,6 +2144,9 @@ components:
                 username:
                     type: string
                     description: 用户名
+                password:
+                    type: string
+                    description: 密码（可选）
                 roleIds:
                     type: array
                     items:

@@ -251,6 +251,8 @@ type UpdateAdminRequest struct {
 	Avatar   string                 `protobuf:"bytes,5,opt,name=avatar,proto3" json:"avatar,omitempty"`
 	Status   string                 `protobuf:"bytes,6,opt,name=status,proto3" json:"status,omitempty"`
 	Username string                 `protobuf:"bytes,7,opt,name=username,proto3" json:"username,omitempty"`
+	// 密码（可选；空表示不修改；非空表示更新密码）
+	Password string `protobuf:"bytes,8,opt,name=password,proto3" json:"password,omitempty"`
 	// 关联的角色ID列表（可选，全量替换）
 	RoleIds       []string `protobuf:"bytes,20,rep,name=roleIds,proto3" json:"roleIds,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -332,6 +334,13 @@ func (x *UpdateAdminRequest) GetStatus() string {
 func (x *UpdateAdminRequest) GetUsername() string {
 	if x != nil {
 		return x.Username
+	}
+	return ""
+}
+
+func (x *UpdateAdminRequest) GetPassword() string {
+	if x != nil {
+		return x.Password
 	}
 	return ""
 }
@@ -639,7 +648,7 @@ const file_identity_service_v1_admin_proto_rawDesc = "" +
 	"\x06avatar\x18\x05 \x01(\tB\f\xbaG\t\x92\x02\x06头像R\x06avatar\x12(\n" +
 	"\bpassword\x18\x06 \x01(\tB\f\xbaG\t\x92\x02\x06密码R\bpassword\x126\n" +
 	"\x06status\x18\a \x01(\tB\x1e\xbaG\x1b\x92\x02\x18状态(enabled/disabled)R\x06status\x127\n" +
-	"\aroleIds\x18\x14 \x03(\tB\x1d\xbaG\x1a\x92\x02\x17关联的角色ID列表R\aroleIds:4\xbaG1\xba\x01\busername\xba\x01\bpassword\x92\x02\x18创建后台用户请求\"\x98\x03\n" +
+	"\aroleIds\x18\x14 \x03(\tB\x1d\xbaG\x1a\x92\x02\x17关联的角色ID列表R\aroleIds:4\xbaG1\xba\x01\busername\xba\x01\bpassword\x92\x02\x18创建后台用户请求\"\xce\x03\n" +
 	"\x12UpdateAdminRequest\x12\x1e\n" +
 	"\x02id\x18\x01 \x01(\tB\x0e\xbaG\v\x92\x02\b用户IDR\x02id\x12.\n" +
 	"\brealName\x18\x02 \x01(\tB\x12\xbaG\x0f\x92\x02\f真实姓名R\brealName\x12\"\n" +
@@ -647,7 +656,8 @@ const file_identity_service_v1_admin_proto_rawDesc = "" +
 	"\x05phone\x18\x04 \x01(\tB\x0f\xbaG\f\x92\x02\t手机号R\x05phone\x12$\n" +
 	"\x06avatar\x18\x05 \x01(\tB\f\xbaG\t\x92\x02\x06头像R\x06avatar\x126\n" +
 	"\x06status\x18\x06 \x01(\tB\x1e\xbaG\x1b\x92\x02\x18状态(enabled/disabled)R\x06status\x12+\n" +
-	"\busername\x18\a \x01(\tB\x0f\xbaG\f\x92\x02\t用户名R\busername\x127\n" +
+	"\busername\x18\a \x01(\tB\x0f\xbaG\f\x92\x02\t用户名R\busername\x124\n" +
+	"\bpassword\x18\b \x01(\tB\x18\xbaG\x15\x92\x02\x12密码（可选）R\bpassword\x127\n" +
 	"\aroleIds\x18\x14 \x03(\tB\x1d\xbaG\x1a\x92\x02\x17关联的角色ID列表R\aroleIds:#\xbaG \xba\x01\x02id\x92\x02\x18更新后台用户请求\"\\\n" +
 	"\x0fGetAdminRequest\x12\x1e\n" +
 	"\x02id\x18\x01 \x01(\tB\x0e\xbaG\v\x92\x02\b用户IDR\x02id:)\xbaG&\xba\x01\x02id\x92\x02\x1e获取后台用户详情请求\"\xfe\x01\n" +

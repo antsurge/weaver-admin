@@ -93,10 +93,14 @@ function setupAccessGuard(router: Router) {
     // 生成路由表
     // 当前登录用户拥有的角色标识列表
     const userInfo = userStore.userInfo || (await authStore.fetchUserInfo());
-    const userRoles = userInfo.roles ?? [];
+    const userRoles = userInfo.roleCodes ?? [];
     const menuTree = userInfo.menuTree ?? [];
     var accessMenuPaths:string[] = []
-    const accessRoutes = transformAccessRoutes(menuTree,accessMenuPaths);
+    var accessCodes:string[] = []
+    const accessRoutes = transformAccessRoutes(menuTree,accessMenuPaths,accessCodes);
+    // 存储角色
+    userStore.setUserRoles(userRoles)
+    
 
     // 生成菜单和路由
     const { accessibleMenus, accessibleRoutes } = await generateAccess({
@@ -109,6 +113,7 @@ function setupAccessGuard(router: Router) {
     // 保存菜单信息和路由信息
     accessStore.setAccessMenus(accessibleMenus);
     accessStore.setAccessRoutes(accessibleRoutes);
+    accessStore.setAccessCodes(accessCodes);
     accessStore.setIsAccessChecked(true);
     const redirectPath = (from.query.redirect ??
       (to.path === preferences.app.defaultHomePath

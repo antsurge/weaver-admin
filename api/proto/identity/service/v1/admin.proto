@@ -54,6 +54,8 @@ message UpdateAdminRequest {
   string avatar = 5 [(gnostic.openapi.v3.property) = {description: "头像"}];
   string status = 6 [(gnostic.openapi.v3.property) = {description: "状态(enabled/disabled)"}];
   string username = 7 [(gnostic.openapi.v3.property) = {description: "用户名"}];
+  // 密码（可选；空表示不修改；非空表示更新密码）
+  string password = 8 [(gnostic.openapi.v3.property) = {description: "密码（可选）"}];
 
   // 关联的角色ID列表（可选，全量替换）
   repeated string roleIds = 20 [(gnostic.openapi.v3.property) = {description: "关联的角色ID列表"}];

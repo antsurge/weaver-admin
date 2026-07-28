@@ -204,13 +204,17 @@ function onBatchDelete() {
   <Grid>
     <template #toolbar-tools>
       <div class="flex gap-2">
-        <Button type="primary" class="inline-flex items-center" danger :disabled="!selectedRows.length" @click="onBatchDelete">
+        <Button v-access:code="['Adminuser:Admin:Delete']" type="primary" class="inline-flex items-center" danger :disabled="!selectedRows.length" @click="onBatchDelete">
           <IconifyIcon icon="ant-design:delete-outlined" class="size-5" />
           {{ $t('ui.actionTitle.delete') }}
         </Button>
-        <Button type="primary" @click="onCreate" class="inline-flex items-center">
+        <Button v-access:code="['Adminuser:Admin:Create']" type="primary" @click="onCreate" class="inline-flex items-center">
           <Plus class="size-5" />
           {{ $t('ui.actionTitle.create') }}
+        </Button>
+        <Button type="primary" @click="onCreate" class="inline-flex items-center">
+          <Plus class="size-5" />
+          测试1
         </Button>
       </div>
     </template>

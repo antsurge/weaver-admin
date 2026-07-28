@@ -18,6 +18,7 @@ import {
     PermissionTypeOptionsValueLink,
     PermissionTypeOptionsValueCatalog,
     PermissionTypeOptionsValueAction,
+    PermissionTypeOptionsValueMenu
 } from '#/views/permission/menu/data';
 
 const forbiddenComponent = () => import('#/views/_core/fallback/forbidden.vue');
@@ -139,77 +140,98 @@ function buildSpecialRoute(
 }
 
 function transformAccessRoutes(
-    menus: PermissionMenuApi.PermissionMenu[],
-    menuPaths: string[] = [],
+  menus: PermissionMenuApi.PermissionMenu[],
+  menuPaths: string[] = [],
+  accessCodes: string[] = [],
 ): any[] {
-    if (!Array.isArray(menus)) {
-        console.error('菜单数据格式错误:', menus)
-        return []
+  if (!Array.isArray(menus)) {
+    console.error('菜单数据格式错误:', menus)
+    return []
+  }
+
+  const routes: any[] = []
+
+  menus.forEach(menu => {
+
+    // 所有类型，只要存在 authCode 都收集
+    if (menu.authCode) {
+      if (!accessCodes.includes(menu.authCode)) {
+        accessCodes.push(menu.authCode)
+      }
     }
-    return menus
-        .filter(menu => menu.type !== PermissionTypeOptionsValueAction)
-        .map(menu => {
-            // 收集菜单页面路径（仅收集有实际页面的菜单）
-            if ((menu.type === 'menu' || !menu.type) && menu.path) {
-                menuPaths.push(menu.path)
-            }
 
-            // 判断是否为目录类型
-            const isDirectory = menu.type === PermissionTypeOptionsValueCatalog 
-            // 判断是否为外链类型
-            const isLink = menu.type === PermissionTypeOptionsValueLink
-            // 判断是否为内嵌类型
-            const isIframe = menu.type === PermissionTypeOptionsValueIframe
+    // 按钮类型不生成路由
+    if (menu.type === PermissionTypeOptionsValueAction) {
+      return
+    }
 
-            const route: any = {
-                name: menu.code || menu.name,
-                path: menu.path,
-                meta: {
-                    title: $t(menu.title),
-                    icon: menu.icon,
-                    order: menu.weight ?? 0,
-                    badgeType: menu?.badgeType ?? "",
-                    badge: menu?.badge ?? "",
-                    badgeVariants: menu?.badgeVariants ?? "",
-                },
-                // 🔧 修复1: 目录类型使用 BasicLayout 组件
-                component: isDirectory
-                    ? BasicLayout
-                    : getViewComponent(menu.component),
-            }
 
-            // 特殊类型（外链 / 内嵌）走占位路由，避免污染 vue-router
-            if (isLink || isIframe) {
-                const override = buildSpecialRoute(
-                    menu,
-                    isLink ? 'link' : 'iframe',
-                )
-                if (override) {
-                    route.name = override.name
-                    route.path = override.path
-                    route.component = override.component
-                    Object.assign(route.meta, override.meta)
-                }
-            }
+    // 收集菜单页面路径
+    if (
+      (menu.type === PermissionTypeOptionsValueMenu || !menu.type)
+      && menu.path
+    ) {
+      menuPaths.push(menu.path)
+    }
 
-            // 递归处理子菜单
-            if (menu.children?.length) {
-                route.children = transformAccessRoutes(
-                    menu.children,
-                    menuPaths,
-                )
-            }
 
-            // 调试日志
-            if (isDirectory) {
-                console.log(`[Access] 📁 目录路由: ${menu.name} (${menu.path})`)
-            } else {
-                const hasComponent = !!route.component
-                console.log(`[Access] 📄 ${hasComponent ? '✅' : '❌'} 页面路由: ${menu.name} (${menu.path}) component=${menu.component}`)
-            }
+    const isDirectory =
+      menu.type === PermissionTypeOptionsValueCatalog
 
-            return route
-        })
+    const isLink =
+      menu.type === PermissionTypeOptionsValueLink
+
+    const isIframe =
+      menu.type === PermissionTypeOptionsValueIframe
+
+
+    const route: any = {
+      name: menu.code || menu.name,
+      path: menu.path,
+      meta: {
+        title: $t(menu.title),
+        icon: menu.icon,
+        order: menu.weight ?? 0,
+        badgeType: menu.badgeType ?? '',
+        badge: menu.badge ?? '',
+        badgeVariants: menu.badgeVariants ?? '',
+      },
+
+      component: isDirectory
+        ? BasicLayout
+        : getViewComponent(menu.component),
+    }
+
+
+    if (isLink || isIframe) {
+      const override = buildSpecialRoute(
+        menu,
+        isLink ? 'link' : 'iframe',
+      )
+
+      if (override) {
+        route.name = override.name
+        route.path = override.path
+        route.component = override.component
+        Object.assign(route.meta, override.meta)
+      }
+    }
+
+
+    if (menu.children?.length) {
+      route.children = transformAccessRoutes(
+        menu.children,
+        menuPaths,
+        accessCodes,
+      )
+    }
+
+
+    routes.push(route)
+  })
+
+
+  return routes
 }
 
 async function generateAccess(options: GenerateMenuAndRoutesOptions) {
