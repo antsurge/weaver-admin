@@ -9,14 +9,17 @@ import (
 // Admin is the predicate function for admin builders.
 type Admin func(*sql.Selector)
 
+// AdminDataPermission is the predicate function for admindatapermission builders.
+type AdminDataPermission func(*sql.Selector)
+
 // AdminRole is the predicate function for adminrole builders.
 type AdminRole func(*sql.Selector)
 
 // ApiInterface is the predicate function for apiinterface builders.
 type ApiInterface func(*sql.Selector)
 
-// ApiPermission is the predicate function for apipermission builders.
-type ApiPermission func(*sql.Selector)
+// DataPermission is the predicate function for datapermission builders.
+type DataPermission func(*sql.Selector)
 
 // Department is the predicate function for department builders.
 type Department func(*sql.Selector)
@@ -27,8 +30,35 @@ type DictData func(*sql.Selector)
 // DictType is the predicate function for dicttype builders.
 type DictType func(*sql.Selector)
 
+// FormSchema is the predicate function for formschema builders.
+type FormSchema func(*sql.Selector)
+
+// FormSubmission is the predicate function for formsubmission builders.
+type FormSubmission func(*sql.Selector)
+
+// GenTable is the predicate function for gentable builders.
+type GenTable func(*sql.Selector)
+
+// LoginLog is the predicate function for loginlog builders.
+type LoginLog func(*sql.Selector)
+
 // Menu is the predicate function for menu builders.
 type Menu func(*sql.Selector)
+
+// MenuApiPermission is the predicate function for menuapipermission builders.
+type MenuApiPermission func(*sql.Selector)
+
+// Notification is the predicate function for notification builders.
+type Notification func(*sql.Selector)
+
+// NotificationRecord is the predicate function for notificationrecord builders.
+type NotificationRecord func(*sql.Selector)
+
+// OperationLog is the predicate function for operationlog builders.
+type OperationLog func(*sql.Selector)
+
+// Order is the predicate function for order builders.
+type Order func(*sql.Selector)
 
 // Position is the predicate function for position builders.
 type Position func(*sql.Selector)
@@ -36,8 +66,26 @@ type Position func(*sql.Selector)
 // Role is the predicate function for role builders.
 type Role func(*sql.Selector)
 
+// RoleDataPermission is the predicate function for roledatapermission builders.
+type RoleDataPermission func(*sql.Selector)
+
 // RoleMenu is the predicate function for rolemenu builders.
 type RoleMenu func(*sql.Selector)
 
 // RolePermission is the predicate function for rolepermission builders.
 type RolePermission func(*sql.Selector)
+
+// SecurityPolicy is the predicate function for securitypolicy builders.
+type SecurityPolicy func(*sql.Selector)
+
+// SysConfig is the predicate function for sysconfig builders.
+type SysConfig func(*sql.Selector)
+
+// SysJob is the predicate function for sysjob builders.
+type SysJob func(*sql.Selector)
+
+// SysJobLog is the predicate function for sysjoblog builders.
+type SysJobLog func(*sql.Selector)
+
+// Tenant is the predicate function for tenant builders.
+type Tenant func(*sql.Selector)

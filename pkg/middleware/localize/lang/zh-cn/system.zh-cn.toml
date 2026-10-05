@@ -1,0 +1,60 @@
+# 系统管理模块错误码（角色/部门/岗位/安全策略/定时任务/接口管理）
+[ROLE_NOT_FOUND]
+other = "角色不存在"
+
+[ROLE_HAS_ADMINS]
+other = "角色已分配给用户，请先解除用户绑定"
+
+[CANNOT_MODIFY_SYSTEM_ROLE]
+other = "系统内置角色不允许修改"
+
+[CANNOT_MODIFY_SUPER_ADMIN_ROLE]
+other = "超级管理员角色不允许修改"
+
+[CANNOT_DELETE_SYSTEM_ROLE]
+other = "系统内置角色不允许删除"
+
+[CANNOT_DELETE_SUPER_ADMIN_ROLE]
+other = "超级管理员角色不允许删除"
+
+[DEPARTMENT_NOT_FOUND]
+other = "部门不存在"
+
+[POSITION_NOT_FOUND]
+other = "岗位不存在"
+
+[POSITION_NAME_EXISTS]
+other = "岗位名称已存在"
+
+[POSITION_CODE_EXISTS]
+other = "岗位编码已存在"
+
+[INVALID_LOGIN_FAIL_MAX]
+other = "登录失败次数上限需在 1-100 之间"
+
+[INVALID_LOGIN_FAIL_WINDOW]
+other = "失败统计窗口需在 1-1440 分钟之间"
+
+[INVALID_LOGIN_LOCK_MINUTES]
+other = "锁定时长需在 1-1440 分钟之间"
+
+[INVALID_IP_MODE]
+other = "IP 黑白名单模式不合法"
+
+[INVALID_IP_LIST]
+other = "IP 列表格式不合法"
+
+[INVALID_ACCESS_TTL]
+other = "访问令牌有效期不合法"
+
+[INVALID_REFRESH_TTL]
+other = "刷新令牌有效期不合法"
+
+[CRON_INVALID]
+other = "定时任务表达式不合法"
+
+[PARSE_OPENAPI_ERROR]
+other = "OpenAPI 文档解析失败"
+
+[READ_FILE_ERROR]
+other = "文件读取失败"

@@ -1,35 +1,310 @@
 {
-  "permission": {
+  "title": "System Settings",
+  "api_interface": {
+    "title": "API Interfaces",
+    "name": "Interface",
     "fields": {
-      "name": "Permission Name",
-      "code": "Permission Code",
-      "parent_id": "Parent Permission",
-      "path": "Route Path",
-      "icon": "Menu Icon",
-      "type": "Permission Type",
-      "url": "Request URL",
-      "component": "Component Path",
-      "weigh": "Sort Order",
-      "status": "Status",
-      "description": "Permission Description"
+      "service": "Service",
+      "tag": "Tag",
+      "method": "Method",
+      "path": "Path",
+      "summary": "Description",
+      "code": "Unique Key",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At",
+      "operation": "Actions"
+    },
+    "import": "Import OpenAPI",
+    "importing": "Importing...",
+    "importSuccess": "Import completed: {0} created, {1} updated",
+    "importFailed": "Import failed",
+    "uploadOnlyYaml": "Only .yaml or .yml files are allowed",
+    "importConfirmTitle": "Confirm Import",
+    "importConfirmContent": "Interfaces will be matched by unique key: existing ones are updated, new ones are created. No data will be deleted.",
+    "form_placeholder": {
+      "service": "Enter or select service name",
+      "tag": "Enter tag",
+      "method": "Select HTTP method",
+      "path": "Enter request path",
+      "summary": "Enter interface description"
     }
   },
-  "position": {
-    "name": "Position",
+  "dict_type": {
+    "title": "Dict Types",
+    "name": "Dict Type",
     "fields": {
-      "name": "Position Name",
-      "code": "Position Code",
-      "weight": "Weight",
+      "name": "Name",
+      "code": "Code",
       "status": "Status",
-      "description": "Description",
-      "operation": "Operation"
-    },
-    "actions": {
-      "switchStatus": "Switch Position Status",
-      "switchStatusConfirm": "Confirm to switch 【{0}】 status to 【{1}】?"
+      "updatedAt": "Updated At",
+      "remark": "Remark",
+      "operation": "Actions"
     },
     "form_placeholder": {
-      "description": "Enter description"
+      "remark": "Enter remark"
+    },
+    "operation": {
+      "appendDictData": "Add Dict Data"
+    }
+  },
+  "dict_data": {
+    "name": "Dict Data",
+    "fields": {
+      "dictTypeID": "Dict Type",
+      "label": "Label",
+      "value": "Value",
+      "status": "Status",
+      "updatedAt": "Updated At",
+      "remark": "Remark",
+      "operation": "Actions"
+    },
+    "form_placeholder": {
+      "remark": "Enter remark"
+    },
+    "operation": {
+      "appendDictData": "Add Dict Data"
+    }
+  },
+  "tenant": {
+    "title": "Tenants",
+    "name": "Tenant",
+    "fields": {
+      "code": "Tenant Code",
+      "name": "Tenant Name",
+      "status": "Status",
+      "maxUsers": "Max Users",
+      "maxRoles": "Max Roles",
+      "contactName": "Contact Name",
+      "contactPhone": "Contact Phone",
+      "expireAt": "Expire At",
+      "remark": "Remark",
+      "updatedAt": "Updated At",
+      "operation": "Actions"
+    },
+    "searchPlaceholder": {
+      "name": "Enter tenant name",
+      "code": "Enter tenant code"
+    },
+    "formPlaceholder": {
+      "code": "Letters/numbers/underscore/hyphen, immutable after creation",
+      "expireAt": "Empty means never expires",
+      "maxUsers": "0 means unlimited",
+      "maxRoles": "0 means unlimited",
+      "contactName": "Enter contact name",
+      "contactPhone": "Enter contact phone",
+      "remark": "Enter remark"
+    },
+    "formRules": {
+      "codePattern": "Only letters, numbers, underscore and hyphen are allowed"
+    },
+    "confirm": {
+      "switchStatusTitle": "Switch Status",
+      "switchStatusContent": "Switch tenant \"{0}\" status to [{1}]?"
+    }
+  },
+  "notification": {
+    "title": "Notifications",
+    "name": "Notification",
+    "fields": {
+      "title": "Title",
+      "content": "Content",
+      "type": "Type",
+      "level": "Level",
+      "targetType": "Target Scope",
+      "targetIds": "Targets",
+      "status": "Status",
+      "link": "Route Link",
+      "createdAt": "Created At",
+      "operation": "Actions"
+    },
+    "type_options": {
+      "system": "System",
+      "announce": "Announcement",
+      "audit": "Approval",
+      "todo": "Todo",
+      "alert": "Alert"
+    },
+    "level_options": {
+      "info": "Info",
+      "success": "Success",
+      "warn": "Warning",
+      "error": "Critical"
+    },
+    "target_options": {
+      "all": "All Users",
+      "user": "Specific Users",
+      "role": "Specific Roles"
+    },
+    "status_options": {
+      "draft": "Draft",
+      "published": "Published",
+      "revoked": "Revoked"
+    },
+    "operation": {
+      "publish": "Publish",
+      "revoke": "Revoke"
+    },
+    "form_placeholder": {
+      "title": "Enter notification title",
+      "content": "Enter notification content",
+      "link": "Optional, e.g. /system/notification",
+      "targetIds": "Select targets"
+    },
+    "confirm": {
+      "revokeTitle": "Confirm Revoke",
+      "revokeContent": "The notification will be removed from all recipients' inboxes. Continue?"
+    },
+    "message": {
+      "alreadyRevoked": "Notification already revoked",
+      "publishSuccess": "Notification published",
+      "revokeSuccess": "Notification revoked"
+    }
+  },
+  "message_center": {
+    "title": "Message Center",
+    "tabs": {
+      "all": "All",
+      "system": "System",
+      "announce": "Announcement",
+      "audit": "Approval",
+      "todo": "Todo",
+      "alert": "Alert"
+    },
+    "types": {
+      "system": "System",
+      "announce": "Announcement",
+      "audit": "Approval",
+      "todo": "Todo",
+      "alert": "Alert"
+    },
+    "levels": {
+      "info": "Info",
+      "success": "Success",
+      "warn": "Warning",
+      "error": "Critical"
+    },
+    "fields": {
+      "type": "Type",
+      "level": "Level",
+      "sender": "Sender",
+      "time": "Time",
+      "content": "Content",
+      "systemSender": "System"
+    },
+    "operation": {
+      "readAll": "Mark all read",
+      "delete": "Delete selected"
+    },
+    "pagination": {
+      "total": "{0} messages"
+    },
+    "unreadCount": "{0} unread",
+    "empty": "No messages",
+    "loadMore": "Load more",
+    "confirm": {
+      "readAllTitle": "Mark all as read",
+      "readAllContent": "Mark {0} unread messages as read?",
+      "deleteTitle": "Confirm Delete",
+      "deleteContent": "Delete {0} selected message(s)? This cannot be undone."
+    },
+    "message": {
+      "noUnread": "No unread messages",
+      "readAllSuccess": "Marked all as read",
+      "selectDelete": "Select messages to delete first",
+      "deleteSuccess": "Deleted"
+    }
+  },
+  "config": {
+    "title": "Config",
+    "name": "System Parameter",
+    "fields": {
+      "name": "Name",
+      "key": "Key",
+      "value": "Value",
+      "configType": "Built-in",
+      "status": "Status",
+      "group": "Group",
+      "remark": "Remark",
+      "updatedAt": "Updated At",
+      "operation": "Actions"
+    },
+    "config_type_options": {
+      "Y": "Built-in",
+      "N": "External"
+    },
+    "config_group_options": {
+      "none": "Standalone"
+    },
+    "search_placeholder": {
+      "name": "Enter name",
+      "key": "Enter key",
+      "group": "Select group"
+    },
+    "form_placeholder": {
+      "value": "Enter value",
+      "group": "Enter or select a group, leave empty for standalone",
+      "remark": "Enter remark"
+    },
+    "operation": {
+      "batchDelete": "Batch delete",
+      "createGroup": "New Group"
+    },
+    "confirm": {
+      "deleteTitle": "Confirm Delete",
+      "deleteContent": "Delete {0} selected parameter(s)?"
+    },
+    "message": {
+      "statusConfirm": "Switch parameter \"{0}\" status to",
+      "deleteSuccess": "Deleted",
+      "groupRequired": "Please enter a group name"
+    }
+  },
+  "job": {
+    "title": "Scheduled Jobs",
+    "name": "Scheduled Job",
+    "fields": {
+      "name": "Job Name",
+      "jobGroup": "Job Group",
+      "jobType": "Job Type",
+      "invokeTarget": "Invoke Target",
+      "cronExpression": "Cron Expression",
+      "misfirePolicy": "Misfire Policy",
+      "concurrent": "Allow Concurrent",
+      "status": "Status",
+      "remark": "Remark",
+      "nextRunTime": "Next Run Time",
+      "updatedAt": "Updated At",
+      "operation": "Actions"
+    },
+    "misfire_options": {
+      "immediately": "Execute Immediately",
+      "once": "Execute Once",
+      "ignore": "Ignore"
+    },
+    "search_placeholder": {
+      "name": "Enter job name",
+      "jobGroup": "Enter job group"
+    },
+    "form_placeholder": {
+      "jobGroup": "Default: DEFAULT",
+      "invokeTarget": "Enter HTTP URL, e.g. https://example.com/api/job",
+      "cronExpression": "e.g. 0 0/5 * * * ? (5 segments) or 0 0 0/5 * * * (6 segments with seconds)",
+      "remark": "Enter remark"
+    },
+    "operation": {
+      "run": "Run Once",
+      "batchDelete": "Batch delete"
+    },
+    "confirm": {
+      "deleteTitle": "Confirm Delete",
+      "deleteContent": "Delete {0} selected job(s)? Schedules will be removed.",
+      "runTitle": "Confirm Run Now",
+      "runContent": "Run job \"{0}\" immediately? The result will be recorded in job logs."
+    },
+    "message": {
+      "statusConfirm": "Switch job \"{0}\" status to",
+      "deleteSuccess": "Deleted",
+      "runSuccess": "Triggered. Check the job log for the result."
     }
   }
 }

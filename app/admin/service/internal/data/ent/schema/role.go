@@ -23,6 +23,11 @@ func (Role) Annotations() []schema.Annotation {
 	}
 }
 
+// Mixin of the Role.
+func (Role) Mixin() []ent.Mixin {
+	return []ent.Mixin{TenantMixin{}}
+}
+
 func (Role) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("id").
@@ -47,10 +52,6 @@ func (Role) Fields() []ent.Field {
 			Default(false).
 			Comment("是否系统内置"),
 
-		field.String("data_scope").
-			Default("all").
-			Comment("数据权限范围: all / dept / self"),
-
 		field.Time("created_at").
 			Default(time.Now),
 		field.Time("updated_at").
@@ -67,6 +68,10 @@ func (Role) Edges() []ent.Edge {
 		// Role → Menus (多对多，通过 role_menus 关联表)
 		edge.To("menus", Menu.Type).
 			Through("role_menus", RoleMenu.Type),
+
+		// Role → DataPermissions (多对多，通过 role_data_permissions 关联表)
+		edge.To("data_permissions", DataPermission.Type).
+			Through("role_data_permissions", RoleDataPermission.Type),
 
 		// Role ← Admins (反向，用户-角色多对多)
 		edge.From("admins", Admin.Type).

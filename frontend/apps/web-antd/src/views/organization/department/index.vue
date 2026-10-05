@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import type { Recordable } from '@vben/types';
+
 import type {
   OnActionClickParams,
   VxeTableGridOptions,
 } from '#/adapter/vxe-table';
+import type { OrganizationDepartmentApi } from '#/api/organization/department';
 
 import { nextTick, ref } from 'vue';
 
@@ -13,15 +15,15 @@ import { $t } from '@vben/locales';
 
 import { Button, message, Modal } from 'ant-design-vue';
 
+import { PermissionAuthCode } from '#/access';
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import {
   deleteDepartmentApi,
   getDepartmentTreeApi,
   updateDepartmentStatusApi,
 } from '#/api/organization/department';
-import type { OrganizationDepartmentApi } from '#/api/organization/department';
 
-import { useColumns,useFormOptions } from './data';
+import { useColumns, useFormOptions } from './data';
 import Form from './modules/form/index.vue';
 
 const [FormModel, formModelApi] = useVbenModal({
@@ -41,9 +43,9 @@ const [Grid, gridApi] = useVbenVxeGrid({
       enabled: false,
     },
     proxyConfig: {
-      autoLoad:true,
+      autoLoad: true,
       ajax: {
-        query: async ({},formValues) => {
+        query: async (_params, formValues) => {
           const res = await getDepartmentTreeApi(formValues);
           return res?.items ?? [];
         },
@@ -52,10 +54,10 @@ const [Grid, gridApi] = useVbenVxeGrid({
     rowConfig: {
       keyField: 'id',
     },
-    checkboxConfig: { 
-      checkStrictly:true,
-      showHeader:true,
-     },
+    checkboxConfig: {
+      checkStrictly: true,
+      showHeader: true,
+    },
     toolbarConfig: {
       custom: true,
       export: false,
@@ -72,20 +74,20 @@ const [Grid, gridApi] = useVbenVxeGrid({
   gridEvents: {
     checkboxChange() {
       nextTick(() => {
-        onCheckboxChange()
-      })
+        onCheckboxChange();
+      });
     },
     checkboxAll() {
       nextTick(() => {
-        onCheckboxChange()
-      })
-    }
+        onCheckboxChange();
+      });
+    },
   },
 });
 
 function onCheckboxChange() {
-  const checkboxRecords = gridApi.grid?.getCheckboxRecords?.() ?? []
-  selectedRows.value = checkboxRecords
+  const checkboxRecords = gridApi.grid?.getCheckboxRecords?.() ?? [];
+  selectedRows.value = checkboxRecords;
 }
 
 function onActionClick({
@@ -113,6 +115,16 @@ function onActionClick({
 
 function onRefresh() {
   gridApi.query();
+}
+
+// 展开全部
+function onExpandAll() {
+  gridApi.grid?.setAllTreeExpand(true);
+}
+
+// 折叠全部
+function onCollapseAll() {
+  gridApi.grid?.clearTreeExpand();
 }
 
 function onEdit(row: OrganizationDepartmentApi.Department) {
@@ -149,7 +161,7 @@ async function onStatusChange(
         try {
           await updateDepartmentStatusApi(row.id, newStatus);
           resolve(true);
-        } catch (e) {
+        } catch {
           resolve(false);
         }
       },
@@ -222,18 +234,44 @@ function onBatchDelete() {
       <template #toolbar-tools>
         <div class="flex gap-2">
           <Button
+            v-access:code="[PermissionAuthCode.Department.ExpandAll]"
             type="primary"
-            danger
-            :disabled="!selectedRows.length"
-            @click="onBatchDelete"
+            class="inline-flex items-center"
+            @click="onExpandAll"
           >
             <IconifyIcon
-              icon="ant-design:delete-outlined"
+              icon="ant-design:column-height-outlined"
               class="size-5"
             />
+            {{ $t('organization.department.actionTitle.expandAll') }}
+          </Button>
+          <Button
+            v-access:code="[PermissionAuthCode.Department.CollapseAll]"
+            type="primary"
+            class="inline-flex items-center"
+            @click="onCollapseAll"
+          >
+            <IconifyIcon
+              icon="ant-design:column-width-outlined"
+              class="size-5"
+            />
+            {{ $t('organization.department.actionTitle.collapseAll') }}
+          </Button>
+          <Button
+            v-access:code="[PermissionAuthCode.Department.BatchDelete]"
+            type="primary"
+            danger
+            :disabled="selectedRows.length === 0"
+            @click="onBatchDelete"
+          >
+            <IconifyIcon icon="ant-design:delete-outlined" class="size-5" />
             {{ $t('ui.actionTitle.delete') }}
           </Button>
-          <Button type="primary" @click="onCreate">
+          <Button
+            v-access:code="[PermissionAuthCode.Department.Create]"
+            type="primary"
+            @click="onCreate"
+          >
             <Plus class="size-5" />
             {{ $t('ui.actionTitle.create') }}
           </Button>
@@ -242,4 +280,3 @@ function onBatchDelete() {
     </Grid>
   </Page>
 </template>
-

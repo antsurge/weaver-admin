@@ -1,0 +1,12 @@
+# 低代码模块错误码（动态表单/代码生成）
+[FORM_SCHEMA_NOT_FOUND]
+other = "表单不存在或已禁用"
+
+[FORM_CODE_REQUIRED]
+other = "请填写表单编码"
+
+[PARSE_FORM_ERROR]
+other = "表单配置解析失败"
+
+[PARSE_ERROR]
+other = "数据解析失败"

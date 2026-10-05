@@ -39,10 +39,11 @@ import { isEmpty } from '@vben/utils';
 
 import { message, Modal, notification } from 'ant-design-vue';
 
+import ApiPermissionPicker from '#/components/form/api-permission-picker/index.vue';
+import JsonTextarea from '#/components/form/json-textarea/index.vue';
 // 导入自定义表单组件
 import FormTitle from '#/components/form/title/index.vue';
 import EnhancedIconPicker from '#/components/icon-picker/enhanced-icon-picker.vue';
-import ApiPermissionPicker from '#/components/form/api-permission-picker/index.vue';
 
 const AutoComplete = defineAsyncComponent(
   () => import('ant-design-vue/es/auto-complete'),
@@ -500,13 +501,14 @@ export type ComponentType =
   | 'DatePicker'
   | 'DefaultButton'
   | 'Divider'
-  | 'FormTitle'           // 自定义表单标题组件
-  | 'EnhancedIconPicker'  // 增强版多图标源选择器
+  | 'EnhancedIconPicker' // 增强版多图标源选择器
+  | 'FormTitle' // 自定义表单标题组件
+  | 'I18nInput' // 国际化输入组件
   | 'IconPicker'
-  | 'I18nInput'           // 国际化输入组件
   | 'Input'
   | 'InputNumber'
   | 'InputPassword'
+  | 'JsonTextarea' // JSON 文本域（支持一键格式化）
   | 'Mentions'
   | 'PrimaryButton'
   | 'Radio'
@@ -562,6 +564,8 @@ async function initComponentAdapter() {
     Divider,
     // 自定义表单标题组件
     FormTitle,
+    // JSON 文本域（支持一键格式化）
+    JsonTextarea,
     // 增强版多图标源选择器
     EnhancedIconPicker,
     // 自定义国际化输入组件

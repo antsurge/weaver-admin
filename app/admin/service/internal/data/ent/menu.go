@@ -17,6 +17,8 @@ type Menu struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID string `json:"id,omitempty"`
+	// 租户ID
+	TenantID string `json:"tenant_id,omitempty"`
 	// 父菜单ID, null表示根节点
 	ParentID string `json:"parent_id,omitempty"`
 	// 菜单名称
@@ -65,13 +67,11 @@ type Menu struct {
 type MenuEdges struct {
 	// Roles holds the value of the roles edge.
 	Roles []*Role `json:"roles,omitempty"`
-	// APIPermissions holds the value of the api_permissions edge.
-	APIPermissions []*ApiPermission `json:"api_permissions,omitempty"`
 	// RoleMenus holds the value of the role_menus edge.
 	RoleMenus []*RoleMenu `json:"role_menus,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [3]bool
+	loadedTypes [2]bool
 }
 
 // RolesOrErr returns the Roles value or an error if the edge
@@ -83,19 +83,10 @@ func (e MenuEdges) RolesOrErr() ([]*Role, error) {
 	return nil, &NotLoadedError{edge: "roles"}
 }
 
-// APIPermissionsOrErr returns the APIPermissions value or an error if the edge
-// was not loaded in eager-loading.
-func (e MenuEdges) APIPermissionsOrErr() ([]*ApiPermission, error) {
-	if e.loadedTypes[1] {
-		return e.APIPermissions, nil
-	}
-	return nil, &NotLoadedError{edge: "api_permissions"}
-}
-
 // RoleMenusOrErr returns the RoleMenus value or an error if the edge
 // was not loaded in eager-loading.
 func (e MenuEdges) RoleMenusOrErr() ([]*RoleMenu, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[1] {
 		return e.RoleMenus, nil
 	}
 	return nil, &NotLoadedError{edge: "role_menus"}
@@ -108,7 +99,7 @@ func (*Menu) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case menu.FieldWeight:
 			values[i] = new(sql.NullInt64)
-		case menu.FieldID, menu.FieldParentID, menu.FieldName, menu.FieldCode, menu.FieldTitle, menu.FieldRemark, menu.FieldPath, menu.FieldIcon, menu.FieldType, menu.FieldMenuType, menu.FieldURL, menu.FieldComponent, menu.FieldAuthCode, menu.FieldBadgeType, menu.FieldBadge, menu.FieldBadgeVariants, menu.FieldStatus:
+		case menu.FieldID, menu.FieldTenantID, menu.FieldParentID, menu.FieldName, menu.FieldCode, menu.FieldTitle, menu.FieldRemark, menu.FieldPath, menu.FieldIcon, menu.FieldType, menu.FieldMenuType, menu.FieldURL, menu.FieldComponent, menu.FieldAuthCode, menu.FieldBadgeType, menu.FieldBadge, menu.FieldBadgeVariants, menu.FieldStatus:
 			values[i] = new(sql.NullString)
 		case menu.FieldCreatedAt, menu.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -132,6 +123,12 @@ func (_m *Menu) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value.Valid {
 				_m.ID = value.String
+			}
+		case menu.FieldTenantID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field tenant_id", values[i])
+			} else if value.Valid {
+				_m.TenantID = value.String
 			}
 		case menu.FieldParentID:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -265,11 +262,6 @@ func (_m *Menu) QueryRoles() *RoleQuery {
 	return NewMenuClient(_m.config).QueryRoles(_m)
 }
 
-// QueryAPIPermissions queries the "api_permissions" edge of the Menu entity.
-func (_m *Menu) QueryAPIPermissions() *ApiPermissionQuery {
-	return NewMenuClient(_m.config).QueryAPIPermissions(_m)
-}
-
 // QueryRoleMenus queries the "role_menus" edge of the Menu entity.
 func (_m *Menu) QueryRoleMenus() *RoleMenuQuery {
 	return NewMenuClient(_m.config).QueryRoleMenus(_m)
@@ -298,6 +290,9 @@ func (_m *Menu) String() string {
 	var builder strings.Builder
 	builder.WriteString("Menu(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
+	builder.WriteString("tenant_id=")
+	builder.WriteString(_m.TenantID)
+	builder.WriteString(", ")
 	builder.WriteString("parent_id=")
 	builder.WriteString(_m.ParentID)
 	builder.WriteString(", ")

@@ -5,10 +5,16 @@ import { preferences } from '@vben/preferences';
 import { useAccessStore, useUserStore } from '@vben/stores';
 import { startProgress, stopProgress } from '@vben/utils';
 
-import {  coreRouteNames } from '#/router/routes';
+import { message } from 'ant-design-vue';
+
+import { coreRouteNames } from '#/router/routes';
 import { useAuthStore } from '#/store';
 
-import { generateAccess,transformAccessRoutes } from './access';
+import {
+  findFirstMenuPath,
+  generateAccess,
+  transformAccessRoutes,
+} from './access';
 
 /**
  * 通用守卫配置
@@ -53,9 +59,11 @@ function setupAccessGuard(router: Router) {
     // 基本路由，这些路由不需要进入权限拦截
     if (coreRouteNames.includes(to.name as string)) {
       if (to.path === LOGIN_PATH && accessStore.accessToken) {
+        // 已登录访问登录页：归一化到第一个可访问菜单，避免落到不存在的占位路径
+        const firstPath = findFirstMenuPath(userStore.userInfo?.menuTree ?? []);
         return decodeURIComponent(
           (to.query?.redirect as string) ||
-            userStore.userInfo?.homePath ||
+            firstPath ||
             preferences.app.defaultHomePath,
         );
       }
@@ -87,6 +95,28 @@ function setupAccessGuard(router: Router) {
 
     // 是否已经生成过动态路由
     if (accessStore.isAccessChecked) {
+      // 已生成路由后访问默认首页占位路径（/menu）或根路径：
+      // 若真实菜单里存在可访问页面，则归一化到第一个 type=menu，避免 404/空页
+      if (to.path === preferences.app.defaultHomePath || to.path === '/') {
+        const firstPath = findFirstMenuPath(userStore.userInfo?.menuTree ?? []);
+        if (firstPath && firstPath !== to.path) {
+          return {
+            ...router.resolve(firstPath),
+            replace: true,
+          };
+        }
+        if (!firstPath) {
+          window.setTimeout(() => {
+            message.warning(
+              '当前账号暂无可访问的菜单，请联系管理员分配菜单权限',
+            );
+          }, 300);
+          return {
+            ...router.resolve('/403'),
+            replace: true,
+          };
+        }
+      }
       return true;
     }
 
@@ -95,12 +125,15 @@ function setupAccessGuard(router: Router) {
     const userInfo = userStore.userInfo || (await authStore.fetchUserInfo());
     const userRoles = userInfo.roleCodes ?? [];
     const menuTree = userInfo.menuTree ?? [];
-    var accessMenuPaths:string[] = []
-    var accessCodes:string[] = []
-    const accessRoutes = transformAccessRoutes(menuTree,accessMenuPaths,accessCodes);
+    const accessMenuPaths: string[] = [];
+    const accessCodes: string[] = [];
+    const accessRoutes = transformAccessRoutes(
+      menuTree,
+      accessMenuPaths,
+      accessCodes,
+    );
     // 存储角色
-    userStore.setUserRoles(userRoles)
-    
+    userStore.setUserRoles(userRoles);
 
     // 生成菜单和路由
     const { accessibleMenus, accessibleRoutes } = await generateAccess({
@@ -115,10 +148,26 @@ function setupAccessGuard(router: Router) {
     accessStore.setAccessRoutes(accessibleRoutes);
     accessStore.setAccessCodes(accessCodes);
     accessStore.setIsAccessChecked(true);
+
+    // 没有任何可访问菜单（数组为空）→ 提示并进入无权限公共页 /403
+    if (accessMenuPaths.length === 0) {
+      window.setTimeout(() => {
+        message.warning('当前账号暂无可访问的菜单，请联系管理员分配菜单权限');
+      }, 300);
+      return {
+        ...router.resolve('/403'),
+        replace: true,
+      };
+    }
+
+    // 计算落地页：
+    // 1. 带 redirect 参数（如被登录拦截回跳）→ 原路返回
+    // 2. 目标是默认首页占位路径（/menu）或根路径 → 跳转 menuTree 第一个 type=menu（accessMenuPaths[0]）
+    // 3. 其余情况（深链访问/刷新具体页面）→ 保持 to.fullPath
+    const isHomeTarget =
+      to.path === preferences.app.defaultHomePath || to.path === '/';
     const redirectPath = (from.query.redirect ??
-      (to.path === preferences.app.defaultHomePath
-        ? userInfo.homePath || preferences.app.defaultHomePath
-        : to.fullPath)) as string;
+      (isHomeTarget ? accessMenuPaths[0] : to.fullPath)) as string;
 
     return {
       ...router.resolve(decodeURIComponent(redirectPath)),

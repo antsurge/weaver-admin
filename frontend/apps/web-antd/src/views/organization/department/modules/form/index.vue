@@ -1,32 +1,25 @@
 <script lang="ts" setup>
 import type { VbenFormSchema } from '#/adapter/form';
+import type { OrganizationDepartmentApi } from '#/api/organization/department';
 
 import { computed, ref } from 'vue';
 
 import { useVbenModal } from '@vben/common-ui';
 import { getPopupContainer } from '@vben/utils';
+
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
 
-import { useVbenForm } from '#/adapter/form';
+import { useVbenForm, z } from '#/adapter/form';
 import {
-  getDepartmentTreeApi,
-  getDepartmentApi,
   createDepartmentApi,
+  getDepartmentApi,
+  getDepartmentTreeApi,
+  isDepartmentCodeExistsApi,
   updateDepartmentApi,
 } from '#/api/organization/department';
-
-import type {
-  OrganizationDepartmentApi,
-} from '#/api/organization/department';
-
-
 import { $t } from '#/locales';
 
-import {
-  nameRule,
-  parentIDRule,
-  codeRule,
-} from "./rules"
+import { nameRule, parentIDRule, typeRule } from './rules';
 
 const emit = defineEmits<{
   success: [];
@@ -78,11 +71,63 @@ const schema: VbenFormSchema[] = [
     fieldName: 'code',
     label: $t('organization.department.fields.code'),
     component: 'Input',
-    rules: codeRule,
+    rules: z
+      .string()
+      .min(
+        1,
+        $t('ui.formRules.required', [
+          $t('organization.department.fields.code'),
+        ]),
+      )
+      .refine(
+        async (value: string) => {
+          if (!value) {
+            return false;
+          }
+          const res = await isDepartmentCodeExistsApi(
+            value,
+            formData.value?.id,
+          );
+          return !res?.exists;
+        },
+        (value) => ({
+          message: $t('ui.formRules.alreadyExists', [
+            $t('organization.department.fields.code'),
+            value,
+          ]),
+        }),
+      ),
     componentProps: {
       placeholder: $t('ui.formRules.required', [
         $t('organization.department.fields.code'),
       ]),
+    },
+    // 失焦时校验部门编码是否已存在
+    formFieldProps: { validateOnBlur: true },
+  },
+  {
+    fieldName: 'type',
+    label: $t('organization.department.fields.type'),
+    component: 'Select',
+    defaultValue: 'department',
+    rules: typeRule,
+    componentProps: {
+      class: 'w-full',
+      options: [
+        { label: $t('organization.department.type.company'), value: 'company' },
+        {
+          label: $t('organization.department.type.subsidiary'),
+          value: 'subsidiary',
+        },
+        {
+          label: $t('organization.department.type.department'),
+          value: 'department',
+        },
+        {
+          label: $t('organization.department.type.position'),
+          value: 'position',
+        },
+      ],
     },
   },
   {
@@ -182,11 +227,9 @@ async function onSubmit() {
   const data = await formApi.getValues<OrganizationDepartmentApi.Department>();
 
   try {
-    if (formData.value?.id) {
-      await updateDepartmentApi(formData.value.id, data);
-    } else {
-      await createDepartmentApi(data);
-    }
+    await (formData.value?.id
+      ? updateDepartmentApi(formData.value.id, data)
+      : createDepartmentApi(data));
 
     modalApi.close();
     emit('success');

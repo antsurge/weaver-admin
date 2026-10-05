@@ -27,6 +27,7 @@ const (
 	Organization_UpdateDepartment_FullMethodName       = "/admin.service.v1.Organization/UpdateDepartment"
 	Organization_UpdateDepartmentStatus_FullMethodName = "/admin.service.v1.Organization/UpdateDepartmentStatus"
 	Organization_DeleteDepartment_FullMethodName       = "/admin.service.v1.Organization/DeleteDepartment"
+	Organization_IsDepartmentCodeExists_FullMethodName = "/admin.service.v1.Organization/IsDepartmentCodeExists"
 	Organization_ListPosition_FullMethodName           = "/admin.service.v1.Organization/ListPosition"
 	Organization_GetPosition_FullMethodName            = "/admin.service.v1.Organization/GetPosition"
 	Organization_CreatePosition_FullMethodName         = "/admin.service.v1.Organization/CreatePosition"
@@ -52,6 +53,8 @@ type OrganizationClient interface {
 	UpdateDepartmentStatus(ctx context.Context, in *v1.UpdateDepartmentStatusRequest, opts ...grpc.CallOption) (*v1.Department, error)
 	// 批量删除
 	DeleteDepartment(ctx context.Context, in *v1.DeleteDepartmentRequset, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 部门编码是否存在
+	IsDepartmentCodeExists(ctx context.Context, in *v1.IsDepartmentCodeExistsRequest, opts ...grpc.CallOption) (*v1.IsDepartmentFieldExistsResponse, error)
 	// 职务模块
 	// 列表
 	ListPosition(ctx context.Context, in *v1.ListPositionRequest, opts ...grpc.CallOption) (*v1.ListPositionResponse, error)
@@ -130,6 +133,16 @@ func (c *organizationClient) DeleteDepartment(ctx context.Context, in *v1.Delete
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Organization_DeleteDepartment_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *organizationClient) IsDepartmentCodeExists(ctx context.Context, in *v1.IsDepartmentCodeExistsRequest, opts ...grpc.CallOption) (*v1.IsDepartmentFieldExistsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v1.IsDepartmentFieldExistsResponse)
+	err := c.cc.Invoke(ctx, Organization_IsDepartmentCodeExists_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -231,6 +244,8 @@ type OrganizationServer interface {
 	UpdateDepartmentStatus(context.Context, *v1.UpdateDepartmentStatusRequest) (*v1.Department, error)
 	// 批量删除
 	DeleteDepartment(context.Context, *v1.DeleteDepartmentRequset) (*emptypb.Empty, error)
+	// 部门编码是否存在
+	IsDepartmentCodeExists(context.Context, *v1.IsDepartmentCodeExistsRequest) (*v1.IsDepartmentFieldExistsResponse, error)
 	// 职务模块
 	// 列表
 	ListPosition(context.Context, *v1.ListPositionRequest) (*v1.ListPositionResponse, error)
@@ -272,6 +287,9 @@ func (UnimplementedOrganizationServer) UpdateDepartmentStatus(context.Context, *
 }
 func (UnimplementedOrganizationServer) DeleteDepartment(context.Context, *v1.DeleteDepartmentRequset) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteDepartment not implemented")
+}
+func (UnimplementedOrganizationServer) IsDepartmentCodeExists(context.Context, *v1.IsDepartmentCodeExistsRequest) (*v1.IsDepartmentFieldExistsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IsDepartmentCodeExists not implemented")
 }
 func (UnimplementedOrganizationServer) ListPosition(context.Context, *v1.ListPositionRequest) (*v1.ListPositionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListPosition not implemented")
@@ -422,6 +440,24 @@ func _Organization_DeleteDepartment_Handler(srv interface{}, ctx context.Context
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(OrganizationServer).DeleteDepartment(ctx, req.(*v1.DeleteDepartmentRequset))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Organization_IsDepartmentCodeExists_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.IsDepartmentCodeExistsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrganizationServer).IsDepartmentCodeExists(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Organization_IsDepartmentCodeExists_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrganizationServer).IsDepartmentCodeExists(ctx, req.(*v1.IsDepartmentCodeExistsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -600,6 +636,10 @@ var Organization_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteDepartment",
 			Handler:    _Organization_DeleteDepartment_Handler,
+		},
+		{
+			MethodName: "IsDepartmentCodeExists",
+			Handler:    _Organization_IsDepartmentCodeExists_Handler,
 		},
 		{
 			MethodName: "ListPosition",

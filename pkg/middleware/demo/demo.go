@@ -5,14 +5,14 @@ import (
 	"net/http"
 
 	authenticationV1 "github.com/antsurge/weaver-admin/api/gen/go/authentication/service/v1"
-	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/transport"
 	khttp "github.com/go-kratos/kratos/v2/transport/http"
 )
 
 var (
-	ErrDemoReadonly = authenticationV1.ErrorDemoReadonly("DEMO_READONLY")
+	// 演示环境只读提示（reason 与 authentication_error.proto 的 DEMO_READONLY 对应）
+	ErrDemoReadonly = authenticationV1.ErrorDemoReadonly("演示环境禁止修改数据")
 )
 
 func DemoReadonly(enabled bool) middleware.Middleware {
@@ -38,7 +38,7 @@ func DemoReadonly(enabled bool) middleware.Middleware {
 			if ht, ok := tr.(*khttp.Transport); ok {
 				reqMethod := ht.Request().Method
 				if reqMethod != http.MethodGet {
-					return nil, errors.BadRequest("DemoReadonly", ErrDemoReadonly.Message)
+					return nil, ErrDemoReadonly
 				}
 			}
 

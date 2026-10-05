@@ -34,12 +34,17 @@ message Menu {
 }
 
 // 单个接口权限（绑定到按钮菜单）
+// 绑定基于 api_interface.code（service|METHOD|path）关联，接口信息实时反查自 api_interface
 message ApiPermission {
-  string id = 1; // ID（数据库主键，回显用）
+  reserved 1;
+  reserved "id";
+
   string service = 2; // 服务全限定名
   string method = 3; // HTTP method
   string path = 4; // 接口路径
   string summary = 5; // 接口描述
+  string tag = 6; // OpenAPI 标签（前端分组回显用）
+  string code = 7; // 业务唯一键 service|METHOD|path（对应 api_interface.code）
 }
 
 // 创建菜单请求
@@ -119,8 +124,8 @@ message CreateMenuRequest {
   string title = 12 [
     (buf.validate.field).cel = {
       id: "CREATE_MENU_TITLE_LENGTH"
-      message: "菜单标题长度必须在 2-30 个字符之间"
-      expression: "this.size() >= 2 && this.size() <= 30"
+      message: "菜单标题长度必须在 2-60 个字符之间"
+      expression: "this.size() >= 2 && this.size() <= 60"
     },
     (gnostic.openapi.v3.property) = {description: "标题（国际化 key）"}
   ];
@@ -234,8 +239,8 @@ message UpdateMenuRequest {
   optional string title = 13 [
     (buf.validate.field).cel = {
       id: "UPDATE_MENU_TITLE_LENGTH"
-      message: "菜单标题长度必须在 2-30 个字符之间"
-      expression: "this.size() >= 2 && this.size() <= 30"
+      message: "菜单标题长度必须在 2-60 个字符之间"
+      expression: "this.size() >= 2 && this.size() <= 60"
     },
     (gnostic.openapi.v3.property) = {description: "标题（国际化 key）"}
   ];

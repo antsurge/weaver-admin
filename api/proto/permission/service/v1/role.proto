@@ -5,6 +5,7 @@ package permission.service.v1;
 import "buf/validate/validate.proto";
 import "gnostic/openapi/v3/annotations.proto";
 import "google/protobuf/timestamp.proto";
+import "permission/service/v1/data_permission.proto";
 import "permission/service/v1/menu.proto";
 
 message Role {
@@ -15,14 +16,16 @@ message Role {
   string remark = 4 [(gnostic.openapi.v3.property) = {description: "备注说明"}];
   int32 weight = 5 [(gnostic.openapi.v3.property) = {description: "权重（排序用）"}];
   string status = 6 [(gnostic.openapi.v3.property) = {description: "状态（enabled/disabled）"}];
-  // 数据权限范围
-  string dataScope = 7 [(gnostic.openapi.v3.property) = {description: "数据权限范围（如：ALL、DEPT、SELF）"}];
   // 是否系统内置
   bool isSystem = 8 [(gnostic.openapi.v3.property) = {description: "是否系统内置角色"}];
+  // 是否超级管理员
+  bool isSuperAdmin = 9 [(gnostic.openapi.v3.property) = {description: "是否超级管理员角色"}];
   google.protobuf.Timestamp createdAt = 10 [(gnostic.openapi.v3.property) = {description: "创建时间"}];
   google.protobuf.Timestamp updatedAt = 11 [(gnostic.openapi.v3.property) = {description: "更新时间"}];
   // 关联的菜单ID列表
   repeated string menuIds = 20 [(gnostic.openapi.v3.property) = {description: "关联的菜单ID列表"}];
+  // 关联的数据权限规则ID列表
+  repeated string dataPermissionIds = 21 [(gnostic.openapi.v3.property) = {description: "关联的数据权限规则ID列表"}];
 }
 
 message ListRoleRequest {
@@ -55,12 +58,12 @@ message CreateRoleRequest {
   string remark = 4 [(gnostic.openapi.v3.property) = {description: "备注说明"}];
   int32 weight = 5 [(gnostic.openapi.v3.property) = {description: "权重（排序用）"}];
   string status = 6 [(gnostic.openapi.v3.property) = {description: "状态（enabled/disabled）"}];
-  // 数据权限范围
-  string dataScope = 7 [(gnostic.openapi.v3.property) = {description: "数据权限范围（如：ALL、DEPT、SELF）"}];
   // 是否系统内置
   bool isSystem = 8 [(gnostic.openapi.v3.property) = {description: "是否系统内置角色"}];
   // 关联的菜单ID列表
   repeated string menuIds = 20 [(gnostic.openapi.v3.property) = {description: "关联的菜单ID列表"}];
+  // 关联的数据权限规则ID列表
+  repeated string dataPermissionIds = 21 [(gnostic.openapi.v3.property) = {description: "关联的数据权限规则ID列表"}];
 }
 
 message UpdateRoleRequest {
@@ -77,12 +80,12 @@ message UpdateRoleRequest {
   string remark = 4 [(gnostic.openapi.v3.property) = {description: "备注说明"}];
   int32 weight = 5 [(gnostic.openapi.v3.property) = {description: "权重（排序用）"}];
   string status = 6 [(gnostic.openapi.v3.property) = {description: "状态（enabled/disabled）"}];
-  // 数据权限范围
-  string dataScope = 7 [(gnostic.openapi.v3.property) = {description: "数据权限范围（如：ALL、DEPT、SELF）"}];
   // 是否系统内置
   bool isSystem = 8 [(gnostic.openapi.v3.property) = {description: "是否系统内置角色"}];
   // 关联的菜单ID列表
   repeated string menuIds = 20 [(gnostic.openapi.v3.property) = {description: "关联的菜单ID列表"}];
+  // 关联的数据权限规则ID列表
+  repeated string dataPermissionIds = 21 [(gnostic.openapi.v3.property) = {description: "关联的数据权限规则ID列表"}];
 }
 
 message UpdateRoleStatusRequest {
@@ -123,6 +126,19 @@ message DeleteRoleRequest {
   ];
 }
 
+// ====== 唯一性校验 ======
+
+// 角色编码是否存在请求
+message IsRoleCodeExistsRequest {
+  string code = 1 [(gnostic.openapi.v3.property) = {description: "角色编码"}];
+  string id = 2 [(gnostic.openapi.v3.property) = {description: "角色ID（编辑时排除自身）"}];
+}
+
+// 角色字段是否存在响应
+message IsRoleFieldExistsResponse {
+  bool exists = 1 [(gnostic.openapi.v3.property) = {description: "是否存在"}];
+}
+
 // ====== 角色菜单绑定相关消息 ======
 
 // 为角色绑定菜单请求（全量替换）
@@ -156,4 +172,39 @@ message ListMenusByRoleRequest {
 // 查询角色的菜单列表响应（返回树形结构）
 message ListMenusByRoleResponse {
   repeated Menu items = 1 [(gnostic.openapi.v3.property) = {description: "菜单树"}];
+}
+
+// ====== 角色数据权限规则绑定相关消息 ======
+
+// 为角色绑定数据权限规则请求（全量替换）
+message BindDataPermissionsForRoleRequest {
+  string roleId = 1 [
+    (buf.validate.field).cel = {
+      id: "BIND_ROLE_ID_REQUIRED"
+      message: "角色ID不能为空"
+      expression: "this.size() > 0"
+    },
+    (gnostic.openapi.v3.property) = {description: "角色ID"}
+  ];
+  repeated string dataPermissionIds = 2 [
+    (buf.validate.field).repeated = {max_items: 200},
+    (gnostic.openapi.v3.property) = {description: "要绑定的数据权限规则ID列表（全量替换）"}
+  ];
+}
+
+// 查询角色已绑定的数据权限规则请求
+message ListDataPermissionsByRoleRequest {
+  string roleId = 1 [
+    (buf.validate.field).cel = {
+      id: "ROLE_ID_REQUIRED"
+      message: "角色ID不能为空"
+      expression: "this.size() > 0"
+    },
+    (gnostic.openapi.v3.property) = {description: "角色ID"}
+  ];
+}
+
+// 查询角色已绑定的数据权限规则响应
+message ListDataPermissionsByRoleResponse {
+  repeated DataPermission items = 1 [(gnostic.openapi.v3.property) = {description: "数据权限规则列表"}];
 }

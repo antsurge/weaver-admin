@@ -1,18 +1,20 @@
 <script setup lang="ts">
-import { message, Modal } from 'ant-design-vue';
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
+import type { DictionaryDictDataApi } from '#/api/system/dictionary/dict-data';
+
 import { watch } from 'vue';
 
 import { useVbenModal } from '@vben/common-ui';
-import { $t } from '#/locales';
+
+import { message, Modal } from 'ant-design-vue';
+
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import type { VxeTableGridOptions } from '#/adapter/vxe-table';
-import type { DictionaryDictDataApi } from '#/api/system/dictionary/dict-data';
 import {
   deleteDictDataApi,
   getDictDataListApi,
   updateDictDataStatusApi,
 } from '#/api/system/dictionary/dict-data';
-
+import { $t } from '#/locales';
 import DictDataForm from '#/views/system/dictionary/dict-data/modules/form/index.vue';
 
 import { useDictDataColumns } from './data';
@@ -54,7 +56,7 @@ const reloadGrid = async () => {
   if (!dictTypeID) return;
 
   const res = await getDictDataListApi({
-    dictTypeID:dictTypeID,
+    dictTypeIds: [dictTypeID],
   });
   const list =
     (Array.isArray(res) ? res : (res as any)?.items) ??
@@ -67,7 +69,7 @@ const onDictDataFormSuccess = () => {
   void reloadGrid();
 };
 
-function onActionClick({
+async function onActionClick({
   code,
   row,
 }: {
@@ -75,17 +77,19 @@ function onActionClick({
   row: DictionaryDictDataApi.DictData;
 }) {
   switch (code) {
-    case 'edit':
+    case 'delete': {
+      await deleteDictDataApi([row.id]);
+      message.success($t('ui.actionMessage.deleteSuccess', [row.label]));
+      await reloadGrid();
+      break;
+    }
+    case 'edit': {
       dictDataFormApi.setData(row).open();
       break;
-    case 'delete':
-      void deleteDictDataApi([row.id]).then(async () => {
-        message.success($t('ui.actionMessage.deleteSuccess', [row.label]));
-        await reloadGrid();
-      });
+    }
+    default: {
       break;
-    default:
-      break;
+    }
   }
 }
 
@@ -94,8 +98,8 @@ function onStatusChange(
   row: DictionaryDictDataApi.DictData,
 ): Promise<boolean | undefined> {
   const statusText: Record<string, string> = {
-    enabled: '启用',
-    disabled: '禁用',
+    enabled: $t('common.enabled'),
+    disabled: $t('common.disabled'),
   };
 
   return new Promise<boolean | undefined>((resolve) => {
@@ -122,5 +126,5 @@ function onStatusChange(
 </script>
 <template>
   <DictDataFormModal @success="onDictDataFormSuccess" />
-  <Grid></Grid>
+  <Grid />
 </template>

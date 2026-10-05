@@ -1,0 +1,4 @@
+# weaver-admin 脚手架模板元数据
+# 由 weaver-admin-cli 读取，用于在创建新项目时全局替换项目标识
+name: weaver-admin
+module: github.com/antsurge/weaver-admin

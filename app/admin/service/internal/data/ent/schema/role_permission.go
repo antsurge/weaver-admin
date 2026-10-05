@@ -20,6 +20,11 @@ func (RolePermission) Annotations() []schema.Annotation {
 	}
 }
 
+// Mixin of the RolePermission.
+func (RolePermission) Mixin() []ent.Mixin {
+	return []ent.Mixin{TenantMixin{}}
+}
+
 func (RolePermission) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("id").

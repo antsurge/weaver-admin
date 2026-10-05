@@ -1,7 +1,12 @@
+import type { VbenFormProps } from '#/adapter/form';
 import type { OnActionClickFn, VxeTableGridOptions } from '#/adapter/vxe-table';
-import type { VbenFormProps, VbenFormSchema } from '#/adapter/form';
 import type { OrganizationPositionApi } from '#/api/organization/position';
+
+import { useAccess } from '@vben/access';
+
+import { PermissionAuthCode } from '#/access';
 import { z } from '#/adapter/form';
+import { isPositionNameExistsApi } from '#/api/organization/position';
 import { $t } from '#/locales';
 
 export const rules = {
@@ -23,13 +28,15 @@ export const rules = {
         $t('organization.position.fields.name'),
         30,
       ]),
-    ).refine(
+    )
+    .refine(
       async (value: string) => {
-        return !(await isMenuNameExists(value, formData.value?.id));
+        const res = await isPositionNameExistsApi(value);
+        return !res?.exists;
       },
       (value) => ({
         message: $t('ui.formRules.alreadyExists', [
-          $t('system.menu.menuName'),
+          $t('organization.position.fields.name'),
           value,
         ]),
       }),
@@ -63,17 +70,19 @@ export function useColumns(
     row: OrganizationPositionApi.Position,
   ) => PromiseLike<boolean | undefined>,
 ): VxeTableGridOptions<OrganizationPositionApi.Position>['columns'] {
+  const { hasAccessByCodes } = useAccess();
+
   return [
     {
       type: 'checkbox',
       align: 'center',
-      width: 80,
+      width: 60,
       fixed: 'left',
     },
     {
       type: 'seq',
       title: $t('common.fields.seq'),
-      width: 80,
+      width: 60,
       align: 'center',
     },
     {
@@ -91,24 +100,29 @@ export function useColumns(
       field: 'weight',
       align: 'center',
       title: $t('organization.position.fields.weight'),
-      width: 160,
+      width: 80,
     },
     {
       field: 'status',
       align: 'center',
       title: $t('organization.position.fields.status'),
-      width: 140,
+      width: 100,
       cellRender: {
         name: 'CellSwitch',
-        attrs: { beforeChange: onStatusChange },
+        attrs: {
+          beforeChange: onStatusChange,
+          // 无状态切换按钮权限时禁用开关
+          disabled: () => !hasAccessByCodes([PermissionAuthCode.Position.Edit]),
+        },
       },
     },
     {
       field: 'createdAt',
       align: 'center',
       title: $t('common.fields.createdAt'),
-      width: 180,
-      formatter: ({ cellValue }) => cellValue ? new Date(cellValue).toLocaleString() : '-', // 格式化
+      width: 160,
+      formatter: ({ cellValue }) =>
+        cellValue ? new Date(cellValue).toLocaleString() : '-', // 格式化
     },
     {
       field: 'operation',
@@ -123,7 +137,18 @@ export function useColumns(
           nameField: 'name',
           onClick: onActionClick,
         },
-        options: ['edit', 'delete'],
+        options: [
+          {
+            code: 'edit',
+            // 无编辑按钮权限时不展示
+            show: hasAccessByCodes([PermissionAuthCode.Position.Edit]),
+          },
+          {
+            code: 'delete',
+            // 无删除按钮权限时不展示
+            show: hasAccessByCodes([PermissionAuthCode.Position.Delete]),
+          },
+        ],
       },
     },
   ];
@@ -178,5 +203,5 @@ export function useGridFormOptions(): VbenFormProps {
     submitOnChange: false,
     // 按下回车时是否提交表单
     submitOnEnter: false,
-  }
+  };
 }

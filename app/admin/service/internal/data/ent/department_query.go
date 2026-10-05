@@ -262,12 +262,12 @@ func (_q *DepartmentQuery) Clone() *DepartmentQuery {
 // Example:
 //
 //	var v []struct {
-//		ParentID string `json:"parent_id,omitempty"`
+//		TenantID string `json:"tenant_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Department.Query().
-//		GroupBy(department.FieldParentID).
+//		GroupBy(department.FieldTenantID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (_q *DepartmentQuery) GroupBy(field string, fields ...string) *DepartmentGroupBy {
@@ -285,11 +285,11 @@ func (_q *DepartmentQuery) GroupBy(field string, fields ...string) *DepartmentGr
 // Example:
 //
 //	var v []struct {
-//		ParentID string `json:"parent_id,omitempty"`
+//		TenantID string `json:"tenant_id,omitempty"`
 //	}
 //
 //	client.Department.Query().
-//		Select(department.FieldParentID).
+//		Select(department.FieldTenantID).
 //		Scan(ctx, &v)
 func (_q *DepartmentQuery) Select(fields ...string) *DepartmentSelect {
 	_q.ctx.Fields = append(_q.ctx.Fields, fields...)

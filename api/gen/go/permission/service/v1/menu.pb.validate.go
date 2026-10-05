@@ -317,8 +317,6 @@ func (m *ApiPermission) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
-
 	// no validation rules for Service
 
 	// no validation rules for Method
@@ -326,6 +324,10 @@ func (m *ApiPermission) validate(all bool) error {
 	// no validation rules for Path
 
 	// no validation rules for Summary
+
+	// no validation rules for Tag
+
+	// no validation rules for Code
 
 	if len(errors) > 0 {
 		return ApiPermissionMultiError(errors)

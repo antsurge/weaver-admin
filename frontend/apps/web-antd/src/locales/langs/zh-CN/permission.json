@@ -20,6 +20,8 @@
       "badge": "徽标内容",
       "badgeVariants": "徽标样式",
       "remark": "备注",
+      "createdAt": "创建时间",
+      "updatedAt": "更新时间",
       "operation": "操作",
       "apiPermissions": "接口权限"
     },
@@ -71,32 +73,84 @@
     "actionTitle": {
       "expandAll": "展开全部",
       "collapseAll": "折叠全部"
+    },
+    "actionMessage": {
+      "sorting": "正在保存排序...",
+      "sortSuccess": "排序保存成功",
+      "sortFailed": "排序保存失败",
+      "switchStatus": "切换状态",
+      "switchStatusConfirm": "你要将 {0} 的状态切换为【{1}】吗？"
     }
   },
   "role": {
     "title": "角色管理",
     "name": "角色",
+    "system": "系统内置",
+    "custom": "自定义",
     "fields": {
       "name": "角色名称",
       "code": "角色编码",
       "weight": "权重",
       "status": "状态",
       "remark": "备注",
-      "menuPermission": "菜单权限"
+      "dataScope": "数据范围",
+      "isSystem": "角色类型",
+      "menuPermission": "菜单权限",
+      "dataPermissionIds": "数据权限规则"
+    },
+    "dataScope_options": {
+      "ALL": "全部数据",
+      "DEPT": "本部门数据",
+      "DEPT_AND_CHILD": "本部门及以下数据",
+      "SELF": "仅本人数据"
     },
     "rules": {
       "menuRequired": "请至少选择一个菜单权限"
     },
     "actions": {
       "switchStatus": "切换角色状态",
-      "switchStatusConfirm": "确认将【{0}】状态切换为【{1}】？"
+      "switchStatusConfirm": "确认将【{0}】状态切换为【{1}】？",
+      "systemNotAllowed": "系统内置角色不允许修改或删除",
+      "superAdminNotAllowed": "超级管理员角色不允许修改或删除"
     },
     "form_placeholder": {
-      "remark": "请输入备注"
+      "remark": "请输入备注",
+      "dataPermissionIds": "请选择数据权限规则"
     },
      "form_group": {
       "basicInfo": "基本信息",
+      "dataPermission": "数据权限规则",
       "authorizedMenu": "授权菜单"
+    }
+  },
+  "data_permission": {
+    "title": "数据权限",
+    "name": "数据权限规则",
+    "fields": {
+      "name": "规则名称",
+      "code": "规则编码",
+      "scopeType": "数据范围",
+      "deptIds": "自定义部门",
+      "roleIds": "自定义角色",
+      "status": "状态",
+      "remark": "备注",
+      "updatedAt": "更新时间",
+      "operation": "操作"
+    },
+    "scope": {
+      "all": "全部数据",
+      "custom": "自定义数据",
+      "dept": "本部门数据",
+      "deptAndBelow": "本部门及以下",
+      "self": "仅本人数据"
+    },
+    "form_placeholder": {
+      "deptIds": "请选择自定义权限的部门",
+      "roleIds": "请选择自定义权限的角色",
+      "remark": "请输入备注"
+    },
+    "message": {
+      "switchStatusConfirm": "确定要将规则“{0}”的状态切换为 {1} 吗？"
     }
   }
 }

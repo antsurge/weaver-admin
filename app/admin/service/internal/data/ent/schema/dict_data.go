@@ -21,6 +21,11 @@ func (DictData) Annotations() []schema.Annotation {
 	}
 }
 
+// Mixin of the DictData.
+func (DictData) Mixin() []ent.Mixin {
+	return []ent.Mixin{TenantMixin{}}
+}
+
 func (DictData) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("id").

@@ -6,6 +6,9 @@ import "gnostic/openapi/v3/annotations.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "system/service/v1/api_interface.proto";
+import "system/service/v1/config.proto";
+import "system/service/v1/dict_data.proto";
+import "system/service/v1/dict_type.proto";
 
 service System {
   // 分页查询接口列表
@@ -18,12 +21,48 @@ service System {
     };
   }
 
+  // 接口列表筛选选项（服务名/标签）
+  rpc ListApiInterfaceOptions(system.service.v1.ListApiInterfaceOptionsRequest) returns (system.service.v1.ListApiInterfaceOptionsResponse) {
+    option (google.api.http) = {get: "/admin/v1/api-interface/options"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "System"
+      summary: "接口筛选选项-服务名/标签"
+      description: "返回去重后的服务名与标签列表，供搜索下拉选择"
+    };
+  }
+
   // 导入 openapi.yaml 文件
   rpc ImportApiInterface(system.service.v1.ImportApiInterfaceRequest) returns (system.service.v1.ImportApiInterfaceResponse) {
     option (gnostic.openapi.v3.operation) = {
       tags: "System"
       summary: "导入接口-上传 openapi.yaml"
       description: "上传 openapi.yaml 文件，解析并导入接口信息到数据库"
+    };
+  }
+
+  // 创建接口（手动新增）
+  rpc CreateApiInterface(system.service.v1.CreateApiInterfaceRequest) returns (system.service.v1.ApiInterface) {
+    option (google.api.http) = {
+      post: "/admin/v1/api-interface"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "System"
+      summary: "接口-创建"
+      description: "手动新增 API 接口"
+    };
+  }
+
+  // 更新接口（手动编辑）
+  rpc UpdateApiInterface(system.service.v1.UpdateApiInterfaceRequest) returns (system.service.v1.ApiInterface) {
+    option (google.api.http) = {
+      put: "/admin/v1/api-interface/{id}"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "System"
+      summary: "接口-更新"
+      description: "编辑 API 接口信息"
     };
   }
 
@@ -34,6 +73,180 @@ service System {
       tags: "System"
       summary: "接口-删除(批量)"
       description: "批量删除 API 接口"
+    };
+  }
+
+  // ====== 字典 ======
+
+  // 字典类型模块
+  rpc ListDictType(system.service.v1.ListDictTypeRequest) returns (system.service.v1.ListDictTypeResponse) {
+    option (google.api.http) = {get: "/admin/v1/dict-type"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "System"
+      summary: "字典类型-列表"
+      description: "字典类型列表"
+    };
+  }
+  rpc CreateDictType(system.service.v1.CreateDictTypeRequest) returns (system.service.v1.DictType) {
+    option (google.api.http) = {
+      post: "/admin/v1/dict-type"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "System"
+      summary: "字典类型-创建"
+      description: "创建字典类型"
+    };
+  }
+  rpc UpdateDictType(system.service.v1.UpdateDictTypeRequest) returns (system.service.v1.DictType) {
+    option (google.api.http) = {
+      put: "/admin/v1/dict-type/{id}"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "System"
+      summary: "字典类型-修改"
+      description: "创建字典修改"
+    };
+  }
+  rpc UpdateDictTypeStatus(system.service.v1.UpdateDictTypeStatusRequest) returns (system.service.v1.DictType) {
+    option (google.api.http) = {
+      put: "/admin/v1/dict-type/{id}/status"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "System"
+      summary: "字典类型-更新状态"
+      description: "更新字典类型状态"
+    };
+  }
+  rpc DeleteDictType(system.service.v1.DeleteDictTypeRequset) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/admin/v1/dict-type"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "System"
+      summary: "字典类型-删除(批量)"
+      description: "删除字典类型(支持批量)"
+    };
+  }
+  rpc GetDictTypeByCode(system.service.v1.GetDictTypeByCodeRequest) returns (system.service.v1.DictType) {
+    option (google.api.http) = {get: "/admin/v1/dict-type/{code}/data"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "System"
+      summary: "字典类型-按编码查询"
+      description: "根据字典编码获取字典类型及其字典数据（供业务页面消费）"
+    };
+  }
+
+  // 字典数据模块
+  rpc ListDictData(system.service.v1.ListDictDataRequest) returns (system.service.v1.ListDictDataResponse) {
+    option (google.api.http) = {get: "/admin/v1/dict-data"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "System"
+      summary: "字典数据-列表"
+      description: "字典数据列表"
+    };
+  }
+  rpc CreateDictData(system.service.v1.CreateDictDataRequest) returns (system.service.v1.DictData) {
+    option (google.api.http) = {
+      post: "/admin/v1/dict-data"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "System"
+      summary: "字典数据-创建"
+      description: "创建字典数据"
+    };
+  }
+  rpc UpdateDictData(system.service.v1.UpdateDictDataRequest) returns (system.service.v1.DictData) {
+    option (google.api.http) = {
+      put: "/admin/v1/dict-data/{id}"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "System"
+      summary: "字典数据-修改"
+      description: "字典数据修改"
+    };
+  }
+  rpc UpdateDictDataStatus(system.service.v1.UpdateDictDataStatusRequest) returns (system.service.v1.DictData) {
+    option (google.api.http) = {
+      put: "/admin/v1/dict-data/{id}/status"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "System"
+      summary: "字典数据-更新状态"
+      description: "更新字典类型状态"
+    };
+  }
+  rpc DeleteDictData(system.service.v1.DeleteDictDataRequset) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/admin/v1/dict-data"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "System"
+      summary: "字典数据-删除(批量)"
+      description: "删除字典类型(支持批量)"
+    };
+  }
+
+  // ====== 参数设置 ======
+
+  // 参数列表（分页）
+  rpc ListConfig(system.service.v1.ListConfigRequest) returns (system.service.v1.ListConfigResponse) {
+    option (google.api.http) = {get: "/admin/v1/config"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "System"
+      summary: "参数设置-列表"
+      description: "参数设置分页列表"
+    };
+  }
+  // 按键名查询参数值（供业务页面消费）
+  rpc GetConfigByKey(system.service.v1.GetConfigByKeyRequest) returns (system.service.v1.Config) {
+    option (google.api.http) = {get: "/admin/v1/config/{key}/value"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "System"
+      summary: "参数设置-按键名查询"
+      description: "根据参数键名获取参数值（供业务页面消费）"
+    };
+  }
+  rpc CreateConfig(system.service.v1.CreateConfigRequest) returns (system.service.v1.Config) {
+    option (google.api.http) = {
+      post: "/admin/v1/config"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "System"
+      summary: "参数设置-创建"
+      description: "创建系统参数"
+    };
+  }
+  rpc UpdateConfig(system.service.v1.UpdateConfigRequest) returns (system.service.v1.Config) {
+    option (google.api.http) = {
+      put: "/admin/v1/config/{id}"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "System"
+      summary: "参数设置-修改"
+      description: "修改系统参数"
+    };
+  }
+  rpc UpdateConfigStatus(system.service.v1.UpdateConfigStatusRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/admin/v1/config/{id}/status"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "System"
+      summary: "参数设置-更新状态"
+      description: "更新参数启用状态"
+    };
+  }
+  rpc DeleteConfig(system.service.v1.DeleteConfigRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/admin/v1/config"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "System"
+      summary: "参数设置-删除(批量)"
+      description: "删除系统参数(支持批量)"
     };
   }
 }

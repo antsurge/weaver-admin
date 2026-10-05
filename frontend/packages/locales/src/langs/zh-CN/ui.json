@@ -1,5 +1,6 @@
 {
   "formRules": {
+    "placeholder": "请输入{0}",
     "required": "请输入{0}",
     "selectRequired": "请选择{0}",
     "minLength": "{0}至少{1}个字符",
@@ -17,7 +18,9 @@
     "delete": "删除{0}",
     "view": "查看{0}",
     "export":"导出{0}",
-    "import":"导入{0}"
+    "import":"导入{0}",
+    "confirm": "确定",
+    "cancel": "取消"
   },
   "actionMessage": {
     "deleteConfirm": "确定删除 {0} 吗？",
@@ -54,7 +57,10 @@
   },
   "jsonViewer": {
     "copy": "复制",
-    "copied": "已复制"
+    "copied": "已复制",
+    "format": "格式化",
+    "formatSuccess": "格式化成功",
+    "formatError": "JSON 格式不正确，无法格式化"
   },
   "crop": {
     "title": "图片裁剪",

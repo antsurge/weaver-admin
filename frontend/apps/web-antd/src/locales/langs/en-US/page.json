@@ -11,14 +11,5 @@
     "title": "Dashboard",
     "analytics": "Analytics",
     "workspace": "Workspace"
-  },
-  "system": {
-    "title": "System",
-    "admin": "Admin",
-    "role": "Role",
-    "permission": "Permission",
-    "organization": "Organization",
-    "position": "Position",
-    "dict": "Dict"
   }
 }

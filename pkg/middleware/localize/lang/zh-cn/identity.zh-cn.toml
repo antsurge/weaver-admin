@@ -1,0 +1,36 @@
+# 用户（Admin）模块错误码
+[INVALID_STATUS]
+other = "状态值非法，仅支持 enabled/disabled"
+
+[USERNAME_ALREADY_EXISTS]
+other = "用户名已存在"
+
+[PHONE_ALREADY_EXISTS]
+other = "手机号已存在"
+
+[EMAIL_ALREADY_EXISTS]
+other = "邮箱已存在"
+
+[PASSWORD_TOO_SHORT]
+other = "密码长度不能少于6位"
+
+[CANNOT_DELETE_SELF]
+other = "不能删除当前登录账号"
+
+[CANNOT_DELETE_SUPERADMIN]
+other = "超级管理员账号不允许删除"
+
+[CANNOT_DISABLE_SUPERADMIN]
+other = "超级管理员账号不允许禁用"
+
+[ADMIN_NOT_FOUND]
+other = "用户不存在"
+
+[CREATE_ADMIN_FAIL]
+other = "创建用户失败"
+
+[UPDATE_ADMIN_FAIL]
+other = "更新用户失败"
+
+[DELETE_ADMIN_FAIL]
+other = "删除用户失败"

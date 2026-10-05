@@ -1,0 +1,277 @@
+syntax = "proto3";
+
+package lowcode.service.v1;
+
+import "buf/validate/validate.proto";
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+// 表单定义（表单构建器）
+message FormSchema {
+  // ID
+  string id = 1 [(gnostic.openapi.v3.property) = {description: "ID"}];
+  // 表单名称
+  string name = 2 [(gnostic.openapi.v3.property) = {description: "表单名称"}];
+  // 表单编码
+  string code = 3 [(gnostic.openapi.v3.property) = {description: "表单编码（唯一，供运行时渲染引用）"}];
+  // 表单描述
+  string description = 4 [(gnostic.openapi.v3.property) = {description: "表单描述"}];
+  // 表单 JSON Schema 定义（字段列表 + 布局配置）
+  google.protobuf.Struct schemaJson = 5 [(gnostic.openapi.v3.property) = {description: "表单 JSON Schema 定义"}];
+  // 状态
+  string status = 6 [(gnostic.openapi.v3.property) = {description: "状态：enabled=启用，disabled=禁用"}];
+  // 备注
+  string remark = 7 [(gnostic.openapi.v3.property) = {description: "备注信息"}];
+  // 创建时间
+  google.protobuf.Timestamp createdAt = 8 [(gnostic.openapi.v3.property) = {description: "创建时间"}];
+  // 更新时间
+  google.protobuf.Timestamp updatedAt = 9 [(gnostic.openapi.v3.property) = {description: "更新时间"}];
+  // 删除时间
+  google.protobuf.Timestamp deletedAt = 10 [(gnostic.openapi.v3.property) = {description: "删除时间（软删除标记）"}];
+}
+
+message ListFormSchemaRequest {
+  int64 currentPage = 1 [(gnostic.openapi.v3.property) = {description: "当前页码（从1开始）"}];
+  int64 pageSize = 2 [(gnostic.openapi.v3.property) = {description: "每页条数（传0为全部）"}];
+  string name = 3 [(gnostic.openapi.v3.property) = {description: "表单名称（支持模糊查询）"}];
+  string code = 4 [(gnostic.openapi.v3.property) = {description: "表单编码（支持模糊查询）"}];
+  string status = 5 [(gnostic.openapi.v3.property) = {description: "状态（enabled=启用，disabled=禁用）"}];
+}
+
+message ListFormSchemaResponse {
+  repeated FormSchema items = 1;
+  int64 total = 2;
+}
+
+message CreateFormSchemaRequest {
+  option (gnostic.openapi.v3.schema) = {
+    required: ["name", "code"]
+  };
+
+  // 表单名称
+  string name = 1 [
+    (buf.validate.field).cel = {
+      id: "form.name.required"
+      message: "form.name.required"
+      expression: "this.size() > 0"
+    },
+    (buf.validate.field).cel = {
+      id: "form.name.max_len"
+      message: "form.name.max_len"
+      expression: "this.size() <= 64"
+    },
+    (gnostic.openapi.v3.property) = {description: "表单名称"}
+  ];
+  // 表单编码
+  string code = 2 [
+    (buf.validate.field).cel = {
+      id: "form.code.required"
+      message: "form.code.required"
+      expression: "this.size() > 0"
+    },
+    (buf.validate.field).cel = {
+      id: "form.code.max_len"
+      message: "form.code.max_len"
+      expression: "this.size() <= 64"
+    },
+    (gnostic.openapi.v3.property) = {description: "表单编码（唯一）"}
+  ];
+  // 表单描述
+  string description = 3 [
+    (buf.validate.field).cel = {
+      id: "form.description.max_len"
+      message: "form.description.max_len"
+      expression: "this.size() <= 255"
+    },
+    (gnostic.openapi.v3.property) = {description: "表单描述"}
+  ];
+  // 表单 JSON Schema 定义
+  google.protobuf.Struct schemaJson = 4 [(gnostic.openapi.v3.property) = {description: "表单 JSON Schema 定义"}];
+  // 状态
+  string status = 5 [
+    (buf.validate.field).string = {
+      in: ["enabled", "disabled"]
+    },
+    (buf.validate.field).cel = {
+      id: "form.status.invalid"
+      message: "form.status.invalid"
+      expression: "this in ['enabled', 'disabled']"
+    },
+    (gnostic.openapi.v3.property) = {description: "状态（enabled/disabled）"}
+  ];
+  // 备注
+  string remark = 6 [
+    (buf.validate.field).cel = {
+      id: "form.remark.max_len"
+      message: "form.remark.max_len"
+      expression: "this.size() <= 256"
+    },
+    (gnostic.openapi.v3.property) = {description: "备注"}
+  ];
+}
+
+message UpdateFormSchemaRequest {
+  // 表单名称
+  string name = 1 [
+    (buf.validate.field).cel = {
+      id: "form.name.required"
+      message: "form.name.required"
+      expression: "this.size() > 0"
+    },
+    (buf.validate.field).cel = {
+      id: "form.name.max_len"
+      message: "form.name.max_len"
+      expression: "this.size() <= 64"
+    },
+    (gnostic.openapi.v3.property) = {description: "表单名称"}
+  ];
+  // 表单编码
+  string code = 2 [
+    (buf.validate.field).cel = {
+      id: "form.code.required"
+      message: "form.code.required"
+      expression: "this.size() > 0"
+    },
+    (buf.validate.field).cel = {
+      id: "form.code.max_len"
+      message: "form.code.max_len"
+      expression: "this.size() <= 64"
+    },
+    (gnostic.openapi.v3.property) = {description: "表单编码（唯一）"}
+  ];
+  // 表单描述
+  string description = 3 [
+    (buf.validate.field).cel = {
+      id: "form.description.max_len"
+      message: "form.description.max_len"
+      expression: "this.size() <= 255"
+    },
+    (gnostic.openapi.v3.property) = {description: "表单描述"}
+  ];
+  // 表单 JSON Schema 定义
+  google.protobuf.Struct schemaJson = 4 [(gnostic.openapi.v3.property) = {description: "表单 JSON Schema 定义"}];
+  // 状态
+  string status = 5 [
+    (buf.validate.field).string = {
+      in: ["enabled", "disabled"]
+    },
+    (buf.validate.field).cel = {
+      id: "form.status.invalid"
+      message: "form.status.invalid"
+      expression: "this in ['enabled', 'disabled']"
+    },
+    (gnostic.openapi.v3.property) = {description: "状态（enabled/disabled）"}
+  ];
+  // 备注
+  string remark = 6 [
+    (buf.validate.field).cel = {
+      id: "form.remark.max_len"
+      message: "form.remark.max_len"
+      expression: "this.size() <= 256"
+    },
+    (gnostic.openapi.v3.property) = {description: "备注"}
+  ];
+  string id = 10;
+}
+
+message DeleteFormSchemaRequest {
+  repeated string ids = 1 [
+    (buf.validate.field).repeated = {
+      min_items: 1
+      max_items: 100
+    },
+    (buf.validate.field).cel = {
+      id: "form.ids.not_empty"
+      message: "form.ids.not_empty"
+      expression: "this.all(x, x.size() > 0)"
+    },
+    (gnostic.openapi.v3.property) = {description: "表单ID列表，至少一个"}
+  ];
+}
+
+message GetFormSchemaByCodeRequest {
+  // 表单编码
+  string code = 1 [
+    (buf.validate.field).cel = {
+      id: "form.code.required"
+      message: "form.code.required"
+      expression: "this.size() > 0"
+    },
+    (gnostic.openapi.v3.property) = {description: "表单编码"}
+  ];
+}
+
+message UpdateFormSchemaStatusRequest {
+  // 状态
+  string status = 1 [
+    (buf.validate.field).string = {
+      in: ["enabled", "disabled"]
+    },
+    (buf.validate.field).cel = {
+      id: "form.status.invalid"
+      message: "form.status.invalid"
+      expression: "this in ['enabled', 'disabled']"
+    },
+    (gnostic.openapi.v3.property) = {description: "状态（enabled/disabled）"}
+  ];
+  string id = 10;
+}
+
+// 表单提交记录（表单构建器运行时的用户提交数据）
+message FormSubmission {
+  // 提交记录ID
+  string id = 1 [(gnostic.openapi.v3.property) = {description: "提交记录ID"}];
+  // 表单编码
+  string formCode = 2 [(gnostic.openapi.v3.property) = {description: "表单编码"}];
+  // 表单名称
+  string formName = 3 [(gnostic.openapi.v3.property) = {description: "表单名称"}];
+  // 提交数据（字段 key -> 值）
+  google.protobuf.Struct submitData = 4 [(gnostic.openapi.v3.property) = {description: "提交数据"}];
+  // 提交时间
+  google.protobuf.Timestamp createdAt = 5 [(gnostic.openapi.v3.property) = {description: "提交时间"}];
+  // 更新时间
+  google.protobuf.Timestamp updatedAt = 6 [(gnostic.openapi.v3.property) = {description: "更新时间"}];
+}
+
+// 提交表单数据请求
+message SubmitFormDataRequest {
+  // 表单编码
+  string code = 1 [
+    (buf.validate.field).cel = {
+      id: "form.code.required"
+      message: "form.code.required"
+      expression: "this.size() > 0"
+    },
+    (gnostic.openapi.v3.property) = {description: "表单编码"}
+  ];
+  // 提交数据（字段 key -> 值）
+  google.protobuf.Struct data = 2 [(gnostic.openapi.v3.property) = {description: "提交数据（字段 key -> 值）"}];
+}
+
+// 提交表单数据响应
+message SubmitFormDataResponse {
+  // 提交记录ID
+  string id = 1 [(gnostic.openapi.v3.property) = {description: "提交记录ID"}];
+}
+
+// 查询表单提交记录请求
+message ListFormSubmissionRequest {
+  int64 currentPage = 1 [(gnostic.openapi.v3.property) = {description: "当前页码（从1开始）"}];
+  int64 pageSize = 2 [(gnostic.openapi.v3.property) = {description: "每页条数（传0为全部）"}];
+  // 表单编码
+  string code = 3 [
+    (buf.validate.field).cel = {
+      id: "form.code.required"
+      message: "form.code.required"
+      expression: "this.size() > 0"
+    },
+    (gnostic.openapi.v3.property) = {description: "表单编码"}
+  ];
+}
+
+// 查询表单提交记录响应
+message ListFormSubmissionResponse {
+  repeated FormSubmission items = 1;
+  int64 total = 2;
+}

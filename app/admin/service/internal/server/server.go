@@ -10,5 +10,10 @@ var ProviderSet = wire.NewSet(
 	NewGRPCServer,
 	NewHTTPServer,
 
+	NewMQServer,
+	NewLogRecorderServer,
+	NewJobSchedulerServer,
+	NewBackgroundServer,
+
 	handler.ProviderSet,
 )

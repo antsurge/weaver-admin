@@ -1,0 +1,167 @@
+syntax = "proto3";
+
+package admin.service.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "lowcode/service/v1/form_schema.proto";
+import "lowcode/service/v1/codegen.proto";
+
+// 低代码服务
+service Lowcode {
+  // ====== 表单构建器 ======
+
+  // 表单列表（分页）
+  rpc ListFormSchema(lowcode.service.v1.ListFormSchemaRequest) returns (lowcode.service.v1.ListFormSchemaResponse) {
+    option (google.api.http) = {get: "/admin/v1/form-schemas"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Lowcode"
+      summary: "表单-列表"
+      description: "表单列表（分页）"
+    };
+  }
+  // 按编码查询表单（供运行时渲染引用）
+  rpc GetFormSchemaByCode(lowcode.service.v1.GetFormSchemaByCodeRequest) returns (lowcode.service.v1.FormSchema) {
+    option (google.api.http) = {get: "/admin/v1/form-schemas/{code}/detail"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Lowcode"
+      summary: "表单-按编码查询"
+      description: "按编码查询表单（供运行时渲染引用）"
+    };
+  }
+  rpc CreateFormSchema(lowcode.service.v1.CreateFormSchemaRequest) returns (lowcode.service.v1.FormSchema) {
+    option (google.api.http) = {
+      post: "/admin/v1/form-schemas"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Lowcode"
+      summary: "表单-创建"
+      description: "创建表单"
+    };
+  }
+  rpc UpdateFormSchema(lowcode.service.v1.UpdateFormSchemaRequest) returns (lowcode.service.v1.FormSchema) {
+    option (google.api.http) = {
+      put: "/admin/v1/form-schemas/{id}"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Lowcode"
+      summary: "表单-修改"
+      description: "修改表单"
+    };
+  }
+  rpc UpdateFormSchemaStatus(lowcode.service.v1.UpdateFormSchemaStatusRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/admin/v1/form-schemas/{id}/status"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Lowcode"
+      summary: "表单-更新状态"
+      description: "更新表单状态"
+    };
+  }
+  rpc DeleteFormSchema(lowcode.service.v1.DeleteFormSchemaRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/admin/v1/form-schemas"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Lowcode"
+      summary: "表单-删除(批量)"
+      description: "删除表单(支持批量)"
+    };
+  }
+  // 提交表单数据（运行时渲染表单的用户提交）
+  rpc SubmitFormData(lowcode.service.v1.SubmitFormDataRequest) returns (lowcode.service.v1.SubmitFormDataResponse) {
+    option (google.api.http) = {
+      post: "/admin/v1/form-schemas/{code}/submit"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Lowcode"
+      summary: "表单-提交数据"
+      description: "提交表单数据（运行时渲染表单的用户提交）"
+    };
+  }
+  // 查询表单提交记录（分页）
+  rpc ListFormSubmission(lowcode.service.v1.ListFormSubmissionRequest) returns (lowcode.service.v1.ListFormSubmissionResponse) {
+    option (google.api.http) = {get: "/admin/v1/form-schemas/{code}/submissions"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Lowcode"
+      summary: "表单-提交记录"
+      description: "查询表单提交记录（分页）"
+    };
+  }
+
+  // ====== 代码生成器 ======
+
+  // 生成表配置列表（分页）
+  rpc ListGenTable(lowcode.service.v1.ListGenTableRequest) returns (lowcode.service.v1.ListGenTableResponse) {
+    option (google.api.http) = {get: "/admin/v1/gen-tables"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Lowcode"
+      summary: "代码生成-表配置列表"
+      description: "生成表配置列表（分页）"
+    };
+  }
+  // 读取数据库表列表（information_schema）
+  rpc ListDbTables(lowcode.service.v1.ListDbTablesRequest) returns (lowcode.service.v1.ListDbTablesResponse) {
+    option (google.api.http) = {get: "/admin/v1/codegen/db-tables"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Lowcode"
+      summary: "代码生成-数据库表列表"
+      description: "读取数据库表列表（information_schema）"
+    };
+  }
+  // 读取表字段
+  rpc ListDbColumns(lowcode.service.v1.ListDbColumnsRequest) returns (lowcode.service.v1.ListDbColumnsResponse) {
+    option (google.api.http) = {get: "/admin/v1/codegen/db-columns/{tableName}"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Lowcode"
+      summary: "代码生成-表字段列表"
+      description: "读取表字段"
+    };
+  }
+  rpc CreateGenTable(lowcode.service.v1.CreateGenTableRequest) returns (lowcode.service.v1.GenTable) {
+    option (google.api.http) = {
+      post: "/admin/v1/gen-tables"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Lowcode"
+      summary: "代码生成-创建配置"
+      description: "创建生成表配置"
+    };
+  }
+  rpc UpdateGenTable(lowcode.service.v1.UpdateGenTableRequest) returns (lowcode.service.v1.GenTable) {
+    option (google.api.http) = {
+      put: "/admin/v1/gen-tables/{id}"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Lowcode"
+      summary: "代码生成-修改配置"
+      description: "修改生成表配置"
+    };
+  }
+  rpc DeleteGenTable(lowcode.service.v1.DeleteGenTableRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/admin/v1/gen-tables"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Lowcode"
+      summary: "代码生成-删除配置"
+      description: "删除生成表配置(支持批量)"
+    };
+  }
+  // 生成代码
+  rpc GenerateCode(lowcode.service.v1.GenerateCodeRequest) returns (lowcode.service.v1.GenerateCodeResponse) {
+    option (google.api.http) = {
+      post: "/admin/v1/codegen/generate"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Lowcode"
+      summary: "代码生成-生成代码"
+      description: "生成代码"
+    };
+  }
+}

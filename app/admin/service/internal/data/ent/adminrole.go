@@ -20,6 +20,8 @@ type AdminRole struct {
 	// ID of the ent.
 	// 主键ID
 	ID string `json:"id,omitempty"`
+	// 租户ID
+	TenantID string `json:"tenant_id,omitempty"`
 	// 用户ID
 	AdminID string `json:"admin_id,omitempty"`
 	// 角色ID
@@ -70,7 +72,7 @@ func (*AdminRole) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case adminrole.FieldID, adminrole.FieldAdminID, adminrole.FieldRoleID:
+		case adminrole.FieldID, adminrole.FieldTenantID, adminrole.FieldAdminID, adminrole.FieldRoleID:
 			values[i] = new(sql.NullString)
 		case adminrole.FieldCreatedAt:
 			values[i] = new(sql.NullTime)
@@ -94,6 +96,12 @@ func (_m *AdminRole) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value.Valid {
 				_m.ID = value.String
+			}
+		case adminrole.FieldTenantID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field tenant_id", values[i])
+			} else if value.Valid {
+				_m.TenantID = value.String
 			}
 		case adminrole.FieldAdminID:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -159,6 +167,9 @@ func (_m *AdminRole) String() string {
 	var builder strings.Builder
 	builder.WriteString("AdminRole(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
+	builder.WriteString("tenant_id=")
+	builder.WriteString(_m.TenantID)
+	builder.WriteString(", ")
 	builder.WriteString("admin_id=")
 	builder.WriteString(_m.AdminID)
 	builder.WriteString(", ")

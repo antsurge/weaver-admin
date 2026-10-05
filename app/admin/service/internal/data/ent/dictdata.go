@@ -19,6 +19,8 @@ type DictData struct {
 	// ID of the ent.
 	// 字典数据ID
 	ID string `json:"id,omitempty"`
+	// 租户ID
+	TenantID string `json:"tenant_id,omitempty"`
 	// 字典类型ID
 	DictTypeID string `json:"dict_type_id,omitempty"`
 	// 标签
@@ -51,7 +53,7 @@ func (*DictData) scanValues(columns []string) ([]any, error) {
 			values[i] = new([]byte)
 		case dictdata.FieldWeight:
 			values[i] = new(sql.NullInt64)
-		case dictdata.FieldID, dictdata.FieldDictTypeID, dictdata.FieldLabel, dictdata.FieldValue, dictdata.FieldStatus, dictdata.FieldRemark:
+		case dictdata.FieldID, dictdata.FieldTenantID, dictdata.FieldDictTypeID, dictdata.FieldLabel, dictdata.FieldValue, dictdata.FieldStatus, dictdata.FieldRemark:
 			values[i] = new(sql.NullString)
 		case dictdata.FieldCreatedAt, dictdata.FieldUpdatedAt, dictdata.FieldDeletedAt:
 			values[i] = new(sql.NullTime)
@@ -75,6 +77,12 @@ func (_m *DictData) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value.Valid {
 				_m.ID = value.String
+			}
+		case dictdata.FieldTenantID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field tenant_id", values[i])
+			} else if value.Valid {
+				_m.TenantID = value.String
 			}
 		case dictdata.FieldDictTypeID:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -175,6 +183,9 @@ func (_m *DictData) String() string {
 	var builder strings.Builder
 	builder.WriteString("DictData(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
+	builder.WriteString("tenant_id=")
+	builder.WriteString(_m.TenantID)
+	builder.WriteString(", ")
 	builder.WriteString("dict_type_id=")
 	builder.WriteString(_m.DictTypeID)
 	builder.WriteString(", ")

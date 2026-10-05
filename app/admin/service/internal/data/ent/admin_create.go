@@ -11,7 +11,9 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/admin"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/admindatapermission"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/adminrole"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/datapermission"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/role"
 )
 
@@ -20,6 +22,20 @@ type AdminCreate struct {
 	config
 	mutation *AdminMutation
 	hooks    []Hook
+}
+
+// SetTenantID sets the "tenant_id" field.
+func (_c *AdminCreate) SetTenantID(v string) *AdminCreate {
+	_c.mutation.SetTenantID(v)
+	return _c
+}
+
+// SetNillableTenantID sets the "tenant_id" field if the given value is not nil.
+func (_c *AdminCreate) SetNillableTenantID(v *string) *AdminCreate {
+	if v != nil {
+		_c.SetTenantID(*v)
+	}
+	return _c
 }
 
 // SetRealName sets the "real_name" field.
@@ -84,9 +100,37 @@ func (_c *AdminCreate) SetNillableAvatar(v *string) *AdminCreate {
 	return _c
 }
 
+// SetDepartmentID sets the "department_id" field.
+func (_c *AdminCreate) SetDepartmentID(v string) *AdminCreate {
+	_c.mutation.SetDepartmentID(v)
+	return _c
+}
+
+// SetNillableDepartmentID sets the "department_id" field if the given value is not nil.
+func (_c *AdminCreate) SetNillableDepartmentID(v *string) *AdminCreate {
+	if v != nil {
+		_c.SetDepartmentID(*v)
+	}
+	return _c
+}
+
 // SetPassword sets the "password" field.
 func (_c *AdminCreate) SetPassword(v string) *AdminCreate {
 	_c.mutation.SetPassword(v)
+	return _c
+}
+
+// SetStatus sets the "status" field.
+func (_c *AdminCreate) SetStatus(v admin.Status) *AdminCreate {
+	_c.mutation.SetStatus(v)
+	return _c
+}
+
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (_c *AdminCreate) SetNillableStatus(v *admin.Status) *AdminCreate {
+	if v != nil {
+		_c.SetStatus(*v)
+	}
 	return _c
 }
 
@@ -153,6 +197,21 @@ func (_c *AdminCreate) AddRoles(v ...*Role) *AdminCreate {
 	return _c.AddRoleIDs(ids...)
 }
 
+// AddDataPermissionIDs adds the "data_permissions" edge to the DataPermission entity by IDs.
+func (_c *AdminCreate) AddDataPermissionIDs(ids ...string) *AdminCreate {
+	_c.mutation.AddDataPermissionIDs(ids...)
+	return _c
+}
+
+// AddDataPermissions adds the "data_permissions" edges to the DataPermission entity.
+func (_c *AdminCreate) AddDataPermissions(v ...*DataPermission) *AdminCreate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddDataPermissionIDs(ids...)
+}
+
 // AddAdminRoleIDs adds the "admin_roles" edge to the AdminRole entity by IDs.
 func (_c *AdminCreate) AddAdminRoleIDs(ids ...string) *AdminCreate {
 	_c.mutation.AddAdminRoleIDs(ids...)
@@ -166,6 +225,21 @@ func (_c *AdminCreate) AddAdminRoles(v ...*AdminRole) *AdminCreate {
 		ids[i] = v[i].ID
 	}
 	return _c.AddAdminRoleIDs(ids...)
+}
+
+// AddAdminDataPermissionIDs adds the "admin_data_permissions" edge to the AdminDataPermission entity by IDs.
+func (_c *AdminCreate) AddAdminDataPermissionIDs(ids ...string) *AdminCreate {
+	_c.mutation.AddAdminDataPermissionIDs(ids...)
+	return _c
+}
+
+// AddAdminDataPermissions adds the "admin_data_permissions" edges to the AdminDataPermission entity.
+func (_c *AdminCreate) AddAdminDataPermissions(v ...*AdminDataPermission) *AdminCreate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddAdminDataPermissionIDs(ids...)
 }
 
 // Mutation returns the AdminMutation object of the builder.
@@ -203,9 +277,21 @@ func (_c *AdminCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (_c *AdminCreate) defaults() {
+	if _, ok := _c.mutation.TenantID(); !ok {
+		v := admin.DefaultTenantID
+		_c.mutation.SetTenantID(v)
+	}
 	if _, ok := _c.mutation.RealName(); !ok {
 		v := admin.DefaultRealName
 		_c.mutation.SetRealName(v)
+	}
+	if _, ok := _c.mutation.DepartmentID(); !ok {
+		v := admin.DefaultDepartmentID
+		_c.mutation.SetDepartmentID(v)
+	}
+	if _, ok := _c.mutation.Status(); !ok {
+		v := admin.DefaultStatus
+		_c.mutation.SetStatus(v)
 	}
 	if _, ok := _c.mutation.CreatedAt(); !ok {
 		v := admin.DefaultCreatedAt()
@@ -219,6 +305,14 @@ func (_c *AdminCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (_c *AdminCreate) check() error {
+	if _, ok := _c.mutation.TenantID(); !ok {
+		return &ValidationError{Name: "tenant_id", err: errors.New(`ent: missing required field "Admin.tenant_id"`)}
+	}
+	if v, ok := _c.mutation.TenantID(); ok {
+		if err := admin.TenantIDValidator(v); err != nil {
+			return &ValidationError{Name: "tenant_id", err: fmt.Errorf(`ent: validator failed for field "Admin.tenant_id": %w`, err)}
+		}
+	}
 	if _, ok := _c.mutation.RealName(); !ok {
 		return &ValidationError{Name: "real_name", err: errors.New(`ent: missing required field "Admin.real_name"`)}
 	}
@@ -227,6 +321,14 @@ func (_c *AdminCreate) check() error {
 	}
 	if _, ok := _c.mutation.Password(); !ok {
 		return &ValidationError{Name: "password", err: errors.New(`ent: missing required field "Admin.password"`)}
+	}
+	if _, ok := _c.mutation.Status(); !ok {
+		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Admin.status"`)}
+	}
+	if v, ok := _c.mutation.Status(); ok {
+		if err := admin.StatusValidator(v); err != nil {
+			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Admin.status": %w`, err)}
+		}
 	}
 	if _, ok := _c.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Admin.created_at"`)}
@@ -269,6 +371,10 @@ func (_c *AdminCreate) createSpec() (*Admin, *sqlgraph.CreateSpec) {
 		_node.ID = id
 		_spec.ID.Value = id
 	}
+	if value, ok := _c.mutation.TenantID(); ok {
+		_spec.SetField(admin.FieldTenantID, field.TypeString, value)
+		_node.TenantID = value
+	}
 	if value, ok := _c.mutation.RealName(); ok {
 		_spec.SetField(admin.FieldRealName, field.TypeString, value)
 		_node.RealName = value
@@ -289,9 +395,17 @@ func (_c *AdminCreate) createSpec() (*Admin, *sqlgraph.CreateSpec) {
 		_spec.SetField(admin.FieldAvatar, field.TypeString, value)
 		_node.Avatar = value
 	}
+	if value, ok := _c.mutation.DepartmentID(); ok {
+		_spec.SetField(admin.FieldDepartmentID, field.TypeString, value)
+		_node.DepartmentID = value
+	}
 	if value, ok := _c.mutation.Password(); ok {
 		_spec.SetField(admin.FieldPassword, field.TypeString, value)
 		_node.Password = value
+	}
+	if value, ok := _c.mutation.Status(); ok {
+		_spec.SetField(admin.FieldStatus, field.TypeEnum, value)
+		_node.Status = value
 	}
 	if value, ok := _c.mutation.CreatedAt(); ok {
 		_spec.SetField(admin.FieldCreatedAt, field.TypeTime, value)
@@ -325,6 +439,26 @@ func (_c *AdminCreate) createSpec() (*Admin, *sqlgraph.CreateSpec) {
 		edge.Target.Fields = specE.Fields
 		_spec.Edges = append(_spec.Edges, edge)
 	}
+	if nodes := _c.mutation.DataPermissionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   admin.DataPermissionsTable,
+			Columns: admin.DataPermissionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(datapermission.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &AdminDataPermissionCreate{config: _c.config, mutation: newAdminDataPermissionMutation(_c.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges = append(_spec.Edges, edge)
+	}
 	if nodes := _c.mutation.AdminRolesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -334,6 +468,22 @@ func (_c *AdminCreate) createSpec() (*Admin, *sqlgraph.CreateSpec) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(adminrole.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.AdminDataPermissionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   admin.AdminDataPermissionsTable,
+			Columns: []string{admin.AdminDataPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(admindatapermission.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

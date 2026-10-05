@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://github.com/anncwb/vue-vben-admin">
-    <img alt="VbenAdmin Logo" width="215" src="https://unpkg.com/@vbenjs/static-source@0.1.7/source/logo-v1.webp">
+    <img alt="VbenAdmin Logo" width="215" src="/logo.png">
   </a>
   <br>
   <br>
@@ -50,7 +50,7 @@ Vue Vben Admin 是 Vue Vben Admin 的升级版本。作为一个免费开源的�
 
 ## 文档
 
-[文档地址](https://doc.vben.pro/)
+[文档地址](http://weaveradmin.antsurge.com/)
 
 ## 安装使用
 

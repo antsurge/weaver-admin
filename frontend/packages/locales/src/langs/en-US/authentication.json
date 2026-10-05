@@ -11,6 +11,8 @@
   "usernameTip": "Please enter username",
   "passwordErrorTip": "Password is incorrect",
   "passwordTip": "Please enter password",
+  "tenantCode": "Tenant Code",
+  "tenantCodeTip": "Please enter tenant code",
   "captchaTip": "Please enter captcha",
   "verifyRequiredTip": "Please complete the verification first",
   "rememberMe": "Remember Me",

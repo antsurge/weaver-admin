@@ -28,6 +28,7 @@ const OperationOrganizationDeletePosition = "/admin.service.v1.Organization/Dele
 const OperationOrganizationDepartmentTree = "/admin.service.v1.Organization/DepartmentTree"
 const OperationOrganizationGetDepartment = "/admin.service.v1.Organization/GetDepartment"
 const OperationOrganizationGetPosition = "/admin.service.v1.Organization/GetPosition"
+const OperationOrganizationIsDepartmentCodeExists = "/admin.service.v1.Organization/IsDepartmentCodeExists"
 const OperationOrganizationIsPositionCodeExists = "/admin.service.v1.Organization/IsPositionCodeExists"
 const OperationOrganizationIsPositionNameExists = "/admin.service.v1.Organization/IsPositionNameExists"
 const OperationOrganizationListPosition = "/admin.service.v1.Organization/ListPosition"
@@ -49,6 +50,8 @@ type OrganizationHTTPServer interface {
 	DepartmentTree(context.Context, *v1.DepartmentTreeRequest) (*v1.DepartmentTreeResponse, error)
 	GetDepartment(context.Context, *v1.GetDepartmentRequest) (*v1.Department, error)
 	GetPosition(context.Context, *v1.GetPositionRequest) (*v1.Position, error)
+	// IsDepartmentCodeExists 部门编码是否存在
+	IsDepartmentCodeExists(context.Context, *v1.IsDepartmentCodeExistsRequest) (*v1.IsDepartmentFieldExistsResponse, error)
 	IsPositionCodeExists(context.Context, *v1.IsPositionCodeExistsRequest) (*v1.IsPositionFieldExistsResponse, error)
 	IsPositionNameExists(context.Context, *v1.IsPositionNameExistsRequest) (*v1.IsPositionFieldExistsResponse, error)
 	// ListPosition 职务模块
@@ -72,6 +75,7 @@ func RegisterOrganizationHTTPServer(s *http.Server, srv OrganizationHTTPServer) 
 	r.PUT("/admin/v1/department/{id}", _Organization_UpdateDepartment0_HTTP_Handler(srv))
 	r.PUT("/admin/v1/department/{id}/status", _Organization_UpdateDepartmentStatus0_HTTP_Handler(srv))
 	r.DELETE("/admin/v1/department", _Organization_DeleteDepartment0_HTTP_Handler(srv))
+	r.GET("/admin/v1/department:code-exists", _Organization_IsDepartmentCodeExists0_HTTP_Handler(srv))
 	r.GET("/admin/v1/position", _Organization_ListPosition0_HTTP_Handler(srv))
 	r.GET("/admin/v1/position/{id}", _Organization_GetPosition0_HTTP_Handler(srv))
 	r.POST("/admin/v1/position", _Organization_CreatePosition0_HTTP_Handler(srv))
@@ -210,6 +214,25 @@ func _Organization_DeleteDepartment0_HTTP_Handler(srv OrganizationHTTPServer) fu
 			return err
 		}
 		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Organization_IsDepartmentCodeExists0_HTTP_Handler(srv OrganizationHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.IsDepartmentCodeExistsRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationOrganizationIsDepartmentCodeExists)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.IsDepartmentCodeExists(ctx, req.(*v1.IsDepartmentCodeExistsRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.IsDepartmentFieldExistsResponse)
 		return ctx.Result(200, reply)
 	}
 }
@@ -397,6 +420,8 @@ type OrganizationHTTPClient interface {
 	DepartmentTree(ctx context.Context, req *v1.DepartmentTreeRequest, opts ...http.CallOption) (rsp *v1.DepartmentTreeResponse, err error)
 	GetDepartment(ctx context.Context, req *v1.GetDepartmentRequest, opts ...http.CallOption) (rsp *v1.Department, err error)
 	GetPosition(ctx context.Context, req *v1.GetPositionRequest, opts ...http.CallOption) (rsp *v1.Position, err error)
+	// IsDepartmentCodeExists 部门编码是否存在
+	IsDepartmentCodeExists(ctx context.Context, req *v1.IsDepartmentCodeExistsRequest, opts ...http.CallOption) (rsp *v1.IsDepartmentFieldExistsResponse, err error)
 	IsPositionCodeExists(ctx context.Context, req *v1.IsPositionCodeExistsRequest, opts ...http.CallOption) (rsp *v1.IsPositionFieldExistsResponse, err error)
 	IsPositionNameExists(ctx context.Context, req *v1.IsPositionNameExistsRequest, opts ...http.CallOption) (rsp *v1.IsPositionFieldExistsResponse, err error)
 	// ListPosition 职务模块
@@ -508,6 +533,20 @@ func (c *OrganizationHTTPClientImpl) GetPosition(ctx context.Context, in *v1.Get
 	pattern := "/admin/v1/position/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationOrganizationGetPosition))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// IsDepartmentCodeExists 部门编码是否存在
+func (c *OrganizationHTTPClientImpl) IsDepartmentCodeExists(ctx context.Context, in *v1.IsDepartmentCodeExistsRequest, opts ...http.CallOption) (*v1.IsDepartmentFieldExistsResponse, error) {
+	var out v1.IsDepartmentFieldExistsResponse
+	pattern := "/admin/v1/department:code-exists"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationOrganizationIsDepartmentCodeExists))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

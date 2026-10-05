@@ -2,7 +2,7 @@ package data
 
 import (
 	"context"
-	"time"
+	"sort"
 
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/biz"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent"
@@ -62,41 +62,147 @@ func (r *apiInterfaceRepo) ListApiInterface(ctx context.Context, params *biz.Lis
 	}, nil
 }
 
-// UpsertApiInterface 按 code 插入或更新
-func (r *apiInterfaceRepo) UpsertApiInterface(ctx context.Context, d *biz.ApiInterface) error {
-	// 先查是否存在
-	exists, err := r.data.db.ApiInterface.Query().
-		Where(apiinterface.CodeEQ(d.Code)).
-		First(ctx)
+// ListApiInterfaceOptions 查询去重后的服务名/标签（下拉数据源）
+func (r *apiInterfaceRepo) ListApiInterfaceOptions(ctx context.Context) (*biz.ApiInterfaceOptions, error) {
+	services, err := r.data.db.ApiInterface.Query().
+		Where(apiinterface.ServiceNEQ("")).
+		GroupBy(apiinterface.FieldService).
+		Strings(ctx)
 	if err != nil {
-		if !ent.IsNotFound(err) {
-			return err
-		}
-		// 不存在则创建
-		_, err = r.data.db.ApiInterface.Create().
-			SetID(d.ID).
-			SetService(d.Service).
-			SetTag(d.Tag).
-			SetMethod(d.Method).
-			SetPath(d.Path).
-			SetSummary(d.Summary).
-			SetCode(d.Code).
-			SetCreatedAt(d.CreatedAt).
-			SetUpdatedAt(d.UpdatedAt).
-			Save(ctx)
-		return err
+		return nil, err
 	}
 
-	// 存在则更新
-	_, err = r.data.db.ApiInterface.UpdateOneID(exists.ID).
-		SetService(d.Service).
-		SetTag(d.Tag).
-		SetMethod(d.Method).
-		SetPath(d.Path).
-		SetSummary(d.Summary).
-		SetUpdatedAt(time.Now()).
+	tags, err := r.data.db.ApiInterface.Query().
+		Where(apiinterface.TagNEQ("")).
+		GroupBy(apiinterface.FieldTag).
+		Strings(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	sort.Strings(services)
+	sort.Strings(tags)
+	return &biz.ApiInterfaceOptions{Services: services, Tags: tags}, nil
+}
+
+// GetApiInterfaceByCode 按唯一键查询（用于新增/编辑时冲突检查；不存在返回 nil）
+func (r *apiInterfaceRepo) GetApiInterfaceByCode(ctx context.Context, code string) (*biz.ApiInterface, error) {
+	v, err := r.data.db.ApiInterface.Query().
+		Where(apiinterface.CodeEQ(code)).
+		First(ctx)
+	if err != nil {
+		if ent.IsNotFound(err) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return toBizApiInterface(v), nil
+}
+
+// CreateApiInterface 手动新增
+func (r *apiInterfaceRepo) CreateApiInterface(ctx context.Context, item *biz.ApiInterface) (*biz.ApiInterface, error) {
+	v, err := r.data.db.ApiInterface.Create().
+		SetID(item.ID).
+		SetService(item.Service).
+		SetTag(item.Tag).
+		SetMethod(item.Method).
+		SetPath(item.Path).
+		SetSummary(item.Summary).
+		SetCode(item.Code).
+		SetCreatedAt(item.CreatedAt).
+		SetUpdatedAt(item.UpdatedAt).
 		Save(ctx)
-	return err
+	if err != nil {
+		return nil, err
+	}
+	return toBizApiInterface(v), nil
+}
+
+// UpdateApiInterface 手动编辑
+func (r *apiInterfaceRepo) UpdateApiInterface(ctx context.Context, item *biz.ApiInterface) (*biz.ApiInterface, error) {
+	v, err := r.data.db.ApiInterface.UpdateOneID(item.ID).
+		SetService(item.Service).
+		SetTag(item.Tag).
+		SetMethod(item.Method).
+		SetPath(item.Path).
+		SetSummary(item.Summary).
+		SetCode(item.Code).
+		SetUpdatedAt(item.UpdatedAt).
+		Save(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return toBizApiInterface(v), nil
+}
+
+// UpsertApiInterfaces 按 code 对比导入（事务保证原子性）：
+//   - code 已存在的记录做更新（保留原 id，绑定关系不受影响，因为绑定按 code 关联）
+//   - code 不存在的记录做创建
+//
+// 不会删除任何已有数据，手动新增的接口不受影响。
+func (r *apiInterfaceRepo) UpsertApiInterfaces(ctx context.Context, items []*biz.ApiInterface) (*biz.ImportResult, error) {
+	result := &biz.ImportResult{Total: len(items)}
+
+	tx, err := r.data.db.Tx(ctx)
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		if err != nil {
+			_ = tx.Rollback()
+		}
+	}()
+
+	// 查出当前全部 code -> id 映射
+	codes, err := tx.ApiInterface.Query().
+		Select(apiinterface.FieldCode, apiinterface.FieldID).
+		All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	codeToID := make(map[string]string, len(codes))
+	for _, c := range codes {
+		codeToID[c.Code] = c.ID
+	}
+
+	for _, item := range items {
+		if existingID, ok := codeToID[item.Code]; ok {
+			// 已存在 -> 更新
+			if _, err = tx.ApiInterface.UpdateOneID(existingID).
+				SetService(item.Service).
+				SetTag(item.Tag).
+				SetMethod(item.Method).
+				SetPath(item.Path).
+				SetSummary(item.Summary).
+				SetCode(item.Code).
+				SetUpdatedAt(item.UpdatedAt).
+				Save(ctx); err != nil {
+				return nil, err
+			}
+			result.Updated++
+		} else {
+			// 不存在 -> 创建
+			if _, err = tx.ApiInterface.Create().
+				SetID(item.ID).
+				SetService(item.Service).
+				SetTag(item.Tag).
+				SetMethod(item.Method).
+				SetPath(item.Path).
+				SetSummary(item.Summary).
+				SetCode(item.Code).
+				SetCreatedAt(item.CreatedAt).
+				SetUpdatedAt(item.UpdatedAt).
+				Save(ctx); err != nil {
+				return nil, err
+			}
+			result.Imported++
+		}
+	}
+
+	if err = tx.Commit(); err != nil {
+		return nil, err
+	}
+	return result, nil
 }
 
 // DeleteApiInterface 批量删除

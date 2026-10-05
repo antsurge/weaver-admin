@@ -22,6 +22,11 @@ func (AdminRole) Annotations() []schema.Annotation {
 	}
 }
 
+// Mixin of the AdminRole.
+func (AdminRole) Mixin() []ent.Mixin {
+	return []ent.Mixin{TenantMixin{}}
+}
+
 func (AdminRole) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("id").

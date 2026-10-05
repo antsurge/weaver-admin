@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import type { NotificationItem } from '@vben/layouts';
 
-import { computed, ref, watch } from 'vue';
+import type { NotificationApi } from '#/api/system/notification';
+
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { AuthenticationLoginExpiredModal } from '@vben/common-ui';
-import { VBEN_DOC_URL, VBEN_GITHUB_URL } from '@vben/constants';
 import { useWatermark } from '@vben/hooks';
 import { BookOpenText, CircleHelp, SvgGithubIcon } from '@vben/icons';
 import {
@@ -18,83 +19,108 @@ import { preferences } from '@vben/preferences';
 import { useAccessStore, useUserStore } from '@vben/stores';
 import { openWindow } from '@vben/utils';
 
+import { getFileAccessUrl } from '#/api/system/file';
+import {
+  deleteNotificationApi,
+  getNotificationListApi,
+  getUnreadCountApi,
+  readAllNotificationApi,
+  readNotificationApi,
+  subscribeNotificationStream,
+} from '#/api/system/notification';
 import { $t } from '#/locales';
 import { useAuthStore } from '#/store';
 import LoginForm from '#/views/_core/authentication/login.vue';
+import ProfileModal from '#/views/_core/profile/profile-modal.vue';
 
-const notifications = ref<NotificationItem[]>([
-  {
-    id: 1,
-    avatar: 'https://avatar.vercel.sh/vercel.svg?text=VB',
-    date: '3小时前',
-    isRead: true,
-    message: '描述信息描述信息描述信息',
-    title: '收到了 14 份新周报',
-  },
-  {
-    id: 2,
-    avatar: 'https://avatar.vercel.sh/1',
-    date: '刚刚',
-    isRead: false,
-    message: '描述信息描述信息描述信息',
-    title: '朱偏右 回复了你',
-  },
-  {
-    id: 3,
-    avatar: 'https://avatar.vercel.sh/1',
-    date: '2024-01-01',
-    isRead: false,
-    message: '描述信息描述信息描述信息',
-    title: '曲丽丽 评论了你',
-  },
-  {
-    id: 4,
-    avatar: 'https://avatar.vercel.sh/satori',
-    date: '1天前',
-    isRead: false,
-    message: '描述信息描述信息描述信息',
-    title: '代办提醒',
-  },
-  {
-    id: 5,
-    avatar: 'https://avatar.vercel.sh/satori',
-    date: '1天前',
-    isRead: false,
-    message: '描述信息描述信息描述信息',
-    title: '跳转Workspace示例',
-    link: '/workspace',
-  },
-  {
-    id: 6,
-    avatar: 'https://avatar.vercel.sh/satori',
-    date: '1天前',
-    isRead: false,
-    message: '描述信息描述信息描述信息',
-    title: '跳转外部链接示例',
-    link: 'https://doc.vben.pro',
-  },
-]);
+const notifications = ref<NotificationItem[]>([]);
+const unreadCount = ref(0);
+
+/** 收件记录 → 铃铛展示项 */
+function toNotificationItem(
+  record: NotificationApi.NotificationRecord,
+): NotificationItem {
+  const n = record.notification;
+  return {
+    id: record.id,
+    avatar: preferences.app.defaultAvatar,
+    date: formatRelativeTime(record.createdAt),
+    isRead: record.isRead,
+    message: n?.content ?? '',
+    title: n?.title ?? '',
+    link: n?.link || undefined,
+  };
+}
+
+/** 时间戳转相对时间，空值返回空串 */
+function formatRelativeTime(value?: string) {
+  if (!value) return '';
+  const ts = new Date(value).getTime();
+  if (Number.isNaN(ts)) return '';
+  const diff = Date.now() - ts;
+  if (diff < 60_000) return '刚刚';
+  if (diff < 3_600_000) return `${Math.floor(diff / 60_000)}分钟前`;
+  if (diff < 86_400_000) return `${Math.floor(diff / 3_600_000)}小时前`;
+  if (diff < 7 * 86_400_000) return `${Math.floor(diff / 86_400_000)}天前`;
+  return new Date(value).toLocaleDateString();
+}
+
+async function refreshUnreadCount() {
+  try {
+    const res = await getUnreadCountApi();
+    unreadCount.value = res.count ?? 0;
+  } catch {
+    // 未读数获取失败不影响主流程
+  }
+}
+
+async function loadNotifications() {
+  try {
+    const res = await getNotificationListApi({
+      currentPage: 1,
+      pageSize: 20,
+    });
+    notifications.value = (res.items ?? []).map((item) =>
+      toNotificationItem(item),
+    );
+  } catch {
+    notifications.value = [];
+  }
+  await refreshUnreadCount();
+}
+
+// SSE 实时推送：收到新通知直接插到列表头部并刷新未读数
+let unsubscribeStream: () => void = () => {};
+onMounted(() => {
+  void loadNotifications();
+  // 收到任何事件都重新拉取：新建与撤回都能覆盖，且未读数始终与后端一致
+  unsubscribeStream = subscribeNotificationStream({
+    onNotification: () => void loadNotifications(),
+  });
+});
+onUnmounted(() => unsubscribeStream());
 
 const router = useRouter();
 const userStore = useUserStore();
 const authStore = useAuthStore();
 const accessStore = useAccessStore();
 const { destroyWatermark, updateWatermark } = useWatermark();
-const showDot = computed(() =>
-  notifications.value.some((item) => !item.isRead),
-);
+// 用后端未读数判断，避免列表只取前 20 条时漏判
+const showDot = computed(() => unreadCount.value > 0);
+
+const profileOpen = ref(false);
 
 const menus = computed(() => [
   {
     handler: () => {
-      router.push({ name: 'Profile' });
+      profileOpen.value = true;
     },
     icon: 'lucide:user',
     text: $t('page.auth.profile'),
   },
   {
     handler: () => {
-      openWindow(VBEN_DOC_URL, {
+      openWindow('http://weaveradmin.antsurge.com', {
         target: '_blank',
       });
     },
@@ -103,7 +129,7 @@ const menus = computed(() => [
   },
   {
     handler: () => {
-      openWindow(VBEN_GITHUB_URL, {
+      openWindow('https://github.com/antsurge/weaver-admin', {
         target: '_blank',
       });
     },
@@ -112,7 +138,7 @@ const menus = computed(() => [
   },
   {
     handler: () => {
-      openWindow(`${VBEN_GITHUB_URL}/issues`, {
+      openWindow('https://github.com/antsurge/weaver-admin/issues', {
         target: '_blank',
       });
     },
@@ -122,7 +148,10 @@ const menus = computed(() => [
 ]);
 
 const avatar = computed(() => {
-  return userStore.userInfo?.avatar ?? preferences.app.defaultAvatar;
+  return (
+    getFileAccessUrl(userStore.userInfo?.avatar) ||
+    preferences.app.defaultAvatar
+  );
 });
 
 async function handleLogout() {
@@ -130,22 +159,50 @@ async function handleLogout() {
 }
 
 function handleNoticeClear() {
-  notifications.value = [];
+  const ids = notifications.value.map((item) => String(item.id));
+  if (ids.length === 0) return;
+  deleteNotificationApi(ids)
+    .then(() => {
+      notifications.value = [];
+      return refreshUnreadCount();
+    })
+    .catch(() => {});
 }
 
 function markRead(id: number | string) {
-  const item = notifications.value.find((item) => item.id === id);
-  if (item) {
-    item.isRead = true;
-  }
+  readNotificationApi(String(id))
+    .then(() => {
+      const item = notifications.value.find((item) => item.id === id);
+      if (item) {
+        item.isRead = true;
+      }
+      return refreshUnreadCount();
+    })
+    .catch(() => {});
 }
 
 function remove(id: number | string) {
-  notifications.value = notifications.value.filter((item) => item.id !== id);
+  deleteNotificationApi([String(id)])
+    .then(() => {
+      notifications.value = notifications.value.filter(
+        (item) => item.id !== id,
+      );
+      return refreshUnreadCount();
+    })
+    .catch(() => {});
 }
 
 function handleMakeAll() {
-  notifications.value.forEach((item) => (item.isRead = true));
+  readAllNotificationApi()
+    .then(() => {
+      notifications.value.forEach((item) => (item.isRead = true));
+      unreadCount.value = 0;
+    })
+    .catch(() => {});
+}
+
+function handleViewAll() {
+  router.push('/system/notification');
 }
 watch(
   () => ({
@@ -189,6 +246,7 @@ watch(
         @read="(item) => item.id && markRead(item.id)"
         @remove="(item) => item.id && remove(item.id)"
         @make-all="handleMakeAll"
+        @view-all="handleViewAll"
       />
     </template>
     <template #extra>
@@ -203,4 +261,5 @@ watch(
       <LockScreen :avatar @to-login="handleLogout" />
     </template>
   </BasicLayout>
+  <ProfileModal v-model:open="profileOpen" />
 </template>

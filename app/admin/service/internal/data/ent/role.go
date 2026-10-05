@@ -17,6 +17,8 @@ type Role struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID string `json:"id,omitempty"`
+	// 租户ID
+	TenantID string `json:"tenant_id,omitempty"`
 	// 角色名称
 	Name string `json:"name,omitempty"`
 	// 角色编码
@@ -29,8 +31,6 @@ type Role struct {
 	Remark string `json:"remark,omitempty"`
 	// 是否系统内置
 	IsSystem bool `json:"is_system,omitempty"`
-	// 数据权限范围: all / dept / self
-	DataScope string `json:"data_scope,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
@@ -47,15 +47,19 @@ type Role struct {
 type RoleEdges struct {
 	// Menus holds the value of the menus edge.
 	Menus []*Menu `json:"menus,omitempty"`
+	// DataPermissions holds the value of the data_permissions edge.
+	DataPermissions []*DataPermission `json:"data_permissions,omitempty"`
 	// Admins holds the value of the admins edge.
 	Admins []*Admin `json:"admins,omitempty"`
 	// RoleMenus holds the value of the role_menus edge.
 	RoleMenus []*RoleMenu `json:"role_menus,omitempty"`
+	// RoleDataPermissions holds the value of the role_data_permissions edge.
+	RoleDataPermissions []*RoleDataPermission `json:"role_data_permissions,omitempty"`
 	// AdminRoles holds the value of the admin_roles edge.
 	AdminRoles []*AdminRole `json:"admin_roles,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [4]bool
+	loadedTypes [6]bool
 }
 
 // MenusOrErr returns the Menus value or an error if the edge
@@ -67,10 +71,19 @@ func (e RoleEdges) MenusOrErr() ([]*Menu, error) {
 	return nil, &NotLoadedError{edge: "menus"}
 }
 
+// DataPermissionsOrErr returns the DataPermissions value or an error if the edge
+// was not loaded in eager-loading.
+func (e RoleEdges) DataPermissionsOrErr() ([]*DataPermission, error) {
+	if e.loadedTypes[1] {
+		return e.DataPermissions, nil
+	}
+	return nil, &NotLoadedError{edge: "data_permissions"}
+}
+
 // AdminsOrErr returns the Admins value or an error if the edge
 // was not loaded in eager-loading.
 func (e RoleEdges) AdminsOrErr() ([]*Admin, error) {
-	if e.loadedTypes[1] {
+	if e.loadedTypes[2] {
 		return e.Admins, nil
 	}
 	return nil, &NotLoadedError{edge: "admins"}
@@ -79,16 +92,25 @@ func (e RoleEdges) AdminsOrErr() ([]*Admin, error) {
 // RoleMenusOrErr returns the RoleMenus value or an error if the edge
 // was not loaded in eager-loading.
 func (e RoleEdges) RoleMenusOrErr() ([]*RoleMenu, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[3] {
 		return e.RoleMenus, nil
 	}
 	return nil, &NotLoadedError{edge: "role_menus"}
 }
 
+// RoleDataPermissionsOrErr returns the RoleDataPermissions value or an error if the edge
+// was not loaded in eager-loading.
+func (e RoleEdges) RoleDataPermissionsOrErr() ([]*RoleDataPermission, error) {
+	if e.loadedTypes[4] {
+		return e.RoleDataPermissions, nil
+	}
+	return nil, &NotLoadedError{edge: "role_data_permissions"}
+}
+
 // AdminRolesOrErr returns the AdminRoles value or an error if the edge
 // was not loaded in eager-loading.
 func (e RoleEdges) AdminRolesOrErr() ([]*AdminRole, error) {
-	if e.loadedTypes[3] {
+	if e.loadedTypes[5] {
 		return e.AdminRoles, nil
 	}
 	return nil, &NotLoadedError{edge: "admin_roles"}
@@ -103,7 +125,7 @@ func (*Role) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullBool)
 		case role.FieldWeight:
 			values[i] = new(sql.NullInt64)
-		case role.FieldID, role.FieldName, role.FieldCode, role.FieldStatus, role.FieldRemark, role.FieldDataScope:
+		case role.FieldID, role.FieldTenantID, role.FieldName, role.FieldCode, role.FieldStatus, role.FieldRemark:
 			values[i] = new(sql.NullString)
 		case role.FieldCreatedAt, role.FieldUpdatedAt, role.FieldDeletedAt:
 			values[i] = new(sql.NullTime)
@@ -127,6 +149,12 @@ func (_m *Role) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value.Valid {
 				_m.ID = value.String
+			}
+		case role.FieldTenantID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field tenant_id", values[i])
+			} else if value.Valid {
+				_m.TenantID = value.String
 			}
 		case role.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -163,12 +191,6 @@ func (_m *Role) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field is_system", values[i])
 			} else if value.Valid {
 				_m.IsSystem = value.Bool
-			}
-		case role.FieldDataScope:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field data_scope", values[i])
-			} else if value.Valid {
-				_m.DataScope = value.String
 			}
 		case role.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -207,6 +229,11 @@ func (_m *Role) QueryMenus() *MenuQuery {
 	return NewRoleClient(_m.config).QueryMenus(_m)
 }
 
+// QueryDataPermissions queries the "data_permissions" edge of the Role entity.
+func (_m *Role) QueryDataPermissions() *DataPermissionQuery {
+	return NewRoleClient(_m.config).QueryDataPermissions(_m)
+}
+
 // QueryAdmins queries the "admins" edge of the Role entity.
 func (_m *Role) QueryAdmins() *AdminQuery {
 	return NewRoleClient(_m.config).QueryAdmins(_m)
@@ -215,6 +242,11 @@ func (_m *Role) QueryAdmins() *AdminQuery {
 // QueryRoleMenus queries the "role_menus" edge of the Role entity.
 func (_m *Role) QueryRoleMenus() *RoleMenuQuery {
 	return NewRoleClient(_m.config).QueryRoleMenus(_m)
+}
+
+// QueryRoleDataPermissions queries the "role_data_permissions" edge of the Role entity.
+func (_m *Role) QueryRoleDataPermissions() *RoleDataPermissionQuery {
+	return NewRoleClient(_m.config).QueryRoleDataPermissions(_m)
 }
 
 // QueryAdminRoles queries the "admin_roles" edge of the Role entity.
@@ -245,6 +277,9 @@ func (_m *Role) String() string {
 	var builder strings.Builder
 	builder.WriteString("Role(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
+	builder.WriteString("tenant_id=")
+	builder.WriteString(_m.TenantID)
+	builder.WriteString(", ")
 	builder.WriteString("name=")
 	builder.WriteString(_m.Name)
 	builder.WriteString(", ")
@@ -262,9 +297,6 @@ func (_m *Role) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("is_system=")
 	builder.WriteString(fmt.Sprintf("%v", _m.IsSystem))
-	builder.WriteString(", ")
-	builder.WriteString("data_scope=")
-	builder.WriteString(_m.DataScope)
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(_m.CreatedAt.Format(time.ANSIC))

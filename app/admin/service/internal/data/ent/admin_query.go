@@ -13,7 +13,9 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/admin"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/admindatapermission"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/adminrole"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/datapermission"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/predicate"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/role"
 )
@@ -21,12 +23,14 @@ import (
 // AdminQuery is the builder for querying Admin entities.
 type AdminQuery struct {
 	config
-	ctx            *QueryContext
-	order          []admin.OrderOption
-	inters         []Interceptor
-	predicates     []predicate.Admin
-	withRoles      *RoleQuery
-	withAdminRoles *AdminRoleQuery
+	ctx                      *QueryContext
+	order                    []admin.OrderOption
+	inters                   []Interceptor
+	predicates               []predicate.Admin
+	withRoles                *RoleQuery
+	withDataPermissions      *DataPermissionQuery
+	withAdminRoles           *AdminRoleQuery
+	withAdminDataPermissions *AdminDataPermissionQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -85,6 +89,28 @@ func (_q *AdminQuery) QueryRoles() *RoleQuery {
 	return query
 }
 
+// QueryDataPermissions chains the current query on the "data_permissions" edge.
+func (_q *AdminQuery) QueryDataPermissions() *DataPermissionQuery {
+	query := (&DataPermissionClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(admin.Table, admin.FieldID, selector),
+			sqlgraph.To(datapermission.Table, datapermission.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, admin.DataPermissionsTable, admin.DataPermissionsPrimaryKey...),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
 // QueryAdminRoles chains the current query on the "admin_roles" edge.
 func (_q *AdminQuery) QueryAdminRoles() *AdminRoleQuery {
 	query := (&AdminRoleClient{config: _q.config}).Query()
@@ -100,6 +126,28 @@ func (_q *AdminQuery) QueryAdminRoles() *AdminRoleQuery {
 			sqlgraph.From(admin.Table, admin.FieldID, selector),
 			sqlgraph.To(adminrole.Table, adminrole.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, true, admin.AdminRolesTable, admin.AdminRolesColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryAdminDataPermissions chains the current query on the "admin_data_permissions" edge.
+func (_q *AdminQuery) QueryAdminDataPermissions() *AdminDataPermissionQuery {
+	query := (&AdminDataPermissionClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(admin.Table, admin.FieldID, selector),
+			sqlgraph.To(admindatapermission.Table, admindatapermission.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, admin.AdminDataPermissionsTable, admin.AdminDataPermissionsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
 		return fromU, nil
@@ -294,13 +342,15 @@ func (_q *AdminQuery) Clone() *AdminQuery {
 		return nil
 	}
 	return &AdminQuery{
-		config:         _q.config,
-		ctx:            _q.ctx.Clone(),
-		order:          append([]admin.OrderOption{}, _q.order...),
-		inters:         append([]Interceptor{}, _q.inters...),
-		predicates:     append([]predicate.Admin{}, _q.predicates...),
-		withRoles:      _q.withRoles.Clone(),
-		withAdminRoles: _q.withAdminRoles.Clone(),
+		config:                   _q.config,
+		ctx:                      _q.ctx.Clone(),
+		order:                    append([]admin.OrderOption{}, _q.order...),
+		inters:                   append([]Interceptor{}, _q.inters...),
+		predicates:               append([]predicate.Admin{}, _q.predicates...),
+		withRoles:                _q.withRoles.Clone(),
+		withDataPermissions:      _q.withDataPermissions.Clone(),
+		withAdminRoles:           _q.withAdminRoles.Clone(),
+		withAdminDataPermissions: _q.withAdminDataPermissions.Clone(),
 		// clone intermediate query.
 		sql:  _q.sql.Clone(),
 		path: _q.path,
@@ -318,6 +368,17 @@ func (_q *AdminQuery) WithRoles(opts ...func(*RoleQuery)) *AdminQuery {
 	return _q
 }
 
+// WithDataPermissions tells the query-builder to eager-load the nodes that are connected to
+// the "data_permissions" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *AdminQuery) WithDataPermissions(opts ...func(*DataPermissionQuery)) *AdminQuery {
+	query := (&DataPermissionClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withDataPermissions = query
+	return _q
+}
+
 // WithAdminRoles tells the query-builder to eager-load the nodes that are connected to
 // the "admin_roles" edge. The optional arguments are used to configure the query builder of the edge.
 func (_q *AdminQuery) WithAdminRoles(opts ...func(*AdminRoleQuery)) *AdminQuery {
@@ -329,18 +390,29 @@ func (_q *AdminQuery) WithAdminRoles(opts ...func(*AdminRoleQuery)) *AdminQuery 
 	return _q
 }
 
+// WithAdminDataPermissions tells the query-builder to eager-load the nodes that are connected to
+// the "admin_data_permissions" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *AdminQuery) WithAdminDataPermissions(opts ...func(*AdminDataPermissionQuery)) *AdminQuery {
+	query := (&AdminDataPermissionClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withAdminDataPermissions = query
+	return _q
+}
+
 // GroupBy is used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
 // Example:
 //
 //	var v []struct {
-//		RealName string `json:"real_name,omitempty"`
+//		TenantID string `json:"tenant_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Admin.Query().
-//		GroupBy(admin.FieldRealName).
+//		GroupBy(admin.FieldTenantID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (_q *AdminQuery) GroupBy(field string, fields ...string) *AdminGroupBy {
@@ -358,11 +430,11 @@ func (_q *AdminQuery) GroupBy(field string, fields ...string) *AdminGroupBy {
 // Example:
 //
 //	var v []struct {
-//		RealName string `json:"real_name,omitempty"`
+//		TenantID string `json:"tenant_id,omitempty"`
 //	}
 //
 //	client.Admin.Query().
-//		Select(admin.FieldRealName).
+//		Select(admin.FieldTenantID).
 //		Scan(ctx, &v)
 func (_q *AdminQuery) Select(fields ...string) *AdminSelect {
 	_q.ctx.Fields = append(_q.ctx.Fields, fields...)
@@ -407,9 +479,11 @@ func (_q *AdminQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Admin,
 	var (
 		nodes       = []*Admin{}
 		_spec       = _q.querySpec()
-		loadedTypes = [2]bool{
+		loadedTypes = [4]bool{
 			_q.withRoles != nil,
+			_q.withDataPermissions != nil,
 			_q.withAdminRoles != nil,
+			_q.withAdminDataPermissions != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
@@ -437,10 +511,26 @@ func (_q *AdminQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Admin,
 			return nil, err
 		}
 	}
+	if query := _q.withDataPermissions; query != nil {
+		if err := _q.loadDataPermissions(ctx, query, nodes,
+			func(n *Admin) { n.Edges.DataPermissions = []*DataPermission{} },
+			func(n *Admin, e *DataPermission) { n.Edges.DataPermissions = append(n.Edges.DataPermissions, e) }); err != nil {
+			return nil, err
+		}
+	}
 	if query := _q.withAdminRoles; query != nil {
 		if err := _q.loadAdminRoles(ctx, query, nodes,
 			func(n *Admin) { n.Edges.AdminRoles = []*AdminRole{} },
 			func(n *Admin, e *AdminRole) { n.Edges.AdminRoles = append(n.Edges.AdminRoles, e) }); err != nil {
+			return nil, err
+		}
+	}
+	if query := _q.withAdminDataPermissions; query != nil {
+		if err := _q.loadAdminDataPermissions(ctx, query, nodes,
+			func(n *Admin) { n.Edges.AdminDataPermissions = []*AdminDataPermission{} },
+			func(n *Admin, e *AdminDataPermission) {
+				n.Edges.AdminDataPermissions = append(n.Edges.AdminDataPermissions, e)
+			}); err != nil {
 			return nil, err
 		}
 	}
@@ -508,6 +598,67 @@ func (_q *AdminQuery) loadRoles(ctx context.Context, query *RoleQuery, nodes []*
 	}
 	return nil
 }
+func (_q *AdminQuery) loadDataPermissions(ctx context.Context, query *DataPermissionQuery, nodes []*Admin, init func(*Admin), assign func(*Admin, *DataPermission)) error {
+	edgeIDs := make([]driver.Value, len(nodes))
+	byID := make(map[string]*Admin)
+	nids := make(map[string]map[*Admin]struct{})
+	for i, node := range nodes {
+		edgeIDs[i] = node.ID
+		byID[node.ID] = node
+		if init != nil {
+			init(node)
+		}
+	}
+	query.Where(func(s *sql.Selector) {
+		joinT := sql.Table(admin.DataPermissionsTable)
+		s.Join(joinT).On(s.C(datapermission.FieldID), joinT.C(admin.DataPermissionsPrimaryKey[1]))
+		s.Where(sql.InValues(joinT.C(admin.DataPermissionsPrimaryKey[0]), edgeIDs...))
+		columns := s.SelectedColumns()
+		s.Select(joinT.C(admin.DataPermissionsPrimaryKey[0]))
+		s.AppendSelect(columns...)
+		s.SetDistinct(false)
+	})
+	if err := query.prepareQuery(ctx); err != nil {
+		return err
+	}
+	qr := QuerierFunc(func(ctx context.Context, q Query) (Value, error) {
+		return query.sqlAll(ctx, func(_ context.Context, spec *sqlgraph.QuerySpec) {
+			assign := spec.Assign
+			values := spec.ScanValues
+			spec.ScanValues = func(columns []string) ([]any, error) {
+				values, err := values(columns[1:])
+				if err != nil {
+					return nil, err
+				}
+				return append([]any{new(sql.NullString)}, values...), nil
+			}
+			spec.Assign = func(columns []string, values []any) error {
+				outValue := values[0].(*sql.NullString).String
+				inValue := values[1].(*sql.NullString).String
+				if nids[inValue] == nil {
+					nids[inValue] = map[*Admin]struct{}{byID[outValue]: {}}
+					return assign(columns[1:], values[1:])
+				}
+				nids[inValue][byID[outValue]] = struct{}{}
+				return nil
+			}
+		})
+	})
+	neighbors, err := withInterceptors[[]*DataPermission](ctx, query, qr, query.inters)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected "data_permissions" node returned %v`, n.ID)
+		}
+		for kn := range nodes {
+			assign(kn, n)
+		}
+	}
+	return nil
+}
 func (_q *AdminQuery) loadAdminRoles(ctx context.Context, query *AdminRoleQuery, nodes []*Admin, init func(*Admin), assign func(*Admin, *AdminRole)) error {
 	fks := make([]driver.Value, 0, len(nodes))
 	nodeids := make(map[string]*Admin)
@@ -523,6 +674,36 @@ func (_q *AdminQuery) loadAdminRoles(ctx context.Context, query *AdminRoleQuery,
 	}
 	query.Where(predicate.AdminRole(func(s *sql.Selector) {
 		s.Where(sql.InValues(s.C(admin.AdminRolesColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.AdminID
+		node, ok := nodeids[fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "admin_id" returned %v for node %v`, fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
+func (_q *AdminQuery) loadAdminDataPermissions(ctx context.Context, query *AdminDataPermissionQuery, nodes []*Admin, init func(*Admin), assign func(*Admin, *AdminDataPermission)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[string]*Admin)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(admindatapermission.FieldAdminID)
+	}
+	query.Where(predicate.AdminDataPermission(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(admin.AdminDataPermissionsColumn), fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {

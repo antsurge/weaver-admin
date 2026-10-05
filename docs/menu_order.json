@@ -1,0 +1,26 @@
+{
+  "genTableId": "<no value>",
+  "menuModule": "order",
+  "authPrefix": "Order:Order",
+  "menus": [
+    {
+      "name": "订单",
+      "type": "menu",
+      "path": "/order/order",
+      "component": "order/order/index",
+      "authCode": "Order:Order",
+      "weight": 20,
+      "actions": [
+        { "name": "列表", "code": "List", "authCode": "Order:Order:List" },
+        { "name": "详情", "code": "Detail", "authCode": "Order:Order:Info" },
+        { "name": "创建", "code": "Create", "authCode": "Order:Order:Create" },
+        { "name": "编辑", "code": "Edit", "authCode": "Order:Order:Edit" },
+        { "name": "删除", "code": "Delete", "authCode": "Order:Order:Delete" },
+        { "name": "批量删除", "code": "BatchDelete", "authCode": "Order:Order:BatchDelete" },
+        { "name": "状态", "code": "Status", "authCode": "Order:Order:SwitchStatus" },
+        { "name": "导入", "code": "Import", "authCode": "Order:Order:Import" },
+        { "name": "导出", "code": "Export", "authCode": "Order:Order:Export" },
+      ]
+    }
+  ]
+}

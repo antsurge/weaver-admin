@@ -1,0 +1,54 @@
+{
+  "title": "Admin",
+  "admin": {
+    "title": "Admin Users",
+    "name": "User",
+    "superAdmin": "Super Admin",
+    "followRole": "Follow Role",
+    "fields": {
+      "username": "Username",
+      "realName": "Display Name",
+      "email": "Email",
+      "phone": "Phone",
+      "avatar": "Avatar",
+      "departmentName": "Department",
+      "status": "Status",
+      "remark": "Remark",
+      "roleIds": "Assigned Roles",
+      "dataPermissionIds": "Data Permissions"
+    },
+    "actions": {
+      "switchStatus": "Switch Status",
+      "switchStatusConfirm": "Switch [{0}] status to [{1}]?",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "resetPassword": "Reset Password",
+      "resetPasswordPlaceholder": "Enter new password",
+      "resetPasswordRequired": "New password is required",
+      "deleteConfirm": "Delete user [{0}]? This cannot be undone.",
+      "deleteBatchConfirm": "Delete {0} selected users? This cannot be undone.",
+      "deleting": "Deleting...",
+      "deleteSuccess": "Deleted",
+      "superAdminNotAllowed": "Super admin cannot be deleted",
+      "superAdminNotAllowedDisable": "Super admin cannot be disabled",
+      "batchStatusConfirm": "Switch {0} selected users' status to [{1}]?",
+      "export": "Export",
+      "exporting": "Exporting...",
+      "exportSuccess": "Exported"
+    },
+    "form_placeholder": {
+      "remark": "Enter remark",
+      "roleIds": "Select roles",
+      "dataPermissionIds": "Select data permission rules"
+    },
+    "form_help": {
+      "dataPermissionIds": "Leave empty to follow the role data scope; selecting rules overrides the role default"
+    },
+    "rules": {
+      "emailInvalid": "Please enter a valid email address",
+      "phoneInvalid": "Please enter a valid phone number",
+      "passwordTooShort": "Password must be at least {0} characters"
+    }
+  }
+}

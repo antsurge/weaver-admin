@@ -64,6 +64,11 @@ func IDContainsFold(id string) predicate.DictData {
 	return predicate.DictData(sql.FieldContainsFold(FieldID, id))
 }
 
+// TenantID applies equality check predicate on the "tenant_id" field. It's identical to TenantIDEQ.
+func TenantID(v string) predicate.DictData {
+	return predicate.DictData(sql.FieldEQ(FieldTenantID, v))
+}
+
 // DictTypeID applies equality check predicate on the "dict_type_id" field. It's identical to DictTypeIDEQ.
 func DictTypeID(v string) predicate.DictData {
 	return predicate.DictData(sql.FieldEQ(FieldDictTypeID, v))
@@ -97,6 +102,71 @@ func UpdatedAt(v time.Time) predicate.DictData {
 // DeletedAt applies equality check predicate on the "deleted_at" field. It's identical to DeletedAtEQ.
 func DeletedAt(v time.Time) predicate.DictData {
 	return predicate.DictData(sql.FieldEQ(FieldDeletedAt, v))
+}
+
+// TenantIDEQ applies the EQ predicate on the "tenant_id" field.
+func TenantIDEQ(v string) predicate.DictData {
+	return predicate.DictData(sql.FieldEQ(FieldTenantID, v))
+}
+
+// TenantIDNEQ applies the NEQ predicate on the "tenant_id" field.
+func TenantIDNEQ(v string) predicate.DictData {
+	return predicate.DictData(sql.FieldNEQ(FieldTenantID, v))
+}
+
+// TenantIDIn applies the In predicate on the "tenant_id" field.
+func TenantIDIn(vs ...string) predicate.DictData {
+	return predicate.DictData(sql.FieldIn(FieldTenantID, vs...))
+}
+
+// TenantIDNotIn applies the NotIn predicate on the "tenant_id" field.
+func TenantIDNotIn(vs ...string) predicate.DictData {
+	return predicate.DictData(sql.FieldNotIn(FieldTenantID, vs...))
+}
+
+// TenantIDGT applies the GT predicate on the "tenant_id" field.
+func TenantIDGT(v string) predicate.DictData {
+	return predicate.DictData(sql.FieldGT(FieldTenantID, v))
+}
+
+// TenantIDGTE applies the GTE predicate on the "tenant_id" field.
+func TenantIDGTE(v string) predicate.DictData {
+	return predicate.DictData(sql.FieldGTE(FieldTenantID, v))
+}
+
+// TenantIDLT applies the LT predicate on the "tenant_id" field.
+func TenantIDLT(v string) predicate.DictData {
+	return predicate.DictData(sql.FieldLT(FieldTenantID, v))
+}
+
+// TenantIDLTE applies the LTE predicate on the "tenant_id" field.
+func TenantIDLTE(v string) predicate.DictData {
+	return predicate.DictData(sql.FieldLTE(FieldTenantID, v))
+}
+
+// TenantIDContains applies the Contains predicate on the "tenant_id" field.
+func TenantIDContains(v string) predicate.DictData {
+	return predicate.DictData(sql.FieldContains(FieldTenantID, v))
+}
+
+// TenantIDHasPrefix applies the HasPrefix predicate on the "tenant_id" field.
+func TenantIDHasPrefix(v string) predicate.DictData {
+	return predicate.DictData(sql.FieldHasPrefix(FieldTenantID, v))
+}
+
+// TenantIDHasSuffix applies the HasSuffix predicate on the "tenant_id" field.
+func TenantIDHasSuffix(v string) predicate.DictData {
+	return predicate.DictData(sql.FieldHasSuffix(FieldTenantID, v))
+}
+
+// TenantIDEqualFold applies the EqualFold predicate on the "tenant_id" field.
+func TenantIDEqualFold(v string) predicate.DictData {
+	return predicate.DictData(sql.FieldEqualFold(FieldTenantID, v))
+}
+
+// TenantIDContainsFold applies the ContainsFold predicate on the "tenant_id" field.
+func TenantIDContainsFold(v string) predicate.DictData {
+	return predicate.DictData(sql.FieldContainsFold(FieldTenantID, v))
 }
 
 // DictTypeIDEQ applies the EQ predicate on the "dict_type_id" field.

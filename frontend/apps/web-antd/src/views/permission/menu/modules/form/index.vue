@@ -1,52 +1,47 @@
 <script lang="ts" setup>
-import type { ChangeEvent } from 'ant-design-vue/es/_util/EventInterface';
 import type { Recordable } from '@vben/types';
+
 import type { VbenFormSchema } from '#/adapter/form';
+import type { PermissionMenuApi } from '#/api/permission/menu';
+import type { AllResult } from '#/types/pagination';
 
 import { computed, h, ref } from 'vue';
 
 import { useVbenModal } from '@vben/common-ui';
 import { IconifyIcon } from '@vben/icons';
+import { $te } from '@vben/locales';
 import { getPopupContainer } from '@vben/utils';
 
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
-import type { AllResult } from '#/types/pagination'
 
 import { useVbenForm } from '#/adapter/form';
-
-import {
-  nameRule,
-  titleRule,
-  componentRule,
-  pathRule,
-  authCodeRule,
-  linkUrlRule,
-} from "#/views/permission/menu/modules/form/rules"
-
 import {
   createMenuApi,
+  getMenuDetailApi,
   getMenuTreeApi,
   updateMenuApi,
 } from '#/api/permission/menu';
-import type {
-  PermissionMenuApi,
-} from '#/api/permission/menu';
-
-import { $t} from '#/locales';
-import { $te } from '@vben/locales';
-
+import { $t } from '#/locales';
 import {
-  getPermissionTypeOptions,
   getBadgeTypeOptions,
   getBadgeVariantsOptions,
-  PermissionTypeOptionsValueMenu,
+  getPermissionTypeOptions,
+  PermissionBadgeTypeOptionsValueText,
+  PermissionTypeOptionsValueAction,
+  PermissionTypeOptionsValueCatalog,
+  PermissionTypeOptionsValueIframe,
   // PermissionTypeOptionsValueTab,
   PermissionTypeOptionsValueLink,
-  PermissionTypeOptionsValueIframe,
-  PermissionTypeOptionsValueCatalog,
-  PermissionTypeOptionsValueAction,
-  PermissionBadgeTypeOptionsValueText,
+  PermissionTypeOptionsValueMenu,
 } from '#/views/permission/menu/data';
+import {
+  authCodeRule,
+  componentRule,
+  linkUrlRule,
+  nameRule,
+  pathRule,
+  titleRule,
+} from '#/views/permission/menu/modules/form/rules';
 
 const emit = defineEmits<{
   success: [];
@@ -78,7 +73,7 @@ const schema: VbenFormSchema[] = [
     component: 'RadioGroup',
     formItemClass: 'col-span-2 md:col-span-2',
     componentProps: {
-      optionType: "button",
+      optionType: 'button',
       options: getPermissionTypeOptions(),
     },
   },
@@ -91,26 +86,32 @@ const schema: VbenFormSchema[] = [
     componentProps: {
       api: getMenuTreeApi,
       allowClear: true,
-      afterFetch: (res:AllResult<PermissionMenuApi.PermissionMenu>) => {
+      afterFetch: (res: AllResult<PermissionMenuApi.PermissionMenu>) => {
         const list = res?.items || res;
-        const convert = (list: any[]): any[] =>
-          list.map((item) => ({
-            id: item.id,
-            label: $t(item.title),
-            icon: item.icon,
-            children: convert(item.children || []),
-          }));
+        // 编辑态需排除自身及其子孙节点，避免形成环形结构
+        const excludeId = formData.value?.id;
+        const convert = (nodes: any[]): any[] =>
+          nodes
+            .filter((item) => item.id !== excludeId)
+            .map((item) => ({
+              id: item.id,
+              label: $t(item.title),
+              meta: { icon: item.icon },
+              children: convert(item.children || []),
+            }));
 
         return convert(list);
       },
-      class: "w-full",
+      class: 'w-full',
       showSearch: true,
       treeDefaultExpandAll: true,
       labelField: 'label',
       valueField: 'id',
       childrenField: 'children',
       getPopupContainer,
-      placeholder: $t('ui.formRules.selectRequired', [$t('permission.menu.fields.parentID')]),
+      placeholder: $t('ui.formRules.selectRequired', [
+        $t('permission.menu.fields.parentID'),
+      ]),
     },
     renderComponentContent() {
       return {
@@ -133,10 +134,12 @@ const schema: VbenFormSchema[] = [
     formItemClass: 'col-span-1 md:col-span-1',
     rules: nameRule,
     componentProps: {
-      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.name")]),
+      placeholder: $t('ui.formRules.required', [
+        $t('permission.menu.fields.name'),
+      ]),
       showCount: true,
       maxlength: 30,
-    }
+    },
   },
   {
     fieldName: 'title',
@@ -147,7 +150,9 @@ const schema: VbenFormSchema[] = [
     componentProps() {
       // 不需要处理多语言时就无需这么做
       return {
-        placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.title")]),
+        placeholder: $t('ui.formRules.required', [
+          $t('permission.menu.fields.title'),
+        ]),
         ...(titleSuffix.value && { addonAfter: titleSuffix.value }),
         onChange({ target: { value } }: { target: { value: string } }) {
           titleSuffix.value = value && $te(value) ? $t(value) : undefined;
@@ -165,7 +170,9 @@ const schema: VbenFormSchema[] = [
     label: $t('permission.menu.fields.weight'),
     formItemClass: 'col-span-1 md:col-span-1',
     componentProps: {
-      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.weight")]),
+      placeholder: $t('ui.formRules.required', [
+        $t('permission.menu.fields.weight'),
+      ]),
       min: 0,
       step: 1,
       precision: 0,
@@ -173,7 +180,7 @@ const schema: VbenFormSchema[] = [
       style: { width: '100%' },
       onInput: (e: Event) => {
         const input = e.target as HTMLInputElement;
-        input.value = input.value.replace(/[^\d]/g, '');
+        input.value = input.value.replaceAll(/\D/g, '');
       },
     },
   },
@@ -182,7 +189,9 @@ const schema: VbenFormSchema[] = [
     component: 'EnhancedIconPicker',
     formItemClass: 'col-span-1 md:col-span-1',
     componentProps: () => ({
-      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.icon")]),
+      placeholder: $t('ui.formRules.required', [
+        $t('permission.menu.fields.icon'),
+      ]),
       // 启用的图标源（可自定义）
       sources: ['ant-design', 'bootstrap-icons', 'lucide', 'local-svg'],
     }),
@@ -194,7 +203,7 @@ const schema: VbenFormSchema[] = [
   },
 
   // ==================== 路由配置 ====================
-   {
+  {
     fieldName: '',
     component: 'FormTitle',
     label: '',
@@ -206,9 +215,12 @@ const schema: VbenFormSchema[] = [
     dependencies: {
       triggerFields: ['type'],
       show: (values) => {
-        return [PermissionTypeOptionsValueCatalog, 
-        PermissionTypeOptionsValueMenu,PermissionTypeOptionsValueIframe,PermissionTypeOptionsValueLink]
-          .includes(values.type)
+        return [
+          PermissionTypeOptionsValueCatalog,
+          PermissionTypeOptionsValueIframe,
+          PermissionTypeOptionsValueLink,
+          PermissionTypeOptionsValueMenu,
+        ].includes(values.type);
       },
     },
   },
@@ -218,16 +230,21 @@ const schema: VbenFormSchema[] = [
     label: $t('permission.menu.fields.path'),
     formItemClass: 'col-span-2 md:col-span-2',
     componentProps: {
-      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.path")]),
+      placeholder: $t('ui.formRules.required', [
+        $t('permission.menu.fields.path'),
+      ]),
       showCount: true,
       maxlength: 100,
     },
-    description:$t("permission.menu.description.path"),
+    description: $t('permission.menu.description.path'),
     dependencies: {
       triggerFields: ['type'],
       show: (values) => {
-        return [PermissionTypeOptionsValueCatalog, PermissionTypeOptionsValueMenu,PermissionTypeOptionsValueIframe]
-          .includes(values.type)
+        return [
+          PermissionTypeOptionsValueCatalog,
+          PermissionTypeOptionsValueIframe,
+          PermissionTypeOptionsValueMenu,
+        ].includes(values.type);
       },
     },
     rules: pathRule,
@@ -238,16 +255,17 @@ const schema: VbenFormSchema[] = [
     label: $t('permission.menu.fields.component'),
     formItemClass: 'col-span-2 md:col-span-2',
     componentProps: {
-      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.component")]),
+      placeholder: $t('ui.formRules.required', [
+        $t('permission.menu.fields.component'),
+      ]),
       showCount: true,
       maxlength: 100,
     },
-    description: $t("permission.menu.description.component"),
+    description: $t('permission.menu.description.component'),
     dependencies: {
       triggerFields: ['type'],
       show: (values) => {
-        return [PermissionTypeOptionsValueMenu]
-          .includes(values.type)
+        return [PermissionTypeOptionsValueMenu].includes(values.type);
       },
     },
     rules: componentRule,
@@ -258,20 +276,23 @@ const schema: VbenFormSchema[] = [
     label: $t('permission.menu.fields.linkUrl'),
     formItemClass: 'col-span-2 md:col-span-2',
     componentProps: {
-      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.linkUrl")]),
+      placeholder: $t('ui.formRules.required', [
+        $t('permission.menu.fields.linkUrl'),
+      ]),
       showCount: true,
       maxlength: 100,
     },
     dependencies: {
       triggerFields: ['type'],
       show: (values) => {
-        return [PermissionTypeOptionsValueIframe,PermissionTypeOptionsValueLink]
-          .includes(values.type)
+        return [
+          PermissionTypeOptionsValueIframe,
+          PermissionTypeOptionsValueLink,
+        ].includes(values.type);
       },
     },
     rules: linkUrlRule,
   },
-
 
   // ==================== 权限与状态 ====================
   {
@@ -285,39 +306,44 @@ const schema: VbenFormSchema[] = [
     },
   },
   {
-     fieldName: 'authCode',
+    fieldName: 'authCode',
     component: 'Input',
     label: $t('permission.menu.fields.authCode'),
     formItemClass: 'col-span-1 md:col-span-1',
     componentProps: {
-      placeholder:  $t("ui.formRules.required", [$t("permission.menu.fields.authCode")]),
+      placeholder: $t('ui.formRules.required', [
+        $t('permission.menu.fields.authCode'),
+      ]),
       showCount: true,
       maxlength: 100,
     },
     dependencies: {
       triggerFields: ['type'],
       show: (values) => {
-        return [PermissionTypeOptionsValueCatalog,PermissionTypeOptionsValueMenu,PermissionTypeOptionsValueAction]
-          .includes(values.type)
+        return [
+          PermissionTypeOptionsValueAction,
+          PermissionTypeOptionsValueCatalog,
+          PermissionTypeOptionsValueMenu,
+        ].includes(values.type);
       },
     },
     rules: authCodeRule,
   },
-   {
+  {
     component: 'Switch',
     componentProps: {
       class: 'w-auto',
       checkedChildren: $t('common.enabled'),
-      checkedValue: "enabled",
+      checkedValue: 'enabled',
       unCheckedChildren: $t('common.disabled'),
-      unCheckedValue: "disabled",
+      unCheckedValue: 'disabled',
     },
     fieldName: 'status',
     formItemClass: 'col-span-1 md:col-span-1',
     defaultValue: 'enabled',
     label: $t('permission.menu.fields.status'),
   },
-  
+
   // ==================== 徽标配置 ====================
   {
     fieldName: '',
@@ -342,7 +368,9 @@ const schema: VbenFormSchema[] = [
       allowClear: true,
       class: 'w-full',
       options: getBadgeTypeOptions(),
-      placeholder: $t("ui.formRules.selectRequired", [$t("permission.menu.fields.badgeType")])
+      placeholder: $t('ui.formRules.selectRequired', [
+        $t('permission.menu.fields.badgeType'),
+      ]),
     },
     dependencies: {
       show: (values) => {
@@ -359,7 +387,9 @@ const schema: VbenFormSchema[] = [
     label: $t('permission.menu.fields.badge'),
     formItemClass: 'col-span-1 md:col-span-1',
     componentProps: {
-      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.badge")]),
+      placeholder: $t('ui.formRules.required', [
+        $t('permission.menu.fields.badge'),
+      ]),
       showCount: true,
       maxlength: 10,
     },
@@ -369,10 +399,14 @@ const schema: VbenFormSchema[] = [
         return values.type !== PermissionTypeOptionsValueAction;
       },
       // 只有 badgeType 选择 dot 时才能输入
-      disabled: (values) => values.badgeType !== PermissionBadgeTypeOptionsValueText,
+      disabled: (values) =>
+        values.badgeType !== PermissionBadgeTypeOptionsValueText,
       // badgeType 不是 text 时，清空 badge 的值
       trigger: (values, formApi) => {
-        if (values.badgeType !== PermissionBadgeTypeOptionsValueText && values.badge) {
+        if (
+          values.badgeType !== PermissionBadgeTypeOptionsValueText &&
+          values.badge
+        ) {
           formApi.setFieldValue('badge', undefined);
         }
       },
@@ -385,7 +419,9 @@ const schema: VbenFormSchema[] = [
       allowClear: true,
       class: 'w-full',
       options: getBadgeVariantsOptions(),
-      placeholder: $t("ui.formRules.selectRequired", [$t("permission.menu.fields.badgeVariants")])
+      placeholder: $t('ui.formRules.selectRequired', [
+        $t('permission.menu.fields.badgeVariants'),
+      ]),
     },
     dependencies: {
       show: (values) => {
@@ -413,12 +449,14 @@ const schema: VbenFormSchema[] = [
     component: 'Textarea',
     formItemClass: 'col-span-2 md:col-span-2',
     componentProps: {
-      placeholder: $t("ui.formRules.required", [$t("permission.menu.fields.remark")])
+      placeholder: $t('ui.formRules.required', [
+        $t('permission.menu.fields.remark'),
+      ]),
     },
     label: $t('permission.menu.fields.remark'),
   },
 
-   {
+  {
     fieldName: '',
     component: 'FormTitle',
     label: '',
@@ -436,7 +474,7 @@ const schema: VbenFormSchema[] = [
   {
     fieldName: 'apiPermissions',
     component: 'ApiPermissionPicker',
-    labelWidth:0,
+    labelWidth: 0,
     formItemClass: 'col-span-2 md:col-span-2',
     dependencies: {
       triggerFields: ['type'],
@@ -474,11 +512,8 @@ const [Modal, modalApi] = useVbenModal({
 
     if (data) {
       formData.value = data;
-      formApi.setValues(data);
-
-      // title 是顶级字段（后端 proto/ent 均为顶级），从 data.title 读取 i18n key
-      const titleVal = data.title as string;
-      titleSuffix.value = titleVal && $te(titleVal) ? $t(titleVal) : '';
+      // 编辑态：调用详情接口获取完整数据（含接口权限）回填表单
+      void fillFormWithDetail(data);
     } else {
       formApi.resetForm();
       titleSuffix.value = '';
@@ -487,20 +522,40 @@ const [Modal, modalApi] = useVbenModal({
 });
 
 /**
+ * 编辑态打开弹框时调用详情接口获取数据回填表单。
+ * 列表行数据可能不完整（尤其按钮类型菜单的 apiPermissions），
+ * 因此以 GET /admin/v1/menu/{id} 返回的最新详情为准。
+ */
+async function fillFormWithDetail(data: PermissionMenuApi.PermissionMenu) {
+  formData.value = data;
+  // 先用列表数据快速渲染，避免弹框打开时表单空白
+  formApi.setValues(data);
+  const titleVal = data.title as string;
+  titleSuffix.value = titleVal && $te(titleVal) ? $t(titleVal) : '';
+
+  if (!data.id) return;
+
+  try {
+    modalApi.lock();
+    const detail = await getMenuDetailApi(data.id);
+    if (!detail) return;
+    formData.value = detail;
+    formApi.setValues(detail);
+    const detailTitle = detail.title as string;
+    titleSuffix.value = detailTitle && $te(detailTitle) ? $t(detailTitle) : '';
+  } catch (error) {
+    console.error('[menu-detail] load failed =>', error);
+  } finally {
+    modalApi.unlock();
+  }
+}
+
+/**
  * 根据菜单类型清理表单中隐藏的字段
  */
 function cleanHiddenFields(data: Record<string, any>) {
   switch (data.type) {
-    case PermissionTypeOptionsValueCatalog:
-      // 目录：隐藏 component、linkUrl
-      delete data.component;
-      delete data.linkUrl;
-      break;
-    case PermissionTypeOptionsValueMenu:
-      // 菜单：隐藏 linkUrl
-      delete data.linkUrl;
-      break;
-    case PermissionTypeOptionsValueAction:
+    case PermissionTypeOptionsValueAction: {
       // 按钮：隐藏 icon、path、component、linkUrl 及徽标相关
       delete data.icon;
       delete data.path;
@@ -510,17 +565,31 @@ function cleanHiddenFields(data: Record<string, any>) {
       delete data.badge;
       delete data.badgeVariants;
       break;
-    case PermissionTypeOptionsValueIframe:
+    }
+    case PermissionTypeOptionsValueCatalog: {
+      // 目录：隐藏 component、linkUrl
+      delete data.component;
+      delete data.linkUrl;
+      break;
+    }
+    case PermissionTypeOptionsValueIframe: {
       // iframe：隐藏 component、authCode
       delete data.component;
       delete data.authCode;
       break;
-    case PermissionTypeOptionsValueLink:
+    }
+    case PermissionTypeOptionsValueLink: {
       // 外链：隐藏 path、component、authCode
       delete data.path;
       delete data.component;
       delete data.authCode;
       break;
+    }
+    case PermissionTypeOptionsValueMenu: {
+      // 菜单：隐藏 linkUrl
+      delete data.linkUrl;
+      break;
+    }
   }
 }
 
@@ -539,11 +608,9 @@ async function onSubmit() {
   cleanHiddenFields(data);
 
   try {
-    if (formData.value?.id) {
-      await updateMenuApi(formData.value.id, data);
-    } else {
-      await createMenuApi(data);
-    }
+    await (formData.value?.id
+      ? updateMenuApi(formData.value.id, data)
+      : createMenuApi(data));
 
     modalApi.close();
     emit('success');

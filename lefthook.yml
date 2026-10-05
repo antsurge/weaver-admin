@@ -1,0 +1,43 @@
+# =========================================================
+# 根仓库 (weaver-admin) lefthook 配置
+# 提交校验：commitlint 约定式提交规范 + Go 后端 gofmt/go vet 检查
+#
+# 三种关闭方式（可关）：
+#   1. 持久关闭（推荐，团队共享）：
+#        git config hooks.enabled false    # 关闭全部校验
+#        git config hooks.enabled true     # 重新开启
+#   2. 临时跳过本次提交（git 原生）：
+#        git commit --no-verify
+#   3. 临时跳过 lefthook 全部 hooks：
+#        LEFTHOOK=0 git commit
+# =========================================================
+
+pre-commit:
+  parallel: true
+  commands:
+    # ----- Go 后端检查（gofmt + go vet）-----
+    go-fmt:
+      run: |
+        [ "$(git config --get hooks.enabled 2>/dev/null || echo true)" = "false" ] && exit 0
+        files=$(git diff --cached --name-only --diff-filter=ACM -- '*.go')
+        [ -z "$files" ] && exit 0
+        unformatted=$(gofmt -l $files)
+        if [ -n "$unformatted" ]; then
+          echo "gofmt 检查失败，以下文件未按 gofmt 格式化:"
+          echo "$unformatted"
+          echo "请运行: gofmt -w <文件> 后重新提交"
+          exit 1
+        fi
+    go-vet:
+      run: |
+        [ "$(git config --get hooks.enabled 2>/dev/null || echo true)" = "false" ] && exit 0
+        files=$(git diff --cached --name-only --diff-filter=ACM -- '*.go')
+        [ -z "$files" ] && exit 0
+        go vet ./...
+
+commit-msg:
+  commands:
+    commitlint:
+      run: |
+        [ "$(git config --get hooks.enabled 2>/dev/null || echo true)" = "false" ] && exit 0
+        cd frontend && pnpm exec commitlint --edit {1}

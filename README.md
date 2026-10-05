@@ -52,3 +52,58 @@
 - [ ] 租户信息
 - [ ] 租户管理员
 - [ ] 租户资源隔离策略
+
+`
+DELIMITER $$
+
+CREATE PROCEDURE truncate_kratos_exclude()
+BEGIN
+DECLARE done INT DEFAULT FALSE;
+DECLARE tbl_name VARCHAR(64);
+DECLARE cur CURSOR FOR
+SELECT TABLE_NAME
+FROM information_schema.TABLES
+WHERE TABLE_SCHEMA = 'kratos_admin'
+AND TABLE_TYPE = 'BASE TABLE'
+AND TABLE_NAME NOT IN (
+'menu',
+'menu_api_permissions',
+'admin',
+'admin_role',
+'security_policy',
+'tenant'
+);
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+    SET FOREIGN_KEY_CHECKS = 0;
+
+    OPEN cur;
+    read_loop: LOOP
+        FETCH cur INTO tbl_name;
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+        SET @sql = CONCAT('TRUNCATE TABLE `', tbl_name, '`');
+        PREPARE stmt FROM @sql;
+        EXECUTE stmt;
+        DEALLOCATE PREPARE stmt;
+    END LOOP;
+    CLOSE cur;
+
+    SET FOREIGN_KEY_CHECKS = 1;
+END$$
+
+DELIMITER ;
+
+-- 调用
+CALL truncate_kratos_exclude();
+
+
+DELETE FROM role WHERE is_system = '0';
+
+DELETE FROM admin_role WHERE role_id != '1';
+
+DELETE FROM admin WHERE id != '1';
+
+
+`

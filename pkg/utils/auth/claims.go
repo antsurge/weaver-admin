@@ -9,9 +9,10 @@ import (
 
 // BaseClaims 通用业务 Claims
 type BaseClaims struct {
-	UserID string `json:"user_id"`
-	Type   string `json:"type"`
-	JTI    string `json:"jti"`
+	UserID   string `json:"user_id"`
+	TenantID string `json:"tenant_id,omitempty"`
+	Type     string `json:"type"`
+	JTI      string `json:"jti"`
 	jwt.RegisteredClaims
 }
 
@@ -19,11 +20,12 @@ func GenerateJTI() string {
 	return uuid.NewString()
 }
 
-func NewAccessClaims(userID string, expire time.Duration, issuer string) *BaseClaims {
+func NewAccessClaims(userID, tenantID string, expire time.Duration, issuer string) *BaseClaims {
 	now := time.Now()
 	return &BaseClaims{
-		UserID: userID,
-		Type:   "access",
+		UserID:   userID,
+		TenantID: tenantID,
+		Type:     "access",
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    issuer,
 			ExpiresAt: jwt.NewNumericDate(now.Add(expire)),
@@ -33,12 +35,13 @@ func NewAccessClaims(userID string, expire time.Duration, issuer string) *BaseCl
 	}
 }
 
-func NewRefreshClaims(userID string, expire time.Duration, issuer string) *BaseClaims {
+func NewRefreshClaims(userID, tenantID string, expire time.Duration, issuer string) *BaseClaims {
 	now := time.Now()
 	return &BaseClaims{
-		UserID: userID,
-		Type:   "refresh",
-		JTI:    GenerateJTI(), // 生成唯一的id
+		UserID:   userID,
+		TenantID: tenantID,
+		Type:     "refresh",
+		JTI:      GenerateJTI(), // 生成唯一的id
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    issuer,
 			ExpiresAt: jwt.NewNumericDate(now.Add(expire)),

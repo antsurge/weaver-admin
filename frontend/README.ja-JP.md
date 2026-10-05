@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://github.com/anncwb/vue-vben-admin">
-    <img alt="VbenAdmin Logo" width="215" src="https://unpkg.com/@vbenjs/static-source@0.1.7/source/logo-v1.webp">
+    <img alt="VbenAdmin Logo" width="215" src="/logo.png">
   </a>
   <br>
   <br>
@@ -50,7 +50,7 @@ Gitpod（GitHub用の無料オンライン開発環境）でプロジェクト�
 
 ## ドキュメント
 
-[ドキュメント](https://doc.vben.pro/)
+[ドキュメント](http://weaveradmin.antsurge.com/)
 
 ## インストールと使用
 

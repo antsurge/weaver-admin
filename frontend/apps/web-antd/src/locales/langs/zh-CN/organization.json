@@ -1,10 +1,13 @@
 {
+  "title": "组织管理",
   "department": {
+    "title": "部门管理",
     "name": "部门",
     "fields": {
       "name": "部门名称",
       "parentID": "上级部门",
       "code": "部门编码",
+      "type": "类型",
       "weight": "权重",
       "leaderName": "负责人姓名",
       "leaderPhone": "联系电话",
@@ -13,9 +16,19 @@
       "updatedAt": "更新时间",
       "operation": "操作"
     },
+    "type": {
+      "company": "公司",
+      "subsidiary": "子公司",
+      "department": "部门",
+      "position": "岗位"
+    },
     "actions": {
       "switchStatus": "切换部门状态",
       "switchStatusConfirm": "确认将【{0}】状态切换为【{1}】？"
+    },
+    "actionTitle": {
+      "expandAll": "展开全部",
+      "collapseAll": "折叠全部"
     },
     "operation": {
       "appendChildren": "新增下级"
@@ -28,6 +41,7 @@
     }
   },
   "position": {
+    "title": "职务管理",
     "name": "职务",
     "fields": {
       "name": "职务名称",

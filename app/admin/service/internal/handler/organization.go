@@ -17,12 +17,14 @@ import (
 )
 
 type OrganizationHandler struct {
-	uc *biz.PositionUsecase
+	positionUc   *biz.PositionUsecase
+	departmentUc *biz.DepartmentUsecase
 }
 
-func NewOrganizationHandler(uc *biz.PositionUsecase) *OrganizationHandler {
+func NewOrganizationHandler(positionUc *biz.PositionUsecase, departmentUc *biz.DepartmentUsecase) *OrganizationHandler {
 	return &OrganizationHandler{
-		uc: uc,
+		positionUc:   positionUc,
+		departmentUc: departmentUc,
 	}
 }
 
@@ -39,12 +41,31 @@ func (h *OrganizationHandler) ExportPosition(ctx http.Context) error {
 		return err
 	}
 
-	data, err := h.uc.ExportPosition(ctx, &input)
+	data, err := h.positionUc.ExportPosition(ctx, &input)
 	if err != nil {
 		return err
 	}
 
 	fileName := url.QueryEscape("职务列表.xlsx")
+
+	ctx.Response().Header().Set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+	ctx.Response().Header().Set("Content-Disposition", "attachment; filename*=UTF-8''"+fileName)
+
+	_, err = ctx.Response().Write(data)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (h *OrganizationHandler) DownloadPositionTemplate(ctx http.Context) error {
+	data, err := h.positionUc.PositionTemplate()
+	if err != nil {
+		return err
+	}
+
+	fileName := url.QueryEscape("职务导入模板.xlsx")
 
 	ctx.Response().Header().Set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 	ctx.Response().Header().Set("Content-Disposition", "attachment; filename*=UTF-8''"+fileName)
@@ -120,10 +141,18 @@ func (h *OrganizationHandler) ImportPosition(ctx http.Context) error {
 	}
 
 	sheet := f.GetSheetName(0)
-	rows, _ := f.GetRows(sheet)
+	rows, err := f.GetRows(sheet)
+	if err != nil {
+		return errors.BadRequest("PARSE_ERROR", "文件解析失败，请检查格式")
+	}
+
+	// 模板结构：第1行标题、第2行说明、第3行表头，数据从第4行开始
+	if len(rows) < 4 {
+		return errors.BadRequest("EMPTY_FILE", "文件内容为空，请使用导入模板填写数据后上传")
+	}
 
 	// 处理数据
 	data := rows[3:]
 
-	return h.uc.ImportPosition(ctx, data)
+	return h.positionUc.ImportPosition(ctx, data)
 }

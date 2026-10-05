@@ -15,9 +15,25 @@ interface BasicUserInfo {
    */
   avatar: string;
   /**
+   * 归属部门名称（个人中心只读展示）
+   */
+  departmentName?: string;
+  /**
+   * 菜单树
+   */
+  menuTree: PermissionMenuApi.PermissionMenu[];
+  /**
    * 用户昵称
    */
   realName: string;
+  /**
+   * 角色code
+   */
+  roleCodes: string[];
+  /**
+   * 角色名称列表（个人中心只读展示）
+   */
+  roleNames?: string[];
   /**
    * 用户角色
    */
@@ -30,14 +46,6 @@ interface BasicUserInfo {
    * 用户名
    */
   username: string;
-  /**
-   * 菜单树
-   */
-   menuTree: PermissionMenuApi.PermissionMenu[];
-   /**
-    * 角色code
-    */
-   roleCodes: string[];
 }
 
 type ClassType = Array<object | string> | object | string;

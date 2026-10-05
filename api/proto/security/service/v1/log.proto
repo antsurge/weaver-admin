@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package security.service.v1;
+
+import "buf/validate/validate.proto";
+import "gnostic/openapi/v3/annotations.proto";
+
+// OperationLog 操作日志
+message OperationLog {
+  string id = 1 [(gnostic.openapi.v3.property) = {description: "日志ID"}];
+  string adminId = 2 [(gnostic.openapi.v3.property) = {description: "操作人ID"}];
+  string adminName = 3 [(gnostic.openapi.v3.property) = {description: "操作人姓名"}];
+  string module = 4 [(gnostic.openapi.v3.property) = {description: "所属模块"}];
+  string operation = 5 [(gnostic.openapi.v3.property) = {description: "操作名"}];
+  string method = 6 [(gnostic.openapi.v3.property) = {description: "HTTP方法"}];
+  string path = 7 [(gnostic.openapi.v3.property) = {description: "请求路径"}];
+  string summary = 8 [(gnostic.openapi.v3.property) = {description: "接口摘要"}];
+  string ip = 9 [(gnostic.openapi.v3.property) = {description: "来源IP"}];
+  string userAgent = 10 [(gnostic.openapi.v3.property) = {description: "客户端UA"}];
+  // 请求参数（已脱敏）
+  string params = 11 [(gnostic.openapi.v3.property) = {description: "请求参数（已脱敏）"}];
+  string status = 12 [(gnostic.openapi.v3.property) = {description: "结果：success/fail"}];
+  string code = 13 [(gnostic.openapi.v3.property) = {description: "错误码"}];
+  string message = 14 [(gnostic.openapi.v3.property) = {description: "错误信息"}];
+  int64 costMs = 15 [(gnostic.openapi.v3.property) = {description: "耗时（毫秒）"}];
+  string createdAt = 16 [(gnostic.openapi.v3.property) = {description: "操作时间（RFC3339）"}];
+}
+
+message ListOperationLogRequest {
+  int64 currentPage = 1 [(gnostic.openapi.v3.property) = {description: "当前页码（从1开始）"}];
+  int64 pageSize = 2 [(gnostic.openapi.v3.property) = {description: "每页条数（传0为全部）"}];
+  string adminId = 3 [(gnostic.openapi.v3.property) = {description: "操作人ID"}];
+  string adminName = 4 [(gnostic.openapi.v3.property) = {description: "操作人姓名（模糊）"}];
+  string module = 5 [(gnostic.openapi.v3.property) = {description: "模块筛选"}];
+  string operation = 6 [(gnostic.openapi.v3.property) = {description: "操作名筛选"}];
+  string status = 7 [(gnostic.openapi.v3.property) = {description: "结果筛选：success/fail"}];
+  string keyword = 8 [(gnostic.openapi.v3.property) = {description: "关键字（路径/摘要/操作名模糊）"}];
+  // 起止时间（RFC3339）
+  string startTime = 9 [(gnostic.openapi.v3.property) = {description: "开始时间（RFC3339）"}];
+  string endTime = 10 [(gnostic.openapi.v3.property) = {description: "结束时间（RFC3339）"}];
+}
+
+message ListOperationLogResponse {
+  repeated OperationLog items = 1;
+  int64 total = 2;
+}
+
+message GetOperationLogRequest {
+  string id = 1 [(gnostic.openapi.v3.property) = {description: "日志ID"}];
+}
+
+message DeleteOperationLogRequest {
+  repeated string ids = 1 [
+    (buf.validate.field).repeated = {max_items: 1000},
+    (gnostic.openapi.v3.property) = {description: "日志ID列表"}
+  ];
+}
+
+// LoginLog 登录日志
+message LoginLog {
+  string id = 1 [(gnostic.openapi.v3.property) = {description: "日志ID"}];
+  string adminId = 2 [(gnostic.openapi.v3.property) = {description: "用户ID"}];
+  string username = 3 [(gnostic.openapi.v3.property) = {description: "登录用户名"}];
+  string ip = 4 [(gnostic.openapi.v3.property) = {description: "来源IP"}];
+  string userAgent = 5 [(gnostic.openapi.v3.property) = {description: "客户端UA"}];
+  string status = 6 [(gnostic.openapi.v3.property) = {description: "结果：success/fail"}];
+  string reason = 7 [(gnostic.openapi.v3.property) = {description: "失败原因"}];
+  string createdAt = 8 [(gnostic.openapi.v3.property) = {description: "登录时间（RFC3339）"}];
+}
+
+message ListLoginLogRequest {
+  int64 currentPage = 1 [(gnostic.openapi.v3.property) = {description: "当前页码（从1开始）"}];
+  int64 pageSize = 2 [(gnostic.openapi.v3.property) = {description: "每页条数（传0为全部）"}];
+  string username = 3 [(gnostic.openapi.v3.property) = {description: "用户名（模糊）"}];
+  string status = 4 [(gnostic.openapi.v3.property) = {description: "结果筛选：success/fail"}];
+  string ip = 5 [(gnostic.openapi.v3.property) = {description: "IP（模糊）"}];
+  string startTime = 6 [(gnostic.openapi.v3.property) = {description: "开始时间（RFC3339）"}];
+  string endTime = 7 [(gnostic.openapi.v3.property) = {description: "结束时间（RFC3339）"}];
+}
+
+message ListLoginLogResponse {
+  repeated LoginLog items = 1;
+  int64 total = 2;
+}
+
+message DeleteLoginLogRequest {
+  repeated string ids = 1 [
+    (buf.validate.field).repeated = {max_items: 1000},
+    (gnostic.openapi.v3.property) = {description: "日志ID列表"}
+  ];
+}

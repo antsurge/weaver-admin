@@ -2,7 +2,8 @@ package biz
 
 import (
 	"context"
-	"math/rand"
+	crand "crypto/rand"
+	"math/big"
 	"strings"
 	"time"
 
@@ -38,10 +39,18 @@ func NewCaptchaUsecase(
 	}
 }
 
-// 获取验证码
+/**
+ * GetCaptcha 获取图形验证码。
+ * 流程：生成随机验证码 -> 绘制干扰图片 -> 保存至 Redis（TTL 2 分钟）-> 返回图片 base64 与验证码 ID。
+ */
 func (u *CaptchaUsecase) GetCaptcha(ctx context.Context) (*authenticationV1.GetCaptchaResponse, error) {
-	// 生成验证码
-	code := strings.ToLower(generateCaptchaCode(4))
+	// 生成验证码，统一转为小写，校验时不区分大小写
+	code, err := generateCaptchaCode(4)
+	if err != nil {
+		u.log.Errorf("generate captcha code error: %v", err)
+		return nil, authenticationV1.ErrorGenerateCaptchaFail("GENERATE_CAPTCHA_FAIL")
+	}
+	code = strings.ToLower(code)
 	captchaID := generateCaptchaID()
 
 	// 生成图片 base64
@@ -67,19 +76,32 @@ func (u *CaptchaUsecase) GetCaptcha(ctx context.Context) (*authenticationV1.GetC
 	}, nil
 }
 
-// 生成随机验证码
-func generateCaptchaCode(length int) string {
+/**
+ * generateCaptchaCode 生成指定长度的随机验证码。
+ * 字符集刻意排除了易混淆字符（I/O/0/1），兼顾可读性与安全性。
+ * 随机源使用 crypto/rand（操作系统加密安全随机源）而非 math/rand：
+ * math/rand 以时间戳为种子、PRNG 状态可重建，会导致验证码可被预测，
+ * 从而绕过登录/注册等接口的防爆破校验。
+ */
+func generateCaptchaCode(length int) (string, error) {
 	const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
-	// 使用局部随机源
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	max := big.NewInt(int64(len(chars)))
 	var b strings.Builder
+	b.Grow(length)
 	for i := 0; i < length; i++ {
-		b.WriteByte(chars[r.Intn(len(chars))])
+		n, err := crand.Int(crand.Reader, max)
+		if err != nil {
+			return "", err
+		}
+		b.WriteByte(chars[n.Int64()])
 	}
-	return b.String()
+	return b.String(), nil
 }
 
-// 生成 captchaId
+/**
+ * generateCaptchaID 生成验证码唯一标识。
+ * 使用 UUIDv4（底层基于 crypto/rand），作为 Redis 中验证码的 key，无法被猜测或枚举。
+ */
 func generateCaptchaID() string {
 	return uuid.NewString()
 }

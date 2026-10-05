@@ -105,12 +105,6 @@ message CreateDepartmentRequest {
     (gnostic.openapi.v3.property) = {description: "负责人邮箱"}
   ];
   string type = 9 [
-    (buf.validate.field).string = {
-      in: [
-        "enabled",
-        "disabled"
-      ]
-    },
     (buf.validate.field).cel = {
       id: "department.type.invalid"
       message: "department.type.invalid"
@@ -189,6 +183,14 @@ message UpdateDepartmentRequest {
     },
     (gnostic.openapi.v3.property) = {description: "负责人邮箱"}
   ];
+  string type = 9 [
+    (buf.validate.field).cel = {
+      id: "department.type.invalid"
+      message: "department.type.invalid"
+      expression: "this in ['company', 'subsidiary','department','position']"
+    },
+    (gnostic.openapi.v3.property) = {description: "类型（company=公司 subsidiary=子公司 department=部门 position=岗位）"}
+  ];
 
   string id = 20;
 }
@@ -247,4 +249,15 @@ message UpdateDepartmentStatusRequest {
 
 message GetDepartmentRequest {
   string id = 1;
+}
+
+// 部门编码是否存在请求
+message IsDepartmentCodeExistsRequest {
+  string code = 1;
+  string id = 2;
+}
+
+// 部门字段是否存在响应
+message IsDepartmentFieldExistsResponse {
+  bool exists = 1;
 }

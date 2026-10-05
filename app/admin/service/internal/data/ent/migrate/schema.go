@@ -12,12 +12,15 @@ var (
 	// AdminColumns holds the columns for the "admin" table.
 	AdminColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true},
+		{Name: "tenant_id", Type: field.TypeString, Size: 36, Comment: "租户ID", Default: "default"},
 		{Name: "real_name", Type: field.TypeString, Default: ""},
 		{Name: "username", Type: field.TypeString},
 		{Name: "email", Type: field.TypeString, Nullable: true},
 		{Name: "phone", Type: field.TypeString, Nullable: true},
 		{Name: "avatar", Type: field.TypeString, Nullable: true},
+		{Name: "department_id", Type: field.TypeString, Nullable: true, Default: ""},
 		{Name: "password", Type: field.TypeString},
+		{Name: "status", Type: field.TypeEnum, Comment: "状态：enabled=启用 disabled=禁用", Enums: []string{"enabled", "disabled"}, Default: "enabled"},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
 		{Name: "deleted_at", Type: field.TypeTime, Nullable: true},
@@ -28,10 +31,59 @@ var (
 		Comment:    "管理员表",
 		Columns:    AdminColumns,
 		PrimaryKey: []*schema.Column{AdminColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "admin_tenant_id",
+				Unique:  false,
+				Columns: []*schema.Column{AdminColumns[1]},
+			},
+		},
+	}
+	// AdminDataPermissionColumns holds the columns for the "admin_data_permission" table.
+	AdminDataPermissionColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Comment: "主键ID"},
+		{Name: "tenant_id", Type: field.TypeString, Size: 36, Comment: "租户ID", Default: "default"},
+		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间"},
+		{Name: "admin_id", Type: field.TypeString, Comment: "管理员ID"},
+		{Name: "data_permission_id", Type: field.TypeString, Size: 36, Comment: "数据权限规则ID"},
+	}
+	// AdminDataPermissionTable holds the schema information for the "admin_data_permission" table.
+	AdminDataPermissionTable = &schema.Table{
+		Name:       "admin_data_permission",
+		Comment:    "管理员数据权限规则关联表",
+		Columns:    AdminDataPermissionColumns,
+		PrimaryKey: []*schema.Column{AdminDataPermissionColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "admin_data_permission_admin_admin",
+				Columns:    []*schema.Column{AdminDataPermissionColumns[3]},
+				RefColumns: []*schema.Column{AdminColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+			{
+				Symbol:     "admin_data_permission_data_permission_data_permission",
+				Columns:    []*schema.Column{AdminDataPermissionColumns[4]},
+				RefColumns: []*schema.Column{DataPermissionColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "admindatapermission_tenant_id",
+				Unique:  false,
+				Columns: []*schema.Column{AdminDataPermissionColumns[1]},
+			},
+			{
+				Name:    "admindatapermission_admin_id_data_permission_id",
+				Unique:  true,
+				Columns: []*schema.Column{AdminDataPermissionColumns[3], AdminDataPermissionColumns[4]},
+			},
+		},
 	}
 	// AdminRoleColumns holds the columns for the "admin_role" table.
 	AdminRoleColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true, Comment: "主键ID"},
+		{Name: "tenant_id", Type: field.TypeString, Size: 36, Comment: "租户ID", Default: "default"},
 		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间"},
 		{Name: "admin_id", Type: field.TypeString, Comment: "用户ID"},
 		{Name: "role_id", Type: field.TypeString, Comment: "角色ID"},
@@ -45,22 +97,27 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "admin_role_admin_admin",
-				Columns:    []*schema.Column{AdminRoleColumns[2]},
+				Columns:    []*schema.Column{AdminRoleColumns[3]},
 				RefColumns: []*schema.Column{AdminColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 			{
 				Symbol:     "admin_role_role_role",
-				Columns:    []*schema.Column{AdminRoleColumns[3]},
+				Columns:    []*schema.Column{AdminRoleColumns[4]},
 				RefColumns: []*schema.Column{RoleColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 		},
 		Indexes: []*schema.Index{
 			{
+				Name:    "adminrole_tenant_id",
+				Unique:  false,
+				Columns: []*schema.Column{AdminRoleColumns[1]},
+			},
+			{
 				Name:    "adminrole_admin_id_role_id",
 				Unique:  true,
-				Columns: []*schema.Column{AdminRoleColumns[2], AdminRoleColumns[3]},
+				Columns: []*schema.Column{AdminRoleColumns[3], AdminRoleColumns[4]},
 			},
 		},
 	}
@@ -83,25 +140,39 @@ var (
 		Columns:    APIInterfaceColumns,
 		PrimaryKey: []*schema.Column{APIInterfaceColumns[0]},
 	}
-	// APIPermissionColumns holds the columns for the "api_permission" table.
-	APIPermissionColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
-		{Name: "service", Type: field.TypeString, Size: 128, Comment: "服务全限定名，如 admin.service.v1.PermissionService"},
-		{Name: "method", Type: field.TypeString, Size: 10, Comment: "HTTP method: GET/POST/PUT/DELETE"},
-		{Name: "path", Type: field.TypeString, Size: 256, Comment: "接口路径，如 /admin/v1/menu"},
-		{Name: "summary", Type: field.TypeString, Size: 256, Comment: "接口描述", Default: ""},
-		{Name: "code", Type: field.TypeString, Unique: true, Size: 512, Comment: "业务唯一键 service|method|path"},
+	// DataPermissionColumns holds the columns for the "data_permission" table.
+	DataPermissionColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36, Comment: "规则ID"},
+		{Name: "tenant_id", Type: field.TypeString, Size: 36, Comment: "租户ID", Default: "default"},
+		{Name: "name", Type: field.TypeString, Size: 64, Comment: "规则名称"},
+		{Name: "code", Type: field.TypeString, Unique: true, Size: 100, Comment: "规则编码"},
+		{Name: "scope_type", Type: field.TypeString, Size: 1, Comment: "数据范围（1=全部数据 2=自定义 3=本部门 4=本部门及以下 5=仅本人）", Default: "1"},
+		{Name: "dept_ids", Type: field.TypeString, Nullable: true, Size: 2000, Comment: "自定义数据范围的部门ID集合（JSON数组）", Default: "[]"},
+		{Name: "role_ids", Type: field.TypeString, Nullable: true, Size: 2000, Comment: "自定义数据范围的角色ID集合（JSON数组）", Default: "[]"},
+		{Name: "status", Type: field.TypeEnum, Comment: "状态", Enums: []string{"enabled", "disabled"}, Default: "enabled"},
+		{Name: "remark", Type: field.TypeString, Nullable: true, Size: 256, Comment: "备注"},
+		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间"},
+		{Name: "updated_at", Type: field.TypeTime, Comment: "更新时间"},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
 	}
-	// APIPermissionTable holds the schema information for the "api_permission" table.
-	APIPermissionTable = &schema.Table{
-		Name:       "api_permission",
-		Comment:    "接口权限表（菜单按钮绑定）",
-		Columns:    APIPermissionColumns,
-		PrimaryKey: []*schema.Column{APIPermissionColumns[0]},
+	// DataPermissionTable holds the schema information for the "data_permission" table.
+	DataPermissionTable = &schema.Table{
+		Name:       "data_permission",
+		Comment:    "数据权限规则表",
+		Columns:    DataPermissionColumns,
+		PrimaryKey: []*schema.Column{DataPermissionColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "datapermission_tenant_id",
+				Unique:  false,
+				Columns: []*schema.Column{DataPermissionColumns[1]},
+			},
+		},
 	}
 	// DepartmentColumns holds the columns for the "department" table.
 	DepartmentColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
+		{Name: "tenant_id", Type: field.TypeString, Size: 36, Comment: "租户ID", Default: "default"},
 		{Name: "parent_id", Type: field.TypeString, Comment: "父部门ID，空表示根节点", Default: ""},
 		{Name: "name", Type: field.TypeString, Size: 64, Comment: "部门名称"},
 		{Name: "code", Type: field.TypeString, Unique: true, Size: 64, Comment: "部门code"},
@@ -123,20 +194,26 @@ var (
 		PrimaryKey: []*schema.Column{DepartmentColumns[0]},
 		Indexes: []*schema.Index{
 			{
-				Name:    "department_parent_id",
+				Name:    "department_tenant_id",
 				Unique:  false,
 				Columns: []*schema.Column{DepartmentColumns[1]},
 			},
 			{
+				Name:    "department_parent_id",
+				Unique:  false,
+				Columns: []*schema.Column{DepartmentColumns[2]},
+			},
+			{
 				Name:    "department_type",
 				Unique:  false,
-				Columns: []*schema.Column{DepartmentColumns[4]},
+				Columns: []*schema.Column{DepartmentColumns[5]},
 			},
 		},
 	}
 	// DictDataColumns holds the columns for the "dict_data" table.
 	DictDataColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true, Size: 36, Comment: "字典数据ID"},
+		{Name: "tenant_id", Type: field.TypeString, Size: 36, Comment: "租户ID", Default: "default"},
 		{Name: "dict_type_id", Type: field.TypeString, Size: 36, Comment: "字典类型ID"},
 		{Name: "label", Type: field.TypeString, Size: 64, Comment: "标签"},
 		{Name: "value", Type: field.TypeString, Size: 64, Comment: "值"},
@@ -154,10 +231,18 @@ var (
 		Comment:    "字典数据表",
 		Columns:    DictDataColumns,
 		PrimaryKey: []*schema.Column{DictDataColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "dictdata_tenant_id",
+				Unique:  false,
+				Columns: []*schema.Column{DictDataColumns[1]},
+			},
+		},
 	}
 	// DictTypeColumns holds the columns for the "dict_type" table.
 	DictTypeColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true, Size: 36, Comment: "字典ID"},
+		{Name: "tenant_id", Type: field.TypeString, Size: 36, Comment: "租户ID", Default: "default"},
 		{Name: "name", Type: field.TypeString, Size: 64, Comment: "字典名称"},
 		{Name: "code", Type: field.TypeString, Unique: true, Size: 64, Comment: "字典编码"},
 		{Name: "status", Type: field.TypeEnum, Comment: "状态", Enums: []string{"enabled", "disabled"}, Default: "enabled"},
@@ -172,10 +257,154 @@ var (
 		Comment:    "字典类型表",
 		Columns:    DictTypeColumns,
 		PrimaryKey: []*schema.Column{DictTypeColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "dicttype_tenant_id",
+				Unique:  false,
+				Columns: []*schema.Column{DictTypeColumns[1]},
+			},
+		},
+	}
+	// FormSchemaColumns holds the columns for the "form_schema" table.
+	FormSchemaColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36, Comment: "表单ID"},
+		{Name: "tenant_id", Type: field.TypeString, Size: 36, Comment: "租户ID", Default: "default"},
+		{Name: "name", Type: field.TypeString, Size: 64, Comment: "表单名称"},
+		{Name: "code", Type: field.TypeString, Unique: true, Size: 64, Comment: "表单编码（唯一，供运行时渲染引用）"},
+		{Name: "description", Type: field.TypeString, Nullable: true, Size: 255, Comment: "表单描述"},
+		{Name: "schema_json", Type: field.TypeJSON, Nullable: true, Comment: "表单 JSON Schema 定义"},
+		{Name: "status", Type: field.TypeEnum, Comment: "状态", Enums: []string{"enabled", "disabled"}, Default: "enabled"},
+		{Name: "remark", Type: field.TypeString, Nullable: true, Size: 256, Comment: "备注"},
+		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间"},
+		{Name: "updated_at", Type: field.TypeTime, Comment: "更新时间"},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
+	}
+	// FormSchemaTable holds the schema information for the "form_schema" table.
+	FormSchemaTable = &schema.Table{
+		Name:       "form_schema",
+		Comment:    "表单构建器-表单定义表",
+		Columns:    FormSchemaColumns,
+		PrimaryKey: []*schema.Column{FormSchemaColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "formschema_tenant_id",
+				Unique:  false,
+				Columns: []*schema.Column{FormSchemaColumns[1]},
+			},
+		},
+	}
+	// FormSubmissionColumns holds the columns for the "form_submission" table.
+	FormSubmissionColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36, Comment: "提交记录ID"},
+		{Name: "tenant_id", Type: field.TypeString, Size: 36, Comment: "租户ID", Default: "default"},
+		{Name: "form_code", Type: field.TypeString, Size: 64, Comment: "表单编码"},
+		{Name: "form_name", Type: field.TypeString, Nullable: true, Size: 64, Comment: "表单名称（冗余，便于列表展示）"},
+		{Name: "submit_data", Type: field.TypeJSON, Nullable: true, Comment: "提交数据（JSON）"},
+		{Name: "created_at", Type: field.TypeTime, Comment: "提交时间"},
+		{Name: "updated_at", Type: field.TypeTime, Comment: "更新时间"},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
+	}
+	// FormSubmissionTable holds the schema information for the "form_submission" table.
+	FormSubmissionTable = &schema.Table{
+		Name:       "form_submission",
+		Comment:    "表单构建器-提交数据表",
+		Columns:    FormSubmissionColumns,
+		PrimaryKey: []*schema.Column{FormSubmissionColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "formsubmission_tenant_id",
+				Unique:  false,
+				Columns: []*schema.Column{FormSubmissionColumns[1]},
+			},
+			{
+				Name:    "formsubmission_form_code",
+				Unique:  false,
+				Columns: []*schema.Column{FormSubmissionColumns[2]},
+			},
+			{
+				Name:    "formsubmission_created_at",
+				Unique:  false,
+				Columns: []*schema.Column{FormSubmissionColumns[5]},
+			},
+		},
+	}
+	// GenTableColumns holds the columns for the "gen_table" table.
+	GenTableColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36, Comment: "配置ID"},
+		{Name: "tenant_id", Type: field.TypeString, Size: 36, Comment: "租户ID", Default: "default"},
+		{Name: "table_name", Type: field.TypeString, Size: 100, Comment: "数据库表名"},
+		{Name: "table_comment", Type: field.TypeString, Nullable: true, Size: 255, Comment: "表备注"},
+		{Name: "module_name", Type: field.TypeString, Size: 50, Comment: "模块名"},
+		{Name: "biz_name", Type: field.TypeString, Size: 100, Comment: "业务名（驼峰）"},
+		{Name: "fields_json", Type: field.TypeJSON, Nullable: true, Comment: "字段配置"},
+		{Name: "gen_type", Type: field.TypeString, Nullable: true, Size: 20, Comment: "生成类型"},
+		{Name: "menu_enabled", Type: field.TypeBool, Comment: "是否生成菜单", Default: false},
+		{Name: "menu_module", Type: field.TypeString, Nullable: true, Size: 50, Comment: "菜单所属模块"},
+		{Name: "buttons_json", Type: field.TypeJSON, Nullable: true, Comment: "生成的按钮列表"},
+		{Name: "status", Type: field.TypeEnum, Comment: "状态", Enums: []string{"enabled", "disabled"}, Default: "enabled"},
+		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间"},
+		{Name: "updated_at", Type: field.TypeTime, Comment: "更新时间"},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
+	}
+	// GenTableTable holds the schema information for the "gen_table" table.
+	GenTableTable = &schema.Table{
+		Name:       "gen_table",
+		Comment:    "代码生成器-生成表配置表",
+		Columns:    GenTableColumns,
+		PrimaryKey: []*schema.Column{GenTableColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "gentable_tenant_id",
+				Unique:  false,
+				Columns: []*schema.Column{GenTableColumns[1]},
+			},
+		},
+	}
+	// LoginLogColumns holds the columns for the "login_log" table.
+	LoginLogColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36, Comment: "日志ID"},
+		{Name: "tenant_id", Type: field.TypeString, Size: 36, Comment: "租户ID", Default: "default"},
+		{Name: "admin_id", Type: field.TypeString, Nullable: true, Size: 36, Comment: "用户ID（登录成功时记录）"},
+		{Name: "username", Type: field.TypeString, Nullable: true, Size: 64, Comment: "登录用户名（失败时也记录，便于排查撞库）"},
+		{Name: "ip", Type: field.TypeString, Nullable: true, Size: 64, Comment: "来源IP"},
+		{Name: "user_agent", Type: field.TypeString, Nullable: true, Size: 512, Comment: "客户端 UA"},
+		{Name: "status", Type: field.TypeEnum, Comment: "结果：success=成功 fail=失败", Enums: []string{"success", "fail"}, Default: "success"},
+		{Name: "reason", Type: field.TypeString, Nullable: true, Size: 128, Comment: "失败原因（错误码或简要说明）"},
+		{Name: "created_at", Type: field.TypeTime, Comment: "登录时间"},
+	}
+	// LoginLogTable holds the schema information for the "login_log" table.
+	LoginLogTable = &schema.Table{
+		Name:       "login_log",
+		Comment:    "登录日志表",
+		Columns:    LoginLogColumns,
+		PrimaryKey: []*schema.Column{LoginLogColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "loginlog_tenant_id",
+				Unique:  false,
+				Columns: []*schema.Column{LoginLogColumns[1]},
+			},
+			{
+				Name:    "loginlog_username_created_at",
+				Unique:  false,
+				Columns: []*schema.Column{LoginLogColumns[3], LoginLogColumns[8]},
+			},
+			{
+				Name:    "loginlog_status_created_at",
+				Unique:  false,
+				Columns: []*schema.Column{LoginLogColumns[6], LoginLogColumns[8]},
+			},
+			{
+				Name:    "loginlog_created_at",
+				Unique:  false,
+				Columns: []*schema.Column{LoginLogColumns[8]},
+			},
+		},
 	}
 	// MenuColumns holds the columns for the "menu" table.
 	MenuColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
+		{Name: "tenant_id", Type: field.TypeString, Size: 36, Comment: "租户ID", Default: "default"},
 		{Name: "parent_id", Type: field.TypeString, Comment: "父菜单ID, null表示根节点", Default: ""},
 		{Name: "name", Type: field.TypeString, Size: 64, Comment: "菜单名称"},
 		{Name: "code", Type: field.TypeString, Size: 64, Comment: "菜单唯一编码", Default: ""},
@@ -202,10 +431,214 @@ var (
 		Comment:    "菜单表",
 		Columns:    MenuColumns,
 		PrimaryKey: []*schema.Column{MenuColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "menu_tenant_id",
+				Unique:  false,
+				Columns: []*schema.Column{MenuColumns[1]},
+			},
+		},
+	}
+	// MenuAPIPermissionColumns holds the columns for the "menu_api_permission" table.
+	MenuAPIPermissionColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
+		{Name: "tenant_id", Type: field.TypeString, Size: 36, Comment: "租户ID", Default: "default"},
+		{Name: "menu_id", Type: field.TypeString, Size: 36, Comment: "菜单ID"},
+		{Name: "api_code", Type: field.TypeString, Size: 512, Comment: "接口业务唯一键 service|METHOD|path（对应 api_interface.code）"},
+		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间"},
+	}
+	// MenuAPIPermissionTable holds the schema information for the "menu_api_permission" table.
+	MenuAPIPermissionTable = &schema.Table{
+		Name:       "menu_api_permission",
+		Comment:    "菜单接口绑定表（菜单按钮 ↔ 接口 code）",
+		Columns:    MenuAPIPermissionColumns,
+		PrimaryKey: []*schema.Column{MenuAPIPermissionColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "menuapipermission_tenant_id",
+				Unique:  false,
+				Columns: []*schema.Column{MenuAPIPermissionColumns[1]},
+			},
+			{
+				Name:    "menuapipermission_menu_id_api_code",
+				Unique:  true,
+				Columns: []*schema.Column{MenuAPIPermissionColumns[2], MenuAPIPermissionColumns[3]},
+			},
+			{
+				Name:    "menuapipermission_api_code",
+				Unique:  false,
+				Columns: []*schema.Column{MenuAPIPermissionColumns[3]},
+			},
+		},
+	}
+	// NotificationColumns holds the columns for the "notification" table.
+	NotificationColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36, Comment: "通知ID"},
+		{Name: "tenant_id", Type: field.TypeString, Size: 36, Comment: "租户ID", Default: "default"},
+		{Name: "title", Type: field.TypeString, Size: 128, Comment: "通知标题"},
+		{Name: "content", Type: field.TypeString, Nullable: true, Size: 1024, Comment: "通知内容"},
+		{Name: "type", Type: field.TypeEnum, Comment: "通知类型：system=系统 announce=公告 audit=审批 todo=待办 alert=告警", Enums: []string{"system", "announce", "audit", "todo", "alert"}, Default: "system"},
+		{Name: "level", Type: field.TypeEnum, Comment: "重要级别：info=普通 success=成功 warn=警告 error=严重", Enums: []string{"info", "success", "warn", "error"}, Default: "info"},
+		{Name: "biz_type", Type: field.TypeString, Nullable: true, Size: 64, Comment: "业务类型，用于业务方归类（如 order、admin）"},
+		{Name: "biz_id", Type: field.TypeString, Nullable: true, Size: 64, Comment: "业务ID，配合 biz_type 定位数据来源"},
+		{Name: "sender_id", Type: field.TypeString, Nullable: true, Size: 36, Comment: "发送人ID，空表示系统发送"},
+		{Name: "sender_name", Type: field.TypeString, Nullable: true, Size: 64, Comment: "发送人名称（冗余，避免联表）"},
+		{Name: "link", Type: field.TypeString, Nullable: true, Size: 256, Comment: "点击后跳转的前端路由"},
+		{Name: "target_type", Type: field.TypeEnum, Comment: "投放范围：all=全体用户 user=指定用户 role=指定角色", Enums: []string{"all", "user", "role"}, Default: "all"},
+		{Name: "target_ids", Type: field.TypeJSON, Nullable: true, Comment: "投放目标ID集合，target_type 为 all 时为空"},
+		{Name: "status", Type: field.TypeEnum, Comment: "状态：draft=草稿 published=已发布 revoked=已撤回", Enums: []string{"draft", "published", "revoked"}, Default: "published"},
+		{Name: "published_at", Type: field.TypeTime, Nullable: true, Comment: "发布时间"},
+		{Name: "expire_at", Type: field.TypeTime, Nullable: true, Comment: "过期时间，为空表示长期有效"},
+		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间"},
+		{Name: "updated_at", Type: field.TypeTime, Comment: "更新时间"},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
+	}
+	// NotificationTable holds the schema information for the "notification" table.
+	NotificationTable = &schema.Table{
+		Name:       "notification",
+		Comment:    "通知表",
+		Columns:    NotificationColumns,
+		PrimaryKey: []*schema.Column{NotificationColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "notification_tenant_id",
+				Unique:  false,
+				Columns: []*schema.Column{NotificationColumns[1]},
+			},
+			{
+				Name:    "notification_status_created_at",
+				Unique:  false,
+				Columns: []*schema.Column{NotificationColumns[13], NotificationColumns[16]},
+			},
+			{
+				Name:    "notification_biz_type_biz_id",
+				Unique:  false,
+				Columns: []*schema.Column{NotificationColumns[6], NotificationColumns[7]},
+			},
+		},
+	}
+	// NotificationRecordColumns holds the columns for the "notification_record" table.
+	NotificationRecordColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36, Comment: "记录ID"},
+		{Name: "tenant_id", Type: field.TypeString, Size: 36, Comment: "租户ID", Default: "default"},
+		{Name: "user_id", Type: field.TypeString, Size: 36, Comment: "接收人ID"},
+		{Name: "is_read", Type: field.TypeBool, Comment: "是否已读", Default: false},
+		{Name: "read_at", Type: field.TypeTime, Nullable: true, Comment: "已读时间"},
+		{Name: "is_deleted", Type: field.TypeBool, Comment: "是否已删除（回收站，用户侧软删）", Default: false},
+		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间"},
+		{Name: "updated_at", Type: field.TypeTime, Comment: "更新时间"},
+		{Name: "notification_id", Type: field.TypeString, Size: 36, Comment: "通知ID"},
+	}
+	// NotificationRecordTable holds the schema information for the "notification_record" table.
+	NotificationRecordTable = &schema.Table{
+		Name:       "notification_record",
+		Comment:    "用户通知收件表",
+		Columns:    NotificationRecordColumns,
+		PrimaryKey: []*schema.Column{NotificationRecordColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "notification_record_notification_records",
+				Columns:    []*schema.Column{NotificationRecordColumns[8]},
+				RefColumns: []*schema.Column{NotificationColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "notificationrecord_tenant_id",
+				Unique:  false,
+				Columns: []*schema.Column{NotificationRecordColumns[1]},
+			},
+			{
+				Name:    "notificationrecord_notification_id_user_id",
+				Unique:  true,
+				Columns: []*schema.Column{NotificationRecordColumns[8], NotificationRecordColumns[2]},
+			},
+			{
+				Name:    "notificationrecord_user_id_is_read_is_deleted",
+				Unique:  false,
+				Columns: []*schema.Column{NotificationRecordColumns[2], NotificationRecordColumns[3], NotificationRecordColumns[5]},
+			},
+		},
+	}
+	// OperationLogColumns holds the columns for the "operation_log" table.
+	OperationLogColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36, Comment: "日志ID"},
+		{Name: "tenant_id", Type: field.TypeString, Size: 36, Comment: "租户ID", Default: "default"},
+		{Name: "admin_id", Type: field.TypeString, Nullable: true, Size: 36, Comment: "操作人ID（未登录操作为空）"},
+		{Name: "admin_name", Type: field.TypeString, Nullable: true, Size: 64, Comment: "操作人姓名（冗余，避免联表）"},
+		{Name: "module", Type: field.TypeString, Nullable: true, Size: 64, Comment: "所属模块/服务名，如 Admin、Dictionary"},
+		{Name: "operation", Type: field.TypeString, Nullable: true, Size: 128, Comment: "操作名，如 CreateAdmin"},
+		{Name: "method", Type: field.TypeString, Nullable: true, Size: 16, Comment: "HTTP 方法"},
+		{Name: "path", Type: field.TypeString, Nullable: true, Size: 256, Comment: "请求路径"},
+		{Name: "summary", Type: field.TypeString, Nullable: true, Size: 256, Comment: "接口中文摘要（来自 OpenAPI）"},
+		{Name: "ip", Type: field.TypeString, Nullable: true, Size: 64, Comment: "来源IP"},
+		{Name: "user_agent", Type: field.TypeString, Nullable: true, Size: 512, Comment: "客户端 UA"},
+		{Name: "params", Type: field.TypeString, Nullable: true, Size: 2147483647, Comment: "请求参数（JSON，已脱敏并截断）"},
+		{Name: "status", Type: field.TypeEnum, Comment: "结果：success=成功 fail=失败", Enums: []string{"success", "fail"}, Default: "success"},
+		{Name: "code", Type: field.TypeString, Nullable: true, Size: 64, Comment: "失败时的错误码"},
+		{Name: "message", Type: field.TypeString, Nullable: true, Size: 512, Comment: "失败时的错误信息"},
+		{Name: "cost_ms", Type: field.TypeInt, Comment: "耗时（毫秒）", Default: 0},
+		{Name: "created_at", Type: field.TypeTime, Comment: "操作时间"},
+	}
+	// OperationLogTable holds the schema information for the "operation_log" table.
+	OperationLogTable = &schema.Table{
+		Name:       "operation_log",
+		Comment:    "操作日志表",
+		Columns:    OperationLogColumns,
+		PrimaryKey: []*schema.Column{OperationLogColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "operationlog_tenant_id",
+				Unique:  false,
+				Columns: []*schema.Column{OperationLogColumns[1]},
+			},
+			{
+				Name:    "operationlog_admin_id_created_at",
+				Unique:  false,
+				Columns: []*schema.Column{OperationLogColumns[2], OperationLogColumns[16]},
+			},
+			{
+				Name:    "operationlog_status_created_at",
+				Unique:  false,
+				Columns: []*schema.Column{OperationLogColumns[12], OperationLogColumns[16]},
+			},
+			{
+				Name:    "operationlog_created_at",
+				Unique:  false,
+				Columns: []*schema.Column{OperationLogColumns[16]},
+			},
+		},
+	}
+	// OrderColumns holds the columns for the "order" table.
+	OrderColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36, Comment: "ID"},
+		{Name: "tenant_id", Type: field.TypeString, Size: 36, Comment: "租户ID", Default: "default"},
+		{Name: "name", Type: field.TypeString, Nullable: true, Comment: "name"},
+		{Name: "sn", Type: field.TypeString, Nullable: true, Comment: "sn"},
+		{Name: "status", Type: field.TypeEnum, Comment: "状态：enabled=启用 disabled=禁用", Enums: []string{"enabled", "disabled"}, Default: "enabled"},
+		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间"},
+		{Name: "updated_at", Type: field.TypeTime, Comment: "更新时间"},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
+	}
+	// OrderTable holds the schema information for the "order" table.
+	OrderTable = &schema.Table{
+		Name:       "order",
+		Comment:    "订单",
+		Columns:    OrderColumns,
+		PrimaryKey: []*schema.Column{OrderColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "order_tenant_id",
+				Unique:  false,
+				Columns: []*schema.Column{OrderColumns[1]},
+			},
+		},
 	}
 	// PositionColumns holds the columns for the "position" table.
 	PositionColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true, Size: 36, Comment: "ID"},
+		{Name: "tenant_id", Type: field.TypeString, Size: 36, Comment: "租户ID", Default: "default"},
 		{Name: "name", Type: field.TypeString, Size: 64, Comment: "职务名称"},
 		{Name: "code", Type: field.TypeString, Size: 64, Comment: "职务编码"},
 		{Name: "weight", Type: field.TypeInt, Comment: "权重/职务级别（越小职务越高）", Default: 0},
@@ -226,22 +659,27 @@ var (
 		PrimaryKey: []*schema.Column{PositionColumns[0]},
 		Indexes: []*schema.Index{
 			{
+				Name:    "position_tenant_id",
+				Unique:  false,
+				Columns: []*schema.Column{PositionColumns[1]},
+			},
+			{
 				Name:    "position_code_deleted_at",
 				Unique:  true,
-				Columns: []*schema.Column{PositionColumns[2], PositionColumns[10]},
+				Columns: []*schema.Column{PositionColumns[3], PositionColumns[11]},
 			},
 		},
 	}
 	// RoleColumns holds the columns for the "role" table.
 	RoleColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true},
+		{Name: "tenant_id", Type: field.TypeString, Size: 36, Comment: "租户ID", Default: "default"},
 		{Name: "name", Type: field.TypeString, Comment: "角色名称"},
 		{Name: "code", Type: field.TypeString, Unique: true, Comment: "角色编码"},
 		{Name: "weight", Type: field.TypeInt, Comment: "排序权重", Default: 0},
 		{Name: "status", Type: field.TypeEnum, Comment: "状态", Enums: []string{"enabled", "disabled"}, Default: "enabled"},
 		{Name: "remark", Type: field.TypeString, Nullable: true, Comment: "备注"},
 		{Name: "is_system", Type: field.TypeBool, Comment: "是否系统内置", Default: false},
-		{Name: "data_scope", Type: field.TypeString, Comment: "数据权限范围: all / dept / self", Default: "all"},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
 		{Name: "deleted_at", Type: field.TypeTime, Nullable: true},
@@ -252,10 +690,59 @@ var (
 		Comment:    "系统角色表",
 		Columns:    RoleColumns,
 		PrimaryKey: []*schema.Column{RoleColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "role_tenant_id",
+				Unique:  false,
+				Columns: []*schema.Column{RoleColumns[1]},
+			},
+		},
+	}
+	// RoleDataPermissionColumns holds the columns for the "role_data_permission" table.
+	RoleDataPermissionColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Comment: "主键ID"},
+		{Name: "tenant_id", Type: field.TypeString, Size: 36, Comment: "租户ID", Default: "default"},
+		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间"},
+		{Name: "role_id", Type: field.TypeString, Comment: "角色ID"},
+		{Name: "data_permission_id", Type: field.TypeString, Size: 36, Comment: "数据权限规则ID"},
+	}
+	// RoleDataPermissionTable holds the schema information for the "role_data_permission" table.
+	RoleDataPermissionTable = &schema.Table{
+		Name:       "role_data_permission",
+		Comment:    "角色数据权限规则关联表",
+		Columns:    RoleDataPermissionColumns,
+		PrimaryKey: []*schema.Column{RoleDataPermissionColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "role_data_permission_role_role",
+				Columns:    []*schema.Column{RoleDataPermissionColumns[3]},
+				RefColumns: []*schema.Column{RoleColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+			{
+				Symbol:     "role_data_permission_data_permission_data_permission",
+				Columns:    []*schema.Column{RoleDataPermissionColumns[4]},
+				RefColumns: []*schema.Column{DataPermissionColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "roledatapermission_tenant_id",
+				Unique:  false,
+				Columns: []*schema.Column{RoleDataPermissionColumns[1]},
+			},
+			{
+				Name:    "roledatapermission_role_id_data_permission_id",
+				Unique:  true,
+				Columns: []*schema.Column{RoleDataPermissionColumns[3], RoleDataPermissionColumns[4]},
+			},
+		},
 	}
 	// RoleMenuColumns holds the columns for the "role_menu" table.
 	RoleMenuColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true, Comment: "主键ID"},
+		{Name: "tenant_id", Type: field.TypeString, Size: 36, Comment: "租户ID", Default: "default"},
 		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间"},
 		{Name: "role_id", Type: field.TypeString, Comment: "角色ID"},
 		{Name: "menu_id", Type: field.TypeString, Size: 36, Comment: "菜单ID"},
@@ -269,28 +756,34 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "role_menu_role_role",
-				Columns:    []*schema.Column{RoleMenuColumns[2]},
+				Columns:    []*schema.Column{RoleMenuColumns[3]},
 				RefColumns: []*schema.Column{RoleColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 			{
 				Symbol:     "role_menu_menu_menu",
-				Columns:    []*schema.Column{RoleMenuColumns[3]},
+				Columns:    []*schema.Column{RoleMenuColumns[4]},
 				RefColumns: []*schema.Column{MenuColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 		},
 		Indexes: []*schema.Index{
 			{
+				Name:    "rolemenu_tenant_id",
+				Unique:  false,
+				Columns: []*schema.Column{RoleMenuColumns[1]},
+			},
+			{
 				Name:    "rolemenu_role_id_menu_id",
 				Unique:  true,
-				Columns: []*schema.Column{RoleMenuColumns[2], RoleMenuColumns[3]},
+				Columns: []*schema.Column{RoleMenuColumns[3], RoleMenuColumns[4]},
 			},
 		},
 	}
 	// RolePermissionColumns holds the columns for the "role_permission" table.
 	RolePermissionColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true, Size: 36, Comment: "主键ID"},
+		{Name: "tenant_id", Type: field.TypeString, Size: 36, Comment: "租户ID", Default: "default"},
 		{Name: "role_id", Type: field.TypeString, Size: 36, Comment: "角色ID"},
 		{Name: "permission_id", Type: field.TypeString, Size: 36, Comment: "权限ID"},
 		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间"},
@@ -301,53 +794,192 @@ var (
 		Comment:    "角色和权限关联表",
 		Columns:    RolePermissionColumns,
 		PrimaryKey: []*schema.Column{RolePermissionColumns[0]},
-	}
-	// MenuAPIPermissionsColumns holds the columns for the "menu_api_permissions" table.
-	MenuAPIPermissionsColumns = []*schema.Column{
-		{Name: "menu_id", Type: field.TypeString, Size: 36},
-		{Name: "api_permission_id", Type: field.TypeString, Size: 36},
-	}
-	// MenuAPIPermissionsTable holds the schema information for the "menu_api_permissions" table.
-	MenuAPIPermissionsTable = &schema.Table{
-		Name:       "menu_api_permissions",
-		Columns:    MenuAPIPermissionsColumns,
-		PrimaryKey: []*schema.Column{MenuAPIPermissionsColumns[0], MenuAPIPermissionsColumns[1]},
-		ForeignKeys: []*schema.ForeignKey{
+		Indexes: []*schema.Index{
 			{
-				Symbol:     "menu_api_permissions_menu_id",
-				Columns:    []*schema.Column{MenuAPIPermissionsColumns[0]},
-				RefColumns: []*schema.Column{MenuColumns[0]},
-				OnDelete:   schema.Cascade,
-			},
-			{
-				Symbol:     "menu_api_permissions_api_permission_id",
-				Columns:    []*schema.Column{MenuAPIPermissionsColumns[1]},
-				RefColumns: []*schema.Column{APIPermissionColumns[0]},
-				OnDelete:   schema.Cascade,
+				Name:    "rolepermission_tenant_id",
+				Unique:  false,
+				Columns: []*schema.Column{RolePermissionColumns[1]},
 			},
 		},
+	}
+	// SecurityPolicyColumns holds the columns for the "security_policy" table.
+	SecurityPolicyColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36, Comment: "策略ID（固定为 default）"},
+		{Name: "login_fail_enabled", Type: field.TypeBool, Comment: "是否启用登录失败次数限制", Default: false},
+		{Name: "login_fail_max", Type: field.TypeInt, Comment: "窗口内允许的最大失败次数", Default: 5},
+		{Name: "login_fail_window_minutes", Type: field.TypeInt, Comment: "失败次数统计窗口（分钟）", Default: 15},
+		{Name: "login_lock_minutes", Type: field.TypeInt, Comment: "达到上限后的锁定时长（分钟）", Default: 15},
+		{Name: "ip_mode", Type: field.TypeEnum, Comment: "IP 访问控制模式：off=关闭 whitelist=白名单 blacklist=黑名单", Enums: []string{"off", "whitelist", "blacklist"}, Default: "off"},
+		{Name: "ip_list", Type: field.TypeString, Nullable: true, Size: 2147483647, Comment: "IP 列表（换行或逗号分隔，支持 CIDR）"},
+		{Name: "access_token_ttl_seconds", Type: field.TypeInt64, Comment: "access token 有效期（秒），合法范围 60-2592000，0 回退默认值 7200", Default: 7200},
+		{Name: "refresh_token_ttl_seconds", Type: field.TypeInt64, Comment: "refresh token 有效期（秒），合法范围 300-31536000，0 回退默认值 604800", Default: 604800},
+		{Name: "remark", Type: field.TypeString, Nullable: true, Size: 256, Comment: "备注"},
+		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间"},
+		{Name: "updated_at", Type: field.TypeTime, Comment: "更新时间"},
+	}
+	// SecurityPolicyTable holds the schema information for the "security_policy" table.
+	SecurityPolicyTable = &schema.Table{
+		Name:       "security_policy",
+		Comment:    "安全策略配置表（单例）",
+		Columns:    SecurityPolicyColumns,
+		PrimaryKey: []*schema.Column{SecurityPolicyColumns[0]},
+	}
+	// SysConfigColumns holds the columns for the "sys_config" table.
+	SysConfigColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36, Comment: "参数ID"},
+		{Name: "tenant_id", Type: field.TypeString, Size: 36, Comment: "租户ID", Default: "default"},
+		{Name: "name", Type: field.TypeString, Size: 64, Comment: "参数名称"},
+		{Name: "key", Type: field.TypeString, Unique: true, Size: 100, Comment: "参数键名"},
+		{Name: "value", Type: field.TypeString, Size: 512, Comment: "参数键值"},
+		{Name: "config_type", Type: field.TypeEnum, Comment: "系统内置（Y=内置，N=外置）", Enums: []string{"Y", "N"}, Default: "N"},
+		{Name: "status", Type: field.TypeEnum, Comment: "状态", Enums: []string{"enabled", "disabled"}, Default: "enabled"},
+		{Name: "remark", Type: field.TypeString, Nullable: true, Size: 256, Comment: "备注"},
+		{Name: "group", Type: field.TypeString, Nullable: true, Size: 50, Comment: "分组名称（可为空，即单一参数）"},
+		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间"},
+		{Name: "updated_at", Type: field.TypeTime, Comment: "更新时间"},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
+	}
+	// SysConfigTable holds the schema information for the "sys_config" table.
+	SysConfigTable = &schema.Table{
+		Name:       "sys_config",
+		Comment:    "系统参数配置表",
+		Columns:    SysConfigColumns,
+		PrimaryKey: []*schema.Column{SysConfigColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "sysconfig_tenant_id",
+				Unique:  false,
+				Columns: []*schema.Column{SysConfigColumns[1]},
+			},
+		},
+	}
+	// SysJobColumns holds the columns for the "sys_job" table.
+	SysJobColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36, Comment: "任务ID"},
+		{Name: "tenant_id", Type: field.TypeString, Size: 36, Comment: "租户ID", Default: "default"},
+		{Name: "name", Type: field.TypeString, Size: 64, Comment: "任务名称"},
+		{Name: "job_group", Type: field.TypeString, Size: 64, Comment: "任务分组", Default: "DEFAULT"},
+		{Name: "job_type", Type: field.TypeString, Size: 32, Comment: "任务类型（http=HTTP调用）", Default: "http"},
+		{Name: "invoke_target", Type: field.TypeString, Size: 512, Comment: "调用目标（HTTP请求URL）"},
+		{Name: "cron_expression", Type: field.TypeString, Size: 64, Comment: "Cron 表达式"},
+		{Name: "misfire_policy", Type: field.TypeString, Size: 32, Comment: "错失执行策略（immediately=立即执行，once=执行一次，ignore=放弃执行）", Default: "immediately"},
+		{Name: "concurrent", Type: field.TypeBool, Comment: "是否允许并发执行", Default: true},
+		{Name: "status", Type: field.TypeEnum, Comment: "状态", Enums: []string{"enabled", "disabled"}, Default: "enabled"},
+		{Name: "remark", Type: field.TypeString, Nullable: true, Size: 256, Comment: "备注"},
+		{Name: "next_run_time", Type: field.TypeTime, Nullable: true, Comment: "下次执行时间"},
+		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间"},
+		{Name: "updated_at", Type: field.TypeTime, Comment: "更新时间"},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
+	}
+	// SysJobTable holds the schema information for the "sys_job" table.
+	SysJobTable = &schema.Table{
+		Name:       "sys_job",
+		Comment:    "定时任务表",
+		Columns:    SysJobColumns,
+		PrimaryKey: []*schema.Column{SysJobColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "sysjob_tenant_id",
+				Unique:  false,
+				Columns: []*schema.Column{SysJobColumns[1]},
+			},
+		},
+	}
+	// SysJobLogColumns holds the columns for the "sys_job_log" table.
+	SysJobLogColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36, Comment: "日志ID"},
+		{Name: "tenant_id", Type: field.TypeString, Size: 36, Comment: "租户ID", Default: "default"},
+		{Name: "job_id", Type: field.TypeString, Size: 36, Comment: "任务ID"},
+		{Name: "job_name", Type: field.TypeString, Nullable: true, Size: 64, Comment: "任务名称", Default: ""},
+		{Name: "job_group", Type: field.TypeString, Nullable: true, Size: 64, Comment: "任务分组", Default: ""},
+		{Name: "invoke_target", Type: field.TypeString, Nullable: true, Size: 512, Comment: "调用目标", Default: ""},
+		{Name: "cron_expression", Type: field.TypeString, Nullable: true, Size: 64, Comment: "Cron 表达式", Default: ""},
+		{Name: "status", Type: field.TypeEnum, Comment: "执行结果", Enums: []string{"success", "fail"}, Default: "success"},
+		{Name: "job_message", Type: field.TypeString, Nullable: true, Size: 2000, Comment: "执行信息", Default: ""},
+		{Name: "start_time", Type: field.TypeTime, Nullable: true, Comment: "开始时间"},
+		{Name: "end_time", Type: field.TypeTime, Nullable: true, Comment: "结束时间"},
+		{Name: "duration", Type: field.TypeInt64, Comment: "耗时（毫秒）", Default: 0},
+		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间"},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
+	}
+	// SysJobLogTable holds the schema information for the "sys_job_log" table.
+	SysJobLogTable = &schema.Table{
+		Name:       "sys_job_log",
+		Comment:    "定时任务执行日志表",
+		Columns:    SysJobLogColumns,
+		PrimaryKey: []*schema.Column{SysJobLogColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "sysjoblog_tenant_id",
+				Unique:  false,
+				Columns: []*schema.Column{SysJobLogColumns[1]},
+			},
+		},
+	}
+	// TenantColumns holds the columns for the "tenant" table.
+	TenantColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36, Comment: "租户ID（默认租户固定为 default）"},
+		{Name: "code", Type: field.TypeString, Unique: true, Size: 64, Comment: "租户编码（登录用，创建后不可修改）"},
+		{Name: "name", Type: field.TypeString, Size: 64, Comment: "租户名称"},
+		{Name: "status", Type: field.TypeEnum, Comment: "状态：enabled=启用 disabled=禁用", Enums: []string{"enabled", "disabled"}, Default: "enabled"},
+		{Name: "expire_at", Type: field.TypeTime, Nullable: true, Comment: "到期时间，空表示永久"},
+		{Name: "max_users", Type: field.TypeInt, Comment: "用户数上限，0 表示不限", Default: 0},
+		{Name: "max_roles", Type: field.TypeInt, Comment: "角色数上限，0 表示不限", Default: 0},
+		{Name: "contact_name", Type: field.TypeString, Nullable: true, Size: 64, Comment: "联系人"},
+		{Name: "contact_phone", Type: field.TypeString, Nullable: true, Size: 20, Comment: "联系电话"},
+		{Name: "remark", Type: field.TypeString, Nullable: true, Size: 256, Comment: "备注"},
+		{Name: "created_at", Type: field.TypeTime, Comment: "创建时间"},
+		{Name: "updated_at", Type: field.TypeTime, Comment: "更新时间"},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true, Comment: "删除时间"},
+	}
+	// TenantTable holds the schema information for the "tenant" table.
+	TenantTable = &schema.Table{
+		Name:       "tenant",
+		Comment:    "租户表",
+		Columns:    TenantColumns,
+		PrimaryKey: []*schema.Column{TenantColumns[0]},
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		AdminTable,
+		AdminDataPermissionTable,
 		AdminRoleTable,
 		APIInterfaceTable,
-		APIPermissionTable,
+		DataPermissionTable,
 		DepartmentTable,
 		DictDataTable,
 		DictTypeTable,
+		FormSchemaTable,
+		FormSubmissionTable,
+		GenTableTable,
+		LoginLogTable,
 		MenuTable,
+		MenuAPIPermissionTable,
+		NotificationTable,
+		NotificationRecordTable,
+		OperationLogTable,
+		OrderTable,
 		PositionTable,
 		RoleTable,
+		RoleDataPermissionTable,
 		RoleMenuTable,
 		RolePermissionTable,
-		MenuAPIPermissionsTable,
+		SecurityPolicyTable,
+		SysConfigTable,
+		SysJobTable,
+		SysJobLogTable,
+		TenantTable,
 	}
 )
 
 func init() {
 	AdminTable.Annotation = &entsql.Annotation{
 		Table: "admin",
+	}
+	AdminDataPermissionTable.ForeignKeys[0].RefTable = AdminTable
+	AdminDataPermissionTable.ForeignKeys[1].RefTable = DataPermissionTable
+	AdminDataPermissionTable.Annotation = &entsql.Annotation{
+		Table: "admin_data_permission",
 	}
 	AdminRoleTable.ForeignKeys[0].RefTable = AdminTable
 	AdminRoleTable.ForeignKeys[1].RefTable = RoleTable
@@ -357,8 +989,8 @@ func init() {
 	APIInterfaceTable.Annotation = &entsql.Annotation{
 		Table: "api_interface",
 	}
-	APIPermissionTable.Annotation = &entsql.Annotation{
-		Table: "api_permission",
+	DataPermissionTable.Annotation = &entsql.Annotation{
+		Table: "data_permission",
 	}
 	DepartmentTable.Annotation = &entsql.Annotation{
 		Table: "department",
@@ -369,14 +1001,47 @@ func init() {
 	DictTypeTable.Annotation = &entsql.Annotation{
 		Table: "dict_type",
 	}
+	FormSchemaTable.Annotation = &entsql.Annotation{
+		Table: "form_schema",
+	}
+	FormSubmissionTable.Annotation = &entsql.Annotation{
+		Table: "form_submission",
+	}
+	GenTableTable.Annotation = &entsql.Annotation{
+		Table: "gen_table",
+	}
+	LoginLogTable.Annotation = &entsql.Annotation{
+		Table: "login_log",
+	}
 	MenuTable.Annotation = &entsql.Annotation{
 		Table: "menu",
+	}
+	MenuAPIPermissionTable.Annotation = &entsql.Annotation{
+		Table: "menu_api_permission",
+	}
+	NotificationTable.Annotation = &entsql.Annotation{
+		Table: "notification",
+	}
+	NotificationRecordTable.ForeignKeys[0].RefTable = NotificationTable
+	NotificationRecordTable.Annotation = &entsql.Annotation{
+		Table: "notification_record",
+	}
+	OperationLogTable.Annotation = &entsql.Annotation{
+		Table: "operation_log",
+	}
+	OrderTable.Annotation = &entsql.Annotation{
+		Table: "order",
 	}
 	PositionTable.Annotation = &entsql.Annotation{
 		Table: "position",
 	}
 	RoleTable.Annotation = &entsql.Annotation{
 		Table: "role",
+	}
+	RoleDataPermissionTable.ForeignKeys[0].RefTable = RoleTable
+	RoleDataPermissionTable.ForeignKeys[1].RefTable = DataPermissionTable
+	RoleDataPermissionTable.Annotation = &entsql.Annotation{
+		Table: "role_data_permission",
 	}
 	RoleMenuTable.ForeignKeys[0].RefTable = RoleTable
 	RoleMenuTable.ForeignKeys[1].RefTable = MenuTable
@@ -386,6 +1051,19 @@ func init() {
 	RolePermissionTable.Annotation = &entsql.Annotation{
 		Table: "role_permission",
 	}
-	MenuAPIPermissionsTable.ForeignKeys[0].RefTable = MenuTable
-	MenuAPIPermissionsTable.ForeignKeys[1].RefTable = APIPermissionTable
+	SecurityPolicyTable.Annotation = &entsql.Annotation{
+		Table: "security_policy",
+	}
+	SysConfigTable.Annotation = &entsql.Annotation{
+		Table: "sys_config",
+	}
+	SysJobTable.Annotation = &entsql.Annotation{
+		Table: "sys_job",
+	}
+	SysJobLogTable.Annotation = &entsql.Annotation{
+		Table: "sys_job_log",
+	}
+	TenantTable.Annotation = &entsql.Annotation{
+		Table: "tenant",
+	}
 }

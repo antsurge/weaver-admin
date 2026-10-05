@@ -1,5 +1,9 @@
+# 通用错误码
 [BAD_REQUEST]
-other = "错误请求"
+other = "请求参数不合法"
+
+[INVALID_ID]
+other = "参数不合法"
 
 [NOT_FOUND_RECORD]
 other = "未找到记录"

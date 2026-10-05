@@ -1,0 +1,69 @@
+# Validation messages (buf validate), key format: {field_path}.{rule}
+[dictType.name.required]
+other = "Name is required"
+
+[dictType.name.max_len]
+other = "Name must not exceed 64 characters"
+
+[dictType.code.required]
+other = "Code is required"
+
+[dictType.code.max_len]
+other = "Code must not exceed 64 characters"
+
+[dictType.status.in]
+other = "Invalid status"
+
+[dictType.remark.max_len]
+other = "Remark must not exceed 255 characters"
+
+[dictType.ids.not_empty]
+other = "IDs cannot be empty"
+
+[position.name.required]
+other = "Position name is required"
+
+[position.name.max_len]
+other = "Position name must not exceed 64 characters"
+
+[position.code.required]
+other = "Position code is required"
+
+[position.code.max_len]
+other = "Position code must not exceed 64 characters"
+
+[position.status.in]
+other = "Invalid status"
+
+[position.remark.max_len]
+other = "Remark must not exceed 255 characters"
+
+[position.ids.not_empty]
+other = "IDs cannot be empty"
+
+[organization.name.required]
+other = "Organization name is required"
+
+[organization.name.max_len]
+other = "Organization name must not exceed 64 characters"
+
+[organization.code.required]
+other = "Organization code is required"
+
+[organization.code.max_len]
+other = "Organization code must not exceed 64 characters"
+
+[organization.status.in]
+other = "Invalid status"
+
+[organization.leaderName.max_len]
+other = "Leader name must not exceed 64 characters"
+
+[organization.leaderPhone.max_len]
+other = "Leader phone must not exceed 20 characters"
+
+[organization.leaderEmail.max_len]
+other = "Leader email must not exceed 20 characters"
+
+[organization.ids.not_empty]
+other = "IDs cannot be empty"

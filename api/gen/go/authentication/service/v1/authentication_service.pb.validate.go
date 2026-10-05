@@ -65,6 +65,8 @@ func (m *LoginRequest) validate(all bool) error {
 
 	// no validation rules for CaptchaId
 
+	// no validation rules for TenantCode
+
 	if len(errors) > 0 {
 		return LoginRequestMultiError(errors)
 	}
@@ -525,6 +527,10 @@ func (m *CurrentUserInfoResponse) validate(all bool) error {
 		}
 
 	}
+
+	// no validation rules for DataScope
+
+	// no validation rules for DepartmentName
 
 	if len(errors) > 0 {
 		return CurrentUserInfoResponseMultiError(errors)

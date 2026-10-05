@@ -1,0 +1,62 @@
+{
+  "title": "安全中心",
+  "online": {
+    "title": "在线用户",
+    "fields": {
+      "username": "用户名",
+      "realName": "姓名",
+      "ip": "登录IP",
+      "userAgent": "浏览器/设备",
+      "sessionCount": "会话数",
+      "loginAt": "登录时间",
+      "expireAt": "过期时间",
+      "operation": "操作"
+    },
+    "operation": {
+      "logout": "强制下线"
+    },
+    "search_placeholder": {
+      "username": "请输入用户名",
+      "realName": "请输入姓名",
+      "ip": "请输入登录IP"
+    },
+    "confirm": {
+      "logoutTitle": "确认强制下线",
+      "logoutContent": "确定强制下线用户“{0}”吗？其所有在线会话将被注销，需重新登录。"
+    },
+    "message": {
+      "logoutSuccess": "已强制下线"
+    }
+  },
+  "security_policy": {
+    "title": "安全策略",
+    "name": "安全策略",
+    "fields": {
+      "loginFailEnabled": "启用失败次数限制",
+      "loginFailMax": "最大失败次数",
+      "loginFailWindowMinutes": "统计窗口（分钟）",
+      "loginLockMinutes": "锁定时长（分钟）",
+      "ipMode": "IP 访问模式",
+      "ipList": "IP 列表",
+      "accessTokenTtlSeconds": "access token 有效期（秒）",
+      "refreshTokenTtlSeconds": "refresh token 有效期（秒）",
+      "remark": "备注"
+    },
+    "ip_mode_options": {
+      "off": "关闭",
+      "whitelist": "白名单",
+      "blacklist": "黑名单"
+    },
+    "placeholder": {
+      "ipList": "每行一个 IP 或 CIDR，例如 127.0.0.1 或 192.168.1.0/24"
+    },
+    "tips": {
+      "lock": "开启后，同一账号在统计窗口内登录失败达到上限将被锁定指定时长。",
+      "ip": "白名单：仅列表内 IP 可访问；黑名单：列表内 IP 禁止访问。修改后立即生效。",
+      "token": "access token 最短 60 秒 / 最长 30 天；refresh token 最短 300 秒 / 最长 365 天。未设置（0）时回退默认值（2 小时 / 7 天）。"
+    },
+    "message": {
+      "loadFailed": "加载安全策略失败"
+    }
+  }
+}

@@ -107,6 +107,20 @@ func ErrorNoPermission(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, AuthenticationErrorReason_NO_PERMISSION.String(), fmt.Sprintf(format, args...))
 }
 
+// 账号已锁定（登录失败次数超限）
+func IsAccountLocked(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == AuthenticationErrorReason_ACCOUNT_LOCKED.String() && e.Code == 400
+}
+
+// 账号已锁定（登录失败次数超限）
+func ErrorAccountLocked(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, AuthenticationErrorReason_ACCOUNT_LOCKED.String(), fmt.Sprintf(format, args...))
+}
+
 // 401
 func IsInvalidToken(err error) bool {
 	if err == nil {

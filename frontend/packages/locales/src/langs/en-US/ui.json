@@ -1,5 +1,6 @@
 {
   "formRules": {
+    "placeholder": "Please enter {0}",
     "required": "Please enter {0}",
     "selectRequired": "Please select {0}",
     "minLength": "{0} must be at least {1} characters",
@@ -17,7 +18,9 @@
     "delete": "Delete {0}",
     "view": "View {0}",
     "export":"Export {0}",
-    "import":"Import {0}"
+    "import":"Import {0}",
+    "confirm": "OK",
+    "cancel": "Cancel"
   },
   "actionMessage": {
     "deleteConfirm": "Are you sure to delete {0}?",
@@ -54,7 +57,10 @@
   },
   "jsonViewer": {
     "copy": "Copy",
-    "copied": "Copied"
+    "copied": "Copied",
+    "format": "Format",
+    "formatSuccess": "Formatted successfully",
+    "formatError": "Invalid JSON, cannot format"
   },
   "crop": {
     "title": "Image Cropping",

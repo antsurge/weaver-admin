@@ -1,20 +1,21 @@
-import type { OnActionClickFn, VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { VbenFormProps } from '#/adapter/form';
-import type { OrganizationPositionApi } from '#/api/organization/position';
-
-import { $t } from '#/locales';
+import type { OnActionClickFn, VxeTableGridOptions } from '#/adapter/vxe-table';
+import type { AdminuserAdminApi } from '#/api/adminuser/admin';
 
 import { useAccess } from '@vben/access';
+
+import { AdminAuthCode } from '#/access';
+import { $t } from '#/locales';
 
 const { hasAccessByCodes } = useAccess();
 
 export function useColumns(
-  onActionClick: OnActionClickFn<OrganizationPositionApi.Position>,
+  onActionClick: OnActionClickFn<AdminuserAdminApi.Admin>,
   onStatusChange?: (
-    newStatus: OrganizationPositionApi.Position['status'],
-    row: OrganizationPositionApi.Position,
+    newStatus: AdminuserAdminApi.Admin['status'],
+    row: AdminuserAdminApi.Admin,
   ) => PromiseLike<boolean | undefined>,
-): VxeTableGridOptions<OrganizationPositionApi.Position>['columns'] {
+): VxeTableGridOptions<AdminuserAdminApi.Admin>['columns'] {
   return [
     {
       type: 'checkbox',
@@ -26,13 +27,20 @@ export function useColumns(
       type: 'seq',
       title: $t('common.fields.seq'),
       width: 60,
-      align: 'center', 
+      align: 'center',
+    },
+    {
+      field: 'avatar',
+      align: 'center',
+      title: $t('adminuser.admin.fields.avatar'),
+      width: 80,
+      slots: { default: 'avatar' },
     },
     {
       field: 'username',
       align: 'center',
       title: $t('adminuser.admin.fields.username'),
-      width:180,
+      width: 180,
     },
     {
       field: 'realName',
@@ -47,21 +55,55 @@ export function useColumns(
       width: 160,
     },
     {
+      field: 'email',
+      align: 'center',
+      title: $t('adminuser.admin.fields.email'),
+      width: 200,
+    },
+    {
+      field: 'departmentName',
+      align: 'center',
+      title: $t('adminuser.admin.fields.departmentName'),
+      width: 140,
+      showOverflow: 'tooltip',
+    },
+    {
+      field: 'roleNames',
+      align: 'center',
+      title: $t('adminuser.admin.fields.roleIds'),
+      width: 220,
+      showOverflow: 'tooltip',
+      slots: { default: 'roleNames' },
+    },
+    {
+      field: 'dataPermissionNames',
+      align: 'center',
+      title: $t('adminuser.admin.fields.dataPermissionIds'),
+      width: 200,
+      slots: { default: 'dataScope' },
+    },
+    {
       field: 'status',
       align: 'center',
       title: $t('adminuser.admin.fields.status'),
-      width: 120,
+      width: 100,
       cellRender: {
         name: 'CellSwitch',
-        attrs: { beforeChange: onStatusChange },
+        attrs: {
+          beforeChange: onStatusChange,
+          // 无启用/禁用权限，或超级管理员账号时禁用开关
+          disabled: (row: AdminuserAdminApi.Admin) =>
+            !hasAccessByCodes([AdminAuthCode.Admin.SwitchStatus]) ||
+            !!row.isSuperAdmin,
+        },
       },
     },
     {
-      field: 'createdAt',
+      field: 'updatedAt',
       align: 'center',
-      title: $t('common.fields.createdAt'),
-      width: 180,
-      formatter: ({ cellValue }) => cellValue ? new Date(cellValue).toLocaleString() : '-', // 格式化
+      title: $t('common.fields.updatedAt'),
+      width: 160,
+      formatter: 'formatDateTime',
     },
     {
       field: 'operation',
@@ -69,22 +111,33 @@ export function useColumns(
       fixed: 'right',
       showOverflow: false,
       title: $t('common.fields.operation'),
-      width: 200,
+      width: 260,
       cellRender: {
         name: 'CellOperation',
         attrs: {
-          nameField: 'name',
+          nameField: 'username',
           onClick: onActionClick,
         },
-        // options: ['edit', 'delete'],
         options: [
           {
             code: 'edit',
-            show: hasAccessByCodes(['Adminuser:Admin:Edit']),
+            text: $t('ui.actionTitle.edit'),
+            show: hasAccessByCodes([AdminAuthCode.Admin.Edit]),
+          },
+          {
+            code: 'resetPassword',
+            text: $t('adminuser.admin.actions.resetPassword'),
+            show: (row: AdminuserAdminApi.Admin) =>
+              hasAccessByCodes([AdminAuthCode.Admin.ResetPassword]) &&
+              !row.isSuperAdmin,
           },
           {
             code: 'delete',
-            show: hasAccessByCodes(['Adminuser:Admin:Delete']),
+            text: $t('ui.actionTitle.delete'),
+            // 超级管理员账号不展示删除按钮
+            show: (row: AdminuserAdminApi.Admin) =>
+              hasAccessByCodes([AdminAuthCode.Admin.Delete]) &&
+              !row.isSuperAdmin,
           },
         ],
       },
@@ -103,7 +156,7 @@ export function useFormOptions(): VbenFormProps {
             $t('adminuser.admin.fields.username'),
           ]),
         },
-        fieldName: 'name',
+        fieldName: 'username',
         label: $t('adminuser.admin.fields.username'),
       },
       {
@@ -113,8 +166,18 @@ export function useFormOptions(): VbenFormProps {
             $t('adminuser.admin.fields.realName'),
           ]),
         },
-        fieldName: 'code',
+        fieldName: 'realName',
         label: $t('adminuser.admin.fields.realName'),
+      },
+      {
+        component: 'Input',
+        componentProps: {
+          placeholder: $t('ui.formRules.required', [
+            $t('adminuser.admin.fields.phone'),
+          ]),
+        },
+        fieldName: 'phone',
+        label: $t('adminuser.admin.fields.phone'),
       },
       {
         component: 'Select',
@@ -141,5 +204,5 @@ export function useFormOptions(): VbenFormProps {
     submitOnChange: false,
     // 按下回车时是否提交表单
     submitOnEnter: false,
-  }
+  };
 }

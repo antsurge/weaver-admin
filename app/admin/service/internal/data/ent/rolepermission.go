@@ -18,6 +18,8 @@ type RolePermission struct {
 	// ID of the ent.
 	// 主键ID
 	ID string `json:"id,omitempty"`
+	// 租户ID
+	TenantID string `json:"tenant_id,omitempty"`
 	// 角色ID
 	RoleID string `json:"role_id,omitempty"`
 	// 权限ID
@@ -32,7 +34,7 @@ func (*RolePermission) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case rolepermission.FieldID, rolepermission.FieldRoleID, rolepermission.FieldPermissionID:
+		case rolepermission.FieldID, rolepermission.FieldTenantID, rolepermission.FieldRoleID, rolepermission.FieldPermissionID:
 			values[i] = new(sql.NullString)
 		case rolepermission.FieldCreatedAt:
 			values[i] = new(sql.NullTime)
@@ -56,6 +58,12 @@ func (_m *RolePermission) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value.Valid {
 				_m.ID = value.String
+			}
+		case rolepermission.FieldTenantID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field tenant_id", values[i])
+			} else if value.Valid {
+				_m.TenantID = value.String
 			}
 		case rolepermission.FieldRoleID:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -111,6 +119,9 @@ func (_m *RolePermission) String() string {
 	var builder strings.Builder
 	builder.WriteString("RolePermission(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
+	builder.WriteString("tenant_id=")
+	builder.WriteString(_m.TenantID)
+	builder.WriteString(", ")
 	builder.WriteString("role_id=")
 	builder.WriteString(_m.RoleID)
 	builder.WriteString(", ")

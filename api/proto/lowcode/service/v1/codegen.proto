@@ -1,0 +1,269 @@
+syntax = "proto3";
+
+package lowcode.service.v1;
+
+import "buf/validate/validate.proto";
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+// 生成表配置（代码生成器）
+message GenTable {
+  // ID
+  string id = 1 [(gnostic.openapi.v3.property) = {description: "ID"}];
+  // 数据库表名
+  string tableName = 2 [(gnostic.openapi.v3.property) = {description: "数据库表名"}];
+  // 表备注
+  string tableComment = 3 [(gnostic.openapi.v3.property) = {description: "表备注"}];
+  // 模块名
+  string moduleName = 4 [(gnostic.openapi.v3.property) = {description: "模块名（如 system / permission）"}];
+  // 业务名（驼峰）
+  string bizName = 5 [(gnostic.openapi.v3.property) = {description: "业务名（驼峰，如 Job / JobLog）"}];
+  // 字段配置
+  google.protobuf.Struct fieldsJson = 6 [(gnostic.openapi.v3.property) = {description: "字段配置"}];
+  // 生成类型
+  string genType = 7 [(gnostic.openapi.v3.property) = {description: "生成类型：single=单表 CRUD"}];
+  // 是否生成菜单
+  bool menuEnabled = 12 [(gnostic.openapi.v3.property) = {description: "是否生成菜单"}];
+  // 菜单所属模块
+  string menuModule = 13 [(gnostic.openapi.v3.property) = {description: "菜单所属模块（父目录归属）"}];
+  // 生成的按钮列表
+  repeated string buttons = 14 [(gnostic.openapi.v3.property) = {description: "生成的按钮：list/detail/create/edit/delete/batchDelete/status/import/export"}];
+  // 状态
+  string status = 8 [(gnostic.openapi.v3.property) = {description: "状态：enabled=启用，disabled=禁用"}];
+  // 创建时间
+  google.protobuf.Timestamp createdAt = 9 [(gnostic.openapi.v3.property) = {description: "创建时间"}];
+  // 更新时间
+  google.protobuf.Timestamp updatedAt = 10 [(gnostic.openapi.v3.property) = {description: "更新时间"}];
+  // 删除时间
+  google.protobuf.Timestamp deletedAt = 11 [(gnostic.openapi.v3.property) = {description: "删除时间（软删除标记）"}];
+}
+
+// 数据库表元数据（从 information_schema 读取）
+message DbTable {
+  // 表名
+  string tableName = 1 [(gnostic.openapi.v3.property) = {description: "表名"}];
+  // 表备注
+  string tableComment = 2 [(gnostic.openapi.v3.property) = {description: "表备注"}];
+}
+
+// 表字段元数据
+message DbColumn {
+  // 列名
+  string columnName = 1;
+  // 列注释
+  string columnComment = 2;
+  // 数据类型（MySQL 原始类型，如 varchar/bigint/int/datetime）
+  string dataType = 3;
+  // 是否主键
+  bool isPrimaryKey = 4;
+  // 是否可空
+  bool isNullable = 5;
+  // 是否自增
+  bool autoIncrement = 6;
+}
+
+message ListGenTableRequest {
+  int64 currentPage = 1 [(gnostic.openapi.v3.property) = {description: "当前页码（从1开始）"}];
+  int64 pageSize = 2 [(gnostic.openapi.v3.property) = {description: "每页条数（传0为全部）"}];
+  string tableName = 3 [(gnostic.openapi.v3.property) = {description: "表名（支持模糊查询）"}];
+  string bizName = 4 [(gnostic.openapi.v3.property) = {description: "业务名（支持模糊查询）"}];
+  string status = 5 [(gnostic.openapi.v3.property) = {description: "状态"}];
+}
+
+message ListGenTableResponse {
+  repeated GenTable items = 1;
+  int64 total = 2;
+}
+
+message ListDbTablesRequest {
+  string keyword = 1 [(gnostic.openapi.v3.property) = {description: "表名关键字（支持模糊匹配，可空返回全部业务表）"}];
+}
+
+message ListDbTablesResponse {
+  repeated DbTable items = 1;
+}
+
+message ListDbColumnsRequest {
+  // 表名
+  string tableName = 1 [
+    (buf.validate.field).cel = {
+      id: "codegen.table_name.required"
+      message: "codegen.table_name.required"
+      expression: "this.size() > 0"
+    },
+    (gnostic.openapi.v3.property) = {description: "表名"}
+  ];
+}
+
+message ListDbColumnsResponse {
+  repeated DbColumn items = 1;
+}
+
+message CreateGenTableRequest {
+  option (gnostic.openapi.v3.schema) = {
+    required: ["tableName", "moduleName", "bizName"]
+  };
+
+  // 数据库表名
+  string tableName = 1 [
+    (buf.validate.field).cel = {
+      id: "codegen.table_name.required"
+      message: "codegen.table_name.required"
+      expression: "this.size() > 0"
+    },
+    (gnostic.openapi.v3.property) = {description: "数据库表名"}
+  ];
+  // 表备注
+  string tableComment = 2 [(gnostic.openapi.v3.property) = {description: "表备注"}];
+  // 模块名
+  string moduleName = 3 [
+    (buf.validate.field).cel = {
+      id: "codegen.module_name.required"
+      message: "codegen.module_name.required"
+      expression: "this.size() > 0"
+    },
+    (gnostic.openapi.v3.property) = {description: "模块名（如 system / permission）"}
+  ];
+  // 业务名（驼峰）
+  string bizName = 4 [
+    (buf.validate.field).cel = {
+      id: "codegen.biz_name.required"
+      message: "codegen.biz_name.required"
+      expression: "this.size() > 0"
+    },
+    (gnostic.openapi.v3.property) = {description: "业务名（驼峰，如 Job / JobLog）"}
+  ];
+  // 字段配置
+  google.protobuf.Struct fieldsJson = 5 [(gnostic.openapi.v3.property) = {description: "字段配置"}];
+  // 生成类型
+  string genType = 6 [(gnostic.openapi.v3.property) = {description: "生成类型：single=单表 CRUD"}];
+  // 是否生成菜单
+  bool menuEnabled = 8 [(gnostic.openapi.v3.property) = {description: "是否生成菜单"}];
+  // 菜单所属模块
+  string menuModule = 9 [(gnostic.openapi.v3.property) = {description: "菜单所属模块（父目录归属）"}];
+  // 生成的按钮列表
+  repeated string buttons = 10 [(gnostic.openapi.v3.property) = {description: "生成的按钮：list/detail/create/edit/delete/batchDelete/status/import/export"}];
+  // 状态
+  string status = 7 [
+    (buf.validate.field).string = {
+      in: ["enabled", "disabled"]
+    },
+    (buf.validate.field).cel = {
+      id: "codegen.status.invalid"
+      message: "codegen.status.invalid"
+      expression: "this in ['enabled', 'disabled']"
+    },
+    (gnostic.openapi.v3.property) = {description: "状态（enabled/disabled）"}
+  ];
+}
+
+message UpdateGenTableRequest {
+  // 数据库表名
+  string tableName = 1 [
+    (buf.validate.field).cel = {
+      id: "codegen.table_name.required"
+      message: "codegen.table_name.required"
+      expression: "this.size() > 0"
+    },
+    (gnostic.openapi.v3.property) = {description: "数据库表名"}
+  ];
+  // 表备注
+  string tableComment = 2 [(gnostic.openapi.v3.property) = {description: "表备注"}];
+  // 模块名
+  string moduleName = 3 [
+    (buf.validate.field).cel = {
+      id: "codegen.module_name.required"
+      message: "codegen.module_name.required"
+      expression: "this.size() > 0"
+    },
+    (gnostic.openapi.v3.property) = {description: "模块名（如 system / permission）"}
+  ];
+  // 业务名（驼峰）
+  string bizName = 4 [
+    (buf.validate.field).cel = {
+      id: "codegen.biz_name.required"
+      message: "codegen.biz_name.required"
+      expression: "this.size() > 0"
+    },
+    (gnostic.openapi.v3.property) = {description: "业务名（驼峰，如 Job / JobLog）"}
+  ];
+  // 字段配置
+  google.protobuf.Struct fieldsJson = 5 [(gnostic.openapi.v3.property) = {description: "字段配置"}];
+  // 生成类型
+  string genType = 6 [(gnostic.openapi.v3.property) = {description: "生成类型：single=单表 CRUD"}];
+  // 是否生成菜单
+  bool menuEnabled = 8 [(gnostic.openapi.v3.property) = {description: "是否生成菜单"}];
+  // 菜单所属模块
+  string menuModule = 9 [(gnostic.openapi.v3.property) = {description: "菜单所属模块（父目录归属）"}];
+  // 生成的按钮列表
+  repeated string buttons = 11 [(gnostic.openapi.v3.property) = {description: "生成的按钮：list/detail/create/edit/delete/batchDelete/status/import/export"}];
+  // 状态
+  string status = 7 [
+    (buf.validate.field).string = {
+      in: ["enabled", "disabled"]
+    },
+    (buf.validate.field).cel = {
+      id: "codegen.status.invalid"
+      message: "codegen.status.invalid"
+      expression: "this in ['enabled', 'disabled']"
+    },
+    (gnostic.openapi.v3.property) = {description: "状态（enabled/disabled）"}
+  ];
+  string id = 10;
+}
+
+message DeleteGenTableRequest {
+  repeated string ids = 1 [
+    (buf.validate.field).repeated = {
+      min_items: 1
+      max_items: 100
+    },
+    (buf.validate.field).cel = {
+      id: "codegen.ids.not_empty"
+      message: "codegen.ids.not_empty"
+      expression: "this.all(x, x.size() > 0)"
+    },
+    (gnostic.openapi.v3.property) = {description: "配置ID列表，至少一个"}
+  ];
+}
+
+// 生成的代码文件（文件名 + 内容）
+message GenCodeFile {
+  // 相对路径/文件名
+  string fileName = 1;
+  // 代码内容
+  string content = 2;
+}
+
+message GenerateCodeRequest {
+  // 生成表配置 ID（为空则新建配置并落库）
+  string id = 1;
+  // 数据库表名
+  string tableName = 2;
+  // 表备注
+  string tableComment = 3;
+  // 模块名
+  string moduleName = 4;
+  // 业务名（驼峰）
+  string bizName = 5;
+  // 字段配置
+  google.protobuf.Struct fieldsJson = 6 [(gnostic.openapi.v3.property) = {description: "字段配置"}];
+  // 生成类型
+  string genType = 7 [(gnostic.openapi.v3.property) = {description: "生成类型：single=单表 CRUD，form=仅表单"}];
+  // 状态
+  string status = 8 [(gnostic.openapi.v3.property) = {description: "状态（enabled/disabled）"}];
+  // 是否生成菜单
+  bool genMenu = 9 [(gnostic.openapi.v3.property) = {description: "是否生成菜单"}];
+  // 菜单所属模块
+  string menuModule = 10 [(gnostic.openapi.v3.property) = {description: "菜单所属模块（父目录归属）"}];
+  // 生成的按钮列表
+  repeated string buttons = 11 [(gnostic.openapi.v3.property) = {description: "生成的按钮：list/detail/create/edit/delete/batchDelete/status/import/export"}];
+}
+
+message GenerateCodeResponse {
+  // 生成的代码文件列表
+  repeated GenCodeFile files = 1;
+  // 生成表配置 ID（新建配置时返回，供下载/落库菜单使用）
+  string id = 2;
+}

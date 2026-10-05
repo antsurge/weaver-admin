@@ -1,5 +1,6 @@
+import type { PaginationParams } from '#/types/pagination';
+
 import { requestClient } from '#/api/request';
-import type { PaginationParams, PaginationResult } from '#/types/pagination'
 
 export namespace DictionaryDictDataApi {
   /** 字典数据 */
@@ -13,7 +14,7 @@ export namespace DictionaryDictDataApi {
     /** 实际值 */
     value: string;
     /** 状态：enabled=启用 disabled=禁用 */
-    status: 'enabled' | 'disabled';
+    status: 'disabled' | 'enabled';
     /** 备注 */
     remark?: string;
     /** 创建时间 */
@@ -23,18 +24,22 @@ export namespace DictionaryDictDataApi {
   }
 
   export interface DictDataListParams extends PaginationParams {
-    dictTypeID?: string
+    dictTypeID?: string;
+    /** 字典类型ID列表（多选过滤） */
+    dictTypeIds?: string[];
   }
 }
 
 /**
  * 根据字典类型获取字典数据列表
  */
-async function getDictDataListApi(params?: DictionaryDictDataApi.DictDataListParams) {
+async function getDictDataListApi(
+  params?: DictionaryDictDataApi.DictDataListParams,
+) {
   return requestClient.get<Array<DictionaryDictDataApi.DictData>>(
     '/admin/v1/dict-data',
     {
-      params: params,
+      params,
     },
   );
 }
@@ -43,7 +48,7 @@ async function getDictDataListApi(params?: DictionaryDictDataApi.DictDataListPar
  * 创建字典数据
  */
 async function createDictDataApi(
-  data: Omit<DictionaryDictDataApi.DictData, 'id' | 'createdAt' | 'updatedAt'>,
+  data: Omit<DictionaryDictDataApi.DictData, 'createdAt' | 'id' | 'updatedAt'>,
 ) {
   return requestClient.post('/admin/v1/dict-data', data);
 }
@@ -53,7 +58,7 @@ async function createDictDataApi(
  */
 async function updateDictDataApi(
   id: string,
-  data: Omit<DictionaryDictDataApi.DictData, 'id' | 'createdAt' | 'updatedAt'>,
+  data: Omit<DictionaryDictDataApi.DictData, 'createdAt' | 'id' | 'updatedAt'>,
 ) {
   return requestClient.put(`/admin/v1/dict-data/${id}`, data);
 }
@@ -88,4 +93,3 @@ export {
   updateDictDataApi,
   updateDictDataStatusApi,
 };
-

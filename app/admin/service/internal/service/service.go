@@ -9,9 +9,18 @@ var ProviderSet = wire.NewSet(
 
 	NewOrganizationService,
 
-	NewDictionaryService,
+	NewTenantService,
 
 	NewIdentityService,
 
 	NewSystemService,
+	NewFileService,
+
+	NewMessageService,
+
+	NewSecurityService,
+
+	NewOpsService,
+
+	NewLowcodeService,
 )

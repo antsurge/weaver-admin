@@ -13,17 +13,33 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/admin"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/admindatapermission"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/adminrole"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/apiinterface"
-	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/apipermission"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/datapermission"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/department"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/dictdata"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/dicttype"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/formschema"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/formsubmission"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/gentable"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/loginlog"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/menu"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/menuapipermission"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/notification"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/notificationrecord"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/operationlog"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/order"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/position"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/role"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/roledatapermission"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/rolemenu"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/rolepermission"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/securitypolicy"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/sysconfig"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/sysjob"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/sysjoblog"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/tenant"
 )
 
 // ent aliases to avoid import conflicts in user's code.
@@ -84,18 +100,34 @@ var (
 func checkColumn(t, c string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			admin.Table:          admin.ValidColumn,
-			adminrole.Table:      adminrole.ValidColumn,
-			apiinterface.Table:   apiinterface.ValidColumn,
-			apipermission.Table:  apipermission.ValidColumn,
-			department.Table:     department.ValidColumn,
-			dictdata.Table:       dictdata.ValidColumn,
-			dicttype.Table:       dicttype.ValidColumn,
-			menu.Table:           menu.ValidColumn,
-			position.Table:       position.ValidColumn,
-			role.Table:           role.ValidColumn,
-			rolemenu.Table:       rolemenu.ValidColumn,
-			rolepermission.Table: rolepermission.ValidColumn,
+			admin.Table:               admin.ValidColumn,
+			admindatapermission.Table: admindatapermission.ValidColumn,
+			adminrole.Table:           adminrole.ValidColumn,
+			apiinterface.Table:        apiinterface.ValidColumn,
+			datapermission.Table:      datapermission.ValidColumn,
+			department.Table:          department.ValidColumn,
+			dictdata.Table:            dictdata.ValidColumn,
+			dicttype.Table:            dicttype.ValidColumn,
+			formschema.Table:          formschema.ValidColumn,
+			formsubmission.Table:      formsubmission.ValidColumn,
+			gentable.Table:            gentable.ValidColumn,
+			loginlog.Table:            loginlog.ValidColumn,
+			menu.Table:                menu.ValidColumn,
+			menuapipermission.Table:   menuapipermission.ValidColumn,
+			notification.Table:        notification.ValidColumn,
+			notificationrecord.Table:  notificationrecord.ValidColumn,
+			operationlog.Table:        operationlog.ValidColumn,
+			order.Table:               order.ValidColumn,
+			position.Table:            position.ValidColumn,
+			role.Table:                role.ValidColumn,
+			roledatapermission.Table:  roledatapermission.ValidColumn,
+			rolemenu.Table:            rolemenu.ValidColumn,
+			rolepermission.Table:      rolepermission.ValidColumn,
+			securitypolicy.Table:      securitypolicy.ValidColumn,
+			sysconfig.Table:           sysconfig.ValidColumn,
+			sysjob.Table:              sysjob.ValidColumn,
+			sysjoblog.Table:           sysjoblog.ValidColumn,
+			tenant.Table:              tenant.ValidColumn,
 		})
 	})
 	return columnCheck(t, c)

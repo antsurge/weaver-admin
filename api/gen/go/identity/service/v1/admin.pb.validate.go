@@ -71,11 +71,11 @@ func (m *Admin) validate(all bool) error {
 	// no validation rules for Status
 
 	if all {
-		switch v := interface{}(m.GetCreateTime()).(type) {
+		switch v := interface{}(m.GetCreatedAt()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
 				errors = append(errors, AdminValidationError{
-					field:  "CreateTime",
+					field:  "CreatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
@@ -83,16 +83,16 @@ func (m *Admin) validate(all bool) error {
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
 				errors = append(errors, AdminValidationError{
-					field:  "CreateTime",
+					field:  "CreatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetCreateTime()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetCreatedAt()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return AdminValidationError{
-				field:  "CreateTime",
+				field:  "CreatedAt",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
@@ -100,11 +100,11 @@ func (m *Admin) validate(all bool) error {
 	}
 
 	if all {
-		switch v := interface{}(m.GetUpdateTime()).(type) {
+		switch v := interface{}(m.GetUpdatedAt()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
 				errors = append(errors, AdminValidationError{
-					field:  "UpdateTime",
+					field:  "UpdatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
@@ -112,21 +112,29 @@ func (m *Admin) validate(all bool) error {
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
 				errors = append(errors, AdminValidationError{
-					field:  "UpdateTime",
+					field:  "UpdatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetUpdateTime()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetUpdatedAt()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return AdminValidationError{
-				field:  "UpdateTime",
+				field:  "UpdatedAt",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
 		}
 	}
+
+	// no validation rules for AvatarUrl
+
+	// no validation rules for IsSuperAdmin
+
+	// no validation rules for DepartmentId
+
+	// no validation rules for DepartmentName
 
 	if len(errors) > 0 {
 		return AdminMultiError(errors)
@@ -240,6 +248,8 @@ func (m *CreateAdminRequest) validate(all bool) error {
 	// no validation rules for Password
 
 	// no validation rules for Status
+
+	// no validation rules for DepartmentId
 
 	if len(errors) > 0 {
 		return CreateAdminRequestMultiError(errors)
@@ -358,6 +368,8 @@ func (m *UpdateAdminRequest) validate(all bool) error {
 	// no validation rules for Username
 
 	// no validation rules for Password
+
+	// no validation rules for DepartmentId
 
 	if len(errors) > 0 {
 		return UpdateAdminRequestMultiError(errors)
@@ -573,6 +585,12 @@ func (m *ListAdminRequest) validate(all bool) error {
 
 	// no validation rules for Status
 
+	// no validation rules for RealName
+
+	// no validation rules for Email
+
+	// no validation rules for DepartmentId
+
 	if len(errors) > 0 {
 		return ListAdminRequestMultiError(errors)
 	}
@@ -650,6 +668,217 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListAdminRequestValidationError{}
+
+// Validate checks the field values on UpdateAdminStatusRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateAdminStatusRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateAdminStatusRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateAdminStatusRequestMultiError, or nil if none found.
+func (m *UpdateAdminStatusRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateAdminStatusRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Status
+
+	if len(errors) > 0 {
+		return UpdateAdminStatusRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdateAdminStatusRequestMultiError is an error wrapping multiple validation
+// errors returned by UpdateAdminStatusRequest.ValidateAll() if the designated
+// constraints aren't met.
+type UpdateAdminStatusRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateAdminStatusRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateAdminStatusRequestMultiError) AllErrors() []error { return m }
+
+// UpdateAdminStatusRequestValidationError is the validation error returned by
+// UpdateAdminStatusRequest.Validate if the designated constraints aren't met.
+type UpdateAdminStatusRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateAdminStatusRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateAdminStatusRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateAdminStatusRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateAdminStatusRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateAdminStatusRequestValidationError) ErrorName() string {
+	return "UpdateAdminStatusRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateAdminStatusRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateAdminStatusRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateAdminStatusRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateAdminStatusRequestValidationError{}
+
+// Validate checks the field values on BatchUpdateAdminStatusRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *BatchUpdateAdminStatusRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on BatchUpdateAdminStatusRequest with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// BatchUpdateAdminStatusRequestMultiError, or nil if none found.
+func (m *BatchUpdateAdminStatusRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *BatchUpdateAdminStatusRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Status
+
+	if len(errors) > 0 {
+		return BatchUpdateAdminStatusRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// BatchUpdateAdminStatusRequestMultiError is an error wrapping multiple
+// validation errors returned by BatchUpdateAdminStatusRequest.ValidateAll()
+// if the designated constraints aren't met.
+type BatchUpdateAdminStatusRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m BatchUpdateAdminStatusRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m BatchUpdateAdminStatusRequestMultiError) AllErrors() []error { return m }
+
+// BatchUpdateAdminStatusRequestValidationError is the validation error
+// returned by BatchUpdateAdminStatusRequest.Validate if the designated
+// constraints aren't met.
+type BatchUpdateAdminStatusRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e BatchUpdateAdminStatusRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e BatchUpdateAdminStatusRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e BatchUpdateAdminStatusRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e BatchUpdateAdminStatusRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e BatchUpdateAdminStatusRequestValidationError) ErrorName() string {
+	return "BatchUpdateAdminStatusRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e BatchUpdateAdminStatusRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sBatchUpdateAdminStatusRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = BatchUpdateAdminStatusRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = BatchUpdateAdminStatusRequestValidationError{}
 
 // Validate checks the field values on ListAdminResponse with the rules defined
 // in the proto definition for this message. If any rules are violated, the
@@ -996,3 +1225,213 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = DeleteAdminRequestValidationError{}
+
+// Validate checks the field values on UsernameExistsRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UsernameExistsRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UsernameExistsRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UsernameExistsRequestMultiError, or nil if none found.
+func (m *UsernameExistsRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UsernameExistsRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Username
+
+	// no validation rules for Id
+
+	if len(errors) > 0 {
+		return UsernameExistsRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// UsernameExistsRequestMultiError is an error wrapping multiple validation
+// errors returned by UsernameExistsRequest.ValidateAll() if the designated
+// constraints aren't met.
+type UsernameExistsRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UsernameExistsRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UsernameExistsRequestMultiError) AllErrors() []error { return m }
+
+// UsernameExistsRequestValidationError is the validation error returned by
+// UsernameExistsRequest.Validate if the designated constraints aren't met.
+type UsernameExistsRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UsernameExistsRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UsernameExistsRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UsernameExistsRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UsernameExistsRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UsernameExistsRequestValidationError) ErrorName() string {
+	return "UsernameExistsRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UsernameExistsRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUsernameExistsRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UsernameExistsRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UsernameExistsRequestValidationError{}
+
+// Validate checks the field values on UsernameExistsResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UsernameExistsResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UsernameExistsResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UsernameExistsResponseMultiError, or nil if none found.
+func (m *UsernameExistsResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UsernameExistsResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Exists
+
+	if len(errors) > 0 {
+		return UsernameExistsResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// UsernameExistsResponseMultiError is an error wrapping multiple validation
+// errors returned by UsernameExistsResponse.ValidateAll() if the designated
+// constraints aren't met.
+type UsernameExistsResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UsernameExistsResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UsernameExistsResponseMultiError) AllErrors() []error { return m }
+
+// UsernameExistsResponseValidationError is the validation error returned by
+// UsernameExistsResponse.Validate if the designated constraints aren't met.
+type UsernameExistsResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UsernameExistsResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UsernameExistsResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UsernameExistsResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UsernameExistsResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UsernameExistsResponseValidationError) ErrorName() string {
+	return "UsernameExistsResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UsernameExistsResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUsernameExistsResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UsernameExistsResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UsernameExistsResponseValidationError{}

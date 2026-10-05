@@ -1,25 +1,54 @@
 {
-  "title":"管理员",
+  "title": "管理员",
   "admin": {
-    "title":"用户管理",
+    "title": "管理员管理",
     "name": "用户",
+    "superAdmin": "超级管理员",
+    "followRole": "跟随角色",
     "fields": {
       "username": "用户名",
       "realName": "用户昵称",
       "email": "邮箱",
       "phone": "手机号",
       "avatar": "头像",
+      "departmentName": "归属部门",
       "status": "状态",
       "remark": "备注",
-      "roleIds": "分配角色"
+      "roleIds": "分配角色",
+      "dataPermissionIds": "数据权限规则"
     },
     "actions": {
       "switchStatus": "切换用户状态",
       "switchStatusConfirm": "确认将【{0}】状态切换为【{1}】？",
       "confirm": "确认",
       "cancel": "取消",
-      "delete": "删除"
+      "delete": "删除",
+      "resetPassword": "重置密码",
+      "resetPasswordPlaceholder": "请输入新密码",
+      "resetPasswordRequired": "请输入新密码",
+      "deleteConfirm": "确认删除用户【{0}】？此操作不可恢复。",
+      "deleteBatchConfirm": "确认删除选中的 {0} 个用户？此操作不可恢复。",
+      "deleting": "正在删除...",
+      "deleteSuccess": "删除成功",
+      "superAdminNotAllowed": "超级管理员账号不允许删除",
+      "superAdminNotAllowedDisable": "超级管理员账号不允许禁用",
+      "batchStatusConfirm": "确认将选中的 {0} 个用户状态切换为【{1}】？",
+      "export": "导出",
+      "exporting": "正在导出...",
+      "exportSuccess": "导出成功"
     },
-    "form_placeholder": { "remark": "请输入备注", "roleIds": "请选择角色" }
+    "form_placeholder": {
+      "remark": "请输入备注",
+      "roleIds": "请选择角色",
+      "dataPermissionIds": "请选择数据权限规则"
+    },
+    "form_help": {
+      "dataPermissionIds": "留空表示跟随角色数据范围；选择后覆盖该用户的角色默认范围"
+    },
+    "rules": {
+      "emailInvalid": "请输入正确的邮箱地址",
+      "phoneInvalid": "请输入正确的手机号",
+      "passwordTooShort": "密码长度至少为 {0} 位"
+    }
   }
 }

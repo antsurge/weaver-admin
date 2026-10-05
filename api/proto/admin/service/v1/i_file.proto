@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package admin.service.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "system/service/v1/upload.proto";
+
+// File 文件管理服务
+//
+// 说明：文件上传与访问由自定义 handler 处理（multipart 表单解析、私有桶预签名
+// 302 重定向），DeleteFile 走 gRPC/HTTP 生成的实现；此处统一声明 RPC 契约，
+// 保证 OpenAPI 文档与接口管理数据完整。
+service File {
+  // 上传文件到对象存储（multipart/form-data，由自定义 handler 处理）
+  rpc UploadFile(google.protobuf.Empty) returns (system.service.v1.UploadFileResponse) {
+    option (gnostic.openapi.v3.operation) = {
+      tags: "File"
+      summary: "文件-上传"
+      description: "上传文件到对象存储（OSS/COS/MinIO），返回访问地址"
+    };
+  }
+
+  // 获取文件访问地址（私有桶 302 重定向到预签名地址，由自定义 handler 处理）
+  rpc GetFile(GetFileRequest) returns (google.protobuf.Empty) {
+    option (gnostic.openapi.v3.operation) = {
+      tags: "File"
+      summary: "文件-访问"
+      description: "根据对象键获取文件访问地址，私有桶下 302 重定向到带签名临时地址"
+    };
+  }
+
+  // 删除对象存储中的文件
+  rpc DeleteFile(system.service.v1.DeleteFileRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/admin/v1/file"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "File"
+      summary: "文件-删除"
+      description: "删除对象存储中的文件"
+    };
+  }
+}
+
+// GetFileRequest 获取文件访问地址的请求。
+message GetFileRequest {
+  // 对象键
+  string objectKey = 1 [(gnostic.openapi.v3.property) = {description: "对象键"}];
+}

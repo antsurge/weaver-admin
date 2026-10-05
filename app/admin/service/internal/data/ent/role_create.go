@@ -12,8 +12,10 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/admin"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/adminrole"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/datapermission"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/menu"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/role"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/roledatapermission"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/rolemenu"
 )
 
@@ -22,6 +24,20 @@ type RoleCreate struct {
 	config
 	mutation *RoleMutation
 	hooks    []Hook
+}
+
+// SetTenantID sets the "tenant_id" field.
+func (_c *RoleCreate) SetTenantID(v string) *RoleCreate {
+	_c.mutation.SetTenantID(v)
+	return _c
+}
+
+// SetNillableTenantID sets the "tenant_id" field if the given value is not nil.
+func (_c *RoleCreate) SetNillableTenantID(v *string) *RoleCreate {
+	if v != nil {
+		_c.SetTenantID(*v)
+	}
+	return _c
 }
 
 // SetName sets the "name" field.
@@ -92,20 +108,6 @@ func (_c *RoleCreate) SetNillableIsSystem(v *bool) *RoleCreate {
 	return _c
 }
 
-// SetDataScope sets the "data_scope" field.
-func (_c *RoleCreate) SetDataScope(v string) *RoleCreate {
-	_c.mutation.SetDataScope(v)
-	return _c
-}
-
-// SetNillableDataScope sets the "data_scope" field if the given value is not nil.
-func (_c *RoleCreate) SetNillableDataScope(v *string) *RoleCreate {
-	if v != nil {
-		_c.SetDataScope(*v)
-	}
-	return _c
-}
-
 // SetCreatedAt sets the "created_at" field.
 func (_c *RoleCreate) SetCreatedAt(v time.Time) *RoleCreate {
 	_c.mutation.SetCreatedAt(v)
@@ -169,6 +171,21 @@ func (_c *RoleCreate) AddMenus(v ...*Menu) *RoleCreate {
 	return _c.AddMenuIDs(ids...)
 }
 
+// AddDataPermissionIDs adds the "data_permissions" edge to the DataPermission entity by IDs.
+func (_c *RoleCreate) AddDataPermissionIDs(ids ...string) *RoleCreate {
+	_c.mutation.AddDataPermissionIDs(ids...)
+	return _c
+}
+
+// AddDataPermissions adds the "data_permissions" edges to the DataPermission entity.
+func (_c *RoleCreate) AddDataPermissions(v ...*DataPermission) *RoleCreate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddDataPermissionIDs(ids...)
+}
+
 // AddAdminIDs adds the "admins" edge to the Admin entity by IDs.
 func (_c *RoleCreate) AddAdminIDs(ids ...string) *RoleCreate {
 	_c.mutation.AddAdminIDs(ids...)
@@ -197,6 +214,21 @@ func (_c *RoleCreate) AddRoleMenus(v ...*RoleMenu) *RoleCreate {
 		ids[i] = v[i].ID
 	}
 	return _c.AddRoleMenuIDs(ids...)
+}
+
+// AddRoleDataPermissionIDs adds the "role_data_permissions" edge to the RoleDataPermission entity by IDs.
+func (_c *RoleCreate) AddRoleDataPermissionIDs(ids ...string) *RoleCreate {
+	_c.mutation.AddRoleDataPermissionIDs(ids...)
+	return _c
+}
+
+// AddRoleDataPermissions adds the "role_data_permissions" edges to the RoleDataPermission entity.
+func (_c *RoleCreate) AddRoleDataPermissions(v ...*RoleDataPermission) *RoleCreate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddRoleDataPermissionIDs(ids...)
 }
 
 // AddAdminRoleIDs adds the "admin_roles" edge to the AdminRole entity by IDs.
@@ -249,6 +281,10 @@ func (_c *RoleCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (_c *RoleCreate) defaults() {
+	if _, ok := _c.mutation.TenantID(); !ok {
+		v := role.DefaultTenantID
+		_c.mutation.SetTenantID(v)
+	}
 	if _, ok := _c.mutation.Weight(); !ok {
 		v := role.DefaultWeight
 		_c.mutation.SetWeight(v)
@@ -260,10 +296,6 @@ func (_c *RoleCreate) defaults() {
 	if _, ok := _c.mutation.IsSystem(); !ok {
 		v := role.DefaultIsSystem
 		_c.mutation.SetIsSystem(v)
-	}
-	if _, ok := _c.mutation.DataScope(); !ok {
-		v := role.DefaultDataScope
-		_c.mutation.SetDataScope(v)
 	}
 	if _, ok := _c.mutation.CreatedAt(); !ok {
 		v := role.DefaultCreatedAt()
@@ -277,6 +309,14 @@ func (_c *RoleCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (_c *RoleCreate) check() error {
+	if _, ok := _c.mutation.TenantID(); !ok {
+		return &ValidationError{Name: "tenant_id", err: errors.New(`ent: missing required field "Role.tenant_id"`)}
+	}
+	if v, ok := _c.mutation.TenantID(); ok {
+		if err := role.TenantIDValidator(v); err != nil {
+			return &ValidationError{Name: "tenant_id", err: fmt.Errorf(`ent: validator failed for field "Role.tenant_id": %w`, err)}
+		}
+	}
 	if _, ok := _c.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Role.name"`)}
 	}
@@ -296,9 +336,6 @@ func (_c *RoleCreate) check() error {
 	}
 	if _, ok := _c.mutation.IsSystem(); !ok {
 		return &ValidationError{Name: "is_system", err: errors.New(`ent: missing required field "Role.is_system"`)}
-	}
-	if _, ok := _c.mutation.DataScope(); !ok {
-		return &ValidationError{Name: "data_scope", err: errors.New(`ent: missing required field "Role.data_scope"`)}
 	}
 	if _, ok := _c.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Role.created_at"`)}
@@ -346,6 +383,10 @@ func (_c *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 		_node.ID = id
 		_spec.ID.Value = id
 	}
+	if value, ok := _c.mutation.TenantID(); ok {
+		_spec.SetField(role.FieldTenantID, field.TypeString, value)
+		_node.TenantID = value
+	}
 	if value, ok := _c.mutation.Name(); ok {
 		_spec.SetField(role.FieldName, field.TypeString, value)
 		_node.Name = value
@@ -369,10 +410,6 @@ func (_c *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.IsSystem(); ok {
 		_spec.SetField(role.FieldIsSystem, field.TypeBool, value)
 		_node.IsSystem = value
-	}
-	if value, ok := _c.mutation.DataScope(); ok {
-		_spec.SetField(role.FieldDataScope, field.TypeString, value)
-		_node.DataScope = value
 	}
 	if value, ok := _c.mutation.CreatedAt(); ok {
 		_spec.SetField(role.FieldCreatedAt, field.TypeTime, value)
@@ -401,6 +438,26 @@ func (_c *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		createE := &RoleMenuCreate{config: _c.config, mutation: newRoleMenuMutation(_c.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.DataPermissionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   role.DataPermissionsTable,
+			Columns: role.DataPermissionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(datapermission.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &RoleDataPermissionCreate{config: _c.config, mutation: newRoleDataPermissionMutation(_c.config, OpCreate)}
 		createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
@@ -435,6 +492,22 @@ func (_c *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(rolemenu.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.RoleDataPermissionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.RoleDataPermissionsTable,
+			Columns: []string{role.RoleDataPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(roledatapermission.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

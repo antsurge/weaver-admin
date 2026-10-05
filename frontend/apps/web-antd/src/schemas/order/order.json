@@ -1,0 +1,16 @@
+{
+  "type": "object",
+  "title": "订单",
+  "properties": {
+    "name": {
+      "title": "name",
+      "type": "string"
+    },
+    "sn": {
+      "title": "sn",
+      "type": "string"
+    },
+    "createdAt": { "title": "创建时间", "type": "string" },
+    "updatedAt": { "title": "更新时间", "type": "string" }
+  }
+}

@@ -1,11 +1,9 @@
 <script lang="ts" setup>
-import { computed, ref, onMounted } from 'vue';
-import { getDepartmentTreeApi } from "#/api/organization/department"
-import {
-  Spin,
-  InputSearch,
-  Tree
-} from 'ant-design-vue';
+import { computed, onMounted, ref } from 'vue';
+
+import { InputSearch, Spin, Tree } from 'ant-design-vue';
+
+import { getDepartmentTreeApi } from '#/api/organization/department';
 
 export interface DeptNode {
   id: string;
@@ -13,18 +11,23 @@ export interface DeptNode {
   children?: DeptNode[];
 }
 
-const props = withDefaults(defineProps<{
-  title?: string;
-  showSearch?: boolean;
-  data?: DeptNode[];
-  request?: () => Promise<DeptNode[]>;
-}>(), {
-  title: '',
-  showSearch: true,
-});
+const props = withDefaults(
+  defineProps<{
+    data?: DeptNode[];
+    request?: () => Promise<DeptNode[]>;
+    showSearch?: boolean;
+    title?: string;
+  }>(),
+  {
+    data: () => [],
+    request: undefined,
+    title: '',
+    showSearch: true,
+  },
+);
 
 const emit = defineEmits<{
-  (e: 'select', node: DeptNode): void;
+  (e: 'select', node: DeptNode | null): void;
 }>();
 
 const searchValue = ref('');
@@ -39,13 +42,12 @@ const fieldNames = {
 
 // 👉 默认请求（你可以替换成自己的接口）
 async function defaultRequest(): Promise<DeptNode[]> {
-  let res = await getDepartmentTreeApi()
-  console.log("我是tree数据", res)
+  const res = await getDepartmentTreeApi();
   return res?.items ?? [];
 }
 
 async function loadData() {
-  if (props.data && props.data.length) {
+  if (props.data && props.data.length > 0) {
     innerData.value = props.data;
     return;
   }
@@ -86,8 +88,11 @@ const filteredData = computed(() => {
 });
 
 function handleSelect(_: string[], e: any) {
-  if (e.node) {
+  // 选中节点：emit 节点；取消选中：emit null，通知父组件清空过滤
+  if (e?.selected) {
     emit('select', e.node);
+  } else {
+    emit('select', null);
   }
 }
 
@@ -96,31 +101,38 @@ onMounted(() => {
 });
 </script>
 
-
 <template>
   <div class="dept-tree">
     <!-- 搜索 -->
     <div v-if="showSearch" class="dept-tree__search">
-      <InputSearch v-model:value="searchValue" placeholder="搜索部门" allow-clear />
+      <InputSearch
+        v-model:value="searchValue"
+        placeholder="搜索部门"
+        allow-clear
+      />
     </div>
     <!-- 树 -->
     <Spin :spinning="loading">
-      <Tree :tree-data="filteredData" :fieldNames="fieldNames" default-expand-all @select="handleSelect" />
+      <Tree
+        :tree-data="filteredData"
+        :field-names="fieldNames"
+        default-expand-all
+        @select="handleSelect"
+      />
     </Spin>
   </div>
 </template>
 
-
 <style scoped>
 .dept-tree {
+  height: 100%;
   padding: 12px;
   background: #fff;
-  height: 100%;
 }
 
 .dept-tree__header {
-  font-weight: 500;
   margin-bottom: 8px;
+  font-weight: 500;
 }
 
 .dept-tree__search {

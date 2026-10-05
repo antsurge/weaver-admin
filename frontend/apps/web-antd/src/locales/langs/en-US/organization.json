@@ -1,0 +1,61 @@
+{
+  "title": "Organization",
+  "department": {
+    "title": "Department",
+    "name": "Department",
+    "fields": {
+      "name": "Department Name",
+      "parentID": "Parent Department",
+      "code": "Department Code",
+      "type": "Type",
+      "weight": "Weight",
+      "leaderName": "Leader Name",
+      "leaderPhone": "Phone",
+      "leaderEmail": "Email",
+      "status": "Status",
+      "updatedAt": "Updated At",
+      "operation": "Operation"
+    },
+    "type": {
+      "company": "Company",
+      "subsidiary": "Subsidiary",
+      "department": "Department",
+      "position": "Position"
+    },
+    "actions": {
+      "switchStatus": "Switch Department Status",
+      "switchStatusConfirm": "Confirm switching 【{0}】 status to 【{1}】?"
+    },
+    "actionTitle": {
+      "expandAll": "Expand All",
+      "collapseAll": "Collapse All"
+    },
+    "operation": {
+      "appendChildren": "Add Child"
+    },
+    "form_placeholder": {
+      "parentID": "Select parent department",
+      "leaderName": "Enter leader name",
+      "leaderPhone": "Enter phone",
+      "leaderEmail": "Enter email"
+    }
+  },
+  "position": {
+    "title": "Position",
+    "name": "Position",
+    "fields": {
+      "name": "Position Name",
+      "code": "Position Code",
+      "weight": "Position Level",
+      "status": "Status",
+      "remark": "Remark"
+    },
+    "actions": {
+      "switchStatus": "Switch Position Status",
+      "switchStatusConfirm": "Confirm switching 【{0}】 status to 【{1}】?"
+    },
+    "form_placeholder": {
+      "remark": "Enter remark"
+    }
+  }
+}

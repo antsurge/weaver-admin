@@ -1,0 +1,60 @@
+# System management error codes (role/department/position/security/cronjob/api management)
+[ROLE_NOT_FOUND]
+other = "Role not found"
+
+[ROLE_HAS_ADMINS]
+other = "Role is assigned to users, unbind users first"
+
+[CANNOT_MODIFY_SYSTEM_ROLE]
+other = "Built-in system role cannot be modified"
+
+[CANNOT_MODIFY_SUPER_ADMIN_ROLE]
+other = "Super admin role cannot be modified"
+
+[CANNOT_DELETE_SYSTEM_ROLE]
+other = "Built-in system role cannot be deleted"
+
+[CANNOT_DELETE_SUPER_ADMIN_ROLE]
+other = "Super admin role cannot be deleted"
+
+[DEPARTMENT_NOT_FOUND]
+other = "Department not found"
+
+[POSITION_NOT_FOUND]
+other = "Position not found"
+
+[POSITION_NAME_EXISTS]
+other = "Position name already exists"
+
+[POSITION_CODE_EXISTS]
+other = "Position code already exists"
+
+[INVALID_LOGIN_FAIL_MAX]
+other = "Max login failure count must be between 1 and 100"
+
+[INVALID_LOGIN_FAIL_WINDOW]
+other = "Failure statistics window must be between 1 and 1440 minutes"
+
+[INVALID_LOGIN_LOCK_MINUTES]
+other = "Lock duration must be between 1 and 1440 minutes"
+
+[INVALID_IP_MODE]
+other = "Invalid IP blacklist/whitelist mode"
+
+[INVALID_IP_LIST]
+other = "Invalid IP list format"
+
+[INVALID_ACCESS_TTL]
+other = "Invalid access token TTL"
+
+[INVALID_REFRESH_TTL]
+other = "Invalid refresh token TTL"
+
+[CRON_INVALID]
+other = "Invalid cron expression"
+
+[PARSE_OPENAPI_ERROR]
+other = "Failed to parse OpenAPI document"
+
+[READ_FILE_ERROR]
+other = "Failed to read file"

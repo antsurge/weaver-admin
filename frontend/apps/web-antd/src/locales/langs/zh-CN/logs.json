@@ -1,0 +1,126 @@
+{
+  "title": "日志中心",
+  "operation_log": {
+    "title": "操作日志",
+    "fields": {
+      "keyword": "关键字",
+      "summary": "接口摘要",
+      "adminName": "操作人",
+      "module": "模块",
+      "operation": "操作名",
+      "method": "方法",
+      "path": "请求路径",
+      "ip": "来源IP",
+      "status": "结果",
+      "costMs": "耗时",
+      "createdAt": "操作时间",
+      "timeRange": "时间范围",
+      "code": "错误码",
+      "message": "错误信息",
+      "userAgent": "客户端UA",
+      "params": "请求参数"
+    },
+    "search_placeholder": {
+      "keyword": "路径/摘要/操作名",
+      "adminName": "操作人姓名"
+    },
+    "status_options": {
+      "success": "成功",
+      "fail": "失败"
+    },
+    "operation": {
+      "detail": "详情",
+      "delete": "删除",
+      "batchDelete": "批量删除",
+      "clear": "清空"
+    },
+    "confirm": {
+      "deleteTitle": "确认删除",
+      "deleteContent": "确定删除选中的 {0} 条操作日志吗？",
+      "clearTitle": "确认清空",
+      "clearContent": "清空后所有操作日志将被永久删除且不可恢复，确定继续吗？"
+    },
+    "message": {
+      "deleteSuccess": "删除成功",
+      "clearSuccess": "已清空操作日志",
+      "detailTitle": "操作日志详情"
+    }
+  },
+  "login_log": {
+    "title": "登录日志",
+    "fields": {
+      "username": "用户名",
+      "ip": "来源IP",
+      "userAgent": "客户端UA",
+      "status": "结果",
+      "reason": "失败原因",
+      "createdAt": "登录时间",
+      "operation": "操作",
+      "timeRange": "时间范围"
+    },
+    "search_placeholder": {
+      "username": "请输入用户名",
+      "ip": "请输入IP"
+    },
+    "status_options": {
+      "success": "成功",
+      "fail": "失败"
+    },
+    "operation": {
+      "delete": "删除",
+      "batchDelete": "批量删除",
+      "clear": "清空"
+    },
+    "confirm": {
+      "deleteTitle": "确认删除",
+      "deleteContent": "确定删除选中的 {0} 条登录日志吗？",
+      "clearTitle": "确认清空",
+      "clearContent": "清空后所有登录日志将被永久删除且不可恢复，确定继续吗？"
+    },
+    "message": {
+      "deleteSuccess": "删除成功",
+      "clearSuccess": "已清空登录日志"
+    }
+  },
+  "job_log": {
+    "title": "任务日志",
+    "name": "任务日志",
+    "fields": {
+      "jobName": "任务名称",
+      "jobGroup": "任务分组",
+      "invokeTarget": "调用目标",
+      "cronExpression": "cron 表达式",
+      "status": "结果",
+      "jobMessage": "执行信息",
+      "startTime": "开始时间",
+      "endTime": "结束时间",
+      "duration": "耗时",
+      "createdAt": "执行时间",
+      "operation": "操作"
+    },
+    "status_options": {
+      "success": "成功",
+      "fail": "失败"
+    },
+    "search_placeholder": {
+      "jobName": "请输入任务名称"
+    },
+    "operation": {
+      "detail": "详情",
+      "delete": "删除",
+      "batchDelete": "批量删除",
+      "clear": "清空"
+    },
+    "confirm": {
+      "deleteTitle": "确认删除",
+      "deleteContent": "确定删除选中的 {0} 条任务日志吗？",
+      "clearTitle": "确认清空",
+      "clearContent": "清空后所有任务日志将被永久删除且不可恢复，确定继续吗？"
+    },
+    "message": {
+      "deleteSuccess": "删除成功",
+      "clearSuccess": "已清空任务日志",
+      "detailTitle": "任务日志详情"
+    }
+  }
+}

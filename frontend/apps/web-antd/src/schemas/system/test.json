@@ -1,0 +1,20 @@
+{
+  "type": "object",
+  "title": "测试2",
+  "properties": {
+    "id": {
+      "title": "ID",
+      "type": "integer"
+    },
+    "status": {
+      "title": "状态",
+      "type": "integer"
+    },
+    "createdAt": {
+      "title": "创建时间",
+      "type": "string"
+    },
+    "createdAt": { "title": "创建时间", "type": "string" },
+    "updatedAt": { "title": "更新时间", "type": "string" }
+  }
+}

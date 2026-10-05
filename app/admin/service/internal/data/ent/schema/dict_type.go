@@ -21,6 +21,11 @@ func (DictType) Annotations() []schema.Annotation {
 	}
 }
 
+// Mixin of the DictType.
+func (DictType) Mixin() []ent.Mixin {
+	return []ent.Mixin{TenantMixin{}}
+}
+
 func (DictType) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("id").

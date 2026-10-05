@@ -1,0 +1,214 @@
+{
+  "title": "Low Code",
+  "formBuilder": {
+    "title": "Form Builder",
+    "name": "Form",
+    "fields": {
+      "name": "Form Name",
+      "code": "Form Code",
+      "description": "Description",
+      "schemaJson": "Form Schema",
+      "status": "Status",
+      "remark": "Remark",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At",
+      "operation": "Operation"
+    },
+    "search_placeholder": {
+      "name": "Enter form name",
+      "code": "Enter form code"
+    },
+    "operation": {
+      "design": "Design",
+      "preview": "Preview",
+      "submissions": "Submissions",
+      "delete": "Delete"
+    },
+    "confirm": {
+      "deleteTitle": "Confirm Delete",
+      "deleteContent": "Delete {0} selected forms?"
+    },
+    "message": {
+      "deleteSuccess": "Deleted successfully"
+    },
+    "render": {
+      "title": "Form Preview",
+      "submit": "Submit",
+      "submitSuccess": "Submitted successfully",
+      "cancel": "Cancel"
+    },
+    "submission": {
+      "title": "{0} - Submissions",
+      "empty": "No submissions yet",
+      "submitTime": "Submit Time",
+      "submitData": "Submit Data",
+      "total": "{0} in total"
+    },
+    "designer": {
+      "title": "Form Designer",
+      "save": "Save Form",
+      "saveSuccess": "Form saved successfully",
+      "cancel": "Cancel",
+      "fieldName": "Field Name",
+      "fieldLabel": "Field Label",
+      "component": "Component",
+      "required": "Required",
+      "addField": "Add Field",
+      "input": "Input",
+      "textarea": "Textarea",
+      "select": "Select",
+      "radio": "Radio",
+      "checkbox": "Checkbox",
+      "date": "Date",
+      "number": "Number",
+      "switch": "Switch",
+      "noField": "Add fields on the left first"
+    }
+  },
+  "codegen": {
+    "title": "Code Generator",
+    "genRequired": " is required",
+    "name": "Code Generator",
+    "fields": {
+      "tableName": "Table Name",
+      "tableComment": "Table Comment",
+      "moduleName": "Module",
+      "bizName": "Biz Name",
+      "genType": "Generate Type",
+      "menuEnabled": "Generate Menu",
+      "menuModule": "Menu Module",
+      "buttons": "Generated Buttons",
+      "status": "Status",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At",
+      "operation": "Operation",
+      "columnName": "Column",
+      "columnComment": "Comment",
+      "dataType": "Data Type",
+      "isPrimaryKey": "Primary Key",
+      "isNullable": "Nullable",
+      "autoIncrement": "Auto Increment"
+    },
+    "gen_types": {
+      "table": "Full Table",
+      "form": "Form Only"
+    },
+    "search_placeholder": {
+      "tableName": "Enter table name",
+      "bizName": "Enter biz name"
+    },
+    "operation": {
+      "generate": "Generate",
+      "copy": "Copy",
+      "delete": "Delete",
+      "deleteRecord": "Delete Record",
+      "deleteModule": "Delete Module",
+      "applyMenu": "Apply Menu"
+    },
+    "selectTable": "Select Data Table",
+    "selectTablePlaceholder": "Choose the database table to generate code for",
+    "noTable": "No selectable tables",
+    "start": {
+      "title": "Start",
+      "subtitle": "Choose a way to quickly generate backend CRUD",
+      "back": "Back to Start",
+      "create": {
+        "title": "Create",
+        "desc": "Create a new backend CRUD from scratch"
+      },
+      "table": {
+        "title": "Select Table",
+        "desc": "Pick a designed table from the database",
+        "next": "Next",
+        "search": "Search",
+        "searchPlaceholder": "Enter table name keyword"
+      },
+      "records": {
+        "title": "CRUD Records",
+        "desc": "Start from previously generated CRUD code"
+      },
+      "quick": {
+        "title": "Quick Experience",
+        "step1": "Make sure the frontend code folder named frontend exists at the project root",
+        "step2": "Click Create or Select Table on this page to enter the drag-and-drop designer",
+        "step3": "Click or drag fields from the left field library. The first field has no suffix; duplicates get _01, _02 automatically",
+        "step4": "Optionally expand Advanced Settings to configure module name, biz name, generation type, menu and buttons",
+        "step5": "Click Generate Code to generate in one click (saves config and generates code; if menu generation is enabled, the menu tree is persisted automatically). Preview the generated files below",
+        "warning": "Note: when creating from scratch the DB table does not exist yet; run the Ent migration after generation to create it."
+      }
+    },
+    "confirm": {
+      "deleteTitle": "Confirm Delete Record",
+      "deleteContent": "Delete {0} selected codegen configuration records? Generated code files are not affected.",
+      "deleteModuleTitle": "Confirm Delete Module",
+      "deleteModuleContent": "Delete {0} selected modules? This will also delete the generated code files, real database tables and applied menu tree. This action cannot be undone!"
+    },
+    "message": {
+      "deleteSuccess": "Deleted successfully",
+      "deleteModuleSuccess": "Module deleted successfully",
+      "generateSuccess": "Code generated successfully",
+      "generateEmpty": "No code files generated",
+      "saveFirst": "Please save the configuration before generating code",
+      "saveSuccess": "Configuration saved successfully",
+      "incomplete": "Please provide table name, module, biz name and add at least one field",
+      "loadTableFail": "Failed to load data table list",
+      "loadColumnFail": "Failed to load table columns, please check the table name",
+      "noColumn": "The table has no available columns",
+      "selectTableFirst": "Please select a data table first",
+      "copySuccess": "Copied successfully, you can adjust field config now",
+      "copyFail": "Copy failed, please try again later",
+      "applyMenuConfirm": "Apply config 【{0}】 to a menu tree?",
+      "menuApplyFail": "Code generated, but menu creation failed"
+    },
+    "field_config": {
+      "title": "Field Config",
+      "empty": "No fields yet, configure fields or select a DB table first",
+      "componentType": "Component",
+      "goType": "Go Type",
+      "list": "List",
+      "form": "Form",
+      "query": "Query",
+      "required": "Required",
+      "tip": "Configure display and validation attributes for each field"
+    },
+    "designer": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "title": "CRUD Designer",
+      "tableNamePlaceholder": "Table name, e.g. sys_member (required)",
+      "tableCommentPlaceholder": "e.g. Member table (generates Member management)",
+      "bizNamePlaceholder": "Biz name for code naming, e.g. member (required)",
+      "moduleNamePlaceholder": "Module name, e.g. system (required)",
+      "moduleNameDesc": "Module name = codegen directory/package, decides where Go & frontend code lands",
+      "genTypePlaceholder": "Select generation type",
+      "buttonsPlaceholder": "Select the buttons to generate",
+      "menuModulePlaceholder": "Select the parent menu (catalog)",
+      "menuModuleDesc": "Menu module = parent catalog for generated menu + auth-code prefix; leave empty to use module name",
+      "generateCrud": "Generate CRUD",
+      "giveUp": "Discard",
+      "advanced": "Advanced",
+      "advancedTip": "Advanced options are hidden by default: module name, generation type, menu and buttons. Expand to customize.",
+      "expandAdvanced": "Expand advanced",
+      "dragHint": "Drag fields into the canvas",
+      "canvasEmpty": "Drag elements from the left to start designing CRUD",
+      "properties": "Field Properties",
+      "columnNamePlaceholder": "e.g. member_name",
+      "columnCommentPlaceholder": "e.g. Member name",
+      "fieldNamePlaceholder": "e.g. memberName",
+      "length": "Length",
+      "lengthPlaceholder": "0 means no limit",
+      "flags": "Flags",
+      "isPrimaryKey": "Primary Key",
+      "noConfig": "Select a field from the left first",
+      "files": "files",
+      "generatedResult": "Generated Result",
+      "backToStart": "Back to Start",
+      "menuTip": "After generating code, apply the config to a menu tree (catalog -> menu -> actions). Disabled when Generate Menu is off.",
+      "fieldLib": {
+        "common": "Common Fields",
+        "basic": "Basic Fields",
+        "advanced": "Advanced Fields"
+      }
+    }
+  }
+}

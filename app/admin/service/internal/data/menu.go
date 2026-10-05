@@ -6,34 +6,64 @@ import (
 
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/biz"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/apiinterface"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/menu"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/menuapipermission"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/rolemenu"
+	"github.com/antsurge/weaver-admin/pkg/utils/uuid"
 	"github.com/go-kratos/kratos/v2/log"
 )
 
 type menuRepo struct {
-	data    *Data
-	log     *log.Helper
-	apiPerm biz.ApiPermissionRepo
+	data *Data
+	log  *log.Helper
 }
 
-func NewMenuRepo(data *Data, logger log.Logger, apiPerm biz.ApiPermissionRepo) biz.MenuRepo {
+func NewMenuRepo(data *Data, logger log.Logger) biz.MenuRepo {
 	return &menuRepo{
-		data:    data,
-		log:     log.NewHelper(logger),
-		apiPerm: apiPerm,
+		data: data,
+		log:  log.NewHelper(logger),
 	}
 }
 
-// resolveAPIPermissions 将 biz.ApiPermission 列表 upsert 到数据库并返回带 ID 的 biz 实体
-func (r *menuRepo) resolveAPIPermissions(ctx context.Context, items []*biz.ApiPermission) ([]*biz.ApiPermission, error) {
-	if len(items) == 0 {
-		return nil, nil
+// replaceApiBindings 全量替换菜单绑定的接口（事务内调用）：
+// 绑定基于 api_interface.code（service|METHOD|path）关联，不依赖接口 id。
+func (r *menuRepo) replaceApiBindings(ctx context.Context, tx *ent.Tx, menuID string, items []*biz.ApiPermission) error {
+	// 1. 清空旧绑定
+	if _, err := tx.MenuApiPermission.Delete().
+		Where(menuapipermission.MenuID(menuID)).
+		Exec(ctx); err != nil {
+		return err
 	}
-	return r.apiPerm.UpsertByCodes(ctx, items)
+	// 2. 写入新绑定
+	for _, item := range items {
+		code := item.CodeKey()
+		if code == "" {
+			continue
+		}
+		if _, err := tx.MenuApiPermission.Create().
+			SetID(uuid.GenerateXID()).
+			SetMenuID(menuID).
+			SetAPICode(code).
+			Save(ctx); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (r *menuRepo) CreateMenu(ctx context.Context, p *biz.Menu) error {
-	builder := r.data.db.Menu.Create().
+	tx, err := r.data.db.Tx(ctx)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err != nil {
+			_ = tx.Rollback()
+		}
+	}()
+
+	if _, err = tx.Menu.Create().
 		SetID(p.ID).
 		SetParentID(p.ParentID).
 		SetName(p.Name).
@@ -52,27 +82,31 @@ func (r *menuRepo) CreateMenu(ctx context.Context, p *biz.Menu) error {
 		SetWeight(p.Weight).
 		SetStatus(menu.Status(p.Status)).
 		SetCreatedAt(p.CreatedAt).
-		SetUpdatedAt(p.UpdatedAt)
-
-	// 绑定接口权限（仅 action 类型携带）
-	if len(p.APIPermissions) > 0 {
-		ents, err := r.resolveAPIPermissions(ctx, p.APIPermissions)
-		if err != nil {
-			return err
-		}
-		ids := make([]string, len(ents))
-		for i, e := range ents {
-			ids[i] = e.ID
-		}
-		builder = builder.AddAPIPermissionIDs(ids...)
+		SetUpdatedAt(p.UpdatedAt).
+		Save(ctx); err != nil {
+		return err
 	}
 
-	_, err := builder.Save(ctx)
-	return err
+	// 绑定接口权限（仅 action 类型携带）
+	if err = r.replaceApiBindings(ctx, tx, p.ID, p.APIPermissions); err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *menuRepo) UpdateMenu(ctx context.Context, p *biz.Menu) error {
-	builder := r.data.db.Menu.UpdateOneID(p.ID).
+	tx, err := r.data.db.Tx(ctx)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err != nil {
+			_ = tx.Rollback()
+		}
+	}()
+
+	if _, err = tx.Menu.UpdateOneID(p.ID).
 		SetParentID(p.ParentID).
 		SetName(p.Name).
 		SetCode(p.Code).
@@ -89,39 +123,43 @@ func (r *menuRepo) UpdateMenu(ctx context.Context, p *biz.Menu) error {
 		SetBadgeVariants(p.BadgeVariants).
 		SetWeight(p.Weight).
 		SetStatus(menu.Status(p.Status)).
-		SetUpdatedAt(p.UpdatedAt)
-
-	// 接口权限全量替换：清空 + 重新绑定
-	ents, err := r.resolveAPIPermissions(ctx, p.APIPermissions)
-	if err != nil {
+		SetUpdatedAt(p.UpdatedAt).
+		Save(ctx); err != nil {
 		return err
 	}
-	ids := make([]string, len(ents))
-	for i, e := range ents {
-		ids[i] = e.ID
-	}
-	builder = builder.ClearAPIPermissions().AddAPIPermissionIDs(ids...)
 
-	_, err = builder.Save(ctx)
-	return err
+	// 接口权限全量替换：清空 + 按 code 重新绑定
+	if err = r.replaceApiBindings(ctx, tx, p.ID, p.APIPermissions); err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
-// DeleteMenus 删除权限及其子孙
+// DeleteMenus 删除权限及其子孙（事务内：清理角色绑定与接口绑定）
 func (r *menuRepo) DeleteMenu(ctx context.Context, ids []string) error {
 	if len(ids) == 0 {
 		return nil
 	}
 
+	tx, err := r.data.db.Tx(ctx)
+	if err != nil {
+		return err
+	}
+
 	var allIDs []string
 
-	// 递归收集子孙节点
+	// 已访问集合防环：若菜单数据存在循环 parent 引用，直接递归会无限递归导致栈溢出
+	visited := make(map[string]bool, len(ids))
+
+	// 事务内递归收集子孙节点
 	var collect func(ids []string) error
 	collect = func(ids []string) error {
 		if len(ids) == 0 {
 			return nil
 		}
 
-		children, err := r.data.db.Menu.
+		children, err := tx.Menu.
 			Query().
 			Where(menu.ParentIDIn(ids...)).
 			All(ctx)
@@ -129,10 +167,14 @@ func (r *menuRepo) DeleteMenu(ctx context.Context, ids []string) error {
 			return err
 		}
 
-		// 收集子节点 ID
-		childIDs := make([]string, len(children))
-		for i, c := range children {
-			childIDs[i] = c.ID
+		// 收集子节点 ID（去除已访问节点，防止环导致无限递归）
+		childIDs := make([]string, 0, len(children))
+		for _, c := range children {
+			if visited[c.ID] {
+				continue
+			}
+			visited[c.ID] = true
+			childIDs = append(childIDs, c.ID)
 		}
 		allIDs = append(allIDs, childIDs...)
 
@@ -140,18 +182,46 @@ func (r *menuRepo) DeleteMenu(ctx context.Context, ids []string) error {
 		return collect(childIDs)
 	}
 
-	// 初始化 allIDs
+	// 初始化 allIDs 与 visited
 	allIDs = append(allIDs, ids...)
+	for _, id := range ids {
+		visited[id] = true
+	}
 	if err := collect(ids); err != nil {
+		tx.Rollback()
 		return err
 	}
 
-	// 删除所有节点
-	_, err := r.data.db.Menu.
+	// 1. 清理角色-菜单绑定
+	_, err = tx.RoleMenu.Delete().
+		Where(rolemenu.MenuIDIn(allIDs...)).
+		Exec(ctx)
+	if err != nil {
+		tx.Rollback()
+		r.log.Errorf("清理菜单角色绑定失败: %v", err)
+		return err
+	}
+
+	// 2. 清理菜单-接口绑定（menu_api_permission 表）
+	if _, err = tx.MenuApiPermission.Delete().
+		Where(menuapipermission.MenuIDIn(allIDs...)).
+		Exec(ctx); err != nil {
+		tx.Rollback()
+		r.log.Errorf("清理菜单接口绑定失败: %v", err)
+		return err
+	}
+
+	// 3. 删除所有节点
+	_, err = tx.Menu.
 		Delete().
 		Where(menu.IDIn(allIDs...)).
 		Exec(ctx)
-	return err
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *menuRepo) ListMenu(
@@ -173,18 +243,25 @@ func (r *menuRepo) ListMenu(
 		query = query.Where(menu.StatusEQ(menu.Status(v)))
 	}
 
-	list, err := query.
-		WithAPIPermissions().
-		All(ctx)
+	if v := params.Type; len(v) > 0 {
+		query = query.Where(menu.TypeEQ(menu.Type(v)))
+	}
 
+	list, err := query.All(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	bindings, err := r.loadApiBindings(ctx, menuIDsOf(list))
 	if err != nil {
 		return nil, err
 	}
 
 	res := make([]*biz.Menu, 0, len(list))
-
 	for _, v := range list {
-		res = append(res, r.toBizMenu(v))
+		m := r.toBizMenu(v)
+		m.APIPermissions = bindings[v.ID]
+		res = append(res, m)
 	}
 
 	return res, nil
@@ -198,6 +275,25 @@ func (r *menuRepo) UpdateMenuStatus(ctx context.Context, id, status string) erro
 	return err
 }
 
+// GetMenuByID 根据ID查询菜单详情（含接口权限）
+func (r *menuRepo) GetMenuByID(ctx context.Context, id string) (*biz.Menu, error) {
+	v, err := r.data.db.Menu.Query().
+		Where(menu.ID(id)).
+		Only(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	bindings, err := r.loadApiBindings(ctx, []string{v.ID})
+	if err != nil {
+		return nil, err
+	}
+
+	m := r.toBizMenu(v)
+	m.APIPermissions = bindings[v.ID]
+	return m, nil
+}
+
 // GetMenusByIDs 根据ID列表查询菜单（用于用户菜单查询）
 func (r *menuRepo) GetMenusByIDs(ctx context.Context, ids []string) ([]*biz.Menu, error) {
 	if len(ids) == 0 {
@@ -207,23 +303,93 @@ func (r *menuRepo) GetMenusByIDs(ctx context.Context, ids []string) ([]*biz.Menu
 	list, err := r.data.db.Menu.Query().
 		Where(menu.IDIn(ids...)).
 		Order(ent.Asc(menu.FieldWeight)).
-		WithAPIPermissions().
 		All(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	bindings, err := r.loadApiBindings(ctx, menuIDsOf(list))
 	if err != nil {
 		return nil, err
 	}
 
 	res := make([]*biz.Menu, 0, len(list))
 	for _, v := range list {
-		res = append(res, r.toBizMenu(v))
+		m := r.toBizMenu(v)
+		m.APIPermissions = bindings[v.ID]
+		res = append(res, m)
 	}
 
 	return res, nil
 }
 
-// toBizMenu 把 ent.Menu 转成 biz.Menu（含 apiPermissions 转换）
+// menuIDsOf 提取菜单 ID 列表
+func menuIDsOf(list []*ent.Menu) []string {
+	ids := make([]string, 0, len(list))
+	for _, v := range list {
+		ids = append(ids, v.ID)
+	}
+	return ids
+}
+
+// loadApiBindings 批量加载菜单绑定的接口权限（实时反查 api_interface，不依赖快照）。
+// 返回 map[menuID][]*biz.ApiPermission；绑定 code 在当前 api_interface 中不存在时忽略。
+func (r *menuRepo) loadApiBindings(ctx context.Context, menuIDs []string) (map[string][]*biz.ApiPermission, error) {
+	if len(menuIDs) == 0 {
+		return map[string][]*biz.ApiPermission{}, nil
+	}
+
+	rows, err := r.data.db.MenuApiPermission.Query().
+		Where(menuapipermission.MenuIDIn(menuIDs...)).
+		Order(ent.Asc(menuapipermission.FieldCreatedAt)).
+		All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if len(rows) == 0 {
+		return map[string][]*biz.ApiPermission{}, nil
+	}
+
+	// 收集全部绑定 code
+	codes := make([]string, 0, len(rows))
+	for _, row := range rows {
+		codes = append(codes, row.APICode)
+	}
+
+	// 实时反查 api_interface（code 唯一，一次查询）
+	apis, err := r.data.db.ApiInterface.Query().
+		Where(apiinterface.CodeIn(codes...)).
+		All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	apiByCode := make(map[string]*biz.ApiPermission, len(apis))
+	for _, a := range apis {
+		apiByCode[a.Code] = &biz.ApiPermission{
+			Service: a.Service,
+			Tag:     a.Tag,
+			Method:  a.Method,
+			Path:    a.Path,
+			Summary: a.Summary,
+			Code:    a.Code,
+		}
+	}
+
+	// 按菜单聚合
+	out := make(map[string][]*biz.ApiPermission)
+	for _, row := range rows {
+		ap, ok := apiByCode[row.APICode]
+		if !ok {
+			continue
+		}
+		out[row.MenuID] = append(out[row.MenuID], ap)
+	}
+	return out, nil
+}
+
+// toBizMenu 把 ent.Menu 转成 biz.Menu（接口权限由调用方从 loadApiBindings 注入）
 func (r *menuRepo) toBizMenu(v *ent.Menu) *biz.Menu {
-	m := &biz.Menu{
+	return &biz.Menu{
 		ID:            v.ID,
 		ParentID:      v.ParentID,
 		Name:          v.Name,
@@ -244,14 +410,4 @@ func (r *menuRepo) toBizMenu(v *ent.Menu) *biz.Menu {
 		CreatedAt:     v.CreatedAt,
 		UpdatedAt:     v.UpdatedAt,
 	}
-	for _, ap := range v.Edges.APIPermissions {
-		m.APIPermissions = append(m.APIPermissions, &biz.ApiPermission{
-			ID:      ap.ID,
-			Service: ap.Service,
-			Method:  ap.Method,
-			Path:    ap.Path,
-			Summary: ap.Summary,
-		})
-	}
-	return m
 }

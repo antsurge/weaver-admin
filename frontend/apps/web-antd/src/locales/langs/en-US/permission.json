@@ -1,0 +1,156 @@
+{
+  "title": "Permission",
+  "name": "Permission",
+  "menu": {
+    "title": "Menu",
+    "name": "Menu",
+    "fields": {
+      "parentID": "Parent Menu",
+      "type": "Type",
+      "name": "Name",
+      "title": "Title",
+      "path": "Route Path",
+      "component": "Component",
+      "linkUrl": "Link URL",
+      "authCode": "Auth Code",
+      "icon": "Icon",
+      "status": "Status",
+      "weight": "Weight",
+      "badgeType": "Badge Type",
+      "badge": "Badge",
+      "badgeVariants": "Badge Variants",
+      "remark": "Remark",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At",
+      "operation": "Operation",
+      "apiPermissions": "API Permissions"
+    },
+    "operation": {
+      "appendChildren": "Add Child"
+    },
+    "apiPermission": {
+      "pickerTitle": "Select API Permissions",
+      "addButton": "Add API Permission",
+      "searchPlaceholder": "Search path, method, summary, service",
+      "selectedCount": "{0} API(s) selected",
+      "selectedEmpty": "No API selected",
+      "empty": "No API available",
+      "tip": "The same API can be bound by multiple buttons",
+      "remove": "Remove"
+    },
+    "type_options": {
+      "catalog": "Catalog",
+      "menu": "Menu",
+      "action": "Button",
+      "iframe": "Iframe",
+      "link": "Link"
+    },
+    "badgeType_options": {
+      "dot": "Dot",
+      "text": "Text"
+    },
+    "menu_type_options": {
+      "tab": "Tab",
+      "link": "Link (external)",
+      "iframe": "Iframe"
+    },
+    "description": {
+      "parentID": "Click to select",
+      "path": "Web route path, e.g.: /system/permission",
+      "component": "Web page component, e.g. if the component path is #/views/permission/menu/index.vue, fill in permission/menu/index",
+      "authCode": "Enter a unique auth code",
+      "url": "Enter the URL of the link or iframe",
+      "title": "i18n key, e.g.: permission.menu.title"
+    },
+    "form_group": {
+      "basicInfo": "Basic Info",
+      "routeConfiguration": "Route Configuration",
+      "permissionAndStatus": "Permission & Status",
+      "badgeConfiguration": "Badge Configuration",
+      "otherConfiguration": "Other",
+      "apiPermissions": "API Permissions"
+    },
+    "actionTitle": {
+      "expandAll": "Expand All",
+      "collapseAll": "Collapse All"
+    },
+    "actionMessage": {
+      "sorting": "Saving order...",
+      "sortSuccess": "Order saved",
+      "sortFailed": "Failed to save order",
+      "switchStatus": "Switch Status",
+      "switchStatusConfirm": "Change the status of {0} to [{1}]?"
+    }
+  },
+  "role": {
+    "title": "Role",
+    "name": "Role",
+    "system": "System",
+    "custom": "Custom",
+    "fields": {
+      "name": "Role Name",
+      "code": "Role Code",
+      "weight": "Weight",
+      "status": "Status",
+      "remark": "Remark",
+      "dataScope": "Data Scope",
+      "isSystem": "Role Type",
+      "menuPermission": "Menu Permission",
+      "dataPermissionIds": "Data Permissions"
+    },
+    "dataScope_options": {
+      "ALL": "All Data",
+      "DEPT": "Own Department",
+      "DEPT_AND_CHILD": "Own Department and Below",
+      "SELF": "Self Only"
+    },
+    "rules": {
+      "menuRequired": "Please select at least one menu permission"
+    },
+    "actions": {
+      "switchStatus": "Switch Role Status",
+      "switchStatusConfirm": "Change the status of [{0}] to [{1}]?",
+      "systemNotAllowed": "System built-in roles cannot be modified or deleted",
+      "superAdminNotAllowed": "Super administrator roles cannot be modified or deleted"
+    },
+    "form_placeholder": {
+      "remark": "Enter a remark",
+      "dataPermissionIds": "Please select data permissions"
+    },
+    "form_group": {
+      "basicInfo": "Basic Info",
+      "dataPermission": "Data Permissions",
+      "authorizedMenu": "Authorized Menus"
+    }
+  },
+  "data_permission": {
+    "title": "Data Permissions",
+    "name": "Data Permission Rule",
+    "fields": {
+      "name": "Rule Name",
+      "code": "Rule Code",
+      "scopeType": "Data Scope",
+      "deptIds": "Custom Departments",
+      "roleIds": "Custom Roles",
+      "status": "Status",
+      "remark": "Remark",
+      "updatedAt": "Updated At",
+      "operation": "Actions"
+    },
+    "scope": {
+      "all": "All Data",
+      "custom": "Custom Data",
+      "dept": "Department Data",
+      "deptAndBelow": "Department & Below",
+      "self": "Only Self"
+    },
+    "form_placeholder": {
+      "deptIds": "Select departments for custom scope",
+      "roleIds": "Select roles for custom scope",
+      "remark": "Enter remark"
+    },
+    "message": {
+      "switchStatusConfirm": "Switch rule \"{0}\" status to {1}?"
+    }
+  }
+}

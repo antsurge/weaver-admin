@@ -14,6 +14,8 @@ const (
 	Label = "role_menu"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldTenantID holds the string denoting the tenant_id field in the database.
+	FieldTenantID = "tenant_id"
 	// FieldRoleID holds the string denoting the role_id field in the database.
 	FieldRoleID = "role_id"
 	// FieldMenuID holds the string denoting the menu_id field in the database.
@@ -45,6 +47,7 @@ const (
 // Columns holds all SQL columns for rolemenu fields.
 var Columns = []string{
 	FieldID,
+	FieldTenantID,
 	FieldRoleID,
 	FieldMenuID,
 	FieldCreatedAt,
@@ -61,6 +64,10 @@ func ValidColumn(column string) bool {
 }
 
 var (
+	// DefaultTenantID holds the default value on creation for the "tenant_id" field.
+	DefaultTenantID string
+	// TenantIDValidator is a validator for the "tenant_id" field. It is called by the builders before save.
+	TenantIDValidator func(string) error
 	// RoleIDValidator is a validator for the "role_id" field. It is called by the builders before save.
 	RoleIDValidator func(string) error
 	// MenuIDValidator is a validator for the "menu_id" field. It is called by the builders before save.
@@ -77,6 +84,11 @@ type OrderOption func(*sql.Selector)
 // ByID orders the results by the id field.
 func ByID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldID, opts...).ToFunc()
+}
+
+// ByTenantID orders the results by the tenant_id field.
+func ByTenantID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTenantID, opts...).ToFunc()
 }
 
 // ByRoleID orders the results by the role_id field.

@@ -564,6 +564,232 @@ var _ interface {
 	ErrorName() string
 } = ImportApiInterfaceRequestValidationError{}
 
+// Validate checks the field values on CreateApiInterfaceRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *CreateApiInterfaceRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on CreateApiInterfaceRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// CreateApiInterfaceRequestMultiError, or nil if none found.
+func (m *CreateApiInterfaceRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *CreateApiInterfaceRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Service
+
+	// no validation rules for Tag
+
+	// no validation rules for Method
+
+	// no validation rules for Path
+
+	// no validation rules for Summary
+
+	if len(errors) > 0 {
+		return CreateApiInterfaceRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// CreateApiInterfaceRequestMultiError is an error wrapping multiple validation
+// errors returned by CreateApiInterfaceRequest.ValidateAll() if the
+// designated constraints aren't met.
+type CreateApiInterfaceRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m CreateApiInterfaceRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m CreateApiInterfaceRequestMultiError) AllErrors() []error { return m }
+
+// CreateApiInterfaceRequestValidationError is the validation error returned by
+// CreateApiInterfaceRequest.Validate if the designated constraints aren't met.
+type CreateApiInterfaceRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e CreateApiInterfaceRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e CreateApiInterfaceRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e CreateApiInterfaceRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e CreateApiInterfaceRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e CreateApiInterfaceRequestValidationError) ErrorName() string {
+	return "CreateApiInterfaceRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e CreateApiInterfaceRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCreateApiInterfaceRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = CreateApiInterfaceRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = CreateApiInterfaceRequestValidationError{}
+
+// Validate checks the field values on UpdateApiInterfaceRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateApiInterfaceRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateApiInterfaceRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateApiInterfaceRequestMultiError, or nil if none found.
+func (m *UpdateApiInterfaceRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateApiInterfaceRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Service
+
+	// no validation rules for Tag
+
+	// no validation rules for Method
+
+	// no validation rules for Path
+
+	// no validation rules for Summary
+
+	if len(errors) > 0 {
+		return UpdateApiInterfaceRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdateApiInterfaceRequestMultiError is an error wrapping multiple validation
+// errors returned by UpdateApiInterfaceRequest.ValidateAll() if the
+// designated constraints aren't met.
+type UpdateApiInterfaceRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateApiInterfaceRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateApiInterfaceRequestMultiError) AllErrors() []error { return m }
+
+// UpdateApiInterfaceRequestValidationError is the validation error returned by
+// UpdateApiInterfaceRequest.Validate if the designated constraints aren't met.
+type UpdateApiInterfaceRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateApiInterfaceRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateApiInterfaceRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateApiInterfaceRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateApiInterfaceRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateApiInterfaceRequestValidationError) ErrorName() string {
+	return "UpdateApiInterfaceRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateApiInterfaceRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateApiInterfaceRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateApiInterfaceRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateApiInterfaceRequestValidationError{}
+
 // Validate checks the field values on ImportApiInterfaceResponse with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -589,6 +815,8 @@ func (m *ImportApiInterfaceResponse) validate(all bool) error {
 	// no validation rules for Total
 
 	// no validation rules for Imported
+
+	// no validation rules for Updated
 
 	// no validation rules for Skipped
 
@@ -671,6 +899,212 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ImportApiInterfaceResponseValidationError{}
+
+// Validate checks the field values on ListApiInterfaceOptionsRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListApiInterfaceOptionsRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListApiInterfaceOptionsRequest with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// ListApiInterfaceOptionsRequestMultiError, or nil if none found.
+func (m *ListApiInterfaceOptionsRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListApiInterfaceOptionsRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return ListApiInterfaceOptionsRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListApiInterfaceOptionsRequestMultiError is an error wrapping multiple
+// validation errors returned by ListApiInterfaceOptionsRequest.ValidateAll()
+// if the designated constraints aren't met.
+type ListApiInterfaceOptionsRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListApiInterfaceOptionsRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListApiInterfaceOptionsRequestMultiError) AllErrors() []error { return m }
+
+// ListApiInterfaceOptionsRequestValidationError is the validation error
+// returned by ListApiInterfaceOptionsRequest.Validate if the designated
+// constraints aren't met.
+type ListApiInterfaceOptionsRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListApiInterfaceOptionsRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListApiInterfaceOptionsRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListApiInterfaceOptionsRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListApiInterfaceOptionsRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListApiInterfaceOptionsRequestValidationError) ErrorName() string {
+	return "ListApiInterfaceOptionsRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListApiInterfaceOptionsRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListApiInterfaceOptionsRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListApiInterfaceOptionsRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListApiInterfaceOptionsRequestValidationError{}
+
+// Validate checks the field values on ListApiInterfaceOptionsResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListApiInterfaceOptionsResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListApiInterfaceOptionsResponse with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// ListApiInterfaceOptionsResponseMultiError, or nil if none found.
+func (m *ListApiInterfaceOptionsResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListApiInterfaceOptionsResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return ListApiInterfaceOptionsResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListApiInterfaceOptionsResponseMultiError is an error wrapping multiple
+// validation errors returned by ListApiInterfaceOptionsResponse.ValidateAll()
+// if the designated constraints aren't met.
+type ListApiInterfaceOptionsResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListApiInterfaceOptionsResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListApiInterfaceOptionsResponseMultiError) AllErrors() []error { return m }
+
+// ListApiInterfaceOptionsResponseValidationError is the validation error
+// returned by ListApiInterfaceOptionsResponse.Validate if the designated
+// constraints aren't met.
+type ListApiInterfaceOptionsResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListApiInterfaceOptionsResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListApiInterfaceOptionsResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListApiInterfaceOptionsResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListApiInterfaceOptionsResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListApiInterfaceOptionsResponseValidationError) ErrorName() string {
+	return "ListApiInterfaceOptionsResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListApiInterfaceOptionsResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListApiInterfaceOptionsResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListApiInterfaceOptionsResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListApiInterfaceOptionsResponseValidationError{}
 
 // Validate checks the field values on DeleteApiInterfaceRequest with the rules
 // defined in the proto definition for this message. If any rules are

@@ -1,0 +1,33 @@
+# 文件存储模块错误码
+[STORAGE_DISABLED]
+other = "对象存储未启用"
+
+[INVALID_FILE]
+other = "文件不能为空"
+
+[FILE_REQUIRED]
+other = "请选择文件"
+
+[FILE_TOO_LARGE]
+other = "文件大小超出限制"
+
+[INVALID_FILE_TYPE]
+other = "不支持的文件类型"
+
+[UPLOAD_FAILED]
+other = "文件上传失败"
+
+[INVALID_OBJECT_KEY]
+other = "对象键不能为空"
+
+[SIGN_URL_FAILED]
+other = "生成文件访问地址失败"
+
+[DELETE_FAILED]
+other = "文件删除失败"
+
+[FILE_UPLOAD_NOT_SUPPORTED]
+other = "文件上传请使用 HTTP 接口"
+
+[FILE_ACCESS_NOT_SUPPORTED]
+other = "文件访问请使用 HTTP 接口"

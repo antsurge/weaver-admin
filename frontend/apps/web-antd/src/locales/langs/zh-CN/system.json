@@ -1,8 +1,8 @@
 {
-  "title":"系统管理",
+  "title": "系统配置",
   "api_interface": {
-    "title":"接口管理",
-    "name":"接口",
+    "title": "接口管理",
+    "name": "接口",
     "fields": {
       "service": "服务名",
       "tag": "标签",
@@ -16,13 +16,22 @@
     },
     "import": "导入 OpenAPI",
     "importing": "导入中...",
-    "importSuccess": "导入成功，已导入 {0} 个，跳过 {1} 个",
+    "importSuccess": "导入成功，新增 {0} 个、更新 {1} 个接口",
     "importFailed": "导入失败",
-    "uploadOnlyYaml": "只能上传 .yaml 或 .yml 文件"
+    "uploadOnlyYaml": "只能上传 .yaml 或 .yml 文件",
+    "importConfirmTitle": "确认导入",
+    "importConfirmContent": "导入将按接口唯一键对比，已存在的更新、不存在的新增，不会删除任何数据。",
+    "form_placeholder": {
+      "service": "请输入或选择服务名",
+      "tag": "请输入标签",
+      "method": "请选择请求方法",
+      "path": "请输入请求路径",
+      "summary": "请输入接口描述"
+    }
   },
   "dict_type": {
-    "title":"字典管理",
-    "name":"字典类型",
+    "title": "字典管理",
+    "name": "字典类型",
     "fields": {
       "name": "名称",
       "code": "编码",
@@ -31,29 +40,271 @@
       "remark": "备注",
       "operation": "操作"
     },
-    "form_placeholder":{
-      "remark":"请输入备注"
+    "form_placeholder": {
+      "remark": "请输入备注"
     },
-    "operation":{
-      "appendDictData":"新增字典值"
+    "operation": {
+      "appendDictData": "新增字典值"
     }
   },
   "dict_data": {
-    "name":"字典值",
+    "name": "字典值",
     "fields": {
       "dictTypeID": "字典类型",
       "label": "名称",
-      "value":"字典值",
+      "value": "字典值",
       "status": "状态",
       "updatedAt": "更新时间",
       "remark": "备注",
       "operation": "操作"
     },
-    "form_placeholder":{
-      "remark":"请输入备注"
+    "form_placeholder": {
+      "remark": "请输入备注"
     },
-    "operation":{
-      "appendDictData":"新增字典值"
+    "operation": {
+      "appendDictData": "新增字典值"
+    }
+  },
+  "tenant": {
+    "title": "租户管理",
+    "name": "租户",
+    "fields": {
+      "code": "租户编码",
+      "name": "租户名称",
+      "status": "状态",
+      "maxUsers": "最大用户数",
+      "maxRoles": "最大角色数",
+      "contactName": "联系人",
+      "contactPhone": "联系电话",
+      "expireAt": "到期时间",
+      "remark": "备注",
+      "updatedAt": "更新时间",
+      "operation": "操作"
+    },
+    "searchPlaceholder": {
+      "name": "请输入租户名称",
+      "code": "请输入租户编码"
+    },
+    "formPlaceholder": {
+      "code": "字母/数字/下划线/中划线，创建后不可修改",
+      "expireAt": "为空表示永不过期",
+      "maxUsers": "0 表示不限",
+      "maxRoles": "0 表示不限",
+      "contactName": "请输入联系人",
+      "contactPhone": "请输入联系电话",
+      "remark": "请输入备注"
+    },
+    "formRules": {
+      "codePattern": "仅支持字母、数字、下划线和中划线"
+    },
+    "confirm": {
+      "switchStatusTitle": "切换状态",
+      "switchStatusContent": "你要将租户“{0}”的状态切换为【{1}】吗？"
+    }
+  },
+  "notification": {
+    "title": "消息通知",
+    "name": "通知",
+    "fields": {
+      "title": "标题",
+      "content": "内容",
+      "type": "类型",
+      "level": "级别",
+      "targetType": "投放范围",
+      "targetIds": "投放目标",
+      "status": "状态",
+      "link": "跳转路由",
+      "createdAt": "创建时间",
+      "operation": "操作"
+    },
+    "type_options": {
+      "system": "系统",
+      "announce": "公告",
+      "audit": "审批",
+      "todo": "待办",
+      "alert": "告警"
+    },
+    "level_options": {
+      "info": "普通",
+      "success": "成功",
+      "warn": "警告",
+      "error": "严重"
+    },
+    "target_options": {
+      "all": "全体用户",
+      "user": "指定用户",
+      "role": "指定角色"
+    },
+    "status_options": {
+      "draft": "草稿",
+      "published": "已发布",
+      "revoked": "已撤回"
+    },
+    "operation": {
+      "publish": "发布通知",
+      "revoke": "撤回"
+    },
+    "form_placeholder": {
+      "title": "请输入通知标题",
+      "content": "请输入通知内容",
+      "link": "可选，如 /system/notification",
+      "targetIds": "请选择投放目标"
+    },
+    "confirm": {
+      "revokeTitle": "确认撤回",
+      "revokeContent": "撤回后该通知将从所有接收人的收件箱中移除，确定继续吗？"
+    },
+    "message": {
+      "alreadyRevoked": "该通知已撤回",
+      "publishSuccess": "通知发布成功",
+      "revokeSuccess": "通知已撤回"
+    }
+  },
+  "message_center": {
+    "title": "消息中心",
+    "tabs": {
+      "all": "全部消息",
+      "system": "系统消息",
+      "announce": "公告",
+      "audit": "审批",
+      "todo": "待办通知",
+      "alert": "告警"
+    },
+    "types": {
+      "system": "系统",
+      "announce": "公告",
+      "audit": "审批",
+      "todo": "待办",
+      "alert": "告警"
+    },
+    "levels": {
+      "info": "普通",
+      "success": "成功",
+      "warn": "警告",
+      "error": "严重"
+    },
+    "fields": {
+      "type": "类型",
+      "level": "级别",
+      "sender": "发送人",
+      "time": "时间",
+      "content": "内容",
+      "systemSender": "系统"
+    },
+    "operation": {
+      "readAll": "全部已读",
+      "delete": "删除选中"
+    },
+    "pagination": {
+      "total": "共 {0} 条"
+    },
+    "unreadCount": "未读 {0} 条",
+    "empty": "暂无消息",
+    "loadMore": "加载更多",
+    "confirm": {
+      "readAllTitle": "确认全部已读",
+      "readAllContent": "确认将 {0} 条未读消息全部标记为已读吗？",
+      "deleteTitle": "确认删除",
+      "deleteContent": "确定删除选中的 {0} 条消息吗？删除后不可恢复。"
+    },
+    "message": {
+      "noUnread": "没有未读消息",
+      "readAllSuccess": "全部已读",
+      "selectDelete": "请先选择要删除的消息",
+      "deleteSuccess": "删除成功"
+    }
+  },
+  "config": {
+    "title": "参数设置",
+    "name": "系统参数",
+    "fields": {
+      "name": "参数名称",
+      "key": "参数键名",
+      "value": "参数键值",
+      "configType": "系统内置",
+      "status": "状态",
+      "group": "分组",
+      "remark": "备注",
+      "updatedAt": "更新时间",
+      "operation": "操作"
+    },
+    "config_type_options": {
+      "Y": "内置",
+      "N": "外置"
+    },
+    "config_group_options": {
+      "none": "单一参数"
+    },
+    "search_placeholder": {
+      "name": "请输入参数名称",
+      "key": "请输入参数键名",
+      "group": "请选择分组"
+    },
+    "form_placeholder": {
+      "value": "请输入参数键值",
+      "group": "请输入或选择分组名称，留空为单一参数",
+      "remark": "请输入备注"
+    },
+    "operation": {
+      "batchDelete": "批量删除",
+      "createGroup": "新建分组"
+    },
+    "confirm": {
+      "deleteTitle": "确认删除",
+      "deleteContent": "确定删除选中的 {0} 个系统参数吗？"
+    },
+    "message": {
+      "statusConfirm": "确定要将参数“{0}”的状态切换为",
+      "deleteSuccess": "删除成功",
+      "groupRequired": "请输入分组名称"
+    }
+  },
+  "job": {
+    "title": "定时任务",
+    "name": "定时任务",
+    "fields": {
+      "name": "任务名称",
+      "jobGroup": "任务分组",
+      "jobType": "任务类型",
+      "invokeTarget": "调用目标",
+      "cronExpression": "cron 表达式",
+      "misfirePolicy": "错失策略",
+      "concurrent": "允许并发",
+      "status": "状态",
+      "remark": "备注",
+      "nextRunTime": "下次执行时间",
+      "updatedAt": "更新时间",
+      "operation": "操作"
+    },
+    "misfire_options": {
+      "immediately": "立即执行",
+      "once": "执行一次",
+      "ignore": "放弃执行"
+    },
+    "search_placeholder": {
+      "name": "请输入任务名称",
+      "jobGroup": "请输入任务分组"
+    },
+    "form_placeholder": {
+      "jobGroup": "默认 DEFAULT",
+      "invokeTarget": "请输入 HTTP 调用地址，如 https://example.com/api/job",
+      "cronExpression": "如 0 0/5 * * * ?（5 段标准式）或 0 0 0/5 * * *（6 段含秒式）",
+      "remark": "请输入备注"
+    },
+    "operation": {
+      "run": "执行一次",
+      "batchDelete": "批量删除"
+    },
+    "confirm": {
+      "deleteTitle": "确认删除",
+      "deleteContent": "确定删除选中的 {0} 个定时任务吗？删除后调度将同步移除。",
+      "runTitle": "确认立即执行",
+      "runContent": "确定立即执行一次任务“{0}”吗？执行结果将记录到任务日志。"
+    },
+    "message": {
+      "statusConfirm": "确定要将任务“{0}”的状态切换为",
+      "deleteSuccess": "删除成功",
+      "runSuccess": "已触发执行，请到任务日志查看结果"
     }
   }
 }

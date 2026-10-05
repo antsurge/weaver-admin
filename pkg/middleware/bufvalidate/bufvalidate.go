@@ -3,6 +3,7 @@ package bufvalidate
 import (
 	"buf.build/go/protovalidate"
 	"context"
+	"github.com/antsurge/weaver-admin/pkg/middleware/localize"
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/middleware"
 	"google.golang.org/protobuf/proto"
@@ -34,7 +35,14 @@ func BufValidator() middleware.Middleware {
 					// 只返回第一个字段错误
 					if len(verr.Violations) > 0 {
 						v := verr.Violations[0]
-						errMsg = v.Proto.GetMessage()
+						// 优先按 {字段路径}.{规则} 查本地化翻译（由 localize 中间件注入语言上下文）
+						// 例如 dictType.name.required；未命中时回退 protovalidate 默认消息
+						key := protovalidate.FieldPathString(v.Proto.GetField()) + "." + v.Proto.GetRuleId()
+						if translated, ok := localize.Translate(ctx, key); ok && translated != "" {
+							errMsg = translated
+						} else {
+							errMsg = v.Proto.GetMessage()
+						}
 					} else {
 						errMsg = verr.Error()
 					}

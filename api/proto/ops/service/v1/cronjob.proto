@@ -1,0 +1,402 @@
+syntax = "proto3";
+
+package ops.service.v1;
+
+import "buf/validate/validate.proto";
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+// 定时任务
+message Job {
+  // ID
+  string id = 1 [(gnostic.openapi.v3.property) = {description: "任务ID"}];
+  // 任务名称
+  string name = 2 [(gnostic.openapi.v3.property) = {description: "任务名称"}];
+  // 任务分组
+  string jobGroup = 3 [(gnostic.openapi.v3.property) = {description: "任务分组，如：DEFAULT/系统/监控"}];
+  // 任务类型：http=HTTP调用
+  string jobType = 4 [(gnostic.openapi.v3.property) = {description: "任务类型：http=HTTP调用"}];
+  // 调用目标
+  string invokeTarget = 5 [(gnostic.openapi.v3.property) = {description: "调用目标（HTTP请求URL）"}];
+  // Cron 表达式
+  string cronExpression = 6 [(gnostic.openapi.v3.property) = {description: "Cron 表达式"}];
+  // 错失执行策略：immediately=立即执行，once=执行一次，ignore=放弃执行
+  string misfirePolicy = 7 [(gnostic.openapi.v3.property) = {description: "错失执行策略"}];
+  // 是否允许并发：true=允许，false=不允许
+  bool concurrent = 8 [(gnostic.openapi.v3.property) = {description: "是否允许并发执行"}];
+  // 状态
+  string status = 9 [(gnostic.openapi.v3.property) = {description: "状态：enabled=启用，disabled=禁用"}];
+  // 备注
+  string remark = 10 [(gnostic.openapi.v3.property) = {description: "备注"}];
+  // 下次执行时间
+  google.protobuf.Timestamp nextRunTime = 11 [(gnostic.openapi.v3.property) = {description: "下次执行时间"}];
+  // 创建时间
+  google.protobuf.Timestamp createdAt = 12 [(gnostic.openapi.v3.property) = {description: "创建时间"}];
+  // 更新时间
+  google.protobuf.Timestamp updatedAt = 13 [(gnostic.openapi.v3.property) = {description: "更新时间"}];
+  // 删除时间
+  google.protobuf.Timestamp deletedAt = 14 [(gnostic.openapi.v3.property) = {description: "删除时间（软删除标记）"}];
+}
+
+// 任务日志
+message JobLog {
+  // ID
+  string id = 1 [(gnostic.openapi.v3.property) = {description: "日志ID"}];
+  // 任务ID
+  string jobId = 2 [(gnostic.openapi.v3.property) = {description: "任务ID"}];
+  // 任务名称
+  string jobName = 3 [(gnostic.openapi.v3.property) = {description: "任务名称"}];
+  // 任务分组
+  string jobGroup = 4 [(gnostic.openapi.v3.property) = {description: "任务分组"}];
+  // 调用目标
+  string invokeTarget = 5 [(gnostic.openapi.v3.property) = {description: "调用目标"}];
+  // Cron 表达式
+  string cronExpression = 6 [(gnostic.openapi.v3.property) = {description: "Cron 表达式"}];
+  // 执行结果：success=成功，fail=失败
+  string status = 7 [(gnostic.openapi.v3.property) = {description: "执行结果：success=成功，fail=失败"}];
+  // 执行信息
+  string jobMessage = 8 [(gnostic.openapi.v3.property) = {description: "执行信息（成功为响应内容，失败为异常信息）"}];
+  // 开始时间
+  google.protobuf.Timestamp startTime = 9 [(gnostic.openapi.v3.property) = {description: "开始时间"}];
+  // 结束时间
+  google.protobuf.Timestamp endTime = 10 [(gnostic.openapi.v3.property) = {description: "结束时间"}];
+  // 耗时（毫秒）
+  int64 duration = 11 [(gnostic.openapi.v3.property) = {description: "耗时（毫秒）"}];
+  // 创建时间
+  google.protobuf.Timestamp createdAt = 12 [(gnostic.openapi.v3.property) = {description: "创建时间"}];
+}
+
+message ListJobRequest {
+  int64 currentPage = 1 [(gnostic.openapi.v3.property) = {description: "当前页码（从1开始）"}];
+  int64 pageSize = 2 [(gnostic.openapi.v3.property) = {description: "每页条数（传0为全部）"}];
+  string name = 3 [(gnostic.openapi.v3.property) = {description: "任务名称（支持模糊查询）"}];
+  string jobGroup = 4 [(gnostic.openapi.v3.property) = {description: "任务分组（支持模糊查询）"}];
+  string status = 5 [(gnostic.openapi.v3.property) = {description: "状态（enabled=启用，disabled=禁用）"}];
+}
+
+message ListJobResponse {
+  repeated Job items = 1;
+  int64 total = 2;
+}
+
+message GetJobRequest {
+  // 任务ID
+  string id = 1 [(gnostic.openapi.v3.property) = {description: "任务ID"}];
+}
+
+message CreateJobRequest {
+  option (gnostic.openapi.v3.schema) = {
+    required: [
+      "name",
+      "invokeTarget",
+      "cronExpression"
+    ]
+  };
+
+  // 任务名称
+  string name = 1 [
+    (buf.validate.field).cel = {
+      id: "job.name.required"
+      message: "job.name.required"
+      expression: "this.size() > 0"
+    },
+    (buf.validate.field).cel = {
+      id: "job.name.max_len"
+      message: "job.name.max_len"
+      expression: "this.size() <= 64"
+    },
+    (gnostic.openapi.v3.property) = {description: "任务名称"}
+  ];
+  // 任务分组
+  string jobGroup = 2 [
+    (buf.validate.field).cel = {
+      id: "job.jobGroup.max_len"
+      message: "job.jobGroup.max_len"
+      expression: "this.size() <= 64"
+    },
+    (gnostic.openapi.v3.property) = {description: "任务分组"}
+  ];
+  // 任务类型
+  string jobType = 3 [
+    (buf.validate.field).string = {
+      in: [
+        "http"
+      ]
+    },
+    (buf.validate.field).cel = {
+      id: "job.jobType.invalid"
+      message: "job.jobType.invalid"
+      expression: "this in ['http']"
+    },
+    (gnostic.openapi.v3.property) = {description: "任务类型：http=HTTP调用"}
+  ];
+  // 调用目标
+  string invokeTarget = 4 [
+    (buf.validate.field).cel = {
+      id: "job.invokeTarget.required"
+      message: "job.invokeTarget.required"
+      expression: "this.size() > 0"
+    },
+    (buf.validate.field).cel = {
+      id: "job.invokeTarget.max_len"
+      message: "job.invokeTarget.max_len"
+      expression: "this.size() <= 512"
+    },
+    (gnostic.openapi.v3.property) = {description: "调用目标（HTTP请求URL）"}
+  ];
+  // Cron 表达式
+  string cronExpression = 5 [
+    (buf.validate.field).cel = {
+      id: "job.cronExpression.required"
+      message: "job.cronExpression.required"
+      expression: "this.size() > 0"
+    },
+    (buf.validate.field).cel = {
+      id: "job.cronExpression.max_len"
+      message: "job.cronExpression.max_len"
+      expression: "this.size() <= 64"
+    },
+    (gnostic.openapi.v3.property) = {description: "Cron 表达式（5/6/7段）"}
+  ];
+  // 错失执行策略
+  string misfirePolicy = 6 [
+    (buf.validate.field).string = {
+      in: [
+        "immediately",
+        "once",
+        "ignore"
+      ]
+    },
+    (buf.validate.field).cel = {
+      id: "job.misfirePolicy.invalid"
+      message: "job.misfirePolicy.invalid"
+      expression: "this in ['immediately', 'once', 'ignore']"
+    },
+    (gnostic.openapi.v3.property) = {description: "错失执行策略：immediately=立即执行，once=执行一次，ignore=放弃执行"}
+  ];
+  // 是否允许并发
+  bool concurrent = 7 [(gnostic.openapi.v3.property) = {description: "是否允许并发执行"}];
+  // 状态
+  string status = 8 [
+    (buf.validate.field).string = {
+      in: [
+        "enabled",
+        "disabled"
+      ]
+    },
+    (buf.validate.field).cel = {
+      id: "job.status.invalid"
+      message: "job.status.invalid"
+      expression: "this in ['enabled', 'disabled']"
+    },
+    (gnostic.openapi.v3.property) = {description: "状态（enabled/disabled）"}
+  ];
+  // 备注
+  string remark = 9 [
+    (buf.validate.field).cel = {
+      id: "job.remark.max_len"
+      message: "job.remark.max_len"
+      expression: "this.size() <= 255"
+    },
+    (gnostic.openapi.v3.property) = {description: "备注"}
+  ];
+}
+
+message UpdateJobRequest {
+  option (gnostic.openapi.v3.schema) = {
+    required: [
+      "name",
+      "invokeTarget",
+      "cronExpression"
+    ]
+  };
+
+  string id = 1;
+  // 任务名称
+  string name = 2 [
+    (buf.validate.field).cel = {
+      id: "job.name.required"
+      message: "job.name.required"
+      expression: "this.size() > 0"
+    },
+    (buf.validate.field).cel = {
+      id: "job.name.max_len"
+      message: "job.name.max_len"
+      expression: "this.size() <= 64"
+    },
+    (gnostic.openapi.v3.property) = {description: "任务名称"}
+  ];
+  // 任务分组
+  string jobGroup = 3 [
+    (buf.validate.field).cel = {
+      id: "job.jobGroup.max_len"
+      message: "job.jobGroup.max_len"
+      expression: "this.size() <= 64"
+    },
+    (gnostic.openapi.v3.property) = {description: "任务分组"}
+  ];
+  // 任务类型
+  string jobType = 4 [
+    (buf.validate.field).string = {
+      in: [
+        "http"
+      ]
+    },
+    (buf.validate.field).cel = {
+      id: "job.jobType.invalid"
+      message: "job.jobType.invalid"
+      expression: "this in ['http']"
+    },
+    (gnostic.openapi.v3.property) = {description: "任务类型：http=HTTP调用"}
+  ];
+  // 调用目标
+  string invokeTarget = 5 [
+    (buf.validate.field).cel = {
+      id: "job.invokeTarget.required"
+      message: "job.invokeTarget.required"
+      expression: "this.size() > 0"
+    },
+    (buf.validate.field).cel = {
+      id: "job.invokeTarget.max_len"
+      message: "job.invokeTarget.max_len"
+      expression: "this.size() <= 512"
+    },
+    (gnostic.openapi.v3.property) = {description: "调用目标（HTTP请求URL）"}
+  ];
+  // Cron 表达式
+  string cronExpression = 6 [
+    (buf.validate.field).cel = {
+      id: "job.cronExpression.required"
+      message: "job.cronExpression.required"
+      expression: "this.size() > 0"
+    },
+    (buf.validate.field).cel = {
+      id: "job.cronExpression.max_len"
+      message: "job.cronExpression.max_len"
+      expression: "this.size() <= 64"
+    },
+    (gnostic.openapi.v3.property) = {description: "Cron 表达式"}
+  ];
+  // 错失执行策略
+  string misfirePolicy = 7 [
+    (buf.validate.field).string = {
+      in: [
+        "immediately",
+        "once",
+        "ignore"
+      ]
+    },
+    (buf.validate.field).cel = {
+      id: "job.misfirePolicy.invalid"
+      message: "job.misfirePolicy.invalid"
+      expression: "this in ['immediately', 'once', 'ignore']"
+    },
+    (gnostic.openapi.v3.property) = {description: "错失执行策略"}
+  ];
+  // 是否允许并发
+  bool concurrent = 8 [(gnostic.openapi.v3.property) = {description: "是否允许并发执行"}];
+  // 状态
+  string status = 9 [
+    (buf.validate.field).string = {
+      in: [
+        "enabled",
+        "disabled"
+      ]
+    },
+    (buf.validate.field).cel = {
+      id: "job.status.invalid"
+      message: "job.status.invalid"
+      expression: "this in ['enabled', 'disabled']"
+    },
+    (gnostic.openapi.v3.property) = {description: "状态（enabled/disabled）"}
+  ];
+  // 备注
+  string remark = 10 [
+    (buf.validate.field).cel = {
+      id: "job.remark.max_len"
+      message: "job.remark.max_len"
+      expression: "this.size() <= 255"
+    },
+    (gnostic.openapi.v3.property) = {description: "备注"}
+  ];
+}
+
+message UpdateJobStatusRequest {
+  option (gnostic.openapi.v3.schema) = {
+    required: ["status"]
+  };
+  // ID
+  string id = 1 [(gnostic.openapi.v3.property) = {description: "任务ID"}];
+  // 状态
+  string status = 2 [
+    (buf.validate.field).string = {
+      in: [
+        "enabled",
+        "disabled"
+      ]
+    },
+    (buf.validate.field).cel = {
+      id: "job.status.invalid"
+      message: "job.status.invalid"
+      expression: "this in ['enabled', 'disabled']"
+    },
+    (gnostic.openapi.v3.property) = {description: "状态（enabled/disabled）"}
+  ];
+}
+
+message DeleteJobRequest {
+  repeated string ids = 1 [
+    (buf.validate.field).repeated = {
+      min_items: 1
+      max_items: 100
+    },
+    (buf.validate.field).cel = {
+      id: "job.ids.not_empty"
+      message: "job.ids.not_empty"
+      expression: "this.all(x, x.size() > 0)"
+    },
+    (gnostic.openapi.v3.property) = {description: "任务ID列表，至少一个"}
+  ];
+}
+
+// 立即执行一次
+message RunJobRequest {
+  option (gnostic.openapi.v3.schema) = {
+    required: ["id"]
+  };
+  // 任务ID
+  string id = 1 [(gnostic.openapi.v3.property) = {description: "任务ID"}];
+}
+
+message ListJobLogRequest {
+  int64 currentPage = 1 [(gnostic.openapi.v3.property) = {description: "当前页码（从1开始）"}];
+  int64 pageSize = 2 [(gnostic.openapi.v3.property) = {description: "每页条数（传0为全部）"}];
+  string jobId = 3 [(gnostic.openapi.v3.property) = {description: "任务ID"}];
+  string jobName = 4 [(gnostic.openapi.v3.property) = {description: "任务名称（支持模糊查询）"}];
+  string status = 5 [(gnostic.openapi.v3.property) = {description: "执行结果：success=成功，fail=失败"}];
+}
+
+message ListJobLogResponse {
+  repeated JobLog items = 1;
+  int64 total = 2;
+}
+
+message GetJobLogRequest {
+  // 日志ID
+  string id = 1 [(gnostic.openapi.v3.property) = {description: "日志ID"}];
+}
+
+message DeleteJobLogRequest {
+  repeated string ids = 1 [
+    (buf.validate.field).repeated = {
+      min_items: 1
+      max_items: 100
+    },
+    (buf.validate.field).cel = {
+      id: "joblog.ids.not_empty"
+      message: "joblog.ids.not_empty"
+      expression: "this.all(x, x.size() > 0)"
+    },
+    (gnostic.openapi.v3.property) = {description: "日志ID列表，至少一个"}
+  ];
+}

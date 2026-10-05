@@ -1,4 +1,4 @@
-import { initPreferences } from '@vben/preferences';
+import { initPreferences, updatePreferences } from '@vben/preferences';
 import { unmountGlobalLoading } from '@vben/utils';
 
 import { overridesPreferences } from './preferences';
@@ -17,6 +17,14 @@ async function initApplication() {
   await initPreferences({
     namespace,
     overrides: overridesPreferences,
+  });
+
+  // 强制指定品牌 logo，避免被 localStorage 中缓存的旧偏好覆盖
+  updatePreferences({
+    logo: {
+      source: '/logo.png',
+      sourceDark: '/logo.png',
+    },
   });
 
   // 启动应用并挂载

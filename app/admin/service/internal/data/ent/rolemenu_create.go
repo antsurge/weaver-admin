@@ -22,6 +22,20 @@ type RoleMenuCreate struct {
 	hooks    []Hook
 }
 
+// SetTenantID sets the "tenant_id" field.
+func (_c *RoleMenuCreate) SetTenantID(v string) *RoleMenuCreate {
+	_c.mutation.SetTenantID(v)
+	return _c
+}
+
+// SetNillableTenantID sets the "tenant_id" field if the given value is not nil.
+func (_c *RoleMenuCreate) SetNillableTenantID(v *string) *RoleMenuCreate {
+	if v != nil {
+		_c.SetTenantID(*v)
+	}
+	return _c
+}
+
 // SetRoleID sets the "role_id" field.
 func (_c *RoleMenuCreate) SetRoleID(v string) *RoleMenuCreate {
 	_c.mutation.SetRoleID(v)
@@ -99,6 +113,10 @@ func (_c *RoleMenuCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (_c *RoleMenuCreate) defaults() {
+	if _, ok := _c.mutation.TenantID(); !ok {
+		v := rolemenu.DefaultTenantID
+		_c.mutation.SetTenantID(v)
+	}
 	if _, ok := _c.mutation.CreatedAt(); !ok {
 		v := rolemenu.DefaultCreatedAt()
 		_c.mutation.SetCreatedAt(v)
@@ -107,6 +125,14 @@ func (_c *RoleMenuCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (_c *RoleMenuCreate) check() error {
+	if _, ok := _c.mutation.TenantID(); !ok {
+		return &ValidationError{Name: "tenant_id", err: errors.New(`ent: missing required field "RoleMenu.tenant_id"`)}
+	}
+	if v, ok := _c.mutation.TenantID(); ok {
+		if err := rolemenu.TenantIDValidator(v); err != nil {
+			return &ValidationError{Name: "tenant_id", err: fmt.Errorf(`ent: validator failed for field "RoleMenu.tenant_id": %w`, err)}
+		}
+	}
 	if _, ok := _c.mutation.RoleID(); !ok {
 		return &ValidationError{Name: "role_id", err: errors.New(`ent: missing required field "RoleMenu.role_id"`)}
 	}
@@ -171,6 +197,10 @@ func (_c *RoleMenuCreate) createSpec() (*RoleMenu, *sqlgraph.CreateSpec) {
 	if id, ok := _c.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = id
+	}
+	if value, ok := _c.mutation.TenantID(); ok {
+		_spec.SetField(rolemenu.FieldTenantID, field.TypeString, value)
+		_node.TenantID = value
 	}
 	if value, ok := _c.mutation.CreatedAt(); ok {
 		_spec.SetField(rolemenu.FieldCreatedAt, field.TypeTime, value)

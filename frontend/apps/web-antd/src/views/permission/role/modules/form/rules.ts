@@ -6,25 +6,8 @@ import { $t } from '#/locales';
  */
 export const nameRule = z
   .string()
-  .min(
-    2,
-    $t('ui.formRules.minLength', [$t('organization.position.fields.name'), 2]),
-  )
+  .min(2, $t('ui.formRules.minLength', [$t('permission.role.fields.name'), 2]))
   .max(
     30,
-    $t('ui.formRules.maxLength', [$t('organization.position.fields.name'), 30]),
-  );
-
-/**
- * 角色编码
- */
-export const codeRule = z
-  .string()
-  .min(
-    2,
-    $t('ui.formRules.minLength', [$t('organization.position.fields.code'), 2]),
-  )
-  .max(
-    30,
-    $t('ui.formRules.maxLength', [$t('organization.position.fields.code'), 30]),
+    $t('ui.formRules.maxLength', [$t('permission.role.fields.name'), 30]),
   );

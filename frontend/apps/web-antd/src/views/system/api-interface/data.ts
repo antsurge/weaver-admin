@@ -1,6 +1,7 @@
-import type { OnActionClickFn, VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { VbenFormProps } from '#/adapter/form';
+import type { OnActionClickFn, VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { SystemApiInterfaceApi } from '#/api/system/api-interface';
+
 import { $t } from '#/locales';
 
 export function useColumns(
@@ -64,14 +65,14 @@ export function useColumns(
       fixed: 'right',
       showOverflow: false,
       title: $t('common.fields.operation'),
-      width: 120,
+      width: 160,
       cellRender: {
         name: 'CellOperation',
         attrs: {
           nameField: 'code',
           onClick: onActionClick,
         },
-        options: ['delete'],
+        options: ['edit', 'delete'],
       },
     },
   ];

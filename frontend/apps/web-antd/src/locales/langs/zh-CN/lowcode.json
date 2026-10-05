@@ -1,0 +1,229 @@
+{
+  "title": "低代码",
+  "formBuilder": {
+    "title": "表单构建器",
+    "name": "表单",
+    "fields": {
+      "name": "表单名称",
+      "code": "表单编码",
+      "description": "描述",
+      "schemaJson": "表单定义",
+      "status": "状态",
+      "remark": "备注",
+      "createdAt": "创建时间",
+      "updatedAt": "更新时间",
+      "operation": "操作"
+    },
+    "search_placeholder": {
+      "name": "请输入表单名称",
+      "code": "请输入表单编码"
+    },
+    "operation": {
+      "design": "设计表单",
+      "preview": "预览",
+      "submissions": "提交数据",
+      "delete": "删除"
+    },
+    "confirm": {
+      "deleteTitle": "确认删除",
+      "deleteContent": "确定要删除选中的 {0} 个表单吗？"
+    },
+    "message": {
+      "deleteSuccess": "删除成功"
+    },
+    "render": {
+      "title": "表单预览",
+      "submit": "提交",
+      "submitSuccess": "提交成功",
+      "cancel": "取消"
+    },
+    "submission": {
+      "title": "{0} - 提交记录",
+      "empty": "暂无提交数据",
+      "submitTime": "提交时间",
+      "submitData": "提交数据",
+      "total": "共 {0} 条"
+    },
+    "designer": {
+      "title": "表单设计器",
+      "save": "保存表单",
+      "saveSuccess": "表单保存成功",
+      "cancel": "取消",
+      "fieldName": "字段名",
+      "fieldLabel": "字段标题",
+      "component": "组件类型",
+      "required": "必填",
+      "addField": "添加字段",
+      "input": "单行输入",
+      "textarea": "多行输入",
+      "select": "下拉选择",
+      "radio": "单选",
+      "checkbox": "多选",
+      "date": "日期",
+      "number": "数字",
+      "switch": "开关",
+      "noField": "请先在左侧添加字段"
+    }
+  },
+  "codegen": {
+    "title": "代码生成",
+    "genRequired": "不能为空",
+    "name": "代码生成",
+    "fields": {
+      "tableName": "数据库表名",
+      "tableComment": "表备注",
+      "moduleName": "模块名",
+      "bizName": "业务名",
+      "genType": "生成类型",
+      "menuEnabled": "生成菜单",
+      "menuModule": "菜单所属模块",
+      "buttons": "生成按钮",
+      "status": "状态",
+      "createdAt": "创建时间",
+      "updatedAt": "更新时间",
+      "operation": "操作",
+      "columnName": "列名",
+      "columnComment": "列注释",
+      "dataType": "数据类型",
+      "isPrimaryKey": "主键",
+      "isNullable": "可空",
+      "autoIncrement": "自增"
+    },
+    "gen_types": {
+      "table": "整表生成",
+      "form": "表单生成"
+    },
+    "search_placeholder": {
+      "tableName": "请输入数据库表名",
+      "bizName": "请输入业务名"
+    },
+    "operation": {
+      "generate": "生成代码",
+      "copy": "复制",
+      "delete": "删除",
+      "deleteRecord": "删除记录",
+      "deleteModule": "删除模块",
+      "applyMenu": "一键生成菜单"
+    },
+    "selectTable": "选择数据表",
+    "selectTablePlaceholder": "请选择要生成代码的数据库表",
+    "noTable": "暂无可选数据表",
+    "start": {
+      "title": "开始",
+      "subtitle": "选择一种方式快速生成后台 CRUD",
+      "back": "返回开始",
+      "create": {
+        "title": "新建",
+        "desc": "从零新建后台 CRUD"
+      },
+      "table": {
+        "title": "选择数据表",
+        "desc": "从数据库中选择一个设计好的数据表",
+        "next": "下一步",
+        "search": "搜索",
+        "searchPlaceholder": "请输入表名关键字"
+      },
+      "records": {
+        "title": "CRUD 记录",
+        "desc": "从以往生成的 CRUD 代码开始"
+      },
+      "quick": {
+        "title": "快速体验",
+        "step1": "确保项目根目录下存在前端代码文件夹 frontend",
+        "step2": "在本页点击 新建 或 选择数据表，进入拖拽设计器",
+        "step3": "在左侧字段库点击或拖拽添加字段，字段列名首个不带后缀，重复时自动追加 _01、_02",
+        "step4": "可选展开 高级设置，配置模块名、生成类型、菜单与按钮",
+        "step5": "点击 生成代码 一键生成（保存配置并生成代码，开启生成菜单时自动落库菜单树），可在下方预览生成的文件",
+        "warning": "提示：从零新建时数据库表尚不存在，生成的代码需运行 Ent 迁移后才会创建真实表。"
+      }
+    },
+    "wizard": {
+      "title": "代码生成向导",
+      "step1": "基础配置",
+      "step2": "字段配置",
+      "step3": "生成代码",
+      "tableNamePlaceholder": "请输入数据库表名",
+      "createTableTip": "从零新建：表名可自由输入，数据库表不存在时将依据字段配置生成",
+      "requireBaseInfo": "请完善基础配置（表名、模块名、业务名必填）",
+      "requireField": "请至少配置一个字段，且字段列名不能为空",
+      "addField": "添加字段",
+      "generateTip": "生成结果如下，可预览代码或下载代码包",
+      "next": "下一步",
+      "prev": "上一步",
+      "saveAndGenerate": "保存并生成代码"
+    },
+    "confirm": {
+      "deleteTitle": "确认删除记录",
+      "deleteContent": "确定要删除选中的 {0} 条代码生成配置记录吗？已生成的代码文件不受影响。",
+      "deleteModuleTitle": "确认删除整个模块",
+      "deleteModuleContent": "确定要删除选中的 {0} 个模块吗？该操作将一并删除已生成的代码文件、真实数据表及已落库的菜单树，且不可恢复！"
+    },
+    "message": {
+      "deleteSuccess": "删除成功",
+      "deleteModuleSuccess": "模块删除成功",
+      "generateSuccess": "代码生成成功",
+      "generateEmpty": "未生成任何代码文件",
+      "saveFirst": "请先保存配置后再生成代码",
+      "saveSuccess": "配置保存成功",
+      "incomplete": "请先完善表名、模块名、业务名并添加至少一个字段",
+      "loadTableFail": "数据表列表加载失败",
+      "loadColumnFail": "表字段加载失败，请确认表名是否存在",
+      "noColumn": "该表没有可用的字段",
+      "selectTableFirst": "请先选择一个数据表",
+      "copySuccess": "复制成功，可继续调整字段配置",
+      "copyFail": "复制失败，请稍后重试",
+      "applyMenuConfirm": "确定要将配置【{0}】一键落库为菜单树吗？",
+      "menuApplyFail": "代码已生成，但菜单落库失败"
+    },
+    "field_config": {
+      "title": "字段配置",
+      "empty": "暂无字段，请先配置字段或选择数据库表",
+      "componentType": "组件类型",
+      "goType": "Go 类型",
+      "list": "列表",
+      "form": "表单",
+      "query": "查询",
+      "required": "必填",
+      "tip": "配置每个字段的展示与校验属性"
+    },
+    "designer": {
+      "save": "保存",
+      "cancel": "取消",
+      "title": "CRUD 代码生成",
+      "tableNamePlaceholder": "填写数据表名，如：sys_member，必填",
+      "tableCommentPlaceholder": "如：会员表（将生成会员管理）",
+      "bizNamePlaceholder": "业务名用于生成代码命名，如：member，必填",
+      "moduleNamePlaceholder": "模块名，如：system，必填",
+      "moduleNameDesc": "模块名 = 代码生成的目录/包名，决定 Go 与前端代码落在哪个文件夹",
+      "genTypePlaceholder": "请选择生成类型",
+      "buttonsPlaceholder": "请选择要生成的按钮功能",
+      "menuModulePlaceholder": "请选择上级菜单（目录）",
+      "menuModuleDesc": "菜单所属模块 = 生成的菜单挂载的上级目录 + 权限码前缀；留空则按模块名创建",
+      "generateCrud": "生成 CRUD 代码",
+      "giveUp": "放弃",
+      "advanced": "高级配置",
+      "advancedTip": "高级配置默认隐藏，包含：模块名、生成类型、菜单与按钮等选项，展开后可进行个性化设置。",
+      "expandAdvanced": "展开高级配置",
+      "dragHint": "拖拽字段至中间画布",
+      "canvasEmpty": "拖动左侧字段至此处以开始设计 CRUD",
+      "properties": "字段配置",
+      "columnNamePlaceholder": "如：member_name",
+      "columnCommentPlaceholder": "如：会员名称",
+      "fieldNamePlaceholder": "如：memberName",
+      "length": "长度",
+      "lengthPlaceholder": "0 表示不限制",
+      "flags": "属性",
+      "isPrimaryKey": "主键",
+      "noConfig": "请先从左侧选择一个字段",
+      "files": "个文件",
+      "generatedResult": "生成结果",
+      "backToStart": "返回开始页",
+      "menuTip": "生成代码后可将配置一键落库为菜单树（目录 -> 菜单 -> 按钮），未开启生成菜单时不可用。",
+      "fieldLib": {
+        "common": "常用字段",
+        "basic": "基础字段",
+        "advanced": "高级字段"
+      }
+    }
+  }
+}

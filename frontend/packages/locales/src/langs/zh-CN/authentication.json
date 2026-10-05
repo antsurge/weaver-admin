@@ -10,6 +10,8 @@
   "password": "密码",
   "usernameTip": "请输入用户名",
   "passwordTip": "请输入密码",
+  "tenantCode": "租户编码",
+  "tenantCodeTip": "请输入租户编码",
   "captchaTip": "请输入验证码",
   "verifyRequiredTip": "请先完成验证",
   "passwordErrorTip": "密码错误",

@@ -18,6 +18,8 @@ type DictType struct {
 	// ID of the ent.
 	// 字典ID
 	ID string `json:"id,omitempty"`
+	// 租户ID
+	TenantID string `json:"tenant_id,omitempty"`
 	// 字典名称
 	Name string `json:"name,omitempty"`
 	// 字典编码
@@ -40,7 +42,7 @@ func (*DictType) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case dicttype.FieldID, dicttype.FieldName, dicttype.FieldCode, dicttype.FieldStatus, dicttype.FieldRemark:
+		case dicttype.FieldID, dicttype.FieldTenantID, dicttype.FieldName, dicttype.FieldCode, dicttype.FieldStatus, dicttype.FieldRemark:
 			values[i] = new(sql.NullString)
 		case dicttype.FieldCreatedAt, dicttype.FieldUpdatedAt, dicttype.FieldDeletedAt:
 			values[i] = new(sql.NullTime)
@@ -64,6 +66,12 @@ func (_m *DictType) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value.Valid {
 				_m.ID = value.String
+			}
+		case dicttype.FieldTenantID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field tenant_id", values[i])
+			} else if value.Valid {
+				_m.TenantID = value.String
 			}
 		case dicttype.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -144,6 +152,9 @@ func (_m *DictType) String() string {
 	var builder strings.Builder
 	builder.WriteString("DictType(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
+	builder.WriteString("tenant_id=")
+	builder.WriteString(_m.TenantID)
+	builder.WriteString(", ")
 	builder.WriteString("name=")
 	builder.WriteString(_m.Name)
 	builder.WriteString(", ")

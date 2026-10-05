@@ -40,6 +40,7 @@ type ListDictTypeResponse struct {
 
 type DictTypeRepo interface {
 	ListDictType(context.Context, *ListDictTypeRequest, ...*ListDictTypeOption) (*ListDictTypeResponse, error)
+	GetDictTypeByCode(context.Context, string) (*DictType, error)
 	CreateDictType(context.Context, *DictType) error
 	UpdateDictType(context.Context, *DictType) error
 	DeleteDictType(context.Context, []string) error
@@ -90,6 +91,21 @@ func (uc *DictTypeUsecase) DeleteDictType(ctx context.Context, ids []string) err
 	return uc.repo.DeleteDictType(ctx, ids)
 }
 
+// 按编码查询字典类型（含字典数据，供业务页面消费）
+func (uc *DictTypeUsecase) GetDictTypeByCode(ctx context.Context, code string) (*DictType, error) {
+	dictType, err := uc.repo.GetDictTypeByCode(ctx, code)
+	if err != nil {
+		return nil, err
+	}
+	if dictType == nil {
+		return nil, nil
+	}
+	if err := uc.FillDictData(ctx, dictType); err != nil {
+		return nil, err
+	}
+	return dictType, nil
+}
+
 func (uc *DictTypeUsecase) UpdateDictTypeStatus(ctx context.Context, id, status string) error {
 	return uc.repo.UpdateDictTypeStatus(ctx, id, status)
 }
@@ -99,7 +115,7 @@ func (uc *DictTypeUsecase) FillDictData(ctx context.Context, items ...*DictType)
 	if len(items) == 0 {
 		return nil
 	}
-	ids := make([]string, len(items))
+	ids := make([]string, 0, len(items))
 	for _, item := range items {
 		ids = append(ids, item.ID)
 	}

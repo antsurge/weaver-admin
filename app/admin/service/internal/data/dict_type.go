@@ -79,6 +79,33 @@ func (r *dictTypeRepo) ListDictType(ctx context.Context, params *biz.ListDictTyp
 	}, nil
 }
 
+// 根据编码查询（未删除）
+func (r *dictTypeRepo) GetDictTypeByCode(ctx context.Context, code string) (*biz.DictType, error) {
+	v, err := r.data.db.DictType.Query().
+		Where(
+			dicttype.CodeEQ(code),
+			dicttype.DeletedAtIsNil(),
+		).
+		Only(ctx)
+	if err != nil {
+		if ent.IsNotFound(err) {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return &biz.DictType{
+		ID:        v.ID,
+		Name:      v.Name,
+		Code:      v.Code,
+		Status:    string(v.Status),
+		Remark:    v.Remark,
+		CreatedAt: v.CreatedAt,
+		UpdatedAt: v.UpdatedAt,
+		DeletedAt: v.DeletedAt,
+	}, nil
+}
+
 // 创建
 func (r *dictTypeRepo) CreateDictType(ctx context.Context, d *biz.DictType) error {
 	_, err := r.data.db.DictType.Create().

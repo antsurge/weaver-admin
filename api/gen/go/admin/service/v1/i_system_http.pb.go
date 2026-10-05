@@ -21,23 +21,87 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
+const OperationSystemCreateApiInterface = "/admin.service.v1.System/CreateApiInterface"
+const OperationSystemCreateConfig = "/admin.service.v1.System/CreateConfig"
+const OperationSystemCreateDictData = "/admin.service.v1.System/CreateDictData"
+const OperationSystemCreateDictType = "/admin.service.v1.System/CreateDictType"
 const OperationSystemDeleteApiInterface = "/admin.service.v1.System/DeleteApiInterface"
-const OperationSystemImportApiInterface = "/admin.service.v1.System/ImportApiInterface"
+const OperationSystemDeleteConfig = "/admin.service.v1.System/DeleteConfig"
+const OperationSystemDeleteDictData = "/admin.service.v1.System/DeleteDictData"
+const OperationSystemDeleteDictType = "/admin.service.v1.System/DeleteDictType"
+const OperationSystemGetConfigByKey = "/admin.service.v1.System/GetConfigByKey"
+const OperationSystemGetDictTypeByCode = "/admin.service.v1.System/GetDictTypeByCode"
 const OperationSystemListApiInterface = "/admin.service.v1.System/ListApiInterface"
+const OperationSystemListApiInterfaceOptions = "/admin.service.v1.System/ListApiInterfaceOptions"
+const OperationSystemListConfig = "/admin.service.v1.System/ListConfig"
+const OperationSystemListDictData = "/admin.service.v1.System/ListDictData"
+const OperationSystemListDictType = "/admin.service.v1.System/ListDictType"
+const OperationSystemUpdateApiInterface = "/admin.service.v1.System/UpdateApiInterface"
+const OperationSystemUpdateConfig = "/admin.service.v1.System/UpdateConfig"
+const OperationSystemUpdateConfigStatus = "/admin.service.v1.System/UpdateConfigStatus"
+const OperationSystemUpdateDictData = "/admin.service.v1.System/UpdateDictData"
+const OperationSystemUpdateDictDataStatus = "/admin.service.v1.System/UpdateDictDataStatus"
+const OperationSystemUpdateDictType = "/admin.service.v1.System/UpdateDictType"
+const OperationSystemUpdateDictTypeStatus = "/admin.service.v1.System/UpdateDictTypeStatus"
 
 type SystemHTTPServer interface {
+	// CreateApiInterface 创建接口（手动新增）
+	CreateApiInterface(context.Context, *v1.CreateApiInterfaceRequest) (*v1.ApiInterface, error)
+	CreateConfig(context.Context, *v1.CreateConfigRequest) (*v1.Config, error)
+	CreateDictData(context.Context, *v1.CreateDictDataRequest) (*v1.DictData, error)
+	CreateDictType(context.Context, *v1.CreateDictTypeRequest) (*v1.DictType, error)
 	// DeleteApiInterface 批量删除接口
 	DeleteApiInterface(context.Context, *v1.DeleteApiInterfaceRequest) (*emptypb.Empty, error)
-	// ImportApiInterface 导入 openapi.yaml 文件
-	ImportApiInterface(context.Context, *v1.ImportApiInterfaceRequest) (*v1.ImportApiInterfaceResponse, error)
+	DeleteConfig(context.Context, *v1.DeleteConfigRequest) (*emptypb.Empty, error)
+	DeleteDictData(context.Context, *v1.DeleteDictDataRequset) (*emptypb.Empty, error)
+	DeleteDictType(context.Context, *v1.DeleteDictTypeRequset) (*emptypb.Empty, error)
+	// GetConfigByKey 按键名查询参数值（供业务页面消费）
+	GetConfigByKey(context.Context, *v1.GetConfigByKeyRequest) (*v1.Config, error)
+	GetDictTypeByCode(context.Context, *v1.GetDictTypeByCodeRequest) (*v1.DictType, error)
 	// ListApiInterface 分页查询接口列表
 	ListApiInterface(context.Context, *v1.ListApiInterfaceRequest) (*v1.ListApiInterfaceResponse, error)
+	// ListApiInterfaceOptions 接口列表筛选选项（服务名/标签）
+	ListApiInterfaceOptions(context.Context, *v1.ListApiInterfaceOptionsRequest) (*v1.ListApiInterfaceOptionsResponse, error)
+	// ListConfig 参数列表（分页）
+	ListConfig(context.Context, *v1.ListConfigRequest) (*v1.ListConfigResponse, error)
+	// ListDictData 字典数据模块
+	ListDictData(context.Context, *v1.ListDictDataRequest) (*v1.ListDictDataResponse, error)
+	// ListDictType 字典类型模块
+	ListDictType(context.Context, *v1.ListDictTypeRequest) (*v1.ListDictTypeResponse, error)
+	// UpdateApiInterface 更新接口（手动编辑）
+	UpdateApiInterface(context.Context, *v1.UpdateApiInterfaceRequest) (*v1.ApiInterface, error)
+	UpdateConfig(context.Context, *v1.UpdateConfigRequest) (*v1.Config, error)
+	UpdateConfigStatus(context.Context, *v1.UpdateConfigStatusRequest) (*emptypb.Empty, error)
+	UpdateDictData(context.Context, *v1.UpdateDictDataRequest) (*v1.DictData, error)
+	UpdateDictDataStatus(context.Context, *v1.UpdateDictDataStatusRequest) (*v1.DictData, error)
+	UpdateDictType(context.Context, *v1.UpdateDictTypeRequest) (*v1.DictType, error)
+	UpdateDictTypeStatus(context.Context, *v1.UpdateDictTypeStatusRequest) (*v1.DictType, error)
 }
 
 func RegisterSystemHTTPServer(s *http.Server, srv SystemHTTPServer) {
 	r := s.Route("/")
 	r.GET("/admin/v1/api-interface", _System_ListApiInterface0_HTTP_Handler(srv))
+	r.GET("/admin/v1/api-interface/options", _System_ListApiInterfaceOptions0_HTTP_Handler(srv))
+	r.POST("/admin/v1/api-interface", _System_CreateApiInterface0_HTTP_Handler(srv))
+	r.PUT("/admin/v1/api-interface/{id}", _System_UpdateApiInterface0_HTTP_Handler(srv))
 	r.DELETE("/admin/v1/api-interface", _System_DeleteApiInterface0_HTTP_Handler(srv))
+	r.GET("/admin/v1/dict-type", _System_ListDictType0_HTTP_Handler(srv))
+	r.POST("/admin/v1/dict-type", _System_CreateDictType0_HTTP_Handler(srv))
+	r.PUT("/admin/v1/dict-type/{id}", _System_UpdateDictType0_HTTP_Handler(srv))
+	r.PUT("/admin/v1/dict-type/{id}/status", _System_UpdateDictTypeStatus0_HTTP_Handler(srv))
+	r.DELETE("/admin/v1/dict-type", _System_DeleteDictType0_HTTP_Handler(srv))
+	r.GET("/admin/v1/dict-type/{code}/data", _System_GetDictTypeByCode0_HTTP_Handler(srv))
+	r.GET("/admin/v1/dict-data", _System_ListDictData0_HTTP_Handler(srv))
+	r.POST("/admin/v1/dict-data", _System_CreateDictData0_HTTP_Handler(srv))
+	r.PUT("/admin/v1/dict-data/{id}", _System_UpdateDictData0_HTTP_Handler(srv))
+	r.PUT("/admin/v1/dict-data/{id}/status", _System_UpdateDictDataStatus0_HTTP_Handler(srv))
+	r.DELETE("/admin/v1/dict-data", _System_DeleteDictData0_HTTP_Handler(srv))
+	r.GET("/admin/v1/config", _System_ListConfig0_HTTP_Handler(srv))
+	r.GET("/admin/v1/config/{key}/value", _System_GetConfigByKey0_HTTP_Handler(srv))
+	r.POST("/admin/v1/config", _System_CreateConfig0_HTTP_Handler(srv))
+	r.PUT("/admin/v1/config/{id}", _System_UpdateConfig0_HTTP_Handler(srv))
+	r.PUT("/admin/v1/config/{id}/status", _System_UpdateConfigStatus0_HTTP_Handler(srv))
+	r.DELETE("/admin/v1/config", _System_DeleteConfig0_HTTP_Handler(srv))
 }
 
 func _System_ListApiInterface0_HTTP_Handler(srv SystemHTTPServer) func(ctx http.Context) error {
@@ -55,6 +119,72 @@ func _System_ListApiInterface0_HTTP_Handler(srv SystemHTTPServer) func(ctx http.
 			return err
 		}
 		reply := out.(*v1.ListApiInterfaceResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _System_ListApiInterfaceOptions0_HTTP_Handler(srv SystemHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.ListApiInterfaceOptionsRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSystemListApiInterfaceOptions)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListApiInterfaceOptions(ctx, req.(*v1.ListApiInterfaceOptionsRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.ListApiInterfaceOptionsResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _System_CreateApiInterface0_HTTP_Handler(srv SystemHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.CreateApiInterfaceRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSystemCreateApiInterface)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CreateApiInterface(ctx, req.(*v1.CreateApiInterfaceRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.ApiInterface)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _System_UpdateApiInterface0_HTTP_Handler(srv SystemHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.UpdateApiInterfaceRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSystemUpdateApiInterface)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateApiInterface(ctx, req.(*v1.UpdateApiInterfaceRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.ApiInterface)
 		return ctx.Result(200, reply)
 	}
 }
@@ -78,13 +208,412 @@ func _System_DeleteApiInterface0_HTTP_Handler(srv SystemHTTPServer) func(ctx htt
 	}
 }
 
+func _System_ListDictType0_HTTP_Handler(srv SystemHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.ListDictTypeRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSystemListDictType)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListDictType(ctx, req.(*v1.ListDictTypeRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.ListDictTypeResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _System_CreateDictType0_HTTP_Handler(srv SystemHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.CreateDictTypeRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSystemCreateDictType)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CreateDictType(ctx, req.(*v1.CreateDictTypeRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.DictType)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _System_UpdateDictType0_HTTP_Handler(srv SystemHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.UpdateDictTypeRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSystemUpdateDictType)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateDictType(ctx, req.(*v1.UpdateDictTypeRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.DictType)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _System_UpdateDictTypeStatus0_HTTP_Handler(srv SystemHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.UpdateDictTypeStatusRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSystemUpdateDictTypeStatus)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateDictTypeStatus(ctx, req.(*v1.UpdateDictTypeStatusRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.DictType)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _System_DeleteDictType0_HTTP_Handler(srv SystemHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.DeleteDictTypeRequset
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSystemDeleteDictType)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeleteDictType(ctx, req.(*v1.DeleteDictTypeRequset))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _System_GetDictTypeByCode0_HTTP_Handler(srv SystemHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.GetDictTypeByCodeRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSystemGetDictTypeByCode)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetDictTypeByCode(ctx, req.(*v1.GetDictTypeByCodeRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.DictType)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _System_ListDictData0_HTTP_Handler(srv SystemHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.ListDictDataRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSystemListDictData)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListDictData(ctx, req.(*v1.ListDictDataRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.ListDictDataResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _System_CreateDictData0_HTTP_Handler(srv SystemHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.CreateDictDataRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSystemCreateDictData)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CreateDictData(ctx, req.(*v1.CreateDictDataRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.DictData)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _System_UpdateDictData0_HTTP_Handler(srv SystemHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.UpdateDictDataRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSystemUpdateDictData)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateDictData(ctx, req.(*v1.UpdateDictDataRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.DictData)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _System_UpdateDictDataStatus0_HTTP_Handler(srv SystemHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.UpdateDictDataStatusRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSystemUpdateDictDataStatus)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateDictDataStatus(ctx, req.(*v1.UpdateDictDataStatusRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.DictData)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _System_DeleteDictData0_HTTP_Handler(srv SystemHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.DeleteDictDataRequset
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSystemDeleteDictData)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeleteDictData(ctx, req.(*v1.DeleteDictDataRequset))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _System_ListConfig0_HTTP_Handler(srv SystemHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.ListConfigRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSystemListConfig)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListConfig(ctx, req.(*v1.ListConfigRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.ListConfigResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _System_GetConfigByKey0_HTTP_Handler(srv SystemHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.GetConfigByKeyRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSystemGetConfigByKey)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetConfigByKey(ctx, req.(*v1.GetConfigByKeyRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.Config)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _System_CreateConfig0_HTTP_Handler(srv SystemHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.CreateConfigRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSystemCreateConfig)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CreateConfig(ctx, req.(*v1.CreateConfigRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.Config)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _System_UpdateConfig0_HTTP_Handler(srv SystemHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.UpdateConfigRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSystemUpdateConfig)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateConfig(ctx, req.(*v1.UpdateConfigRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.Config)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _System_UpdateConfigStatus0_HTTP_Handler(srv SystemHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.UpdateConfigStatusRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSystemUpdateConfigStatus)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateConfigStatus(ctx, req.(*v1.UpdateConfigStatusRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _System_DeleteConfig0_HTTP_Handler(srv SystemHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.DeleteConfigRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSystemDeleteConfig)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeleteConfig(ctx, req.(*v1.DeleteConfigRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
 type SystemHTTPClient interface {
+	// CreateApiInterface 创建接口（手动新增）
+	CreateApiInterface(ctx context.Context, req *v1.CreateApiInterfaceRequest, opts ...http.CallOption) (rsp *v1.ApiInterface, err error)
+	CreateConfig(ctx context.Context, req *v1.CreateConfigRequest, opts ...http.CallOption) (rsp *v1.Config, err error)
+	CreateDictData(ctx context.Context, req *v1.CreateDictDataRequest, opts ...http.CallOption) (rsp *v1.DictData, err error)
+	CreateDictType(ctx context.Context, req *v1.CreateDictTypeRequest, opts ...http.CallOption) (rsp *v1.DictType, err error)
 	// DeleteApiInterface 批量删除接口
 	DeleteApiInterface(ctx context.Context, req *v1.DeleteApiInterfaceRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
-	// ImportApiInterface 导入 openapi.yaml 文件
-	ImportApiInterface(ctx context.Context, req *v1.ImportApiInterfaceRequest, opts ...http.CallOption) (rsp *v1.ImportApiInterfaceResponse, err error)
+	DeleteConfig(ctx context.Context, req *v1.DeleteConfigRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	DeleteDictData(ctx context.Context, req *v1.DeleteDictDataRequset, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	DeleteDictType(ctx context.Context, req *v1.DeleteDictTypeRequset, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	// GetConfigByKey 按键名查询参数值（供业务页面消费）
+	GetConfigByKey(ctx context.Context, req *v1.GetConfigByKeyRequest, opts ...http.CallOption) (rsp *v1.Config, err error)
+	GetDictTypeByCode(ctx context.Context, req *v1.GetDictTypeByCodeRequest, opts ...http.CallOption) (rsp *v1.DictType, err error)
 	// ListApiInterface 分页查询接口列表
 	ListApiInterface(ctx context.Context, req *v1.ListApiInterfaceRequest, opts ...http.CallOption) (rsp *v1.ListApiInterfaceResponse, err error)
+	// ListApiInterfaceOptions 接口列表筛选选项（服务名/标签）
+	ListApiInterfaceOptions(ctx context.Context, req *v1.ListApiInterfaceOptionsRequest, opts ...http.CallOption) (rsp *v1.ListApiInterfaceOptionsResponse, err error)
+	// ListConfig 参数列表（分页）
+	ListConfig(ctx context.Context, req *v1.ListConfigRequest, opts ...http.CallOption) (rsp *v1.ListConfigResponse, err error)
+	// ListDictData 字典数据模块
+	ListDictData(ctx context.Context, req *v1.ListDictDataRequest, opts ...http.CallOption) (rsp *v1.ListDictDataResponse, err error)
+	// ListDictType 字典类型模块
+	ListDictType(ctx context.Context, req *v1.ListDictTypeRequest, opts ...http.CallOption) (rsp *v1.ListDictTypeResponse, err error)
+	// UpdateApiInterface 更新接口（手动编辑）
+	UpdateApiInterface(ctx context.Context, req *v1.UpdateApiInterfaceRequest, opts ...http.CallOption) (rsp *v1.ApiInterface, err error)
+	UpdateConfig(ctx context.Context, req *v1.UpdateConfigRequest, opts ...http.CallOption) (rsp *v1.Config, err error)
+	UpdateConfigStatus(ctx context.Context, req *v1.UpdateConfigStatusRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	UpdateDictData(ctx context.Context, req *v1.UpdateDictDataRequest, opts ...http.CallOption) (rsp *v1.DictData, err error)
+	UpdateDictDataStatus(ctx context.Context, req *v1.UpdateDictDataStatusRequest, opts ...http.CallOption) (rsp *v1.DictData, err error)
+	UpdateDictType(ctx context.Context, req *v1.UpdateDictTypeRequest, opts ...http.CallOption) (rsp *v1.DictType, err error)
+	UpdateDictTypeStatus(ctx context.Context, req *v1.UpdateDictTypeStatusRequest, opts ...http.CallOption) (rsp *v1.DictType, err error)
 }
 
 type SystemHTTPClientImpl struct {
@@ -93,6 +622,59 @@ type SystemHTTPClientImpl struct {
 
 func NewSystemHTTPClient(client *http.Client) SystemHTTPClient {
 	return &SystemHTTPClientImpl{client}
+}
+
+// CreateApiInterface 创建接口（手动新增）
+func (c *SystemHTTPClientImpl) CreateApiInterface(ctx context.Context, in *v1.CreateApiInterfaceRequest, opts ...http.CallOption) (*v1.ApiInterface, error) {
+	var out v1.ApiInterface
+	pattern := "/admin/v1/api-interface"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSystemCreateApiInterface))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *SystemHTTPClientImpl) CreateConfig(ctx context.Context, in *v1.CreateConfigRequest, opts ...http.CallOption) (*v1.Config, error) {
+	var out v1.Config
+	pattern := "/admin/v1/config"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSystemCreateConfig))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *SystemHTTPClientImpl) CreateDictData(ctx context.Context, in *v1.CreateDictDataRequest, opts ...http.CallOption) (*v1.DictData, error) {
+	var out v1.DictData
+	pattern := "/admin/v1/dict-data"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSystemCreateDictData))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *SystemHTTPClientImpl) CreateDictType(ctx context.Context, in *v1.CreateDictTypeRequest, opts ...http.CallOption) (*v1.DictType, error) {
+	var out v1.DictType
+	pattern := "/admin/v1/dict-type"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSystemCreateDictType))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
 }
 
 // DeleteApiInterface 批量删除接口
@@ -109,14 +691,66 @@ func (c *SystemHTTPClientImpl) DeleteApiInterface(ctx context.Context, in *v1.De
 	return &out, nil
 }
 
-// ImportApiInterface 导入 openapi.yaml 文件
-func (c *SystemHTTPClientImpl) ImportApiInterface(ctx context.Context, in *v1.ImportApiInterfaceRequest, opts ...http.CallOption) (*v1.ImportApiInterfaceResponse, error) {
-	var out v1.ImportApiInterfaceResponse
-	pattern := "/admin/v1/api-interface/import"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationSystemImportApiInterface))
+func (c *SystemHTTPClientImpl) DeleteConfig(ctx context.Context, in *v1.DeleteConfigRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/admin/v1/config"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationSystemDeleteConfig))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *SystemHTTPClientImpl) DeleteDictData(ctx context.Context, in *v1.DeleteDictDataRequset, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/admin/v1/dict-data"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationSystemDeleteDictData))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *SystemHTTPClientImpl) DeleteDictType(ctx context.Context, in *v1.DeleteDictTypeRequset, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/admin/v1/dict-type"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationSystemDeleteDictType))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// GetConfigByKey 按键名查询参数值（供业务页面消费）
+func (c *SystemHTTPClientImpl) GetConfigByKey(ctx context.Context, in *v1.GetConfigByKeyRequest, opts ...http.CallOption) (*v1.Config, error) {
+	var out v1.Config
+	pattern := "/admin/v1/config/{key}/value"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationSystemGetConfigByKey))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *SystemHTTPClientImpl) GetDictTypeByCode(ctx context.Context, in *v1.GetDictTypeByCodeRequest, opts ...http.CallOption) (*v1.DictType, error) {
+	var out v1.DictType
+	pattern := "/admin/v1/dict-type/{code}/data"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationSystemGetDictTypeByCode))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -131,6 +765,154 @@ func (c *SystemHTTPClientImpl) ListApiInterface(ctx context.Context, in *v1.List
 	opts = append(opts, http.Operation(OperationSystemListApiInterface))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// ListApiInterfaceOptions 接口列表筛选选项（服务名/标签）
+func (c *SystemHTTPClientImpl) ListApiInterfaceOptions(ctx context.Context, in *v1.ListApiInterfaceOptionsRequest, opts ...http.CallOption) (*v1.ListApiInterfaceOptionsResponse, error) {
+	var out v1.ListApiInterfaceOptionsResponse
+	pattern := "/admin/v1/api-interface/options"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationSystemListApiInterfaceOptions))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// ListConfig 参数列表（分页）
+func (c *SystemHTTPClientImpl) ListConfig(ctx context.Context, in *v1.ListConfigRequest, opts ...http.CallOption) (*v1.ListConfigResponse, error) {
+	var out v1.ListConfigResponse
+	pattern := "/admin/v1/config"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationSystemListConfig))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// ListDictData 字典数据模块
+func (c *SystemHTTPClientImpl) ListDictData(ctx context.Context, in *v1.ListDictDataRequest, opts ...http.CallOption) (*v1.ListDictDataResponse, error) {
+	var out v1.ListDictDataResponse
+	pattern := "/admin/v1/dict-data"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationSystemListDictData))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// ListDictType 字典类型模块
+func (c *SystemHTTPClientImpl) ListDictType(ctx context.Context, in *v1.ListDictTypeRequest, opts ...http.CallOption) (*v1.ListDictTypeResponse, error) {
+	var out v1.ListDictTypeResponse
+	pattern := "/admin/v1/dict-type"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationSystemListDictType))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// UpdateApiInterface 更新接口（手动编辑）
+func (c *SystemHTTPClientImpl) UpdateApiInterface(ctx context.Context, in *v1.UpdateApiInterfaceRequest, opts ...http.CallOption) (*v1.ApiInterface, error) {
+	var out v1.ApiInterface
+	pattern := "/admin/v1/api-interface/{id}"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSystemUpdateApiInterface))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *SystemHTTPClientImpl) UpdateConfig(ctx context.Context, in *v1.UpdateConfigRequest, opts ...http.CallOption) (*v1.Config, error) {
+	var out v1.Config
+	pattern := "/admin/v1/config/{id}"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSystemUpdateConfig))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *SystemHTTPClientImpl) UpdateConfigStatus(ctx context.Context, in *v1.UpdateConfigStatusRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/admin/v1/config/{id}/status"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSystemUpdateConfigStatus))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *SystemHTTPClientImpl) UpdateDictData(ctx context.Context, in *v1.UpdateDictDataRequest, opts ...http.CallOption) (*v1.DictData, error) {
+	var out v1.DictData
+	pattern := "/admin/v1/dict-data/{id}"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSystemUpdateDictData))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *SystemHTTPClientImpl) UpdateDictDataStatus(ctx context.Context, in *v1.UpdateDictDataStatusRequest, opts ...http.CallOption) (*v1.DictData, error) {
+	var out v1.DictData
+	pattern := "/admin/v1/dict-data/{id}/status"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSystemUpdateDictDataStatus))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *SystemHTTPClientImpl) UpdateDictType(ctx context.Context, in *v1.UpdateDictTypeRequest, opts ...http.CallOption) (*v1.DictType, error) {
+	var out v1.DictType
+	pattern := "/admin/v1/dict-type/{id}"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSystemUpdateDictType))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *SystemHTTPClientImpl) UpdateDictTypeStatus(ctx context.Context, in *v1.UpdateDictTypeStatusRequest, opts ...http.CallOption) (*v1.DictType, error) {
+	var out v1.DictType
+	pattern := "/admin/v1/dict-type/{id}/status"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSystemUpdateDictTypeStatus))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

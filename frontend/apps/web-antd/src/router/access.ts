@@ -1,87 +1,26 @@
 import type {
-    ComponentRecordType,
-    GenerateMenuAndRoutesOptions,
+  ComponentRecordType,
+  GenerateMenuAndRoutesOptions,
 } from '@vben/types';
 
 import { generateAccessible } from '@vben/access';
 import { preferences } from '@vben/preferences';
-import { PermissionMenuApi } from "#/api/permission/menu"
+import { convertRoutes, normalizeViewPath } from '@vben/utils';
 
 import { message } from 'ant-design-vue';
 
-import { getAllMenusApi } from '#/api';
+import { PermissionMenuApi } from '#/api/permission/menu';
 import { BasicLayout, IFrameView } from '#/layouts';
 import { $t } from '#/locales';
-
 import {
-    PermissionTypeOptionsValueIframe,
-    PermissionTypeOptionsValueLink,
-    PermissionTypeOptionsValueCatalog,
-    PermissionTypeOptionsValueAction,
-    PermissionTypeOptionsValueMenu
+  PermissionTypeOptionsValueAction,
+  PermissionTypeOptionsValueCatalog,
+  PermissionTypeOptionsValueIframe,
+  PermissionTypeOptionsValueLink,
+  PermissionTypeOptionsValueMenu,
 } from '#/views/permission/menu/data';
 
 const forbiddenComponent = () => import('#/views/_core/fallback/forbidden.vue');
-
-/**
- * 页面组件映射
- *
- * key:
- * /src/views/system/user/index.vue
- *
- * value:
- * () => Promise<Component>
- */
-const views = import.meta.glob(
-    '/src/views/**/*.vue',
-)
-
-/**
- * 获取视图组件 - 支持多种路径格式
- *
- * 支持的格式：
- * - "permission/menu/index" → /src/views/permission/menu/index.vue
- * - "/permission/menu" → /src/views/permission/menu.vue (或 index.vue)
- * - "/menu" → /src/views/menu.vue (或 index.vue)
- */
-function getViewComponent(component?: string) {
-    if (!component) {
-        console.warn('[Access] component 为空')
-        return undefined
-    }
-
-    // 规范化路径：去掉前导斜杠和尾部斜杠
-    let normalizedPath = component.replace(/^\/+|\/+$/g, '')
-
-    if (!normalizedPath) {
-        console.warn('[Access] component 路径为空:', component)
-        return undefined
-    }
-
-    // 尝试多种路径组合
-    const candidates = [
-        `/src/views/${normalizedPath}.vue`,           // permission/menu/index.vue
-        `/src/views/${normalizedPath}/index.vue`,     // permission/menu/index/
-        `/src/views/${normalizedPath}.vue`,           // 如果原来没有 .vue 后缀
-    ]
-
-    for (const path of candidates) {
-        const loader = views[path]
-        if (loader) {
-            console.log('[Access] ✅ 组件匹配成功:', path)
-            return loader
-        }
-    }
-
-    // 所有路径都未匹配
-    console.error('[Access] ❌ 组件不存在, 尝试过的路径:', {
-        original: component,
-        normalized: normalizedPath,
-        candidates,
-        availablePaths: Object.keys(views).filter(p => p.includes(normalizedPath.split('/')[0])).slice(0, 5),
-    })
-    return undefined
-}
 
 /**
  * 为特殊类型菜单（外链 / 内嵌）构造占位路由
@@ -96,47 +35,81 @@ function getViewComponent(component?: string) {
  * @param type 特殊类型：'link' | 'iframe'
  * @returns 占位路由配置；非特殊类型或缺 linkUrl 时返回 null
  */
-type SpecialMenuType = 'link' | 'iframe'
+type SpecialMenuType = 'iframe' | 'link';
 
 interface SpecialRouteOverride {
-    name: string
-    path: string
-    meta: Record<string, unknown>
-    component: any
+  name: string;
+  path: string;
+  meta: Record<string, unknown>;
+  component: any;
 }
 
 function buildSpecialRoute(
-    menu: PermissionMenuApi.PermissionMenu,
-    type: SpecialMenuType,
-): SpecialRouteOverride | null {
-    const linkUrl = menu.linkUrl
-    if (!linkUrl) {
-        return null
-    }
+  menu: PermissionMenuApi.PermissionMenu,
+  type: SpecialMenuType,
+): null | SpecialRouteOverride {
+  const linkUrl = menu.linkUrl;
+  if (!linkUrl) {
+    return null;
+  }
 
-    const code = menu.code || menu.name || String(menu.id ?? '')
+  const code = menu.code || menu.name || String(menu.id ?? '');
 
-    if (type === PermissionTypeOptionsValueLink) {
-        return {
-            name: `Link_${code}`,
-            path: `/link/${code}`,
-            meta: {
-                link: linkUrl,
-                openInNewWindow: true,
-            },
-            component: undefined,
-        }
-    }
-
-    // iframe
+  if (type === PermissionTypeOptionsValueLink) {
     return {
-        name: `Iframe_${code}`,
-        path: `/iframe/${code}`,
-        meta: {
-            iframeSrc: linkUrl,
-        },
-        component: IFrameView,
+      name: `Link_${code}`,
+      path: `/link/${code}`,
+      meta: {
+        link: linkUrl,
+        openInNewWindow: true,
+      },
+      component: undefined,
+    };
+  }
+
+  // iframe（组件用字符串标识，由 layoutMap 解析）
+  return {
+    name: `Iframe_${code}`,
+    path: `/iframe/${code}`,
+    meta: {
+      iframeSrc: linkUrl,
+    },
+    component: 'IFrameView',
+  };
+}
+
+/**
+ * 找到 menuTree 中第一个可访问的 type=menu 页面路径
+ *
+ * 收集规则与 transformAccessRoutes 中的 accessMenuPaths 保持一致：
+ * - 仅 type === 'menu'（或未声明 type）且有 path 的节点算一个可访问页面
+ * - 目录（catalog）/ 按钮（action）/ 外链（link）/ 内嵌（iframe）不计入
+ * - 先序遍历：父级 menu 优先于其子级
+ *
+ * @returns 第一个可访问菜单路径；不存在则返回空串
+ */
+function findFirstMenuPath(menus: PermissionMenuApi.PermissionMenu[]): string {
+  if (!Array.isArray(menus)) {
+    return '';
+  }
+
+  for (const menu of menus) {
+    if (
+      (menu.type === PermissionTypeOptionsValueMenu || !menu.type) &&
+      menu.path
+    ) {
+      return menu.path;
     }
+
+    if (menu.children?.length) {
+      const childPath = findFirstMenuPath(menu.children);
+      if (childPath) {
+        return childPath;
+      }
+    }
+  }
+
+  return '';
 }
 
 function transformAccessRoutes(
@@ -145,51 +118,42 @@ function transformAccessRoutes(
   accessCodes: string[] = [],
 ): any[] {
   if (!Array.isArray(menus)) {
-    console.error('菜单数据格式错误:', menus)
-    return []
+    console.error('菜单数据格式错误:', menus);
+    return [];
   }
 
-  const routes: any[] = []
+  const routes: any[] = [];
 
-  menus.forEach(menu => {
-
+  menus.forEach((menu) => {
     // 所有类型，只要存在 authCode 都收集
-    if (menu.authCode) {
-      if (!accessCodes.includes(menu.authCode)) {
-        accessCodes.push(menu.authCode)
-      }
+    if (menu.authCode && !accessCodes.includes(menu.authCode)) {
+      accessCodes.push(menu.authCode);
     }
 
     // 按钮类型不生成路由
     if (menu.type === PermissionTypeOptionsValueAction) {
-      return
+      return;
     }
-
 
     // 收集菜单页面路径
     if (
-      (menu.type === PermissionTypeOptionsValueMenu || !menu.type)
-      && menu.path
+      (menu.type === PermissionTypeOptionsValueMenu || !menu.type) &&
+      menu.path
     ) {
-      menuPaths.push(menu.path)
+      menuPaths.push(menu.path);
     }
 
+    const isDirectory = menu.type === PermissionTypeOptionsValueCatalog;
 
-    const isDirectory =
-      menu.type === PermissionTypeOptionsValueCatalog
+    const isLink = menu.type === PermissionTypeOptionsValueLink;
 
-    const isLink =
-      menu.type === PermissionTypeOptionsValueLink
-
-    const isIframe =
-      menu.type === PermissionTypeOptionsValueIframe
-
+    const isIframe = menu.type === PermissionTypeOptionsValueIframe;
 
     const route: any = {
       name: menu.code || menu.name,
       path: menu.path,
       meta: {
-        title: $t(menu.title),
+        title: $t(menu.title ?? ''),
         icon: menu.icon,
         order: menu.weight ?? 0,
         badgeType: menu.badgeType ?? '',
@@ -197,66 +161,79 @@ function transformAccessRoutes(
         badgeVariants: menu.badgeVariants ?? '',
       },
 
-      component: isDirectory
-        ? BasicLayout
-        : getViewComponent(menu.component),
-    }
-
+      // 组件使用字符串标识，由 generateRoutesByBackend 通过 layoutMap/pageMap 解析
+      // catalog → BasicLayout；menu 类型 → 后端存储的组件路径
+      component: isDirectory ? 'BasicLayout' : menu.component,
+    };
 
     if (isLink || isIframe) {
-      const override = buildSpecialRoute(
-        menu,
-        isLink ? 'link' : 'iframe',
-      )
+      const override = buildSpecialRoute(menu, isLink ? 'link' : 'iframe');
 
       if (override) {
-        route.name = override.name
-        route.path = override.path
-        route.component = override.component
-        Object.assign(route.meta, override.meta)
+        route.name = override.name;
+        route.path = override.path;
+        route.component = override.component;
+        Object.assign(route.meta, override.meta);
       }
     }
-
 
     if (menu.children?.length) {
       route.children = transformAccessRoutes(
         menu.children,
         menuPaths,
         accessCodes,
-      )
+      );
     }
 
+    routes.push(route);
+  });
 
-    routes.push(route)
-  })
-
-
-  return routes
+  return routes;
 }
 
 async function generateAccess(options: GenerateMenuAndRoutesOptions) {
-    const pageMap: ComponentRecordType = import.meta.glob('../views/**/*.vue');
+  const pageMap: ComponentRecordType = import.meta.glob('../views/**/*.vue');
 
-    const layoutMap: ComponentRecordType = {
-        BasicLayout,
-        IFrameView,
-    };
+  const layoutMap: ComponentRecordType = {
+    BasicLayout,
+    IFrameView,
+  };
 
-    return await generateAccessible(preferences.app.accessMode, {
-        ...options,
-        fetchMenuListAsync: async () => {
-            message.loading({
-                content: `${$t('common.loadingMenu')}...`,
-                duration: 1.5,
-            });
-            return await getAllMenusApi();
-        },
-        // 可以指定没有权限跳转403页面
-        forbiddenComponent,
-        // 如果 route.meta.menuVisibleWithForbidden = true
-        layoutMap,
-        pageMap,
-    });
+  const normalizePageMap: ComponentRecordType = {};
+  for (const [key, value] of Object.entries(pageMap)) {
+    normalizePageMap[normalizeViewPath(key)] = value;
+  }
+
+  // transformAccessRoutes 产出的组件是后端字符串（catalog → 'BasicLayout'，
+  // menu → 'admin/user/index'），只有 backend 模式的 generateRoutesByBackend
+  // 会将其解析为真实组件。若 preferences.accessMode 被 localStorage 缓存覆盖为
+  // frontend/mixed，字符串组件会原样进入路由表，导航时触发 vue-router 的
+  // "Invalid route component"(R0027)。因此在这里统一提前解析，与 accessMode 解耦。
+  const resolvedRoutes = convertRoutes(
+    (options.routes ?? []) as any,
+    layoutMap,
+    normalizePageMap,
+  );
+
+  return await generateAccessible(preferences.app.accessMode, {
+    ...options,
+    // 传入已解析的路由，保证任何模式下路由表里都不存在字符串组件
+    routes: resolvedRoutes as any,
+    // 路由已在 guard 中根据 current-user 的 menuTree 构建完成（transformAccessRoutes），
+    // 直接复用，不再请求后端不存在的 /menu/all
+    fetchMenuListAsync: async () => {
+      message.loading({
+        content: `${$t('common.loadingMenu')}...`,
+        duration: 1.5,
+      });
+      return resolvedRoutes as any;
+    },
+    // 可以指定没有权限跳转403页面
+    forbiddenComponent,
+    // 如果 route.meta.menuVisibleWithForbidden = true
+    layoutMap,
+    pageMap,
+  });
 }
 
-export { transformAccessRoutes, generateAccess };
+export { findFirstMenuPath, generateAccess, transformAccessRoutes };

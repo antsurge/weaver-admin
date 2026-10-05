@@ -12,7 +12,9 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/admin"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/admindatapermission"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/adminrole"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/datapermission"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/predicate"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/role"
 )
@@ -118,6 +120,26 @@ func (_u *AdminUpdate) ClearAvatar() *AdminUpdate {
 	return _u
 }
 
+// SetDepartmentID sets the "department_id" field.
+func (_u *AdminUpdate) SetDepartmentID(v string) *AdminUpdate {
+	_u.mutation.SetDepartmentID(v)
+	return _u
+}
+
+// SetNillableDepartmentID sets the "department_id" field if the given value is not nil.
+func (_u *AdminUpdate) SetNillableDepartmentID(v *string) *AdminUpdate {
+	if v != nil {
+		_u.SetDepartmentID(*v)
+	}
+	return _u
+}
+
+// ClearDepartmentID clears the value of the "department_id" field.
+func (_u *AdminUpdate) ClearDepartmentID() *AdminUpdate {
+	_u.mutation.ClearDepartmentID()
+	return _u
+}
+
 // SetPassword sets the "password" field.
 func (_u *AdminUpdate) SetPassword(v string) *AdminUpdate {
 	_u.mutation.SetPassword(v)
@@ -128,6 +150,20 @@ func (_u *AdminUpdate) SetPassword(v string) *AdminUpdate {
 func (_u *AdminUpdate) SetNillablePassword(v *string) *AdminUpdate {
 	if v != nil {
 		_u.SetPassword(*v)
+	}
+	return _u
+}
+
+// SetStatus sets the "status" field.
+func (_u *AdminUpdate) SetStatus(v admin.Status) *AdminUpdate {
+	_u.mutation.SetStatus(v)
+	return _u
+}
+
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (_u *AdminUpdate) SetNillableStatus(v *admin.Status) *AdminUpdate {
+	if v != nil {
+		_u.SetStatus(*v)
 	}
 	return _u
 }
@@ -173,6 +209,21 @@ func (_u *AdminUpdate) AddRoles(v ...*Role) *AdminUpdate {
 	return _u.AddRoleIDs(ids...)
 }
 
+// AddDataPermissionIDs adds the "data_permissions" edge to the DataPermission entity by IDs.
+func (_u *AdminUpdate) AddDataPermissionIDs(ids ...string) *AdminUpdate {
+	_u.mutation.AddDataPermissionIDs(ids...)
+	return _u
+}
+
+// AddDataPermissions adds the "data_permissions" edges to the DataPermission entity.
+func (_u *AdminUpdate) AddDataPermissions(v ...*DataPermission) *AdminUpdate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddDataPermissionIDs(ids...)
+}
+
 // AddAdminRoleIDs adds the "admin_roles" edge to the AdminRole entity by IDs.
 func (_u *AdminUpdate) AddAdminRoleIDs(ids ...string) *AdminUpdate {
 	_u.mutation.AddAdminRoleIDs(ids...)
@@ -186,6 +237,21 @@ func (_u *AdminUpdate) AddAdminRoles(v ...*AdminRole) *AdminUpdate {
 		ids[i] = v[i].ID
 	}
 	return _u.AddAdminRoleIDs(ids...)
+}
+
+// AddAdminDataPermissionIDs adds the "admin_data_permissions" edge to the AdminDataPermission entity by IDs.
+func (_u *AdminUpdate) AddAdminDataPermissionIDs(ids ...string) *AdminUpdate {
+	_u.mutation.AddAdminDataPermissionIDs(ids...)
+	return _u
+}
+
+// AddAdminDataPermissions adds the "admin_data_permissions" edges to the AdminDataPermission entity.
+func (_u *AdminUpdate) AddAdminDataPermissions(v ...*AdminDataPermission) *AdminUpdate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddAdminDataPermissionIDs(ids...)
 }
 
 // Mutation returns the AdminMutation object of the builder.
@@ -214,6 +280,27 @@ func (_u *AdminUpdate) RemoveRoles(v ...*Role) *AdminUpdate {
 	return _u.RemoveRoleIDs(ids...)
 }
 
+// ClearDataPermissions clears all "data_permissions" edges to the DataPermission entity.
+func (_u *AdminUpdate) ClearDataPermissions() *AdminUpdate {
+	_u.mutation.ClearDataPermissions()
+	return _u
+}
+
+// RemoveDataPermissionIDs removes the "data_permissions" edge to DataPermission entities by IDs.
+func (_u *AdminUpdate) RemoveDataPermissionIDs(ids ...string) *AdminUpdate {
+	_u.mutation.RemoveDataPermissionIDs(ids...)
+	return _u
+}
+
+// RemoveDataPermissions removes "data_permissions" edges to DataPermission entities.
+func (_u *AdminUpdate) RemoveDataPermissions(v ...*DataPermission) *AdminUpdate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveDataPermissionIDs(ids...)
+}
+
 // ClearAdminRoles clears all "admin_roles" edges to the AdminRole entity.
 func (_u *AdminUpdate) ClearAdminRoles() *AdminUpdate {
 	_u.mutation.ClearAdminRoles()
@@ -233,6 +320,27 @@ func (_u *AdminUpdate) RemoveAdminRoles(v ...*AdminRole) *AdminUpdate {
 		ids[i] = v[i].ID
 	}
 	return _u.RemoveAdminRoleIDs(ids...)
+}
+
+// ClearAdminDataPermissions clears all "admin_data_permissions" edges to the AdminDataPermission entity.
+func (_u *AdminUpdate) ClearAdminDataPermissions() *AdminUpdate {
+	_u.mutation.ClearAdminDataPermissions()
+	return _u
+}
+
+// RemoveAdminDataPermissionIDs removes the "admin_data_permissions" edge to AdminDataPermission entities by IDs.
+func (_u *AdminUpdate) RemoveAdminDataPermissionIDs(ids ...string) *AdminUpdate {
+	_u.mutation.RemoveAdminDataPermissionIDs(ids...)
+	return _u
+}
+
+// RemoveAdminDataPermissions removes "admin_data_permissions" edges to AdminDataPermission entities.
+func (_u *AdminUpdate) RemoveAdminDataPermissions(v ...*AdminDataPermission) *AdminUpdate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveAdminDataPermissionIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -271,7 +379,20 @@ func (_u *AdminUpdate) defaults() {
 	}
 }
 
+// check runs all checks and user-defined validators on the builder.
+func (_u *AdminUpdate) check() error {
+	if v, ok := _u.mutation.Status(); ok {
+		if err := admin.StatusValidator(v); err != nil {
+			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Admin.status": %w`, err)}
+		}
+	}
+	return nil
+}
+
 func (_u *AdminUpdate) sqlSave(ctx context.Context) (_node int, err error) {
+	if err := _u.check(); err != nil {
+		return _node, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(admin.Table, admin.Columns, sqlgraph.NewFieldSpec(admin.FieldID, field.TypeString))
 	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
@@ -304,8 +425,17 @@ func (_u *AdminUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if _u.mutation.AvatarCleared() {
 		_spec.ClearField(admin.FieldAvatar, field.TypeString)
 	}
+	if value, ok := _u.mutation.DepartmentID(); ok {
+		_spec.SetField(admin.FieldDepartmentID, field.TypeString, value)
+	}
+	if _u.mutation.DepartmentIDCleared() {
+		_spec.ClearField(admin.FieldDepartmentID, field.TypeString)
+	}
 	if value, ok := _u.mutation.Password(); ok {
 		_spec.SetField(admin.FieldPassword, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.Status(); ok {
+		_spec.SetField(admin.FieldStatus, field.TypeEnum, value)
 	}
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(admin.FieldUpdatedAt, field.TypeTime, value)
@@ -373,6 +503,63 @@ func (_u *AdminUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 		edge.Target.Fields = specE.Fields
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if _u.mutation.DataPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   admin.DataPermissionsTable,
+			Columns: admin.DataPermissionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(datapermission.FieldID, field.TypeString),
+			},
+		}
+		createE := &AdminDataPermissionCreate{config: _u.config, mutation: newAdminDataPermissionMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedDataPermissionsIDs(); len(nodes) > 0 && !_u.mutation.DataPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   admin.DataPermissionsTable,
+			Columns: admin.DataPermissionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(datapermission.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &AdminDataPermissionCreate{config: _u.config, mutation: newAdminDataPermissionMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.DataPermissionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   admin.DataPermissionsTable,
+			Columns: admin.DataPermissionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(datapermission.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &AdminDataPermissionCreate{config: _u.config, mutation: newAdminDataPermissionMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if _u.mutation.AdminRolesCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -411,6 +598,51 @@ func (_u *AdminUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(adminrole.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.AdminDataPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   admin.AdminDataPermissionsTable,
+			Columns: []string{admin.AdminDataPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(admindatapermission.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedAdminDataPermissionsIDs(); len(nodes) > 0 && !_u.mutation.AdminDataPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   admin.AdminDataPermissionsTable,
+			Columns: []string{admin.AdminDataPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(admindatapermission.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.AdminDataPermissionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   admin.AdminDataPermissionsTable,
+			Columns: []string{admin.AdminDataPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(admindatapermission.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -526,6 +758,26 @@ func (_u *AdminUpdateOne) ClearAvatar() *AdminUpdateOne {
 	return _u
 }
 
+// SetDepartmentID sets the "department_id" field.
+func (_u *AdminUpdateOne) SetDepartmentID(v string) *AdminUpdateOne {
+	_u.mutation.SetDepartmentID(v)
+	return _u
+}
+
+// SetNillableDepartmentID sets the "department_id" field if the given value is not nil.
+func (_u *AdminUpdateOne) SetNillableDepartmentID(v *string) *AdminUpdateOne {
+	if v != nil {
+		_u.SetDepartmentID(*v)
+	}
+	return _u
+}
+
+// ClearDepartmentID clears the value of the "department_id" field.
+func (_u *AdminUpdateOne) ClearDepartmentID() *AdminUpdateOne {
+	_u.mutation.ClearDepartmentID()
+	return _u
+}
+
 // SetPassword sets the "password" field.
 func (_u *AdminUpdateOne) SetPassword(v string) *AdminUpdateOne {
 	_u.mutation.SetPassword(v)
@@ -536,6 +788,20 @@ func (_u *AdminUpdateOne) SetPassword(v string) *AdminUpdateOne {
 func (_u *AdminUpdateOne) SetNillablePassword(v *string) *AdminUpdateOne {
 	if v != nil {
 		_u.SetPassword(*v)
+	}
+	return _u
+}
+
+// SetStatus sets the "status" field.
+func (_u *AdminUpdateOne) SetStatus(v admin.Status) *AdminUpdateOne {
+	_u.mutation.SetStatus(v)
+	return _u
+}
+
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (_u *AdminUpdateOne) SetNillableStatus(v *admin.Status) *AdminUpdateOne {
+	if v != nil {
+		_u.SetStatus(*v)
 	}
 	return _u
 }
@@ -581,6 +847,21 @@ func (_u *AdminUpdateOne) AddRoles(v ...*Role) *AdminUpdateOne {
 	return _u.AddRoleIDs(ids...)
 }
 
+// AddDataPermissionIDs adds the "data_permissions" edge to the DataPermission entity by IDs.
+func (_u *AdminUpdateOne) AddDataPermissionIDs(ids ...string) *AdminUpdateOne {
+	_u.mutation.AddDataPermissionIDs(ids...)
+	return _u
+}
+
+// AddDataPermissions adds the "data_permissions" edges to the DataPermission entity.
+func (_u *AdminUpdateOne) AddDataPermissions(v ...*DataPermission) *AdminUpdateOne {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddDataPermissionIDs(ids...)
+}
+
 // AddAdminRoleIDs adds the "admin_roles" edge to the AdminRole entity by IDs.
 func (_u *AdminUpdateOne) AddAdminRoleIDs(ids ...string) *AdminUpdateOne {
 	_u.mutation.AddAdminRoleIDs(ids...)
@@ -594,6 +875,21 @@ func (_u *AdminUpdateOne) AddAdminRoles(v ...*AdminRole) *AdminUpdateOne {
 		ids[i] = v[i].ID
 	}
 	return _u.AddAdminRoleIDs(ids...)
+}
+
+// AddAdminDataPermissionIDs adds the "admin_data_permissions" edge to the AdminDataPermission entity by IDs.
+func (_u *AdminUpdateOne) AddAdminDataPermissionIDs(ids ...string) *AdminUpdateOne {
+	_u.mutation.AddAdminDataPermissionIDs(ids...)
+	return _u
+}
+
+// AddAdminDataPermissions adds the "admin_data_permissions" edges to the AdminDataPermission entity.
+func (_u *AdminUpdateOne) AddAdminDataPermissions(v ...*AdminDataPermission) *AdminUpdateOne {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddAdminDataPermissionIDs(ids...)
 }
 
 // Mutation returns the AdminMutation object of the builder.
@@ -622,6 +918,27 @@ func (_u *AdminUpdateOne) RemoveRoles(v ...*Role) *AdminUpdateOne {
 	return _u.RemoveRoleIDs(ids...)
 }
 
+// ClearDataPermissions clears all "data_permissions" edges to the DataPermission entity.
+func (_u *AdminUpdateOne) ClearDataPermissions() *AdminUpdateOne {
+	_u.mutation.ClearDataPermissions()
+	return _u
+}
+
+// RemoveDataPermissionIDs removes the "data_permissions" edge to DataPermission entities by IDs.
+func (_u *AdminUpdateOne) RemoveDataPermissionIDs(ids ...string) *AdminUpdateOne {
+	_u.mutation.RemoveDataPermissionIDs(ids...)
+	return _u
+}
+
+// RemoveDataPermissions removes "data_permissions" edges to DataPermission entities.
+func (_u *AdminUpdateOne) RemoveDataPermissions(v ...*DataPermission) *AdminUpdateOne {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveDataPermissionIDs(ids...)
+}
+
 // ClearAdminRoles clears all "admin_roles" edges to the AdminRole entity.
 func (_u *AdminUpdateOne) ClearAdminRoles() *AdminUpdateOne {
 	_u.mutation.ClearAdminRoles()
@@ -641,6 +958,27 @@ func (_u *AdminUpdateOne) RemoveAdminRoles(v ...*AdminRole) *AdminUpdateOne {
 		ids[i] = v[i].ID
 	}
 	return _u.RemoveAdminRoleIDs(ids...)
+}
+
+// ClearAdminDataPermissions clears all "admin_data_permissions" edges to the AdminDataPermission entity.
+func (_u *AdminUpdateOne) ClearAdminDataPermissions() *AdminUpdateOne {
+	_u.mutation.ClearAdminDataPermissions()
+	return _u
+}
+
+// RemoveAdminDataPermissionIDs removes the "admin_data_permissions" edge to AdminDataPermission entities by IDs.
+func (_u *AdminUpdateOne) RemoveAdminDataPermissionIDs(ids ...string) *AdminUpdateOne {
+	_u.mutation.RemoveAdminDataPermissionIDs(ids...)
+	return _u
+}
+
+// RemoveAdminDataPermissions removes "admin_data_permissions" edges to AdminDataPermission entities.
+func (_u *AdminUpdateOne) RemoveAdminDataPermissions(v ...*AdminDataPermission) *AdminUpdateOne {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveAdminDataPermissionIDs(ids...)
 }
 
 // Where appends a list predicates to the AdminUpdate builder.
@@ -692,7 +1030,20 @@ func (_u *AdminUpdateOne) defaults() {
 	}
 }
 
+// check runs all checks and user-defined validators on the builder.
+func (_u *AdminUpdateOne) check() error {
+	if v, ok := _u.mutation.Status(); ok {
+		if err := admin.StatusValidator(v); err != nil {
+			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Admin.status": %w`, err)}
+		}
+	}
+	return nil
+}
+
 func (_u *AdminUpdateOne) sqlSave(ctx context.Context) (_node *Admin, err error) {
+	if err := _u.check(); err != nil {
+		return _node, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(admin.Table, admin.Columns, sqlgraph.NewFieldSpec(admin.FieldID, field.TypeString))
 	id, ok := _u.mutation.ID()
 	if !ok {
@@ -742,8 +1093,17 @@ func (_u *AdminUpdateOne) sqlSave(ctx context.Context) (_node *Admin, err error)
 	if _u.mutation.AvatarCleared() {
 		_spec.ClearField(admin.FieldAvatar, field.TypeString)
 	}
+	if value, ok := _u.mutation.DepartmentID(); ok {
+		_spec.SetField(admin.FieldDepartmentID, field.TypeString, value)
+	}
+	if _u.mutation.DepartmentIDCleared() {
+		_spec.ClearField(admin.FieldDepartmentID, field.TypeString)
+	}
 	if value, ok := _u.mutation.Password(); ok {
 		_spec.SetField(admin.FieldPassword, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.Status(); ok {
+		_spec.SetField(admin.FieldStatus, field.TypeEnum, value)
 	}
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(admin.FieldUpdatedAt, field.TypeTime, value)
@@ -811,6 +1171,63 @@ func (_u *AdminUpdateOne) sqlSave(ctx context.Context) (_node *Admin, err error)
 		edge.Target.Fields = specE.Fields
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if _u.mutation.DataPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   admin.DataPermissionsTable,
+			Columns: admin.DataPermissionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(datapermission.FieldID, field.TypeString),
+			},
+		}
+		createE := &AdminDataPermissionCreate{config: _u.config, mutation: newAdminDataPermissionMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedDataPermissionsIDs(); len(nodes) > 0 && !_u.mutation.DataPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   admin.DataPermissionsTable,
+			Columns: admin.DataPermissionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(datapermission.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &AdminDataPermissionCreate{config: _u.config, mutation: newAdminDataPermissionMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.DataPermissionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   admin.DataPermissionsTable,
+			Columns: admin.DataPermissionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(datapermission.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &AdminDataPermissionCreate{config: _u.config, mutation: newAdminDataPermissionMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if _u.mutation.AdminRolesCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -849,6 +1266,51 @@ func (_u *AdminUpdateOne) sqlSave(ctx context.Context) (_node *Admin, err error)
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(adminrole.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.AdminDataPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   admin.AdminDataPermissionsTable,
+			Columns: []string{admin.AdminDataPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(admindatapermission.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedAdminDataPermissionsIDs(); len(nodes) > 0 && !_u.mutation.AdminDataPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   admin.AdminDataPermissionsTable,
+			Columns: []string{admin.AdminDataPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(admindatapermission.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.AdminDataPermissionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   admin.AdminDataPermissionsTable,
+			Columns: []string{admin.AdminDataPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(admindatapermission.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

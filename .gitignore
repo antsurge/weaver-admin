@@ -29,3 +29,14 @@ go.work.sum
 # Editor/IDE
 .idea/
 .vscode/
+
+# 工作区助手工具目录
+.codebuddy/
+.workbuddy/
+
+# 运行期数据 / 本地构建产物
+*.rdb
+dump.rdb
+go_build_admin
+*go_build_admin
+out/

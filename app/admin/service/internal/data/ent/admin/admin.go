@@ -3,6 +3,7 @@
 package admin
 
 import (
+	"fmt"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -14,6 +15,8 @@ const (
 	Label = "admin"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldTenantID holds the string denoting the tenant_id field in the database.
+	FieldTenantID = "tenant_id"
 	// FieldRealName holds the string denoting the real_name field in the database.
 	FieldRealName = "real_name"
 	// FieldUsername holds the string denoting the username field in the database.
@@ -24,8 +27,12 @@ const (
 	FieldPhone = "phone"
 	// FieldAvatar holds the string denoting the avatar field in the database.
 	FieldAvatar = "avatar"
+	// FieldDepartmentID holds the string denoting the department_id field in the database.
+	FieldDepartmentID = "department_id"
 	// FieldPassword holds the string denoting the password field in the database.
 	FieldPassword = "password"
+	// FieldStatus holds the string denoting the status field in the database.
+	FieldStatus = "status"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
@@ -34,8 +41,12 @@ const (
 	FieldDeletedAt = "deleted_at"
 	// EdgeRoles holds the string denoting the roles edge name in mutations.
 	EdgeRoles = "roles"
+	// EdgeDataPermissions holds the string denoting the data_permissions edge name in mutations.
+	EdgeDataPermissions = "data_permissions"
 	// EdgeAdminRoles holds the string denoting the admin_roles edge name in mutations.
 	EdgeAdminRoles = "admin_roles"
+	// EdgeAdminDataPermissions holds the string denoting the admin_data_permissions edge name in mutations.
+	EdgeAdminDataPermissions = "admin_data_permissions"
 	// Table holds the table name of the admin in the database.
 	Table = "admin"
 	// RolesTable is the table that holds the roles relation/edge. The primary key declared below.
@@ -43,6 +54,11 @@ const (
 	// RolesInverseTable is the table name for the Role entity.
 	// It exists in this package in order to avoid circular dependency with the "role" package.
 	RolesInverseTable = "role"
+	// DataPermissionsTable is the table that holds the data_permissions relation/edge. The primary key declared below.
+	DataPermissionsTable = "admin_data_permission"
+	// DataPermissionsInverseTable is the table name for the DataPermission entity.
+	// It exists in this package in order to avoid circular dependency with the "datapermission" package.
+	DataPermissionsInverseTable = "data_permission"
 	// AdminRolesTable is the table that holds the admin_roles relation/edge.
 	AdminRolesTable = "admin_role"
 	// AdminRolesInverseTable is the table name for the AdminRole entity.
@@ -50,17 +66,27 @@ const (
 	AdminRolesInverseTable = "admin_role"
 	// AdminRolesColumn is the table column denoting the admin_roles relation/edge.
 	AdminRolesColumn = "admin_id"
+	// AdminDataPermissionsTable is the table that holds the admin_data_permissions relation/edge.
+	AdminDataPermissionsTable = "admin_data_permission"
+	// AdminDataPermissionsInverseTable is the table name for the AdminDataPermission entity.
+	// It exists in this package in order to avoid circular dependency with the "admindatapermission" package.
+	AdminDataPermissionsInverseTable = "admin_data_permission"
+	// AdminDataPermissionsColumn is the table column denoting the admin_data_permissions relation/edge.
+	AdminDataPermissionsColumn = "admin_id"
 )
 
 // Columns holds all SQL columns for admin fields.
 var Columns = []string{
 	FieldID,
+	FieldTenantID,
 	FieldRealName,
 	FieldUsername,
 	FieldEmail,
 	FieldPhone,
 	FieldAvatar,
+	FieldDepartmentID,
 	FieldPassword,
+	FieldStatus,
 	FieldCreatedAt,
 	FieldUpdatedAt,
 	FieldDeletedAt,
@@ -70,6 +96,9 @@ var (
 	// RolesPrimaryKey and RolesColumn2 are the table columns denoting the
 	// primary key for the roles relation (M2M).
 	RolesPrimaryKey = []string{"admin_id", "role_id"}
+	// DataPermissionsPrimaryKey and DataPermissionsColumn2 are the table columns denoting the
+	// primary key for the data_permissions relation (M2M).
+	DataPermissionsPrimaryKey = []string{"admin_id", "data_permission_id"}
 )
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -83,8 +112,14 @@ func ValidColumn(column string) bool {
 }
 
 var (
+	// DefaultTenantID holds the default value on creation for the "tenant_id" field.
+	DefaultTenantID string
+	// TenantIDValidator is a validator for the "tenant_id" field. It is called by the builders before save.
+	TenantIDValidator func(string) error
 	// DefaultRealName holds the default value on creation for the "real_name" field.
 	DefaultRealName string
+	// DefaultDepartmentID holds the default value on creation for the "department_id" field.
+	DefaultDepartmentID string
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() time.Time
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
@@ -93,12 +128,43 @@ var (
 	UpdateDefaultUpdatedAt func() time.Time
 )
 
+// Status defines the type for the "status" enum field.
+type Status string
+
+// StatusEnabled is the default value of the Status enum.
+const DefaultStatus = StatusEnabled
+
+// Status values.
+const (
+	StatusEnabled  Status = "enabled"
+	StatusDisabled Status = "disabled"
+)
+
+func (s Status) String() string {
+	return string(s)
+}
+
+// StatusValidator is a validator for the "status" field enum values. It is called by the builders before save.
+func StatusValidator(s Status) error {
+	switch s {
+	case StatusEnabled, StatusDisabled:
+		return nil
+	default:
+		return fmt.Errorf("admin: invalid enum value for status field: %q", s)
+	}
+}
+
 // OrderOption defines the ordering options for the Admin queries.
 type OrderOption func(*sql.Selector)
 
 // ByID orders the results by the id field.
 func ByID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldID, opts...).ToFunc()
+}
+
+// ByTenantID orders the results by the tenant_id field.
+func ByTenantID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTenantID, opts...).ToFunc()
 }
 
 // ByRealName orders the results by the real_name field.
@@ -126,9 +192,19 @@ func ByAvatar(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldAvatar, opts...).ToFunc()
 }
 
+// ByDepartmentID orders the results by the department_id field.
+func ByDepartmentID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDepartmentID, opts...).ToFunc()
+}
+
 // ByPassword orders the results by the password field.
 func ByPassword(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldPassword, opts...).ToFunc()
+}
+
+// ByStatus orders the results by the status field.
+func ByStatus(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStatus, opts...).ToFunc()
 }
 
 // ByCreatedAt orders the results by the created_at field.
@@ -160,6 +236,20 @@ func ByRoles(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	}
 }
 
+// ByDataPermissionsCount orders the results by data_permissions count.
+func ByDataPermissionsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newDataPermissionsStep(), opts...)
+	}
+}
+
+// ByDataPermissions orders the results by data_permissions terms.
+func ByDataPermissions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newDataPermissionsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
 // ByAdminRolesCount orders the results by admin_roles count.
 func ByAdminRolesCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
@@ -173,6 +263,20 @@ func ByAdminRoles(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newAdminRolesStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
+
+// ByAdminDataPermissionsCount orders the results by admin_data_permissions count.
+func ByAdminDataPermissionsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newAdminDataPermissionsStep(), opts...)
+	}
+}
+
+// ByAdminDataPermissions orders the results by admin_data_permissions terms.
+func ByAdminDataPermissions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newAdminDataPermissionsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
 func newRolesStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
@@ -180,10 +284,24 @@ func newRolesStep() *sqlgraph.Step {
 		sqlgraph.Edge(sqlgraph.M2M, false, RolesTable, RolesPrimaryKey...),
 	)
 }
+func newDataPermissionsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(DataPermissionsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, false, DataPermissionsTable, DataPermissionsPrimaryKey...),
+	)
+}
 func newAdminRolesStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(AdminRolesInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.O2M, true, AdminRolesTable, AdminRolesColumn),
+	)
+}
+func newAdminDataPermissionsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(AdminDataPermissionsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, true, AdminDataPermissionsTable, AdminDataPermissionsColumn),
 	)
 }

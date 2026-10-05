@@ -22,6 +22,11 @@ func (Department) Annotations() []schema.Annotation {
 	}
 }
 
+// Mixin of the Department.
+func (Department) Mixin() []ent.Mixin {
+	return []ent.Mixin{TenantMixin{}}
+}
+
 func (Department) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("id").Unique().Immutable().MaxLen(36),

@@ -33,6 +33,7 @@ func _System_ImportApiInterface0_HTTP_Handler(srv SystemHandlerHTTPServer) func(
 		http.SetOperation(ctx, OperationSystemImportApiInterface)
 
 		h := ctx.Middleware(func(ctx1 context.Context, req interface{}) (interface{}, error) {
+			mergeContext(ctx, ctx1)
 			return nil, srv.ImportApiInterface(ctx)
 		})
 		_, err := h(ctx, &in)

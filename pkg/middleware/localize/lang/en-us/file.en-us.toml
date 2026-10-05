@@ -1,0 +1,33 @@
+# File storage error codes
+[STORAGE_DISABLED]
+other = "Object storage is not enabled"
+
+[INVALID_FILE]
+other = "File cannot be empty"
+
+[FILE_REQUIRED]
+other = "Please select a file"
+
+[FILE_TOO_LARGE]
+other = "File size exceeds the limit"
+
+[INVALID_FILE_TYPE]
+other = "File type is not supported"
+
+[UPLOAD_FAILED]
+other = "Failed to upload file"
+
+[INVALID_OBJECT_KEY]
+other = "Object key cannot be empty"
+
+[SIGN_URL_FAILED]
+other = "Failed to generate file access URL"
+
+[DELETE_FAILED]
+other = "Failed to delete file"
+
+[FILE_UPLOAD_NOT_SUPPORTED]
+other = "Please use the HTTP API for file upload"
+
+[FILE_ACCESS_NOT_SUPPORTED]
+other = "Please use the HTTP API for file access"

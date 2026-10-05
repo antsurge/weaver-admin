@@ -21,20 +21,30 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	PermissionService_MenuTree_FullMethodName         = "/admin.service.v1.PermissionService/MenuTree"
-	PermissionService_CreateMenu_FullMethodName       = "/admin.service.v1.PermissionService/CreateMenu"
-	PermissionService_UpdateMenu_FullMethodName       = "/admin.service.v1.PermissionService/UpdateMenu"
-	PermissionService_UpdateMenuStatus_FullMethodName = "/admin.service.v1.PermissionService/UpdateMenuStatus"
-	PermissionService_DeleteMenu_FullMethodName       = "/admin.service.v1.PermissionService/DeleteMenu"
-	PermissionService_ListRole_FullMethodName         = "/admin.service.v1.PermissionService/ListRole"
-	PermissionService_GetRole_FullMethodName          = "/admin.service.v1.PermissionService/GetRole"
-	PermissionService_CreateRole_FullMethodName       = "/admin.service.v1.PermissionService/CreateRole"
-	PermissionService_UpdateRole_FullMethodName       = "/admin.service.v1.PermissionService/UpdateRole"
-	PermissionService_UpdateRoleStatus_FullMethodName = "/admin.service.v1.PermissionService/UpdateRoleStatus"
-	PermissionService_DeleteRole_FullMethodName       = "/admin.service.v1.PermissionService/DeleteRole"
-	PermissionService_BindMenusForRole_FullMethodName = "/admin.service.v1.PermissionService/BindMenusForRole"
-	PermissionService_ListMenusByRole_FullMethodName  = "/admin.service.v1.PermissionService/ListMenusByRole"
-	PermissionService_ListApiMetadata_FullMethodName  = "/admin.service.v1.PermissionService/ListApiMetadata"
+	PermissionService_MenuTree_FullMethodName                   = "/admin.service.v1.PermissionService/MenuTree"
+	PermissionService_GetMenu_FullMethodName                    = "/admin.service.v1.PermissionService/GetMenu"
+	PermissionService_CreateMenu_FullMethodName                 = "/admin.service.v1.PermissionService/CreateMenu"
+	PermissionService_UpdateMenu_FullMethodName                 = "/admin.service.v1.PermissionService/UpdateMenu"
+	PermissionService_UpdateMenuStatus_FullMethodName           = "/admin.service.v1.PermissionService/UpdateMenuStatus"
+	PermissionService_DeleteMenu_FullMethodName                 = "/admin.service.v1.PermissionService/DeleteMenu"
+	PermissionService_ListRole_FullMethodName                   = "/admin.service.v1.PermissionService/ListRole"
+	PermissionService_GetRole_FullMethodName                    = "/admin.service.v1.PermissionService/GetRole"
+	PermissionService_CreateRole_FullMethodName                 = "/admin.service.v1.PermissionService/CreateRole"
+	PermissionService_UpdateRole_FullMethodName                 = "/admin.service.v1.PermissionService/UpdateRole"
+	PermissionService_UpdateRoleStatus_FullMethodName           = "/admin.service.v1.PermissionService/UpdateRoleStatus"
+	PermissionService_DeleteRole_FullMethodName                 = "/admin.service.v1.PermissionService/DeleteRole"
+	PermissionService_IsRoleCodeExists_FullMethodName           = "/admin.service.v1.PermissionService/IsRoleCodeExists"
+	PermissionService_BindMenusForRole_FullMethodName           = "/admin.service.v1.PermissionService/BindMenusForRole"
+	PermissionService_ListMenusByRole_FullMethodName            = "/admin.service.v1.PermissionService/ListMenusByRole"
+	PermissionService_BindDataPermissionsForRole_FullMethodName = "/admin.service.v1.PermissionService/BindDataPermissionsForRole"
+	PermissionService_ListDataPermissionsByRole_FullMethodName  = "/admin.service.v1.PermissionService/ListDataPermissionsByRole"
+	PermissionService_ListApiMetadata_FullMethodName            = "/admin.service.v1.PermissionService/ListApiMetadata"
+	PermissionService_ListDataPermission_FullMethodName         = "/admin.service.v1.PermissionService/ListDataPermission"
+	PermissionService_CreateDataPermission_FullMethodName       = "/admin.service.v1.PermissionService/CreateDataPermission"
+	PermissionService_UpdateDataPermission_FullMethodName       = "/admin.service.v1.PermissionService/UpdateDataPermission"
+	PermissionService_UpdateDataPermissionStatus_FullMethodName = "/admin.service.v1.PermissionService/UpdateDataPermissionStatus"
+	PermissionService_DeleteDataPermission_FullMethodName       = "/admin.service.v1.PermissionService/DeleteDataPermission"
+	PermissionService_IsDataPermissionCodeExists_FullMethodName = "/admin.service.v1.PermissionService/IsDataPermissionCodeExists"
 )
 
 // PermissionServiceClient is the client API for PermissionService service.
@@ -44,6 +54,8 @@ type PermissionServiceClient interface {
 	// 菜单
 	// 列表的tree
 	MenuTree(ctx context.Context, in *v1.MenuTreeRequest, opts ...grpc.CallOption) (*v1.MenuTreeResponse, error)
+	// 获取权限详情（含接口权限）
+	GetMenu(ctx context.Context, in *v1.GetMenuRequest, opts ...grpc.CallOption) (*v1.Menu, error)
 	// 创建权限
 	CreateMenu(ctx context.Context, in *v1.CreateMenuRequest, opts ...grpc.CallOption) (*v1.Menu, error)
 	// 更新权限
@@ -59,12 +71,24 @@ type PermissionServiceClient interface {
 	UpdateRole(ctx context.Context, in *v1.UpdateRoleRequest, opts ...grpc.CallOption) (*v1.Role, error)
 	UpdateRoleStatus(ctx context.Context, in *v1.UpdateRoleStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteRole(ctx context.Context, in *v1.DeleteRoleRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	IsRoleCodeExists(ctx context.Context, in *v1.IsRoleCodeExistsRequest, opts ...grpc.CallOption) (*v1.IsRoleFieldExistsResponse, error)
 	// 为角色绑定菜单（全量替换）
 	BindMenusForRole(ctx context.Context, in *v1.BindMenusForRoleRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 查询角色的菜单列表（树形结构）
 	ListMenusByRole(ctx context.Context, in *v1.ListMenusByRoleRequest, opts ...grpc.CallOption) (*v1.ListMenusByRoleResponse, error)
+	// 为角色绑定数据权限规则（全量替换）
+	BindDataPermissionsForRole(ctx context.Context, in *v1.BindDataPermissionsForRoleRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 查询角色已绑定的数据权限规则列表
+	ListDataPermissionsByRole(ctx context.Context, in *v1.ListDataPermissionsByRoleRequest, opts ...grpc.CallOption) (*v1.ListDataPermissionsByRoleResponse, error)
 	// 查询接口元数据（用于菜单按钮的接口权限选择器）
 	ListApiMetadata(ctx context.Context, in *v1.ListApiMetadataRequest, opts ...grpc.CallOption) (*v1.ListApiMetadataResponse, error)
+	// 数据权限规则-列表（分页）
+	ListDataPermission(ctx context.Context, in *v1.ListDataPermissionRequest, opts ...grpc.CallOption) (*v1.ListDataPermissionResponse, error)
+	CreateDataPermission(ctx context.Context, in *v1.CreateDataPermissionRequest, opts ...grpc.CallOption) (*v1.DataPermission, error)
+	UpdateDataPermission(ctx context.Context, in *v1.UpdateDataPermissionRequest, opts ...grpc.CallOption) (*v1.DataPermission, error)
+	UpdateDataPermissionStatus(ctx context.Context, in *v1.UpdateDataPermissionStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteDataPermission(ctx context.Context, in *v1.DeleteDataPermissionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	IsDataPermissionCodeExists(ctx context.Context, in *v1.IsDataPermissionCodeExistsRequest, opts ...grpc.CallOption) (*v1.IsDataPermissionFieldExistsResponse, error)
 }
 
 type permissionServiceClient struct {
@@ -79,6 +103,16 @@ func (c *permissionServiceClient) MenuTree(ctx context.Context, in *v1.MenuTreeR
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(v1.MenuTreeResponse)
 	err := c.cc.Invoke(ctx, PermissionService_MenuTree_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *permissionServiceClient) GetMenu(ctx context.Context, in *v1.GetMenuRequest, opts ...grpc.CallOption) (*v1.Menu, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v1.Menu)
+	err := c.cc.Invoke(ctx, PermissionService_GetMenu_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -185,6 +219,16 @@ func (c *permissionServiceClient) DeleteRole(ctx context.Context, in *v1.DeleteR
 	return out, nil
 }
 
+func (c *permissionServiceClient) IsRoleCodeExists(ctx context.Context, in *v1.IsRoleCodeExistsRequest, opts ...grpc.CallOption) (*v1.IsRoleFieldExistsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v1.IsRoleFieldExistsResponse)
+	err := c.cc.Invoke(ctx, PermissionService_IsRoleCodeExists_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *permissionServiceClient) BindMenusForRole(ctx context.Context, in *v1.BindMenusForRoleRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -205,10 +249,90 @@ func (c *permissionServiceClient) ListMenusByRole(ctx context.Context, in *v1.Li
 	return out, nil
 }
 
+func (c *permissionServiceClient) BindDataPermissionsForRole(ctx context.Context, in *v1.BindDataPermissionsForRoleRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, PermissionService_BindDataPermissionsForRole_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *permissionServiceClient) ListDataPermissionsByRole(ctx context.Context, in *v1.ListDataPermissionsByRoleRequest, opts ...grpc.CallOption) (*v1.ListDataPermissionsByRoleResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v1.ListDataPermissionsByRoleResponse)
+	err := c.cc.Invoke(ctx, PermissionService_ListDataPermissionsByRole_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *permissionServiceClient) ListApiMetadata(ctx context.Context, in *v1.ListApiMetadataRequest, opts ...grpc.CallOption) (*v1.ListApiMetadataResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(v1.ListApiMetadataResponse)
 	err := c.cc.Invoke(ctx, PermissionService_ListApiMetadata_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *permissionServiceClient) ListDataPermission(ctx context.Context, in *v1.ListDataPermissionRequest, opts ...grpc.CallOption) (*v1.ListDataPermissionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v1.ListDataPermissionResponse)
+	err := c.cc.Invoke(ctx, PermissionService_ListDataPermission_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *permissionServiceClient) CreateDataPermission(ctx context.Context, in *v1.CreateDataPermissionRequest, opts ...grpc.CallOption) (*v1.DataPermission, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v1.DataPermission)
+	err := c.cc.Invoke(ctx, PermissionService_CreateDataPermission_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *permissionServiceClient) UpdateDataPermission(ctx context.Context, in *v1.UpdateDataPermissionRequest, opts ...grpc.CallOption) (*v1.DataPermission, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v1.DataPermission)
+	err := c.cc.Invoke(ctx, PermissionService_UpdateDataPermission_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *permissionServiceClient) UpdateDataPermissionStatus(ctx context.Context, in *v1.UpdateDataPermissionStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, PermissionService_UpdateDataPermissionStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *permissionServiceClient) DeleteDataPermission(ctx context.Context, in *v1.DeleteDataPermissionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, PermissionService_DeleteDataPermission_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *permissionServiceClient) IsDataPermissionCodeExists(ctx context.Context, in *v1.IsDataPermissionCodeExistsRequest, opts ...grpc.CallOption) (*v1.IsDataPermissionFieldExistsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v1.IsDataPermissionFieldExistsResponse)
+	err := c.cc.Invoke(ctx, PermissionService_IsDataPermissionCodeExists_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -222,6 +346,8 @@ type PermissionServiceServer interface {
 	// 菜单
 	// 列表的tree
 	MenuTree(context.Context, *v1.MenuTreeRequest) (*v1.MenuTreeResponse, error)
+	// 获取权限详情（含接口权限）
+	GetMenu(context.Context, *v1.GetMenuRequest) (*v1.Menu, error)
 	// 创建权限
 	CreateMenu(context.Context, *v1.CreateMenuRequest) (*v1.Menu, error)
 	// 更新权限
@@ -237,12 +363,24 @@ type PermissionServiceServer interface {
 	UpdateRole(context.Context, *v1.UpdateRoleRequest) (*v1.Role, error)
 	UpdateRoleStatus(context.Context, *v1.UpdateRoleStatusRequest) (*emptypb.Empty, error)
 	DeleteRole(context.Context, *v1.DeleteRoleRequest) (*emptypb.Empty, error)
+	IsRoleCodeExists(context.Context, *v1.IsRoleCodeExistsRequest) (*v1.IsRoleFieldExistsResponse, error)
 	// 为角色绑定菜单（全量替换）
 	BindMenusForRole(context.Context, *v1.BindMenusForRoleRequest) (*emptypb.Empty, error)
 	// 查询角色的菜单列表（树形结构）
 	ListMenusByRole(context.Context, *v1.ListMenusByRoleRequest) (*v1.ListMenusByRoleResponse, error)
+	// 为角色绑定数据权限规则（全量替换）
+	BindDataPermissionsForRole(context.Context, *v1.BindDataPermissionsForRoleRequest) (*emptypb.Empty, error)
+	// 查询角色已绑定的数据权限规则列表
+	ListDataPermissionsByRole(context.Context, *v1.ListDataPermissionsByRoleRequest) (*v1.ListDataPermissionsByRoleResponse, error)
 	// 查询接口元数据（用于菜单按钮的接口权限选择器）
 	ListApiMetadata(context.Context, *v1.ListApiMetadataRequest) (*v1.ListApiMetadataResponse, error)
+	// 数据权限规则-列表（分页）
+	ListDataPermission(context.Context, *v1.ListDataPermissionRequest) (*v1.ListDataPermissionResponse, error)
+	CreateDataPermission(context.Context, *v1.CreateDataPermissionRequest) (*v1.DataPermission, error)
+	UpdateDataPermission(context.Context, *v1.UpdateDataPermissionRequest) (*v1.DataPermission, error)
+	UpdateDataPermissionStatus(context.Context, *v1.UpdateDataPermissionStatusRequest) (*emptypb.Empty, error)
+	DeleteDataPermission(context.Context, *v1.DeleteDataPermissionRequest) (*emptypb.Empty, error)
+	IsDataPermissionCodeExists(context.Context, *v1.IsDataPermissionCodeExistsRequest) (*v1.IsDataPermissionFieldExistsResponse, error)
 	mustEmbedUnimplementedPermissionServiceServer()
 }
 
@@ -255,6 +393,9 @@ type UnimplementedPermissionServiceServer struct{}
 
 func (UnimplementedPermissionServiceServer) MenuTree(context.Context, *v1.MenuTreeRequest) (*v1.MenuTreeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method MenuTree not implemented")
+}
+func (UnimplementedPermissionServiceServer) GetMenu(context.Context, *v1.GetMenuRequest) (*v1.Menu, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMenu not implemented")
 }
 func (UnimplementedPermissionServiceServer) CreateMenu(context.Context, *v1.CreateMenuRequest) (*v1.Menu, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateMenu not implemented")
@@ -286,14 +427,41 @@ func (UnimplementedPermissionServiceServer) UpdateRoleStatus(context.Context, *v
 func (UnimplementedPermissionServiceServer) DeleteRole(context.Context, *v1.DeleteRoleRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteRole not implemented")
 }
+func (UnimplementedPermissionServiceServer) IsRoleCodeExists(context.Context, *v1.IsRoleCodeExistsRequest) (*v1.IsRoleFieldExistsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IsRoleCodeExists not implemented")
+}
 func (UnimplementedPermissionServiceServer) BindMenusForRole(context.Context, *v1.BindMenusForRoleRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BindMenusForRole not implemented")
 }
 func (UnimplementedPermissionServiceServer) ListMenusByRole(context.Context, *v1.ListMenusByRoleRequest) (*v1.ListMenusByRoleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMenusByRole not implemented")
 }
+func (UnimplementedPermissionServiceServer) BindDataPermissionsForRole(context.Context, *v1.BindDataPermissionsForRoleRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BindDataPermissionsForRole not implemented")
+}
+func (UnimplementedPermissionServiceServer) ListDataPermissionsByRole(context.Context, *v1.ListDataPermissionsByRoleRequest) (*v1.ListDataPermissionsByRoleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListDataPermissionsByRole not implemented")
+}
 func (UnimplementedPermissionServiceServer) ListApiMetadata(context.Context, *v1.ListApiMetadataRequest) (*v1.ListApiMetadataResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListApiMetadata not implemented")
+}
+func (UnimplementedPermissionServiceServer) ListDataPermission(context.Context, *v1.ListDataPermissionRequest) (*v1.ListDataPermissionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListDataPermission not implemented")
+}
+func (UnimplementedPermissionServiceServer) CreateDataPermission(context.Context, *v1.CreateDataPermissionRequest) (*v1.DataPermission, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateDataPermission not implemented")
+}
+func (UnimplementedPermissionServiceServer) UpdateDataPermission(context.Context, *v1.UpdateDataPermissionRequest) (*v1.DataPermission, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateDataPermission not implemented")
+}
+func (UnimplementedPermissionServiceServer) UpdateDataPermissionStatus(context.Context, *v1.UpdateDataPermissionStatusRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateDataPermissionStatus not implemented")
+}
+func (UnimplementedPermissionServiceServer) DeleteDataPermission(context.Context, *v1.DeleteDataPermissionRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteDataPermission not implemented")
+}
+func (UnimplementedPermissionServiceServer) IsDataPermissionCodeExists(context.Context, *v1.IsDataPermissionCodeExistsRequest) (*v1.IsDataPermissionFieldExistsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IsDataPermissionCodeExists not implemented")
 }
 func (UnimplementedPermissionServiceServer) mustEmbedUnimplementedPermissionServiceServer() {}
 func (UnimplementedPermissionServiceServer) testEmbeddedByValue()                           {}
@@ -330,6 +498,24 @@ func _PermissionService_MenuTree_Handler(srv interface{}, ctx context.Context, d
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PermissionServiceServer).MenuTree(ctx, req.(*v1.MenuTreeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PermissionService_GetMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.GetMenuRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PermissionServiceServer).GetMenu(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PermissionService_GetMenu_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PermissionServiceServer).GetMenu(ctx, req.(*v1.GetMenuRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -514,6 +700,24 @@ func _PermissionService_DeleteRole_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PermissionService_IsRoleCodeExists_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.IsRoleCodeExistsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PermissionServiceServer).IsRoleCodeExists(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PermissionService_IsRoleCodeExists_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PermissionServiceServer).IsRoleCodeExists(ctx, req.(*v1.IsRoleCodeExistsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _PermissionService_BindMenusForRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v1.BindMenusForRoleRequest)
 	if err := dec(in); err != nil {
@@ -550,6 +754,42 @@ func _PermissionService_ListMenusByRole_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PermissionService_BindDataPermissionsForRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.BindDataPermissionsForRoleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PermissionServiceServer).BindDataPermissionsForRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PermissionService_BindDataPermissionsForRole_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PermissionServiceServer).BindDataPermissionsForRole(ctx, req.(*v1.BindDataPermissionsForRoleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PermissionService_ListDataPermissionsByRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.ListDataPermissionsByRoleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PermissionServiceServer).ListDataPermissionsByRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PermissionService_ListDataPermissionsByRole_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PermissionServiceServer).ListDataPermissionsByRole(ctx, req.(*v1.ListDataPermissionsByRoleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _PermissionService_ListApiMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v1.ListApiMetadataRequest)
 	if err := dec(in); err != nil {
@@ -568,6 +808,114 @@ func _PermissionService_ListApiMetadata_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PermissionService_ListDataPermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.ListDataPermissionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PermissionServiceServer).ListDataPermission(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PermissionService_ListDataPermission_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PermissionServiceServer).ListDataPermission(ctx, req.(*v1.ListDataPermissionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PermissionService_CreateDataPermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.CreateDataPermissionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PermissionServiceServer).CreateDataPermission(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PermissionService_CreateDataPermission_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PermissionServiceServer).CreateDataPermission(ctx, req.(*v1.CreateDataPermissionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PermissionService_UpdateDataPermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.UpdateDataPermissionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PermissionServiceServer).UpdateDataPermission(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PermissionService_UpdateDataPermission_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PermissionServiceServer).UpdateDataPermission(ctx, req.(*v1.UpdateDataPermissionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PermissionService_UpdateDataPermissionStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.UpdateDataPermissionStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PermissionServiceServer).UpdateDataPermissionStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PermissionService_UpdateDataPermissionStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PermissionServiceServer).UpdateDataPermissionStatus(ctx, req.(*v1.UpdateDataPermissionStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PermissionService_DeleteDataPermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.DeleteDataPermissionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PermissionServiceServer).DeleteDataPermission(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PermissionService_DeleteDataPermission_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PermissionServiceServer).DeleteDataPermission(ctx, req.(*v1.DeleteDataPermissionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PermissionService_IsDataPermissionCodeExists_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.IsDataPermissionCodeExistsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PermissionServiceServer).IsDataPermissionCodeExists(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PermissionService_IsDataPermissionCodeExists_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PermissionServiceServer).IsDataPermissionCodeExists(ctx, req.(*v1.IsDataPermissionCodeExistsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PermissionService_ServiceDesc is the grpc.ServiceDesc for PermissionService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -578,6 +926,10 @@ var PermissionService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "MenuTree",
 			Handler:    _PermissionService_MenuTree_Handler,
+		},
+		{
+			MethodName: "GetMenu",
+			Handler:    _PermissionService_GetMenu_Handler,
 		},
 		{
 			MethodName: "CreateMenu",
@@ -620,6 +972,10 @@ var PermissionService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _PermissionService_DeleteRole_Handler,
 		},
 		{
+			MethodName: "IsRoleCodeExists",
+			Handler:    _PermissionService_IsRoleCodeExists_Handler,
+		},
+		{
 			MethodName: "BindMenusForRole",
 			Handler:    _PermissionService_BindMenusForRole_Handler,
 		},
@@ -628,8 +984,40 @@ var PermissionService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _PermissionService_ListMenusByRole_Handler,
 		},
 		{
+			MethodName: "BindDataPermissionsForRole",
+			Handler:    _PermissionService_BindDataPermissionsForRole_Handler,
+		},
+		{
+			MethodName: "ListDataPermissionsByRole",
+			Handler:    _PermissionService_ListDataPermissionsByRole_Handler,
+		},
+		{
 			MethodName: "ListApiMetadata",
 			Handler:    _PermissionService_ListApiMetadata_Handler,
+		},
+		{
+			MethodName: "ListDataPermission",
+			Handler:    _PermissionService_ListDataPermission_Handler,
+		},
+		{
+			MethodName: "CreateDataPermission",
+			Handler:    _PermissionService_CreateDataPermission_Handler,
+		},
+		{
+			MethodName: "UpdateDataPermission",
+			Handler:    _PermissionService_UpdateDataPermission_Handler,
+		},
+		{
+			MethodName: "UpdateDataPermissionStatus",
+			Handler:    _PermissionService_UpdateDataPermissionStatus_Handler,
+		},
+		{
+			MethodName: "DeleteDataPermission",
+			Handler:    _PermissionService_DeleteDataPermission_Handler,
+		},
+		{
+			MethodName: "IsDataPermissionCodeExists",
+			Handler:    _PermissionService_IsDataPermissionCodeExists_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -1,0 +1,36 @@
+# Tenant error codes
+[TENANT_CODE_REQUIRED]
+other = "Tenant code is required"
+
+[TENANT_NOT_FOUND]
+other = "Tenant not found"
+
+[TENANT_DISABLED]
+other = "Tenant has been disabled"
+
+[TENANT_EXPIRED]
+other = "Tenant has expired"
+
+[TENANT_QUERY_FAILED]
+other = "Failed to query tenant info"
+
+[CODE_ALREADY_EXISTS]
+other = "Tenant code already exists"
+
+[CANNOT_DELETE_DEFAULT]
+other = "Default tenant cannot be deleted"
+
+[CANNOT_DISABLE_DEFAULT]
+other = "Default tenant cannot be disabled"
+
+[CREATE_TENANT_FAIL]
+other = "Failed to create tenant"
+
+[UPDATE_TENANT_FAIL]
+other = "Failed to update tenant"
+
+[DELETE_TENANT_FAIL]
+other = "Failed to delete tenant"
+
+[QUOTA_EXCEEDED]
+other = "Tenant resource quota exceeded"

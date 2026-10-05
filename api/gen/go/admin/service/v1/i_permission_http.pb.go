@@ -21,33 +21,55 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
+const OperationPermissionServiceBindDataPermissionsForRole = "/admin.service.v1.PermissionService/BindDataPermissionsForRole"
 const OperationPermissionServiceBindMenusForRole = "/admin.service.v1.PermissionService/BindMenusForRole"
+const OperationPermissionServiceCreateDataPermission = "/admin.service.v1.PermissionService/CreateDataPermission"
 const OperationPermissionServiceCreateMenu = "/admin.service.v1.PermissionService/CreateMenu"
 const OperationPermissionServiceCreateRole = "/admin.service.v1.PermissionService/CreateRole"
+const OperationPermissionServiceDeleteDataPermission = "/admin.service.v1.PermissionService/DeleteDataPermission"
 const OperationPermissionServiceDeleteMenu = "/admin.service.v1.PermissionService/DeleteMenu"
 const OperationPermissionServiceDeleteRole = "/admin.service.v1.PermissionService/DeleteRole"
+const OperationPermissionServiceGetMenu = "/admin.service.v1.PermissionService/GetMenu"
 const OperationPermissionServiceGetRole = "/admin.service.v1.PermissionService/GetRole"
+const OperationPermissionServiceIsDataPermissionCodeExists = "/admin.service.v1.PermissionService/IsDataPermissionCodeExists"
+const OperationPermissionServiceIsRoleCodeExists = "/admin.service.v1.PermissionService/IsRoleCodeExists"
 const OperationPermissionServiceListApiMetadata = "/admin.service.v1.PermissionService/ListApiMetadata"
+const OperationPermissionServiceListDataPermission = "/admin.service.v1.PermissionService/ListDataPermission"
+const OperationPermissionServiceListDataPermissionsByRole = "/admin.service.v1.PermissionService/ListDataPermissionsByRole"
 const OperationPermissionServiceListMenusByRole = "/admin.service.v1.PermissionService/ListMenusByRole"
 const OperationPermissionServiceListRole = "/admin.service.v1.PermissionService/ListRole"
 const OperationPermissionServiceMenuTree = "/admin.service.v1.PermissionService/MenuTree"
+const OperationPermissionServiceUpdateDataPermission = "/admin.service.v1.PermissionService/UpdateDataPermission"
+const OperationPermissionServiceUpdateDataPermissionStatus = "/admin.service.v1.PermissionService/UpdateDataPermissionStatus"
 const OperationPermissionServiceUpdateMenu = "/admin.service.v1.PermissionService/UpdateMenu"
 const OperationPermissionServiceUpdateMenuStatus = "/admin.service.v1.PermissionService/UpdateMenuStatus"
 const OperationPermissionServiceUpdateRole = "/admin.service.v1.PermissionService/UpdateRole"
 const OperationPermissionServiceUpdateRoleStatus = "/admin.service.v1.PermissionService/UpdateRoleStatus"
 
 type PermissionServiceHTTPServer interface {
+	// BindDataPermissionsForRole 为角色绑定数据权限规则（全量替换）
+	BindDataPermissionsForRole(context.Context, *v1.BindDataPermissionsForRoleRequest) (*emptypb.Empty, error)
 	// BindMenusForRole 为角色绑定菜单（全量替换）
 	BindMenusForRole(context.Context, *v1.BindMenusForRoleRequest) (*emptypb.Empty, error)
+	CreateDataPermission(context.Context, *v1.CreateDataPermissionRequest) (*v1.DataPermission, error)
 	// CreateMenu 创建权限
 	CreateMenu(context.Context, *v1.CreateMenuRequest) (*v1.Menu, error)
 	CreateRole(context.Context, *v1.CreateRoleRequest) (*v1.Role, error)
+	DeleteDataPermission(context.Context, *v1.DeleteDataPermissionRequest) (*emptypb.Empty, error)
 	// DeleteMenu 批量删除权限
 	DeleteMenu(context.Context, *v1.DeleteMenuRequest) (*emptypb.Empty, error)
 	DeleteRole(context.Context, *v1.DeleteRoleRequest) (*emptypb.Empty, error)
+	// GetMenu 获取权限详情（含接口权限）
+	GetMenu(context.Context, *v1.GetMenuRequest) (*v1.Menu, error)
 	GetRole(context.Context, *v1.GetRoleRequest) (*v1.Role, error)
+	IsDataPermissionCodeExists(context.Context, *v1.IsDataPermissionCodeExistsRequest) (*v1.IsDataPermissionFieldExistsResponse, error)
+	IsRoleCodeExists(context.Context, *v1.IsRoleCodeExistsRequest) (*v1.IsRoleFieldExistsResponse, error)
 	// ListApiMetadata 查询接口元数据（用于菜单按钮的接口权限选择器）
 	ListApiMetadata(context.Context, *v1.ListApiMetadataRequest) (*v1.ListApiMetadataResponse, error)
+	// ListDataPermission 数据权限规则-列表（分页）
+	ListDataPermission(context.Context, *v1.ListDataPermissionRequest) (*v1.ListDataPermissionResponse, error)
+	// ListDataPermissionsByRole 查询角色已绑定的数据权限规则列表
+	ListDataPermissionsByRole(context.Context, *v1.ListDataPermissionsByRoleRequest) (*v1.ListDataPermissionsByRoleResponse, error)
 	// ListMenusByRole 查询角色的菜单列表（树形结构）
 	ListMenusByRole(context.Context, *v1.ListMenusByRoleRequest) (*v1.ListMenusByRoleResponse, error)
 	// ListRole 角色
@@ -55,6 +77,8 @@ type PermissionServiceHTTPServer interface {
 	// MenuTree 菜单
 	// 列表的tree
 	MenuTree(context.Context, *v1.MenuTreeRequest) (*v1.MenuTreeResponse, error)
+	UpdateDataPermission(context.Context, *v1.UpdateDataPermissionRequest) (*v1.DataPermission, error)
+	UpdateDataPermissionStatus(context.Context, *v1.UpdateDataPermissionStatusRequest) (*emptypb.Empty, error)
 	// UpdateMenu 更新权限
 	UpdateMenu(context.Context, *v1.UpdateMenuRequest) (*v1.Menu, error)
 	// UpdateMenuStatus 更新权限状态
@@ -66,6 +90,7 @@ type PermissionServiceHTTPServer interface {
 func RegisterPermissionServiceHTTPServer(s *http.Server, srv PermissionServiceHTTPServer) {
 	r := s.Route("/")
 	r.GET("/admin/v1/menu/tree", _PermissionService_MenuTree0_HTTP_Handler(srv))
+	r.GET("/admin/v1/menu/{id}", _PermissionService_GetMenu0_HTTP_Handler(srv))
 	r.POST("/admin/v1/menu", _PermissionService_CreateMenu0_HTTP_Handler(srv))
 	r.PUT("/admin/v1/menu/{id}", _PermissionService_UpdateMenu0_HTTP_Handler(srv))
 	r.PUT("/admin/v1/menu/{id}/status", _PermissionService_UpdateMenuStatus0_HTTP_Handler(srv))
@@ -74,11 +99,20 @@ func RegisterPermissionServiceHTTPServer(s *http.Server, srv PermissionServiceHT
 	r.GET("/admin/v1/role/{id}", _PermissionService_GetRole0_HTTP_Handler(srv))
 	r.POST("/admin/v1/role", _PermissionService_CreateRole0_HTTP_Handler(srv))
 	r.PUT("/admin/v1/role/{id}", _PermissionService_UpdateRole0_HTTP_Handler(srv))
-	r.GET("/admin/v1/role/{id}/status", _PermissionService_UpdateRoleStatus0_HTTP_Handler(srv))
+	r.PUT("/admin/v1/role/{id}/status", _PermissionService_UpdateRoleStatus0_HTTP_Handler(srv))
 	r.DELETE("/admin/v1/role", _PermissionService_DeleteRole0_HTTP_Handler(srv))
+	r.GET("/admin/v1/role:code-exists", _PermissionService_IsRoleCodeExists0_HTTP_Handler(srv))
 	r.PUT("/admin/v1/role/{roleId}/menus", _PermissionService_BindMenusForRole0_HTTP_Handler(srv))
 	r.GET("/admin/v1/role/{roleId}/menus", _PermissionService_ListMenusByRole0_HTTP_Handler(srv))
+	r.PUT("/admin/v1/role/{roleId}/data-permissions", _PermissionService_BindDataPermissionsForRole0_HTTP_Handler(srv))
+	r.GET("/admin/v1/role/{roleId}/data-permissions", _PermissionService_ListDataPermissionsByRole0_HTTP_Handler(srv))
 	r.GET("/admin/v1/api-metadata", _PermissionService_ListApiMetadata0_HTTP_Handler(srv))
+	r.GET("/admin/v1/data-permission", _PermissionService_ListDataPermission0_HTTP_Handler(srv))
+	r.POST("/admin/v1/data-permission", _PermissionService_CreateDataPermission0_HTTP_Handler(srv))
+	r.PUT("/admin/v1/data-permission/{id}", _PermissionService_UpdateDataPermission0_HTTP_Handler(srv))
+	r.PUT("/admin/v1/data-permission/{id}/status", _PermissionService_UpdateDataPermissionStatus0_HTTP_Handler(srv))
+	r.DELETE("/admin/v1/data-permission", _PermissionService_DeleteDataPermission0_HTTP_Handler(srv))
+	r.GET("/admin/v1/data-permission:code-exists", _PermissionService_IsDataPermissionCodeExists0_HTTP_Handler(srv))
 }
 
 func _PermissionService_MenuTree0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
@@ -96,6 +130,28 @@ func _PermissionService_MenuTree0_HTTP_Handler(srv PermissionServiceHTTPServer) 
 			return err
 		}
 		reply := out.(*v1.MenuTreeResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _PermissionService_GetMenu0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.GetMenuRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationPermissionServiceGetMenu)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetMenu(ctx, req.(*v1.GetMenuRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.Menu)
 		return ctx.Result(200, reply)
 	}
 }
@@ -282,6 +338,9 @@ func _PermissionService_UpdateRole0_HTTP_Handler(srv PermissionServiceHTTPServer
 func _PermissionService_UpdateRoleStatus0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in v1.UpdateRoleStatusRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
@@ -316,6 +375,25 @@ func _PermissionService_DeleteRole0_HTTP_Handler(srv PermissionServiceHTTPServer
 			return err
 		}
 		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _PermissionService_IsRoleCodeExists0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.IsRoleCodeExistsRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationPermissionServiceIsRoleCodeExists)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.IsRoleCodeExists(ctx, req.(*v1.IsRoleCodeExistsRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.IsRoleFieldExistsResponse)
 		return ctx.Result(200, reply)
 	}
 }
@@ -367,6 +445,53 @@ func _PermissionService_ListMenusByRole0_HTTP_Handler(srv PermissionServiceHTTPS
 	}
 }
 
+func _PermissionService_BindDataPermissionsForRole0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.BindDataPermissionsForRoleRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationPermissionServiceBindDataPermissionsForRole)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.BindDataPermissionsForRole(ctx, req.(*v1.BindDataPermissionsForRoleRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _PermissionService_ListDataPermissionsByRole0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.ListDataPermissionsByRoleRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationPermissionServiceListDataPermissionsByRole)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListDataPermissionsByRole(ctx, req.(*v1.ListDataPermissionsByRoleRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.ListDataPermissionsByRoleResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _PermissionService_ListApiMetadata0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in v1.ListApiMetadataRequest
@@ -386,18 +511,159 @@ func _PermissionService_ListApiMetadata0_HTTP_Handler(srv PermissionServiceHTTPS
 	}
 }
 
+func _PermissionService_ListDataPermission0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.ListDataPermissionRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationPermissionServiceListDataPermission)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListDataPermission(ctx, req.(*v1.ListDataPermissionRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.ListDataPermissionResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _PermissionService_CreateDataPermission0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.CreateDataPermissionRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationPermissionServiceCreateDataPermission)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CreateDataPermission(ctx, req.(*v1.CreateDataPermissionRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.DataPermission)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _PermissionService_UpdateDataPermission0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.UpdateDataPermissionRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationPermissionServiceUpdateDataPermission)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateDataPermission(ctx, req.(*v1.UpdateDataPermissionRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.DataPermission)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _PermissionService_UpdateDataPermissionStatus0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.UpdateDataPermissionStatusRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationPermissionServiceUpdateDataPermissionStatus)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateDataPermissionStatus(ctx, req.(*v1.UpdateDataPermissionStatusRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _PermissionService_DeleteDataPermission0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.DeleteDataPermissionRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationPermissionServiceDeleteDataPermission)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeleteDataPermission(ctx, req.(*v1.DeleteDataPermissionRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _PermissionService_IsDataPermissionCodeExists0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.IsDataPermissionCodeExistsRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationPermissionServiceIsDataPermissionCodeExists)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.IsDataPermissionCodeExists(ctx, req.(*v1.IsDataPermissionCodeExistsRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.IsDataPermissionFieldExistsResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
 type PermissionServiceHTTPClient interface {
+	// BindDataPermissionsForRole 为角色绑定数据权限规则（全量替换）
+	BindDataPermissionsForRole(ctx context.Context, req *v1.BindDataPermissionsForRoleRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	// BindMenusForRole 为角色绑定菜单（全量替换）
 	BindMenusForRole(ctx context.Context, req *v1.BindMenusForRoleRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	CreateDataPermission(ctx context.Context, req *v1.CreateDataPermissionRequest, opts ...http.CallOption) (rsp *v1.DataPermission, err error)
 	// CreateMenu 创建权限
 	CreateMenu(ctx context.Context, req *v1.CreateMenuRequest, opts ...http.CallOption) (rsp *v1.Menu, err error)
 	CreateRole(ctx context.Context, req *v1.CreateRoleRequest, opts ...http.CallOption) (rsp *v1.Role, err error)
+	DeleteDataPermission(ctx context.Context, req *v1.DeleteDataPermissionRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	// DeleteMenu 批量删除权限
 	DeleteMenu(ctx context.Context, req *v1.DeleteMenuRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DeleteRole(ctx context.Context, req *v1.DeleteRoleRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	// GetMenu 获取权限详情（含接口权限）
+	GetMenu(ctx context.Context, req *v1.GetMenuRequest, opts ...http.CallOption) (rsp *v1.Menu, err error)
 	GetRole(ctx context.Context, req *v1.GetRoleRequest, opts ...http.CallOption) (rsp *v1.Role, err error)
+	IsDataPermissionCodeExists(ctx context.Context, req *v1.IsDataPermissionCodeExistsRequest, opts ...http.CallOption) (rsp *v1.IsDataPermissionFieldExistsResponse, err error)
+	IsRoleCodeExists(ctx context.Context, req *v1.IsRoleCodeExistsRequest, opts ...http.CallOption) (rsp *v1.IsRoleFieldExistsResponse, err error)
 	// ListApiMetadata 查询接口元数据（用于菜单按钮的接口权限选择器）
 	ListApiMetadata(ctx context.Context, req *v1.ListApiMetadataRequest, opts ...http.CallOption) (rsp *v1.ListApiMetadataResponse, err error)
+	// ListDataPermission 数据权限规则-列表（分页）
+	ListDataPermission(ctx context.Context, req *v1.ListDataPermissionRequest, opts ...http.CallOption) (rsp *v1.ListDataPermissionResponse, err error)
+	// ListDataPermissionsByRole 查询角色已绑定的数据权限规则列表
+	ListDataPermissionsByRole(ctx context.Context, req *v1.ListDataPermissionsByRoleRequest, opts ...http.CallOption) (rsp *v1.ListDataPermissionsByRoleResponse, err error)
 	// ListMenusByRole 查询角色的菜单列表（树形结构）
 	ListMenusByRole(ctx context.Context, req *v1.ListMenusByRoleRequest, opts ...http.CallOption) (rsp *v1.ListMenusByRoleResponse, err error)
 	// ListRole 角色
@@ -405,6 +671,8 @@ type PermissionServiceHTTPClient interface {
 	// MenuTree 菜单
 	// 列表的tree
 	MenuTree(ctx context.Context, req *v1.MenuTreeRequest, opts ...http.CallOption) (rsp *v1.MenuTreeResponse, err error)
+	UpdateDataPermission(ctx context.Context, req *v1.UpdateDataPermissionRequest, opts ...http.CallOption) (rsp *v1.DataPermission, err error)
+	UpdateDataPermissionStatus(ctx context.Context, req *v1.UpdateDataPermissionStatusRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	// UpdateMenu 更新权限
 	UpdateMenu(ctx context.Context, req *v1.UpdateMenuRequest, opts ...http.CallOption) (rsp *v1.Menu, err error)
 	// UpdateMenuStatus 更新权限状态
@@ -421,6 +689,20 @@ func NewPermissionServiceHTTPClient(client *http.Client) PermissionServiceHTTPCl
 	return &PermissionServiceHTTPClientImpl{client}
 }
 
+// BindDataPermissionsForRole 为角色绑定数据权限规则（全量替换）
+func (c *PermissionServiceHTTPClientImpl) BindDataPermissionsForRole(ctx context.Context, in *v1.BindDataPermissionsForRoleRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/admin/v1/role/{roleId}/data-permissions"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationPermissionServiceBindDataPermissionsForRole))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // BindMenusForRole 为角色绑定菜单（全量替换）
 func (c *PermissionServiceHTTPClientImpl) BindMenusForRole(ctx context.Context, in *v1.BindMenusForRoleRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
@@ -429,6 +711,19 @@ func (c *PermissionServiceHTTPClientImpl) BindMenusForRole(ctx context.Context, 
 	opts = append(opts, http.Operation(OperationPermissionServiceBindMenusForRole))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *PermissionServiceHTTPClientImpl) CreateDataPermission(ctx context.Context, in *v1.CreateDataPermissionRequest, opts ...http.CallOption) (*v1.DataPermission, error) {
+	var out v1.DataPermission
+	pattern := "/admin/v1/data-permission"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationPermissionServiceCreateDataPermission))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -462,6 +757,19 @@ func (c *PermissionServiceHTTPClientImpl) CreateRole(ctx context.Context, in *v1
 	return &out, nil
 }
 
+func (c *PermissionServiceHTTPClientImpl) DeleteDataPermission(ctx context.Context, in *v1.DeleteDataPermissionRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/admin/v1/data-permission"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationPermissionServiceDeleteDataPermission))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // DeleteMenu 批量删除权限
 func (c *PermissionServiceHTTPClientImpl) DeleteMenu(ctx context.Context, in *v1.DeleteMenuRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
@@ -489,11 +797,51 @@ func (c *PermissionServiceHTTPClientImpl) DeleteRole(ctx context.Context, in *v1
 	return &out, nil
 }
 
+// GetMenu 获取权限详情（含接口权限）
+func (c *PermissionServiceHTTPClientImpl) GetMenu(ctx context.Context, in *v1.GetMenuRequest, opts ...http.CallOption) (*v1.Menu, error) {
+	var out v1.Menu
+	pattern := "/admin/v1/menu/{id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationPermissionServiceGetMenu))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 func (c *PermissionServiceHTTPClientImpl) GetRole(ctx context.Context, in *v1.GetRoleRequest, opts ...http.CallOption) (*v1.Role, error) {
 	var out v1.Role
 	pattern := "/admin/v1/role/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationPermissionServiceGetRole))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *PermissionServiceHTTPClientImpl) IsDataPermissionCodeExists(ctx context.Context, in *v1.IsDataPermissionCodeExistsRequest, opts ...http.CallOption) (*v1.IsDataPermissionFieldExistsResponse, error) {
+	var out v1.IsDataPermissionFieldExistsResponse
+	pattern := "/admin/v1/data-permission:code-exists"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationPermissionServiceIsDataPermissionCodeExists))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *PermissionServiceHTTPClientImpl) IsRoleCodeExists(ctx context.Context, in *v1.IsRoleCodeExistsRequest, opts ...http.CallOption) (*v1.IsRoleFieldExistsResponse, error) {
+	var out v1.IsRoleFieldExistsResponse
+	pattern := "/admin/v1/role:code-exists"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationPermissionServiceIsRoleCodeExists))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -508,6 +856,34 @@ func (c *PermissionServiceHTTPClientImpl) ListApiMetadata(ctx context.Context, i
 	pattern := "/admin/v1/api-metadata"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationPermissionServiceListApiMetadata))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// ListDataPermission 数据权限规则-列表（分页）
+func (c *PermissionServiceHTTPClientImpl) ListDataPermission(ctx context.Context, in *v1.ListDataPermissionRequest, opts ...http.CallOption) (*v1.ListDataPermissionResponse, error) {
+	var out v1.ListDataPermissionResponse
+	pattern := "/admin/v1/data-permission"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationPermissionServiceListDataPermission))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// ListDataPermissionsByRole 查询角色已绑定的数据权限规则列表
+func (c *PermissionServiceHTTPClientImpl) ListDataPermissionsByRole(ctx context.Context, in *v1.ListDataPermissionsByRoleRequest, opts ...http.CallOption) (*v1.ListDataPermissionsByRoleResponse, error) {
+	var out v1.ListDataPermissionsByRoleResponse
+	pattern := "/admin/v1/role/{roleId}/data-permissions"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationPermissionServiceListDataPermissionsByRole))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -559,6 +935,32 @@ func (c *PermissionServiceHTTPClientImpl) MenuTree(ctx context.Context, in *v1.M
 	return &out, nil
 }
 
+func (c *PermissionServiceHTTPClientImpl) UpdateDataPermission(ctx context.Context, in *v1.UpdateDataPermissionRequest, opts ...http.CallOption) (*v1.DataPermission, error) {
+	var out v1.DataPermission
+	pattern := "/admin/v1/data-permission/{id}"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationPermissionServiceUpdateDataPermission))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *PermissionServiceHTTPClientImpl) UpdateDataPermissionStatus(ctx context.Context, in *v1.UpdateDataPermissionStatusRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/admin/v1/data-permission/{id}/status"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationPermissionServiceUpdateDataPermissionStatus))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // UpdateMenu 更新权限
 func (c *PermissionServiceHTTPClientImpl) UpdateMenu(ctx context.Context, in *v1.UpdateMenuRequest, opts ...http.CallOption) (*v1.Menu, error) {
 	var out v1.Menu
@@ -603,10 +1005,10 @@ func (c *PermissionServiceHTTPClientImpl) UpdateRole(ctx context.Context, in *v1
 func (c *PermissionServiceHTTPClientImpl) UpdateRoleStatus(ctx context.Context, in *v1.UpdateRoleStatusRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
 	pattern := "/admin/v1/role/{id}/status"
-	path := binding.EncodeURL(pattern, in, true)
+	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationPermissionServiceUpdateRoleStatus))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

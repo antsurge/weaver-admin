@@ -1,0 +1,26 @@
+{
+  "genTableId": "<no value>",
+  "menuModule": "system",
+  "authPrefix": "System:test",
+  "menus": [
+    {
+      "name": "测试2",
+      "type": "menu",
+      "path": "/system/test",
+      "component": "system/test/index",
+      "authCode": "System:test",
+      "weight": 20,
+      "actions": [
+        { "name": "列表", "code": "List", "authCode": "System:test:List" },
+        { "name": "详情", "code": "Detail", "authCode": "System:test:Info" },
+        { "name": "创建", "code": "Create", "authCode": "System:test:Create" },
+        { "name": "编辑", "code": "Edit", "authCode": "System:test:Edit" },
+        { "name": "删除", "code": "Delete", "authCode": "System:test:Delete" },
+        { "name": "批量删除", "code": "BatchDelete", "authCode": "System:test:BatchDelete" },
+        { "name": "状态", "code": "Status", "authCode": "System:test:SwitchStatus" },
+        { "name": "导入", "code": "Import", "authCode": "System:test:Import" },
+        { "name": "导出", "code": "Export", "authCode": "System:test:Export" },
+      ]
+    }
+  ]
+}

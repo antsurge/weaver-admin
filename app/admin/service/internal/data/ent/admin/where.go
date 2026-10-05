@@ -65,6 +65,11 @@ func IDContainsFold(id string) predicate.Admin {
 	return predicate.Admin(sql.FieldContainsFold(FieldID, id))
 }
 
+// TenantID applies equality check predicate on the "tenant_id" field. It's identical to TenantIDEQ.
+func TenantID(v string) predicate.Admin {
+	return predicate.Admin(sql.FieldEQ(FieldTenantID, v))
+}
+
 // RealName applies equality check predicate on the "real_name" field. It's identical to RealNameEQ.
 func RealName(v string) predicate.Admin {
 	return predicate.Admin(sql.FieldEQ(FieldRealName, v))
@@ -90,6 +95,11 @@ func Avatar(v string) predicate.Admin {
 	return predicate.Admin(sql.FieldEQ(FieldAvatar, v))
 }
 
+// DepartmentID applies equality check predicate on the "department_id" field. It's identical to DepartmentIDEQ.
+func DepartmentID(v string) predicate.Admin {
+	return predicate.Admin(sql.FieldEQ(FieldDepartmentID, v))
+}
+
 // Password applies equality check predicate on the "password" field. It's identical to PasswordEQ.
 func Password(v string) predicate.Admin {
 	return predicate.Admin(sql.FieldEQ(FieldPassword, v))
@@ -108,6 +118,71 @@ func UpdatedAt(v time.Time) predicate.Admin {
 // DeletedAt applies equality check predicate on the "deleted_at" field. It's identical to DeletedAtEQ.
 func DeletedAt(v time.Time) predicate.Admin {
 	return predicate.Admin(sql.FieldEQ(FieldDeletedAt, v))
+}
+
+// TenantIDEQ applies the EQ predicate on the "tenant_id" field.
+func TenantIDEQ(v string) predicate.Admin {
+	return predicate.Admin(sql.FieldEQ(FieldTenantID, v))
+}
+
+// TenantIDNEQ applies the NEQ predicate on the "tenant_id" field.
+func TenantIDNEQ(v string) predicate.Admin {
+	return predicate.Admin(sql.FieldNEQ(FieldTenantID, v))
+}
+
+// TenantIDIn applies the In predicate on the "tenant_id" field.
+func TenantIDIn(vs ...string) predicate.Admin {
+	return predicate.Admin(sql.FieldIn(FieldTenantID, vs...))
+}
+
+// TenantIDNotIn applies the NotIn predicate on the "tenant_id" field.
+func TenantIDNotIn(vs ...string) predicate.Admin {
+	return predicate.Admin(sql.FieldNotIn(FieldTenantID, vs...))
+}
+
+// TenantIDGT applies the GT predicate on the "tenant_id" field.
+func TenantIDGT(v string) predicate.Admin {
+	return predicate.Admin(sql.FieldGT(FieldTenantID, v))
+}
+
+// TenantIDGTE applies the GTE predicate on the "tenant_id" field.
+func TenantIDGTE(v string) predicate.Admin {
+	return predicate.Admin(sql.FieldGTE(FieldTenantID, v))
+}
+
+// TenantIDLT applies the LT predicate on the "tenant_id" field.
+func TenantIDLT(v string) predicate.Admin {
+	return predicate.Admin(sql.FieldLT(FieldTenantID, v))
+}
+
+// TenantIDLTE applies the LTE predicate on the "tenant_id" field.
+func TenantIDLTE(v string) predicate.Admin {
+	return predicate.Admin(sql.FieldLTE(FieldTenantID, v))
+}
+
+// TenantIDContains applies the Contains predicate on the "tenant_id" field.
+func TenantIDContains(v string) predicate.Admin {
+	return predicate.Admin(sql.FieldContains(FieldTenantID, v))
+}
+
+// TenantIDHasPrefix applies the HasPrefix predicate on the "tenant_id" field.
+func TenantIDHasPrefix(v string) predicate.Admin {
+	return predicate.Admin(sql.FieldHasPrefix(FieldTenantID, v))
+}
+
+// TenantIDHasSuffix applies the HasSuffix predicate on the "tenant_id" field.
+func TenantIDHasSuffix(v string) predicate.Admin {
+	return predicate.Admin(sql.FieldHasSuffix(FieldTenantID, v))
+}
+
+// TenantIDEqualFold applies the EqualFold predicate on the "tenant_id" field.
+func TenantIDEqualFold(v string) predicate.Admin {
+	return predicate.Admin(sql.FieldEqualFold(FieldTenantID, v))
+}
+
+// TenantIDContainsFold applies the ContainsFold predicate on the "tenant_id" field.
+func TenantIDContainsFold(v string) predicate.Admin {
+	return predicate.Admin(sql.FieldContainsFold(FieldTenantID, v))
 }
 
 // RealNameEQ applies the EQ predicate on the "real_name" field.
@@ -465,6 +540,81 @@ func AvatarContainsFold(v string) predicate.Admin {
 	return predicate.Admin(sql.FieldContainsFold(FieldAvatar, v))
 }
 
+// DepartmentIDEQ applies the EQ predicate on the "department_id" field.
+func DepartmentIDEQ(v string) predicate.Admin {
+	return predicate.Admin(sql.FieldEQ(FieldDepartmentID, v))
+}
+
+// DepartmentIDNEQ applies the NEQ predicate on the "department_id" field.
+func DepartmentIDNEQ(v string) predicate.Admin {
+	return predicate.Admin(sql.FieldNEQ(FieldDepartmentID, v))
+}
+
+// DepartmentIDIn applies the In predicate on the "department_id" field.
+func DepartmentIDIn(vs ...string) predicate.Admin {
+	return predicate.Admin(sql.FieldIn(FieldDepartmentID, vs...))
+}
+
+// DepartmentIDNotIn applies the NotIn predicate on the "department_id" field.
+func DepartmentIDNotIn(vs ...string) predicate.Admin {
+	return predicate.Admin(sql.FieldNotIn(FieldDepartmentID, vs...))
+}
+
+// DepartmentIDGT applies the GT predicate on the "department_id" field.
+func DepartmentIDGT(v string) predicate.Admin {
+	return predicate.Admin(sql.FieldGT(FieldDepartmentID, v))
+}
+
+// DepartmentIDGTE applies the GTE predicate on the "department_id" field.
+func DepartmentIDGTE(v string) predicate.Admin {
+	return predicate.Admin(sql.FieldGTE(FieldDepartmentID, v))
+}
+
+// DepartmentIDLT applies the LT predicate on the "department_id" field.
+func DepartmentIDLT(v string) predicate.Admin {
+	return predicate.Admin(sql.FieldLT(FieldDepartmentID, v))
+}
+
+// DepartmentIDLTE applies the LTE predicate on the "department_id" field.
+func DepartmentIDLTE(v string) predicate.Admin {
+	return predicate.Admin(sql.FieldLTE(FieldDepartmentID, v))
+}
+
+// DepartmentIDContains applies the Contains predicate on the "department_id" field.
+func DepartmentIDContains(v string) predicate.Admin {
+	return predicate.Admin(sql.FieldContains(FieldDepartmentID, v))
+}
+
+// DepartmentIDHasPrefix applies the HasPrefix predicate on the "department_id" field.
+func DepartmentIDHasPrefix(v string) predicate.Admin {
+	return predicate.Admin(sql.FieldHasPrefix(FieldDepartmentID, v))
+}
+
+// DepartmentIDHasSuffix applies the HasSuffix predicate on the "department_id" field.
+func DepartmentIDHasSuffix(v string) predicate.Admin {
+	return predicate.Admin(sql.FieldHasSuffix(FieldDepartmentID, v))
+}
+
+// DepartmentIDIsNil applies the IsNil predicate on the "department_id" field.
+func DepartmentIDIsNil() predicate.Admin {
+	return predicate.Admin(sql.FieldIsNull(FieldDepartmentID))
+}
+
+// DepartmentIDNotNil applies the NotNil predicate on the "department_id" field.
+func DepartmentIDNotNil() predicate.Admin {
+	return predicate.Admin(sql.FieldNotNull(FieldDepartmentID))
+}
+
+// DepartmentIDEqualFold applies the EqualFold predicate on the "department_id" field.
+func DepartmentIDEqualFold(v string) predicate.Admin {
+	return predicate.Admin(sql.FieldEqualFold(FieldDepartmentID, v))
+}
+
+// DepartmentIDContainsFold applies the ContainsFold predicate on the "department_id" field.
+func DepartmentIDContainsFold(v string) predicate.Admin {
+	return predicate.Admin(sql.FieldContainsFold(FieldDepartmentID, v))
+}
+
 // PasswordEQ applies the EQ predicate on the "password" field.
 func PasswordEQ(v string) predicate.Admin {
 	return predicate.Admin(sql.FieldEQ(FieldPassword, v))
@@ -528,6 +678,26 @@ func PasswordEqualFold(v string) predicate.Admin {
 // PasswordContainsFold applies the ContainsFold predicate on the "password" field.
 func PasswordContainsFold(v string) predicate.Admin {
 	return predicate.Admin(sql.FieldContainsFold(FieldPassword, v))
+}
+
+// StatusEQ applies the EQ predicate on the "status" field.
+func StatusEQ(v Status) predicate.Admin {
+	return predicate.Admin(sql.FieldEQ(FieldStatus, v))
+}
+
+// StatusNEQ applies the NEQ predicate on the "status" field.
+func StatusNEQ(v Status) predicate.Admin {
+	return predicate.Admin(sql.FieldNEQ(FieldStatus, v))
+}
+
+// StatusIn applies the In predicate on the "status" field.
+func StatusIn(vs ...Status) predicate.Admin {
+	return predicate.Admin(sql.FieldIn(FieldStatus, vs...))
+}
+
+// StatusNotIn applies the NotIn predicate on the "status" field.
+func StatusNotIn(vs ...Status) predicate.Admin {
+	return predicate.Admin(sql.FieldNotIn(FieldStatus, vs...))
 }
 
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
@@ -683,6 +853,29 @@ func HasRolesWith(preds ...predicate.Role) predicate.Admin {
 	})
 }
 
+// HasDataPermissions applies the HasEdge predicate on the "data_permissions" edge.
+func HasDataPermissions() predicate.Admin {
+	return predicate.Admin(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, DataPermissionsTable, DataPermissionsPrimaryKey...),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasDataPermissionsWith applies the HasEdge predicate on the "data_permissions" edge with a given conditions (other predicates).
+func HasDataPermissionsWith(preds ...predicate.DataPermission) predicate.Admin {
+	return predicate.Admin(func(s *sql.Selector) {
+		step := newDataPermissionsStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // HasAdminRoles applies the HasEdge predicate on the "admin_roles" edge.
 func HasAdminRoles() predicate.Admin {
 	return predicate.Admin(func(s *sql.Selector) {
@@ -698,6 +891,29 @@ func HasAdminRoles() predicate.Admin {
 func HasAdminRolesWith(preds ...predicate.AdminRole) predicate.Admin {
 	return predicate.Admin(func(s *sql.Selector) {
 		step := newAdminRolesStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasAdminDataPermissions applies the HasEdge predicate on the "admin_data_permissions" edge.
+func HasAdminDataPermissions() predicate.Admin {
+	return predicate.Admin(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, AdminDataPermissionsTable, AdminDataPermissionsColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasAdminDataPermissionsWith applies the HasEdge predicate on the "admin_data_permissions" edge with a given conditions (other predicates).
+func HasAdminDataPermissionsWith(preds ...predicate.AdminDataPermission) predicate.Admin {
+	return predicate.Admin(func(s *sql.Selector) {
+		step := newAdminDataPermissionsStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

@@ -9,6 +9,7 @@ import "organization/service/v1/department.proto";
 import "permission/service/v1/menu.proto";
 import "permission/service/v1/role.proto";
 import "permission/service/v1/api_metadata.proto";
+import "permission/service/v1/data_permission.proto";
 
 service PermissionService {
   // 菜单
@@ -19,6 +20,15 @@ service PermissionService {
       tags: "Permission"
       summary: "权限树"
       description: "获取权限树"
+    };
+  }
+  // 获取权限详情（含接口权限）
+  rpc GetMenu(permission.service.v1.GetMenuRequest) returns (permission.service.v1.Menu) {
+    option (google.api.http) = {get: "/admin/v1/menu/{id}"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Permission"
+      summary: "权限-通过ID获取"
+      description: "通过ID获取权限详情（含接口权限）"
     };
   }
   // 创建权限
@@ -107,7 +117,10 @@ service PermissionService {
     };
   }
   rpc UpdateRoleStatus(permission.service.v1.UpdateRoleStatusRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {get: "/admin/v1/role/{id}/status"};
+    option (google.api.http) = {
+      put: "/admin/v1/role/{id}/status"
+      body: "*"
+    };
     option (gnostic.openapi.v3.operation) = {
       tags: "Permission"
       summary: "角色-修改状态"
@@ -120,6 +133,14 @@ service PermissionService {
       tags: "Permission"
       summary: "角色-删除"
       description: "删除角色"
+    };
+  }
+  rpc IsRoleCodeExists(permission.service.v1.IsRoleCodeExistsRequest) returns (permission.service.v1.IsRoleFieldExistsResponse) {
+    option (google.api.http) = {get: "/admin/v1/role:code-exists"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Permission"
+      summary: "角色-角色编码是否存在"
+      description: "角色编码是否存在"
     };
   }
 
@@ -148,6 +169,31 @@ service PermissionService {
     };
   }
 
+  // ====== RBAC 角色数据权限规则绑定 ======
+
+  // 为角色绑定数据权限规则（全量替换）
+  rpc BindDataPermissionsForRole(permission.service.v1.BindDataPermissionsForRoleRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/admin/v1/role/{roleId}/data-permissions"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Permission"
+      summary: "角色-绑定数据权限规则"
+      description: "为角色绑定数据权限规则（全量替换）"
+    };
+  }
+
+  // 查询角色已绑定的数据权限规则列表
+  rpc ListDataPermissionsByRole(permission.service.v1.ListDataPermissionsByRoleRequest) returns (permission.service.v1.ListDataPermissionsByRoleResponse) {
+    option (google.api.http) = {get: "/admin/v1/role/{roleId}/data-permissions"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Permission"
+      summary: "角色-查询数据权限规则"
+      description: "查询角色已绑定的数据权限规则列表"
+    };
+  }
+
   // 查询接口元数据（用于菜单按钮的接口权限选择器）
   rpc ListApiMetadata(permission.service.v1.ListApiMetadataRequest) returns (permission.service.v1.ListApiMetadataResponse) {
     option (google.api.http) = {get: "/admin/v1/api-metadata"};
@@ -155,6 +201,67 @@ service PermissionService {
       tags: "Permission"
       summary: "接口元数据-查询"
       description: "查询所有可用的接口元数据（按 service 分组）"
+    };
+  }
+
+  // ====== 数据权限 ======
+
+  // 数据权限规则-列表（分页）
+  rpc ListDataPermission(permission.service.v1.ListDataPermissionRequest) returns (permission.service.v1.ListDataPermissionResponse) {
+    option (google.api.http) = {get: "/admin/v1/data-permission"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Permission"
+      summary: "数据权限-列表"
+      description: "数据权限规则分页列表"
+    };
+  }
+  rpc CreateDataPermission(permission.service.v1.CreateDataPermissionRequest) returns (permission.service.v1.DataPermission) {
+    option (google.api.http) = {
+      post: "/admin/v1/data-permission"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Permission"
+      summary: "数据权限-创建"
+      description: "创建数据权限规则"
+    };
+  }
+  rpc UpdateDataPermission(permission.service.v1.UpdateDataPermissionRequest) returns (permission.service.v1.DataPermission) {
+    option (google.api.http) = {
+      put: "/admin/v1/data-permission/{id}"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Permission"
+      summary: "数据权限-修改"
+      description: "修改数据权限规则"
+    };
+  }
+  rpc UpdateDataPermissionStatus(permission.service.v1.UpdateDataPermissionStatusRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/admin/v1/data-permission/{id}/status"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Permission"
+      summary: "数据权限-更新状态"
+      description: "更新数据权限规则启用状态"
+    };
+  }
+  rpc DeleteDataPermission(permission.service.v1.DeleteDataPermissionRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/admin/v1/data-permission"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Permission"
+      summary: "数据权限-删除(批量)"
+      description: "删除数据权限规则(支持批量)"
+    };
+  }
+  rpc IsDataPermissionCodeExists(permission.service.v1.IsDataPermissionCodeExistsRequest) returns (permission.service.v1.IsDataPermissionFieldExistsResponse) {
+    option (google.api.http) = {get: "/admin/v1/data-permission:code-exists"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Permission"
+      summary: "数据权限-规则编码是否存在"
+      description: "数据权限规则编码是否存在（用于表单失焦校验）"
     };
   }
 }

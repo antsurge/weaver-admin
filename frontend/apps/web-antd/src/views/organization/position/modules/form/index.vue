@@ -6,23 +6,22 @@ import type { OrganizationPositionApi } from '#/api/organization/position';
 // ==================== vue ====================
 import { computed, ref } from 'vue';
 
-// ==================== vben ====================
-import { useVbenForm, z } from '#/adapter/form';
 import { useVbenModal } from '@vben/common-ui';
-import { $t } from '#/locales';
 
 // ==================== third-party ====================
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
 
+// ==================== vben ====================
+import { useVbenForm, z } from '#/adapter/form';
 // ==================== api ====================
 import {
-  getPositionApi,
   createPositionApi,
-  updatePositionApi,
-  isPositionNameExistsApi,
+  getPositionApi,
   isPositionCodeExistsApi,
+  isPositionNameExistsApi,
+  updatePositionApi,
 } from '#/api/organization/position';
-
+import { $t } from '#/locales';
 
 const emit = defineEmits<{
   success: [];
@@ -36,14 +35,26 @@ const schema: VbenFormSchema[] = [
     component: 'Input',
     rules: z
       .string()
-      .min(2, $t('ui.formRules.minLength', [$t('organization.position.fields.name'), 2]))
-      .max(30, $t('ui.formRules.maxLength', [$t('organization.position.fields.name'), 30]))
+      .min(
+        2,
+        $t('ui.formRules.minLength', [
+          $t('organization.position.fields.name'),
+          2,
+        ]),
+      )
+      .max(
+        30,
+        $t('ui.formRules.maxLength', [
+          $t('organization.position.fields.name'),
+          30,
+        ]),
+      )
       .refine(
         async (value: string) => {
           if (!value) {
-            return false
+            return false;
           }
-          let res = await isPositionNameExistsApi(value, formData.value?.id)
+          const res = await isPositionNameExistsApi(value, formData.value?.id);
           return !res?.exists;
         },
         (value) => ({
@@ -65,14 +76,26 @@ const schema: VbenFormSchema[] = [
     component: 'Input',
     rules: z
       .string()
-      .min(2, $t('ui.formRules.minLength', [$t('organization.position.fields.code'), 2]))
-      .max(30, $t('ui.formRules.maxLength', [$t('organization.position.fields.code'), 30]))
+      .min(
+        2,
+        $t('ui.formRules.minLength', [
+          $t('organization.position.fields.code'),
+          2,
+        ]),
+      )
+      .max(
+        30,
+        $t('ui.formRules.maxLength', [
+          $t('organization.position.fields.code'),
+          30,
+        ]),
+      )
       .refine(
         async (value: string) => {
           if (!value) {
-            return false
+            return false;
           }
-          let res = await isPositionCodeExistsApi(value, formData.value?.id)
+          const res = await isPositionCodeExistsApi(value, formData.value?.id);
           return !res?.exists;
         },
         (value) => ({
@@ -87,6 +110,8 @@ const schema: VbenFormSchema[] = [
         $t('organization.position.fields.code'),
       ]),
     },
+    // 失焦时校验职务编码是否已存在
+    formFieldProps: { validateOnBlur: true },
   },
   {
     fieldName: 'weight',
@@ -136,7 +161,7 @@ const [Form, formApi] = useVbenForm({
     formItemClass: 'col-span-2 md:col-span-2',
     labelWidth: 90,
   },
-  schema: schema,
+  schema,
   showDefaultActions: false,
   wrapperClass: 'grid-cols-2 gap-x-4',
 });
@@ -170,11 +195,9 @@ async function onSubmit() {
   modalApi.lock();
   const data = await formApi.getValues<OrganizationPositionApi.Position>();
   try {
-    if (formData.value?.id) {
-      await updatePositionApi(formData.value.id, data);
-    } else {
-      await createPositionApi(data);
-    }
+    await (formData.value?.id
+      ? updatePositionApi(formData.value.id, data)
+      : createPositionApi(data));
     modalApi.close();
     emit('success');
   } finally {

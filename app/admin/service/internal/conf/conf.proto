@@ -9,14 +9,32 @@ message Bootstrap {
   Server server = 1;
   Data data = 2;
   JWT jwt = 3;
-  MQ mq = 4;
-  App app = 5;
-  OpenAPI openapi = 6;
+  App app = 4;
+  OpenAPI openapi = 5;
+  OSS oss = 6;
+  MQ mq = 7;
+  Codegen codegen = 8;
+}
+
+/**
+ * 代码生成器配置
+ */
+message Codegen {
+  // 生成代码输出根目录（项目根路径，如 /path/to/weaver-admin）。
+  // 为空则不写盘，仅返回生成内容供预览/下载。
+  string output_root = 1;
+  // 是否启用写盘（默认 false，需显式开启；output_root 为空时无论是否开启都不写盘）
+  bool write_to_disk = 2;
 }
 
 message App {
   bool is_demo = 1; // 演示环境
   string super_admin_code = 2;  // 超级管理员的code
+  string admin_default_password = 3; // 新建管理员时未指定密码所采用的默认密码
+  bool authz_enabled = 4; // 接口权限校验总开关（false = 不校验，用于权限数据未就绪/开发联调阶段；开启后 superAdmin 直通、其余按角色绑定接口权限匹配）
+  string tenant_mode = 5; // 租户模式：single=单租户（仅默认租户，UI 不展示租户相关入口）；multi=多租户
+  string default_tenant_code = 6; // 默认租户编码（默认 default）
+  bool tenant_superadmin_cross_read = 7; // 平台超管是否允许跨租户只读（默认 false，强隔离）
 }
 
 message Server {
@@ -62,21 +80,7 @@ message JWT {
 
   // token 签发方（iss）
   string issuer = 3;
-
-  // access token 有效期
-  google.protobuf.Duration access_ttl = 4;
-
-  // refresh token 有效期
-  google.protobuf.Duration refresh_ttl = 5;
-}
-
-/**
-MQ配置
- */
-message MQ {
-  string driver = 1;
-
-  RabbitMQ rabbitmq = 2;
+  // 注：access/refresh token 有效期由安全策略管理，不再在此配置
 }
 
 /**
@@ -87,20 +91,62 @@ message OpenAPI {
   string path = 1;
 }
 
-// Rabbitmq 配置
-message RabbitMQ {
-  string url = 1;
+/**
+ * 对象存储配置（兼容 S3 协议：阿里云 OSS / 腾讯云 COS / 七牛云 / MinIO）
+ */
+message OSS {
+  // 是否启用
+  bool enabled = 1;
+  // 服务端点，如 https://oss-cn-hangzhou.aliyuncs.com
+  string endpoint = 2;
+  // 访问密钥 ID
+  string access_key_id = 3;
+  // 访问密钥 Secret
+  string access_key_secret = 4;
+  // 区域（腾讯云 COS 等必填）
+  string region = 5;
+  // 存储桶名称
+  string bucket = 6;
+  // 是否使用 HTTPS
+  bool use_ssl = 7;
+  // 自定义公开访问域名（CDN/绑定域名），为空时用 endpoint 拼装
+  string public_url = 8;
+  // 是否使用 path-style（MinIO / 七牛云等需开启）
+  bool use_path_style = 9;
+  // 允许上传的文件扩展名（小写、含点），为空则不限制
+  repeated string allow_extensions = 10;
+  // 单个文件最大字节数，0 表示不限制
+  int64 max_file_size = 11;
+  // 上传到对象存储的目录前缀
+  string upload_prefix = 12;
+  // 存储桶是否私有：私有桶访问文件时动态生成带签名的临时地址
+  bool private = 13;
+  // 私有桶预签名地址的有效期，默认 15m
+  google.protobuf.Duration presign_expiry = 14;
+}
 
-  // 默认 exchange（可以为空）
-  string exchange = 2;
-
-  string queue = 3;
-
-  string routing_key = 4;
-
-  int32 prefetch = 5;
-
-  int32 pool_size = 6;
-
-  bool durable = 7;
+/**
+ * 消息中间件配置（驱动化：memory / redis / rabbitmq / kafka / noop）
+ *
+ * 语义约定：
+ *   - 订阅时 Group 为空 → 广播（每个实例都收到），用于 SSE 推送扇出
+ *   - 订阅时 Group 非空 → 负载均衡（同组内只有一个实例收到），用于异步任务
+ */
+message MQ {
+  // 总开关：false 时使用内置空实现，消息被丢弃但不影响服务启动
+  bool enabled = 1;
+  // 驱动名：memory（开发/单副本）| redis（Pub/Sub）| rabbitmq | kafka | noop
+  string driver = 2;
+  // 连接地址，多数驱动只用第一个
+  repeated string addrs = 3;
+  // 用户名
+  string username = 4;
+  // 密码
+  string password = 5;
+  // 虚拟主机（RabbitMQ）
+  string vhost = 6;
+  // topic 前缀，如 "weaver."
+  string prefix = 7;
+  // 驱动私有参数（如 db、pool_size、network）
+  map<string, string> options = 8;
 }

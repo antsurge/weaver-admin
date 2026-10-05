@@ -1,18 +1,16 @@
 <script lang="ts" setup>
+import type { DeptNode } from '#/components/department-tree/index.vue';
+
 import { reactive, ref } from 'vue';
 
 import { ColPage } from '@vben/common-ui';
 import { IconifyIcon } from '@vben/icons';
-import Table from "./modules/table/index.vue"
-import DepartmentTree from "#/components/department-tree/index.vue"
 
-import {
-  Button,
-  Card,
-  Checkbox,
-  Slider,
-  Tooltip,
-} from 'ant-design-vue';
+import { Button, Tooltip } from 'ant-design-vue';
+
+import DepartmentTree from '#/components/department-tree/index.vue';
+
+import Table from './modules/table/index.vue';
 
 const props = reactive({
   leftCollapsedWidth: 5,
@@ -25,16 +23,16 @@ const props = reactive({
   splitHandle: true,
   splitLine: true,
 });
-const leftMinWidth = ref(props.leftMinWidth || 1);
-const leftMaxWidth = ref(props.leftMaxWidth || 100);
+
+// 左侧选中的部门（用于列表过滤 + 新增时默认归属）
+const selectedDept = ref<DeptNode | null>(null);
+
+function onSelectDept(node: DeptNode | null) {
+  selectedDept.value = node;
+}
 </script>
 <template>
-  <ColPage
-    auto-content-height
-    description=""
-    v-bind="props"
-    title=""
-  >
+  <ColPage auto-content-height description="" v-bind="props" title="">
     <template #left="{ isCollapsed, expand }">
       <div v-if="isCollapsed" @click="expand">
         <Tooltip title="点击展开左侧">
@@ -48,11 +46,14 @@ const leftMaxWidth = ref(props.leftMaxWidth || 100);
       <div
         v-else
         :style="{ minWidth: '120px' }"
-        class="mr-2 rounded-(--radius) border border-border bg-card p-2"
+        class="rounded-(--radius) mr-2 border border-border bg-card p-2"
       >
-        <DepartmentTree @select="(value:any)=>{console.log('我是选中的数据',value)}"/>
+        <DepartmentTree @select="onSelectDept" />
       </div>
     </template>
-    <Table />
+    <Table
+      :department-id="selectedDept?.id"
+      :department-name="selectedDept?.name"
+    />
   </ColPage>
 </template>

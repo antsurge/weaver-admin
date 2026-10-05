@@ -1,0 +1,12 @@
+# Notification error codes
+[NOTIFICATION_NOT_FOUND]
+other = "Notification not found"
+
+[NOTIFICATION_NO_TARGET]
+other = "No target user matched"
+
+[NOTIFICATION_BAD_REQUEST]
+other = "Invalid notification argument"
+
+[NOTIFICATION_UNAUTHORIZED]
+other = "Please sign in to perform this operation"

@@ -1,0 +1,156 @@
+syntax = "proto3";
+
+package ops.service.v1;
+
+import "buf/validate/validate.proto";
+import "gnostic/openapi/v3/annotations.proto";
+
+// ============ 服务监控 ============
+
+message ServerInfo {
+  string hostname = 1 [(gnostic.openapi.v3.property) = {description: "主机名"}];
+  string os = 2 [(gnostic.openapi.v3.property) = {description: "操作系统"}];
+  string arch = 3 [(gnostic.openapi.v3.property) = {description: "CPU 架构"}];
+  string goVersion = 4 [(gnostic.openapi.v3.property) = {description: "Go 版本"}];
+  int32 numCPU = 5 [(gnostic.openapi.v3.property) = {description: "CPU 核数"}];
+  int32 numGoroutine = 6 [(gnostic.openapi.v3.property) = {description: "当前协程数"}];
+  int32 goMaxProcs = 7 [(gnostic.openapi.v3.property) = {description: "GOMAXPROCS"}];
+  int64 heapAlloc = 8 [(gnostic.openapi.v3.property) = {description: "堆分配内存（字节）"}];
+  int64 heapSys = 9 [(gnostic.openapi.v3.property) = {description: "堆占用系统内存（字节）"}];
+  int64 heapInuse = 10 [(gnostic.openapi.v3.property) = {description: "堆在用内存（字节）"}];
+  int64 stackInuse = 11 [(gnostic.openapi.v3.property) = {description: "栈在用内存（字节）"}];
+  int64 sys = 12 [(gnostic.openapi.v3.property) = {description: "进程向系统申请的内存（字节）"}];
+  int64 totalAlloc = 13 [(gnostic.openapi.v3.property) = {description: "累计分配内存（字节）"}];
+  uint32 numGC = 14 [(gnostic.openapi.v3.property) = {description: "GC 次数"}];
+  int64 gcPauseTotalMs = 15 [(gnostic.openapi.v3.property) = {description: "GC 累计暂停（毫秒）"}];
+  string startTime = 16 [(gnostic.openapi.v3.property) = {description: "进程启动时间"}];
+  int64 uptimeSeconds = 17 [(gnostic.openapi.v3.property) = {description: "运行时长（秒）"}];
+}
+
+message GetServerInfoRequest {}
+
+// ============ 缓存监控 ============
+
+message CacheInfo {
+  string version = 1 [(gnostic.openapi.v3.property) = {description: "Redis 版本"}];
+  string mode = 2 [(gnostic.openapi.v3.property) = {description: "运行模式（standalone/sentinel/cluster）"}];
+  string role = 3 [(gnostic.openapi.v3.property) = {description: "角色（master/slave）"}];
+  int64 uptimeSeconds = 4 [(gnostic.openapi.v3.property) = {description: "运行时长（秒）"}];
+  int32 connectedClients = 5 [(gnostic.openapi.v3.property) = {description: "当前连接数"}];
+  int64 usedMemory = 6 [(gnostic.openapi.v3.property) = {description: "已用内存（字节）"}];
+  string usedMemoryHuman = 7 [(gnostic.openapi.v3.property) = {description: "已用内存（可读）"}];
+  int64 maxMemory = 8 [(gnostic.openapi.v3.property) = {description: "最大内存（字节），0 表示不限制"}];
+  int64 totalKeys = 9 [(gnostic.openapi.v3.property) = {description: "当前库键总数"}];
+  int64 keyspaceHits = 10 [(gnostic.openapi.v3.property) = {description: "命中次数"}];
+  int64 keyspaceMisses = 11 [(gnostic.openapi.v3.property) = {description: "未命中次数"}];
+  double hitRate = 12 [(gnostic.openapi.v3.property) = {description: "命中率（0-100）"}];
+  int64 totalCommands = 13 [(gnostic.openapi.v3.property) = {description: "累计处理命令数"}];
+  int64 expiredKeys = 14 [(gnostic.openapi.v3.property) = {description: "累计过期键数"}];
+  int64 evictedKeys = 15 [(gnostic.openapi.v3.property) = {description: "累计淘汰键数"}];
+  int64 opsPerSec = 16 [(gnostic.openapi.v3.property) = {description: "每秒处理命令数（瞬时）"}];
+}
+
+message GetCacheInfoRequest {}
+
+// 缓存键信息
+message CacheKey {
+  string key = 1 [(gnostic.openapi.v3.property) = {description: "键名（超长时脱敏）"}];
+  string type = 2 [(gnostic.openapi.v3.property) = {description: "数据类型"}];
+  int64 ttlSeconds = 3 [(gnostic.openapi.v3.property) = {description: "剩余过期时间（秒），-1 表示永不过期"}];
+  int64 size = 4 [(gnostic.openapi.v3.property) = {description: "占用内存（字节），-1 表示未知"}];
+  string value = 5 [(gnostic.openapi.v3.property) = {description: "键值（预览，超长截断）"}];
+  string rawKey = 6 [(gnostic.openapi.v3.property) = {description: "原始键名（用于复制）"}];
+}
+
+message ListCacheKeyRequest {
+  int64 currentPage = 1 [(gnostic.openapi.v3.property) = {description: "当前页码（从1开始）"}];
+  int64 pageSize = 2 [(gnostic.openapi.v3.property) = {description: "每页条数（传0为全部）"}];
+  string pattern = 3 [(gnostic.openapi.v3.property) = {description: "匹配模式（支持通配符 *，默认全部）"}];
+}
+
+message ListCacheKeyResponse {
+  repeated CacheKey items = 1;
+  int64 total = 2;
+}
+
+// ============ 数据库监控 ============
+
+message DatabaseInfo {
+  string driver = 1 [(gnostic.openapi.v3.property) = {description: "驱动"}];
+  string version = 2 [(gnostic.openapi.v3.property) = {description: "数据库版本"}];
+  string database = 3 [(gnostic.openapi.v3.property) = {description: "数据库名"}];
+  int32 tableCount = 4 [(gnostic.openapi.v3.property) = {description: "表数量"}];
+  int32 maxOpenConnections = 5 [(gnostic.openapi.v3.property) = {description: "最大连接数"}];
+  int32 openConnections = 6 [(gnostic.openapi.v3.property) = {description: "当前打开连接数"}];
+  int32 inUse = 7 [(gnostic.openapi.v3.property) = {description: "使用中的连接数"}];
+  int32 idle = 8 [(gnostic.openapi.v3.property) = {description: "空闲连接数"}];
+  int64 waitCount = 9 [(gnostic.openapi.v3.property) = {description: "等待连接的累计次数"}];
+  int64 waitDurationMs = 10 [(gnostic.openapi.v3.property) = {description: "等待连接的累计时长（毫秒）"}];
+  int64 maxIdleClosed = 11 [(gnostic.openapi.v3.property) = {description: "因空闲过多而关闭的连接数"}];
+  int64 maxLifetimeClosed = 12 [(gnostic.openapi.v3.property) = {description: "因超时而关闭的连接数"}];
+  repeated DbTableStat tables = 13 [(gnostic.openapi.v3.property) = {description: "表统计"}];
+}
+
+message DbTableStat {
+  string name = 1 [(gnostic.openapi.v3.property) = {description: "表名"}];
+  int64 rows = 2 [(gnostic.openapi.v3.property) = {description: "行数（估算）"}];
+  int64 dataSize = 3 [(gnostic.openapi.v3.property) = {description: "数据大小（字节）"}];
+  int64 indexSize = 4 [(gnostic.openapi.v3.property) = {description: "索引大小（字节）"}];
+}
+
+message GetDatabaseInfoRequest {}
+
+// ============ 接口监控 ============
+
+message ApiMetric {
+  string method = 1 [(gnostic.openapi.v3.property) = {description: "HTTP 方法"}];
+  string path = 2 [(gnostic.openapi.v3.property) = {description: "路由路径模板"}];
+  int64 total = 3 [(gnostic.openapi.v3.property) = {description: "总请求数"}];
+  int64 success = 4 [(gnostic.openapi.v3.property) = {description: "成功请求数"}];
+  int64 error = 5 [(gnostic.openapi.v3.property) = {description: "失败请求数"}];
+  double errorRate = 6 [(gnostic.openapi.v3.property) = {description: "失败率（0-100）"}];
+  double avgMs = 7 [(gnostic.openapi.v3.property) = {description: "平均耗时（毫秒）"}];
+  double maxMs = 8 [(gnostic.openapi.v3.property) = {description: "最大耗时（毫秒）"}];
+  double lastMs = 9 [(gnostic.openapi.v3.property) = {description: "最近一次耗时（毫秒）"}];
+}
+
+message GetApiMetricsRequest {
+  string method = 1 [(gnostic.openapi.v3.property) = {description: "HTTP 方法过滤（可选，如 GET）"}];
+  string path = 2 [(gnostic.openapi.v3.property) = {description: "接口路径模糊查询（可选）"}];
+}
+
+message GetApiMetricsResponse {
+  repeated ApiMetric items = 1;
+  int64 totalRequests = 2;
+  int64 totalErrors = 3;
+  int64 uptimeSeconds = 4 [(gnostic.openapi.v3.property) = {description: "统计时长（秒，服务启动至今）"}];
+}
+
+// ============ 定时任务监控 ============
+
+message JobMonitorInfo {
+  int64 totalJobs = 1 [(gnostic.openapi.v3.property) = {description: "任务总数"}];
+  int64 enabledJobs = 2 [(gnostic.openapi.v3.property) = {description: "启用任务数"}];
+  int64 disabledJobs = 3 [(gnostic.openapi.v3.property) = {description: "禁用任务数"}];
+  int64 totalRuns = 4 [(gnostic.openapi.v3.property) = {description: "累计执行次数"}];
+  int64 successRuns = 5 [(gnostic.openapi.v3.property) = {description: "成功次数"}];
+  int64 failedRuns = 6 [(gnostic.openapi.v3.property) = {description: "失败次数"}];
+  double successRate = 7 [(gnostic.openapi.v3.property) = {description: "成功率（0-100）"}];
+  int64 runningJobs = 8 [(gnostic.openapi.v3.property) = {description: "当前正在执行的任务数"}];
+  repeated JobRunLog recentRuns = 9 [(gnostic.openapi.v3.property) = {description: "最近执行记录"}];
+}
+
+message JobRunLog {
+  string id = 1 [(gnostic.openapi.v3.property) = {description: "日志ID"}];
+  string jobName = 2 [(gnostic.openapi.v3.property) = {description: "任务名称"}];
+  string jobGroup = 3 [(gnostic.openapi.v3.property) = {description: "任务分组"}];
+  string status = 4 [(gnostic.openapi.v3.property) = {description: "执行结果：success/fail"}];
+  string message = 5 [(gnostic.openapi.v3.property) = {description: "执行信息"}];
+  string startTime = 6 [(gnostic.openapi.v3.property) = {description: "开始时间"}];
+  int64 duration = 7 [(gnostic.openapi.v3.property) = {description: "耗时（毫秒）"}];
+}
+
+message GetJobMonitorRequest {
+  string name = 1 [(gnostic.openapi.v3.property) = {description: "任务名称模糊查询（可选）"}];
+  string group = 2 [(gnostic.openapi.v3.property) = {description: "任务分组模糊查询（可选）"}];
+}

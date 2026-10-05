@@ -1,15 +1,39 @@
 {
+  "enabled": "启用",
+  "disabled": "禁用",
   "fields": {
     "seq": "序号",
     "operation": "操作",
     "createdAt": "创建时间",
     "updatedAt": "更新时间"
   },
+  "confirm": "确认",
+  "close": "关闭",
   "actions": {
     "list": "列表",
     "create":"新增",
     "info": "详情",
     "edit": "编辑",
-    "delete": "删除"
+    "delete": "删除",
+    "batchDelete": "批量删除",
+    "expandAll":"展开全部",
+    "collapseAll":"折叠全部",
+    "addSubordinate":"新增下级",
+    "switchStatus":"启用/禁用",
+    "import":"导入",
+    "export":"导出",
+    "downloadTemplate":"下载模版",
+    "resetPassword":"重置密码",
+    "read":"已读",
+    "clear":"清空",
+    "forceLogout":"强制下线",
+    "revoke":"撤回",
+    "search": "查询",
+    "reset": "重置",
+    "save": "保存",
+    "design": "设计",
+    "editField": "字段配置",
+    "generate": "生成代码",
+    "preview": "预览"
   }
 }

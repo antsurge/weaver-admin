@@ -1,10 +1,21 @@
 app:
   is_demo: false
-  super_admin_code: superAdmin
+  super_admin_code: SuperAdmin
+  # 新建管理员时的默认密码（生产环境务必修改为强密码）
+  admin_default_password: "123456"
+  # 接口权限校验总开关：false=不校验（角色绑定接口权限数据未配齐前建议保持关闭）
+  authz_enabled: true
+  # 租户模式：single=单租户（仅默认租户，UI 不展示租户相关入口）；multi=多租户
+  # 说明：即使 single，内部依旧按多租户隔离（所有数据归属 default 租户）
+  tenant_mode: single
+  # 默认租户编码（single 模式下即唯一租户）
+  default_tenant_code: "default"
+  # 平台超管是否允许跨租户只读（默认 false，保持强隔离）
+  tenant_superadmin_cross_read: false
 server:
   http:
     addr: 0.0.0.0:8888
-    timeout: 3s
+    timeout: 30s
   grpc:
     addr: 0.0.0.0:9999
     timeout: 3s
@@ -22,16 +33,48 @@ jwt:
   access_secret: "kratos-admin-access-secret"
   refresh_secret: "kratos-admin-access-refresh"
   issuer: "kratos-admin"
-  access_ttl: 7200s
-  refresh_ttl: 604800s # 7
-mq:
-  rabbitmq:
-    url: "amqp://guest:guest@127.0.0.1:5672/"
-    exchange: "" # 默认交换机
-    queue: ""
-    routing_key: ""
-    prefetch: 10 # 消费限流
-    pool_size: 2
-    durable: true
+  # 注：access/refresh token 有效期已由「系统设置-安全策略」管理，不再在配置文件中配置
+# 代码生成器：生成代码可直接写入项目磁盘
+codegen:
+  # 项目根目录（写盘时会根据生成文件相对路径映射到实际目录）；为空则不写盘，仅返回内容预览
+  output_root: /Users/wjf/Startup/OpenSourceProject/weaver-admin/weaver-admin
+  # 是否启用写盘（需 output_root 也配置；默认 false）
+  write_to_disk: true
 openapi:
   path: "" # 为空时自动尝试 fallback 路径
+
+# 消息中间件（驱动可插拔：memory / redis / rabbitmq / kafka / noop）
+mq:
+  enabled: true
+  # 本地开发/单副本用 memory；多副本部署改为 redis，保证跨实例推送
+  driver: memory
+  addrs:
+    - "127.0.0.1:6379"
+  username: ""
+  password: ""
+  vhost: ""
+  prefix: "weaver."
+  options:
+    db: "0"
+    pool_size: "10"
+
+# 对象存储配置（兼容 S3 协议：阿里云 OSS / 腾讯云 COS / 七牛云 / MinIO）
+oss:
+  enabled: true # 启用后才会初始化客户端
+  # 阿里云 OSS:   https://oss-cn-hangzhou.aliyuncs.com
+  # 腾讯云 COS:   https://cos.ap-guangzhou.myqcloud.com
+  # 七牛云 Kodo:  https://s3-cn-east-1.qiniucs.com
+  # MinIO 自建:   http://127.0.0.1:9000
+  endpoint: "https://oss-cn-beijing.aliyuncs.com"
+  access_key_id: ""
+  access_key_secret: ""
+  region: "" # 腾讯云 COS 等部分厂商必填
+  bucket: "weaver-admin"
+  use_ssl: true
+  public_url: "" # 自定义 CDN/绑定域名，为空时用 endpoint 拼装
+  use_path_style: false # MinIO/七牛云等需开启
+  allow_extensions: [] # 允许的扩展名（小写含点），为空不限制，如 [".jpg", ".png"]
+  max_file_size: 10485760 # 单个文件最大字节数（10MB），0 不限制
+  upload_prefix: "uploads" # 对象键前缀
+  private: true # 存储桶是否私有：私有桶访问文件时动态生成带签名的临时地址
+  presign_expiry: 900s # 私有桶预签名地址有效期（900s=15m，proto Duration 需带 s 后缀）

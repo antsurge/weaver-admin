@@ -1,14 +1,17 @@
+import type { VbenFormProps } from '#/adapter/form';
 import type { OnActionClickFn, VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { PermissionMenuApi } from '#/api/permission/menu';
-import type { VbenFormProps } from '#/adapter/form';
 
+import { useAccess } from '@vben/access';
+
+import { PermissionAuthCode } from '#/access';
 import { $t } from '#/locales';
 
-export const PermissionTypeOptionsValueCatalog = "catalog"
-export const PermissionTypeOptionsValueMenu = "menu"
-export const PermissionTypeOptionsValueAction = "action"
-export const PermissionTypeOptionsValueIframe = "iframe"
-export const PermissionTypeOptionsValueLink = "link"
+export const PermissionTypeOptionsValueCatalog = 'catalog';
+export const PermissionTypeOptionsValueMenu = 'menu';
+export const PermissionTypeOptionsValueAction = 'action';
+export const PermissionTypeOptionsValueIframe = 'iframe';
+export const PermissionTypeOptionsValueLink = 'link';
 export function getPermissionTypeOptions() {
   return [
     {
@@ -39,8 +42,8 @@ export function getPermissionTypeOptions() {
   ];
 }
 
-export const PermissionBadgeTypeOptionsValueDot = "dot"
-export const PermissionBadgeTypeOptionsValueText = "text"
+export const PermissionBadgeTypeOptionsValueDot = 'dot';
+export const PermissionBadgeTypeOptionsValueText = 'text';
 export function getBadgeTypeOptions() {
   return [
     {
@@ -80,18 +83,22 @@ export function getBadgeVariantsOptions() {
   ];
 }
 
-// 标题，图标，Code、类型、状态、修改时间
+// 标题、名称、权限标识、类型、路径、权重、状态、修改时间
 export function useColumns(
   onActionClick: OnActionClickFn<PermissionMenuApi.PermissionMenu>,
-  onStatusChange?: (newStatus: any, row: T) => PromiseLike<boolean | undefined>,
+  onStatusChange?: (
+    newStatus: any,
+    row: PermissionMenuApi.PermissionMenu,
+  ) => PromiseLike<boolean | undefined>,
 ): VxeTableGridOptions<PermissionMenuApi.PermissionMenu>['columns'] {
+  const { hasAccessByCodes } = useAccess();
   return [
     {
       field: 'id',
       align: 'center',
       type: 'checkbox',
       width: 60,
-      fixed: 'left'
+      fixed: 'left',
     },
     {
       field: 'title',
@@ -99,7 +106,7 @@ export function useColumns(
       title: $t('permission.menu.fields.title'),
       treeNode: true,
       slots: { default: 'title' },
-      width: 200,
+      width: 160,
       formatter: ({ cellValue }) => {
         return $t(cellValue);
       },
@@ -108,13 +115,13 @@ export function useColumns(
       field: 'name',
       align: 'center',
       title: $t('permission.menu.fields.name'),
-      width: 200,
+      width: 160,
     },
     {
       field: 'authCode',
       align: 'center',
       title: $t('permission.menu.fields.authCode'),
-      width: 200,
+      width: 220,
     },
     {
       align: 'center',
@@ -129,20 +136,38 @@ export function useColumns(
       title: $t('permission.menu.fields.path'),
     },
     {
+      align: 'center',
+      field: 'weight',
+      title: $t('permission.menu.fields.weight'),
+      width: 80,
+    },
+    {
       field: 'status',
       cellRender: {
         name: 'CellSwitch',
-        attrs: { beforeChange: onStatusChange },
+        attrs: {
+          beforeChange: onStatusChange,
+          // 无启用/禁用按钮权限时禁用开关
+          disabled: () =>
+            !hasAccessByCodes([PermissionAuthCode.Menu.SwitchStatus]),
+        },
       },
       align: 'center',
       title: $t('permission.menu.fields.status'),
       width: 100,
     },
     {
+      field: 'updatedAt',
+      align: 'center',
+      title: $t('permission.menu.fields.updatedAt'),
+      width: 160,
+      formatter: 'formatDateTime',
+    },
+    {
       align: 'center',
       cellRender: {
         attrs: {
-          nameField: 'permission.name',
+          nameField: 'name',
           onClick: onActionClick,
         },
         name: 'CellOperation',
@@ -150,10 +175,19 @@ export function useColumns(
           {
             code: 'append',
             text: $t('permission.menu.operation.appendChildren'),
-            show: (row: any) => row.type !== PermissionTypeOptionsValueAction,
+            // 追加子级属于独立按钮权限
+            show: (row: any) =>
+              row.type !== PermissionTypeOptionsValueAction &&
+              hasAccessByCodes([PermissionAuthCode.Menu.AddSubordinate]),
           },
-          'edit', // 默认的编辑按钮
-          'delete', // 默认的删除按钮
+          {
+            code: 'edit',
+            show: hasAccessByCodes([PermissionAuthCode.Menu.Edit]),
+          },
+          {
+            code: 'delete',
+            show: hasAccessByCodes([PermissionAuthCode.Menu.Delete]),
+          },
         ],
       },
       field: 'operation',
@@ -181,6 +215,18 @@ export function useFormOptions(): VbenFormProps {
       },
       {
         component: 'Select',
+        fieldName: 'type',
+        label: $t('permission.menu.fields.type'),
+        componentProps: {
+          placeholder: $t('ui.formRules.selectRequired', [
+            $t('permission.menu.fields.type'),
+          ]),
+          options: getPermissionTypeOptions(),
+          allowClear: true,
+        },
+      },
+      {
+        component: 'Select',
         fieldName: 'status',
         label: $t('permission.menu.fields.status'),
         componentProps: {
@@ -188,8 +234,8 @@ export function useFormOptions(): VbenFormProps {
             $t('permission.menu.fields.status'),
           ]),
           options: [
-            { label: '启用', value: 'enabled' },
-            { label: '禁用', value: 'disabled' },
+            { label: $t('common.enabled'), value: 'enabled' },
+            { label: $t('common.disabled'), value: 'disabled' },
           ],
           allowClear: true,
         },
@@ -198,11 +244,11 @@ export function useFormOptions(): VbenFormProps {
     // 控制表单是否显示折叠按钮
     showCollapseButton: true,
     submitButtonOptions: {
-      content: '查询',
+      content: $t('common.actions.search'),
     },
     // 是否在字段值改变时提交表单
     submitOnChange: false,
     // 按下回车时是否提交表单
     submitOnEnter: false,
-  }
+  };
 }

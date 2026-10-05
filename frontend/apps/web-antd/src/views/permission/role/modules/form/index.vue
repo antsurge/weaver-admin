@@ -1,30 +1,36 @@
 <script lang="ts" setup>
-import type { VbenFormSchema } from '#/adapter/form';
 import type { TreeDataItem } from 'ant-design-vue/es/tree/Tree';
+
 import type { Recordable } from '@vben/types';
+
+import type { VbenFormSchema } from '#/adapter/form';
+import type { PermissionRoleApi } from '#/api/permission/role';
 
 import { computed, onMounted, ref } from 'vue';
 
 import { Tree, useVbenModal } from '@vben/common-ui';
 import { IconifyIcon } from '@vben/icons';
-import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
-import { Spin, message } from 'ant-design-vue';
-
-import {
-  getRoleApi,
-  createRoleApi,
-  updateRoleApi,
-  bindMenusForRoleApi,
-} from '#/api/permission/role';
-import { PermissionTypeOptionsValueAction } from "#/views/permission/menu/data"
-import { getMenuTreeApi } from '#/api/permission/menu';
-import type { PermissionRoleApi } from '#/api/permission/role';
-import { useVbenForm } from '#/adapter/form';
-
-import { $t } from '#/locales';
 import { $te } from '@vben/locales';
+import { getPopupContainer } from '@vben/utils';
 
-import { nameRule, codeRule } from './rules';
+import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
+import { message, Spin } from 'ant-design-vue';
+
+import { useVbenForm, z } from '#/adapter/form';
+import { getDataPermissionListApi } from '#/api/permission/data-permission';
+import { getMenuTreeApi } from '#/api/permission/menu';
+import {
+  bindDataPermissionsForRoleApi,
+  bindMenusForRoleApi,
+  createRoleApi,
+  getRoleApi,
+  isRoleCodeExistsApi,
+  updateRoleApi,
+} from '#/api/permission/role';
+import { $t } from '#/locales';
+import { PermissionTypeOptionsValueAction } from '#/views/permission/menu/data';
+
+import { nameRule } from './rules';
 
 const emit = defineEmits<{
   success: [];
@@ -42,7 +48,8 @@ const menuTreeLoading = ref(false);
 const menuValidateStatus = ref<'' | 'error'>('');
 const menuHelpText = ref('');
 
-
+// 数据权限规则相关状态
+const checkedDataPermissions = ref<string[]>([]);
 
 // 加载菜单树
 async function loadMenuTree() {
@@ -59,7 +66,7 @@ async function loadMenuTree() {
 }
 
 function getNodeClass(node: Recordable<any>) {
- const classes: string[] = [];
+  const classes: string[] = [];
   if (node.value?.type === PermissionTypeOptionsValueAction) {
     classes.push('inline-flex');
   }
@@ -79,22 +86,22 @@ function transformToTreeData(items: any[]): TreeDataItem[] {
     label: item.title,
     // action 类型不显示图标
     icon: item.type === PermissionTypeOptionsValueAction ? '' : item.icon,
-    type:item.type,
+    type: item.type,
     children: item.children ? transformToTreeData(item.children) : undefined,
-  }))
+  }));
 }
 
 // 树节点选中变化
 function onTreeCheck(keys: (number | string)[], info: any) {
-  checkedKeys.value = keys as string[]
-  halfCheckedKeys.value = info?.halfCheckedKeys ?? []
+  checkedKeys.value = keys as string[];
+  halfCheckedKeys.value = info?.halfCheckedKeys ?? [];
   // 同步到 form 字段（如果 schema 启用了字段绑定）
-  formApi.setFieldValue('menuPermission', checkedKeys.value)
+  formApi.setFieldValue('menuPermission', checkedKeys.value);
 
   // 当用户选择了菜单时，清除错误状态
   if (checkedKeys.value.length > 0) {
-    menuValidateStatus.value = ''
-    menuHelpText.value = ''
+    menuValidateStatus.value = '';
+    menuHelpText.value = '';
   }
 }
 
@@ -102,7 +109,8 @@ function onTreeCheck(keys: (number | string)[], info: any) {
 function validateMenuSelection(): boolean {
   if (checkedKeys.value.length === 0) {
     menuValidateStatus.value = 'error';
-    menuHelpText.value = $t('permission.role.rules.menuRequired') || '请至少选择一个菜单权限';
+    menuHelpText.value =
+      $t('permission.role.rules.menuRequired') || '请至少选择一个菜单权限';
     return false;
   }
   menuValidateStatus.value = '';
@@ -136,7 +144,31 @@ const schema: VbenFormSchema[] = [
     fieldName: 'code',
     label: $t('permission.role.fields.code'),
     component: 'Input',
-    rules: codeRule,
+    rules: z
+      .string()
+      .min(
+        2,
+        $t('ui.formRules.minLength', [$t('permission.role.fields.code'), 2]),
+      )
+      .max(
+        30,
+        $t('ui.formRules.maxLength', [$t('permission.role.fields.code'), 30]),
+      )
+      .refine(
+        async (value: string) => {
+          if (!value) {
+            return false;
+          }
+          const res = await isRoleCodeExistsApi(value, formData.value?.id);
+          return !res?.exists;
+        },
+        (value) => ({
+          message: $t('ui.formRules.alreadyExists', [
+            $t('permission.role.fields.code'),
+            value,
+          ]),
+        }),
+      ),
     componentProps: {
       placeholder: $t('ui.formRules.required', [
         $t('permission.role.fields.code'),
@@ -178,6 +210,43 @@ const schema: VbenFormSchema[] = [
     component: 'Textarea',
     componentProps: {
       placeholder: $t('permission.role.form_placeholder.remark'),
+    },
+  },
+  {
+    fieldName: '',
+    component: 'FormTitle',
+    label: '',
+    labelWidth: 0,
+    formItemClass: 'col-span-2 md:col-span-2',
+    componentProps: {
+      title: $t('permission.role.form_group.dataPermission'),
+    },
+  },
+  {
+    component: 'ApiSelect',
+    fieldName: 'dataPermissionIds',
+    label: $t('permission.role.fields.dataPermissionIds'),
+    formItemClass: 'col-span-2 md:col-span-2',
+    componentProps: {
+      api: async () => {
+        const res = await getDataPermissionListApi({
+          status: 'enabled',
+          currentPage: 1,
+          pageSize: 200,
+        });
+        const list = res?.items || [];
+        return list.map((item) => ({
+          value: item.id,
+          label: `${item.name}（${item.code}）`,
+        }));
+      },
+      allowClear: true,
+      class: 'w-full',
+      getPopupContainer,
+      mode: 'multiple',
+      optionFilterProp: 'label',
+      placeholder: $t('permission.role.form_placeholder.dataPermissionIds'),
+      showSearch: true,
     },
   },
   {
@@ -237,6 +306,8 @@ const [Modal, modalApi] = useVbenModal({
         formApi.setValues(res);
         // 回显已绑定的菜单
         checkedKeys.value = res.menuIds || [];
+        // 回显已绑定的数据权限规则
+        checkedDataPermissions.value = res.dataPermissionIds || [];
       } finally {
         modalApi.unlock();
       }
@@ -247,6 +318,8 @@ const [Modal, modalApi] = useVbenModal({
       // 清空菜单选择
       checkedKeys.value = [];
       halfCheckedKeys.value = [];
+      // 清空数据权限规则选择
+      checkedDataPermissions.value = [];
     }
   },
 });
@@ -258,24 +331,41 @@ async function onSubmit() {
 
   // 2. 校验菜单权限（必填）
   if (!validateMenuSelection()) {
-    message.warning($t('permission.role.rules.menuRequired') || '请至少选择一个菜单权限');
+    message.warning(
+      $t('permission.role.rules.menuRequired') || '请至少选择一个菜单权限',
+    );
     return;
   }
 
   modalApi.lock();
   const data = await formApi.getValues<PermissionRoleApi.Role>();
+  // menuPermission 仅用于表单内部的菜单树绑定，不属于角色实体字段，提交前移除
+  delete (data as Recordable<any>).menuPermission;
+  // dataPermissionIds 通过单独绑定接口提交，不属于角色实体基础字段，提交前移除
+  checkedDataPermissions.value = data.dataPermissionIds || [];
+  delete (data as Recordable<any>).dataPermissionIds;
   try {
     if (formData.value?.id) {
       // 更新角色基本信息
       await updateRoleApi(formData.value.id, data);
       // 重新绑定菜单（全量替换）
       await bindMenusForRoleApi(formData.value.id, checkedKeys.value);
+      // 重新绑定数据权限规则（全量替换）
+      await bindDataPermissionsForRoleApi(
+        formData.value.id,
+        checkedDataPermissions.value,
+      );
     } else {
       // 创建角色
       const res = await createRoleApi(data);
       // 绑定菜单到新创建的角色
       if (res?.id) {
         await bindMenusForRoleApi(res.id, checkedKeys.value);
+        // 绑定数据权限规则到新创建的角色
+        await bindDataPermissionsForRoleApi(
+          res.id,
+          checkedDataPermissions.value,
+        );
       }
     }
     modalApi.close();
@@ -303,12 +393,29 @@ onMounted(() => {
       <template #menuPermission="slotProps">
         <div class="w-full">
           <Spin :spinning="menuTreeLoading" class="w-full">
-            <Tree :tree-data="menuTreeData" multiple bordered class="w-full" :default-expanded-level="2"
-              v-bind="slotProps" :model-value="checkedKeys" value-field="key" label-field="title" icon-field="icon"
-              :get-node-class="getNodeClass" @update:model-value="onTreeCheck">
+            <Tree
+              :tree-data="menuTreeData"
+              multiple
+              bordered
+              class="w-full"
+              :default-expanded-level="2"
+              v-bind="slotProps"
+              :model-value="checkedKeys"
+              value-field="key"
+              label-field="title"
+              icon-field="icon"
+              :get-node-class="getNodeClass"
+              @update:model-value="onTreeCheck"
+            >
               <template #node="{ value }">
-                <IconifyIcon v-if="value?.type !== PermissionTypeOptionsValueAction && value?.icon" :icon="value.icon"
-                  class="mr-1 size-4" />
+                <IconifyIcon
+                  v-if="
+                    value?.type !== PermissionTypeOptionsValueAction &&
+                    value?.icon
+                  "
+                  :icon="value.icon"
+                  class="mr-1 size-4"
+                />
                 {{ $te(value.title) ? $t(value.title) : (value.title ?? '') }}
               </template>
             </Tree>

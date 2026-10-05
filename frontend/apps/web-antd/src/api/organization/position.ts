@@ -1,5 +1,6 @@
+import type { PaginationParams, PaginationResult } from '#/types/pagination';
+
 import { requestClient } from '#/api/request';
-import type { PaginationParams, PaginationResult } from '#/types/pagination'
 
 export namespace OrganizationPositionApi {
   /** 职务 */
@@ -13,7 +14,7 @@ export namespace OrganizationPositionApi {
     /** 权重/职务级别（越小职务越高） */
     weight: number;
     /** 状态：enabled=启用 disabled=禁用 */
-    status: 'enabled' | 'disabled';
+    status: 'disabled' | 'enabled';
     /** 备注 */
     remark: string;
     /** 创建时间 */
@@ -37,32 +38,34 @@ export namespace OrganizationPositionApi {
     /** 职务编码 */
     code?: string;
     /** 状态 */
-    status?: 'enabled' | 'disabled';
+    status?: 'disabled' | 'enabled';
   }
 
   export interface isExists {
-    exists: boolean
+    exists: boolean;
   }
 }
 
 /**
  * 获取职务列表
  */
-async function getPositionListApi(params?: OrganizationPositionApi.PositionListParams) {
+async function getPositionListApi(
+  params?: OrganizationPositionApi.PositionListParams,
+) {
   return requestClient.get<PaginationResult<OrganizationPositionApi.Position>>(
     '/admin/v1/position',
     {
-      params: params
-    }
+      params,
+    },
   );
 }
 
 /**
  * 获取职务
  */
-async function getPositionApi(id: string, params: object = {}) {
+async function getPositionApi(id: string) {
   return requestClient.get<OrganizationPositionApi.Position>(
-    `/admin/v1/position/${id}`
+    `/admin/v1/position/${id}`,
   );
 }
 
@@ -71,7 +74,10 @@ async function getPositionApi(id: string, params: object = {}) {
  * @param data 职务数据
  */
 async function createPositionApi(
-  data: Omit<OrganizationPositionApi.Position, 'id' | 'createdAt' | 'updatedAt'>,
+  data: Omit<
+    OrganizationPositionApi.Position,
+    'createdAt' | 'id' | 'updatedAt'
+  >,
 ) {
   return requestClient.post('/admin/v1/position', data, {
     showSuccessMessage: true,
@@ -85,7 +91,10 @@ async function createPositionApi(
  */
 async function updatePositionApi(
   id: string,
-  data: Omit<OrganizationPositionApi.Position, 'id' | 'createdAt' | 'updatedAt'>,
+  data: Omit<
+    OrganizationPositionApi.Position,
+    'createdAt' | 'id' | 'updatedAt'
+  >,
 ) {
   return requestClient.put(`/admin/v1/position/${id}`, data, {
     showSuccessMessage: true,
@@ -126,9 +135,12 @@ async function isPositionNameExistsApi(
   name: string,
   id?: OrganizationPositionApi.Position['id'],
 ) {
-  return requestClient.get<OrganizationPositionApi.isExists>('/admin/v1/position:name-exists', {
-    params: { id, name },
-  });
+  return requestClient.get<OrganizationPositionApi.isExists>(
+    '/admin/v1/position:name-exists',
+    {
+      params: { id, name },
+    },
+  );
 }
 
 /**
@@ -138,44 +150,53 @@ async function isPositionCodeExistsApi(
   code: string,
   id?: OrganizationPositionApi.Position['id'],
 ) {
-  return requestClient.get<OrganizationPositionApi.isExists>('/admin/v1/position:code-exists', {
-    params: { id, code },
-  });
-}
-
-/** 导出 */
-async function exportPositionApi(params?: OrganizationPositionApi.PositionListParams) {
-  return requestClient.post(
-    '/admin/v1/position:export',
-    params,
+  return requestClient.get<OrganizationPositionApi.isExists>(
+    '/admin/v1/position:code-exists',
     {
-      responseType: 'blob',
-      responseReturn:"raw",
-      showFailMessage:false
+      params: { id, code },
     },
   );
 }
 
+/** 下载导入模版 */
+async function downloadPositionTemplateApi() {
+  return requestClient.get('/admin/v1/position:template', {
+    responseType: 'blob',
+    responseReturn: 'raw',
+    showFailMessage: false,
+  });
+}
+
+/** 导出 */
+async function exportPositionApi(
+  params?: OrganizationPositionApi.PositionListParams,
+) {
+  return requestClient.post('/admin/v1/position:export', params, {
+    responseType: 'blob',
+    responseReturn: 'raw',
+    showFailMessage: false,
+  });
+}
+
 /** 导入 */
 async function importPositionApi(data: FormData) {
-  return requestClient.post('/admin/v1/position:import',data, {
+  return requestClient.post('/admin/v1/position:import', data, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
   });
 }
 
-
-
 export {
-  getPositionListApi,
-  getPositionApi,
   createPositionApi,
+  deletePositionApi,
+  downloadPositionTemplateApi,
+  exportPositionApi,
+  getPositionApi,
+  getPositionListApi,
+  importPositionApi,
+  isPositionCodeExistsApi,
+  isPositionNameExistsApi,
   updatePositionApi,
   updatePositionStatusApi,
-  deletePositionApi,
-  isPositionNameExistsApi,
-  isPositionCodeExistsApi,
-  exportPositionApi,
-  importPositionApi,
 };

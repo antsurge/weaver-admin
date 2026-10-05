@@ -1,11 +1,9 @@
-[BAD_REQUEST]
-other = "错误请求"
-
+# 认证模块错误码
 [GENERATE_CAPTCHA_FAIL]
 other = "生成验证码失败"
 
 [CAPTCHA_EXPIRED]
-other = "验证码失效"
+other = "验证码已过期"
 
 [CAPTCHA_INVALID]
 other = "验证码错误"
@@ -13,23 +11,23 @@ other = "验证码错误"
 [INVALID_CREDENTIALS]
 other = "用户名或密码错误"
 
-[LOGINREQUEST_USERNAME_REQUIRED]
-other = "请填写用户名"
-
-[LOGINREQUEST_PASSWORD_REQUIRED]
-other = "请填写密码"
-
-[LOGINREQUEST_CAPTCHA_REQUIRED]
-other = "请填写验证码"
-
-[WRONG_CONTEXT]
-other = "错误请求"
-
-[INVALID_TOKEN]
-other = "授权失败"
-
 [NO_PERMISSION]
 other = "无权限访问"
 
-[DEMO_READONLY]
-other = "演示环境禁止修改数据"
+[ACCOUNT_LOCKED]
+other = "账号已锁定，请稍后再试"
+
+[ACCOUNT_DISABLED]
+other = "账号已被禁用"
+
+[INVALID_TOKEN]
+other = "登录状态已失效，请重新登录"
+
+[AUTH_INVALID_ARGUMENT]
+other = "请求参数不合法"
+
+[AUTH_UNAUTHORIZED]
+other = "认证失败"
+
+[AUTH_INTERNAL]
+other = "系统内部错误"

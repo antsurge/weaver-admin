@@ -1,0 +1,98 @@
+syntax = "proto3";
+
+package order.service.v1;
+
+import "buf/validate/validate.proto";
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+// 注意：该文件仅定义消息结构（Message），HTTP 路由与 Service 定义统一在
+// admin/service/v1/i_order.proto 中聚合声明（与 system/service/v1/dict_type.proto 等模块保持一致）。
+
+// 订单
+message Order {
+  string id = 1;
+  // name
+  string name = 2;
+  // sn
+  string sn = 3;
+  google.protobuf.Timestamp createdAt = 100;
+  google.protobuf.Timestamp updatedAt = 101;
+}
+
+// 订单列表查询
+message ListOrderRequest {
+  int64 currentPage = 1 [(gnostic.openapi.v3.property) = {description: "当前页码（从1开始）"}];
+  int64 pageSize = 2 [(gnostic.openapi.v3.property) = {description: "每页条数（传0为全部）"}];
+}
+
+message ListOrderResponse {
+  repeated Order items = 1;
+  int64 total = 2;
+}
+// 订单详情
+message GetOrderRequest {
+  string id = 1 [
+    (buf.validate.field).cel = {
+      id: "order.id.required"
+      message: "order.id.required"
+      expression: "this.size() > 0"
+    },
+    (gnostic.openapi.v3.property) = {description: "ID"}
+  ];
+}
+
+message GetOrderResponse {
+  Order data = 1;
+}
+// 创建订单
+message CreateOrderRequest {
+  string name = 1;
+  string sn = 2;
+}
+
+message CreateOrderResponse {
+  Order data = 1;
+}
+// 更新订单
+message UpdateOrderRequest {
+  string id = 1 [
+    (buf.validate.field).cel = {
+      id: "order.id.required"
+      message: "order.id.required"
+      expression: "this.size() > 0"
+    }
+  ];
+  string name = 2;
+  string sn = 3;
+}
+
+message UpdateOrderResponse {
+  Order data = 1;
+}
+// 删除订单
+message DeleteOrderRequest {
+  repeated string ids = 1 [
+    (buf.validate.field).repeated = {
+      min_items: 1
+      max_items: 100
+    },
+    (gnostic.openapi.v3.property) = {description: "ID列表，至少一个"}
+  ];
+}
+
+message DeleteOrderResponse {}
+// 更新订单状态
+message UpdateOrderStatusRequest {
+  string id = 1 [
+    (buf.validate.field).cel = {
+      id: "order.id.required"
+      message: "order.id.required"
+      expression: "this.size() > 0"
+    }
+  ];
+  string status = 2 [(gnostic.openapi.v3.property) = {description: "状态"}];
+}
+
+message UpdateOrderStatusResponse {}

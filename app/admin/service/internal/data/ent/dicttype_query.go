@@ -262,12 +262,12 @@ func (_q *DictTypeQuery) Clone() *DictTypeQuery {
 // Example:
 //
 //	var v []struct {
-//		Name string `json:"name,omitempty"`
+//		TenantID string `json:"tenant_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.DictType.Query().
-//		GroupBy(dicttype.FieldName).
+//		GroupBy(dicttype.FieldTenantID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (_q *DictTypeQuery) GroupBy(field string, fields ...string) *DictTypeGroupBy {
@@ -285,11 +285,11 @@ func (_q *DictTypeQuery) GroupBy(field string, fields ...string) *DictTypeGroupB
 // Example:
 //
 //	var v []struct {
-//		Name string `json:"name,omitempty"`
+//		TenantID string `json:"tenant_id,omitempty"`
 //	}
 //
 //	client.DictType.Query().
-//		Select(dicttype.FieldName).
+//		Select(dicttype.FieldTenantID).
 //		Scan(ctx, &v)
 func (_q *DictTypeQuery) Select(fields ...string) *DictTypeSelect {
 	_q.ctx.Fields = append(_q.ctx.Fields, fields...)

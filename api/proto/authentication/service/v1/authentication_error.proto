@@ -13,6 +13,7 @@ enum AuthenticationErrorReason {
   INVALID_CREDENTIALS = 101 [(errors.code) = 400]; // 用户名或密码错误
   DEMO_READONLY = 4 [(errors.code) = 400]; // 演示环境
   NO_PERMISSION = 5 [(errors.code) = 400];
+  ACCOUNT_LOCKED = 6 [(errors.code) = 400]; // 账号已锁定（登录失败次数超限）
 
   // 401
   INVALID_TOKEN = 102 [(errors.code) = 401];

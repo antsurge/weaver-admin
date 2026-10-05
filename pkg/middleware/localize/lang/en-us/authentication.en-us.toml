@@ -1,17 +1,33 @@
-[BAD_REQUEST]
-other = "错误请求"
-
+# Authentication error codes
 [GENERATE_CAPTCHA_FAIL]
-other = "生成验证码失败"
+other = "Failed to generate captcha"
 
-[SysUser_Not_Found]
-other = "用户名或密码错误"
+[CAPTCHA_EXPIRED]
+other = "Captcha has expired"
 
-[Incorrect_Password]
-other = "用户名或密码错误"
+[CAPTCHA_INVALID]
+other = "Invalid captcha"
 
-[Generate_Captcha_Failed]
-other = "生成验证码失败"
+[INVALID_CREDENTIALS]
+other = "Invalid username or password"
 
-[Captcha_Error]
-other = "验证码输入错误"
+[NO_PERMISSION]
+other = "Access denied"
+
+[ACCOUNT_LOCKED]
+other = "Account locked, please try again later"
+
+[ACCOUNT_DISABLED]
+other = "Account has been disabled"
+
+[INVALID_TOKEN]
+other = "Login expired, please sign in again"
+
+[AUTH_INVALID_ARGUMENT]
+other = "Invalid request parameters"
+
+[AUTH_UNAUTHORIZED]
+other = "Authentication failed"
+
+[AUTH_INTERNAL]
+other = "Internal server error"

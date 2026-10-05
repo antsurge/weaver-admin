@@ -23,6 +23,11 @@ func (RoleMenu) Annotations() []schema.Annotation {
 	}
 }
 
+// Mixin of the RoleMenu.
+func (RoleMenu) Mixin() []ent.Mixin {
+	return []ent.Mixin{TenantMixin{}}
+}
+
 func (RoleMenu) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("id").

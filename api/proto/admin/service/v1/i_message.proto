@@ -1,0 +1,107 @@
+syntax = "proto3";
+
+package admin.service.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "message/service/v1/notification.proto";
+
+// Message 消息通知服务
+//
+// 注意：实时推送不走这里，使用自定义 SSE 端点
+// GET /admin/v1/notifications/stream（EventSource 无法携带自定义 Header，
+// 鉴权 token 通过 query 参数 ?token= 传递）。
+service Message {
+  // 我的消息列表
+  rpc ListNotification(message.service.v1.ListNotificationRequest) returns (message.service.v1.ListNotificationResponse) {
+    option (google.api.http) = {get: "/admin/v1/notifications"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Message"
+      summary: "消息通知-我的消息列表"
+      description: "分页查询当前登录用户的消息（收件箱）"
+    };
+  }
+
+  // 未读数量
+  rpc GetUnreadCount(google.protobuf.Empty) returns (message.service.v1.GetUnreadCountResponse) {
+    option (google.api.http) = {get: "/admin/v1/notifications/unread-count"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Message"
+      summary: "消息通知-未读数量"
+      description: "查询当前登录用户的未读消息数量"
+    };
+  }
+
+  // 标记已读
+  rpc ReadNotification(message.service.v1.ReadNotificationRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/admin/v1/notifications/{id}/read"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Message"
+      summary: "消息通知-标记已读"
+      description: "将指定消息标记为已读"
+    };
+  }
+
+  // 全部已读
+  rpc ReadAllNotification(message.service.v1.ReadAllNotificationRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/admin/v1/notifications/read-all"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Message"
+      summary: "消息通知-全部已读"
+      description: "将当前登录用户的所有消息标记为已读"
+    };
+  }
+
+  // 删除消息（软删，进回收站）
+  rpc DeleteNotification(message.service.v1.DeleteNotificationRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/admin/v1/notifications"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Message"
+      summary: "消息通知-删除"
+      description: "删除当前登录用户的消息（支持批量）"
+    };
+  }
+
+  // 管理端：通知列表
+  rpc ListNotificationManage(message.service.v1.ListNotificationManageRequest) returns (message.service.v1.ListNotificationManageResponse) {
+    option (google.api.http) = {get: "/admin/v1/notifications/manage"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Message"
+      summary: "消息通知-管理端列表"
+      description: "分页查询已发布的通知（管理视角）"
+    };
+  }
+
+  // 管理端：发布通知
+  rpc CreateNotification(message.service.v1.CreateNotificationRequest) returns (message.service.v1.Notification) {
+    option (google.api.http) = {
+      post: "/admin/v1/notifications"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Message"
+      summary: "消息通知-发布"
+      description: "发布一条通知，按投放范围扇出到接收人并实时推送"
+    };
+  }
+
+  // 管理端：撤回通知
+  rpc RevokeNotification(message.service.v1.RevokeNotificationRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/admin/v1/notifications/{id}/revoke"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Message"
+      summary: "消息通知-撤回"
+      description: "撤回已发布的通知，同时从所有接收人收件箱移除"
+    };
+  }
+}

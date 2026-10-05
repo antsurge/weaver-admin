@@ -1,7 +1,11 @@
 import type { OnActionClickFn, VxeTableGridOptions } from '#/adapter/vxe-table';
+import type { DictionaryDictDataApi } from '#/api/system/dictionary/dict-data';
+
+import { useAccess } from '@vben/access';
+
+import { SystemAuthCode } from '#/access';
 import { $t } from '#/locales';
 
-import type { DictionaryDictDataApi } from '#/api/system/dictionary/dict-data';
 export function useDictDataColumns(
   onActionClick: OnActionClickFn<DictionaryDictDataApi.DictData>,
   onStatusChange?: (
@@ -9,6 +13,7 @@ export function useDictDataColumns(
     row: DictionaryDictDataApi.DictData,
   ) => PromiseLike<boolean | undefined>,
 ): VxeTableGridOptions<DictionaryDictDataApi.DictData>['columns'] {
+  const { hasAccessByCodes } = useAccess();
   return [
     {
       field: 'label',
@@ -24,17 +29,22 @@ export function useDictDataColumns(
       field: 'status',
       align: 'center',
       title: $t('system.dict_data.fields.status'),
-      width: 140,
+      width: 100,
       cellRender: {
         name: 'CellSwitch',
-        attrs: { beforeChange: onStatusChange },
+        attrs: {
+          beforeChange: onStatusChange,
+          // 无编辑权限时禁用状态开关
+          disabled: () => !hasAccessByCodes([SystemAuthCode.DictType.Edit]),
+        },
       },
     },
     {
       field: 'updatedAt',
       align: 'center',
       title: $t('system.dict_data.fields.updatedAt'),
-      width: 200,
+      width: 160,
+      formatter: 'formatDateTime',
     },
     {
       field: 'operation',
@@ -49,7 +59,18 @@ export function useDictDataColumns(
           nameField: 'label',
           onClick: onActionClick,
         },
-        options: ['edit', 'delete'],
+        options: [
+          {
+            code: 'edit',
+            // 无编辑权限时不展示
+            show: hasAccessByCodes([SystemAuthCode.DictType.Edit]),
+          },
+          {
+            code: 'delete',
+            // 无删除权限时不展示
+            show: hasAccessByCodes([SystemAuthCode.DictType.Delete]),
+          },
+        ],
       },
     },
   ];

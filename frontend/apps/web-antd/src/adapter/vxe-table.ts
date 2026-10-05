@@ -1,21 +1,18 @@
 import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
+import type { Recordable } from '@vben/types';
 
 import { h } from 'vue';
 
+import { IconifyIcon } from '@vben/icons'; // 引入图标组件
 import { setupVbenVxeTable, useVbenVxeGrid } from '@vben/plugins/vxe-table';
-
-import { Button, Image, Tag, Switch, Popconfirm } from 'ant-design-vue';
-
-import { useVbenForm } from './form';
-
 import { get, isFunction, isString } from '@vben/utils';
-import { objectOmit } from '@vueuse/core';
 
-import type { Recordable } from '@vben/types';
+import { objectOmit } from '@vueuse/core';
+import { Button, Image, Popconfirm, Switch, Tag } from 'ant-design-vue';
 
 import { $t } from '#/locales';
 
-import { IconifyIcon } from '@vben/icons'; // 引入图标组件
+import { useVbenForm } from './form';
 
 setupVbenVxeTable({
   configVxeTable: (vxeUI) => {
@@ -78,9 +75,10 @@ setupVbenVxeTable({
           return h(
             'div',
             {
-              class: 'flex items-center justify-center w-full h-full text-gray-300 text-xs'
+              class:
+                'flex items-center justify-center w-full h-full text-gray-300 text-xs',
             },
-            '-'
+            '-',
           );
         }
 
@@ -95,7 +93,7 @@ setupVbenVxeTable({
               // 防止某些主题下的边距干扰
               margin: 0,
               padding: 0,
-            }
+            },
           },
           [
             h(
@@ -111,9 +109,9 @@ setupVbenVxeTable({
                   // 不需要再在这里写 flex 居中，因为父 div 已经处理了
                 ].filter(Boolean),
               },
-              { default: () => null }
-            )
-          ]
+              { default: () => null },
+            ),
+          ],
         );
       },
     });
@@ -142,14 +140,21 @@ setupVbenVxeTable({
         const loadingKey = `__loading_${column.field}`;
         const finallyProps = {
           checkedChildren: $t('common.enabled'),
-          checkedValue: "enabled",
+          checkedValue: 'enabled',
           unCheckedChildren: $t('common.disabled'),
-          unCheckedValue: "disabled",
+          unCheckedValue: 'disabled',
           ...props,
           checked: value,
           loading: row[loadingKey] ?? false,
           'onUpdate:checked': onChange,
         };
+        // attrs.disabled 支持布尔或函数（函数入参 row，便于按行控制），
+        // 可选链守卫：CellRenderAttrs 未声明 disabled 时安全跳过
+        const rawDisabled = (attrs as any)?.disabled;
+        if (rawDisabled !== null && rawDisabled !== undefined) {
+          finallyProps.disabled =
+            typeof rawDisabled === 'function' ? rawDisabled(row) : rawDisabled;
+        }
         async function onChange(newVal: any) {
           row[loadingKey] = true;
           try {
@@ -203,10 +208,10 @@ setupVbenVxeTable({
               return presets[opt]
                 ? { code: opt, ...presets[opt], ...defaultProps }
                 : {
-                  code: opt,
-                  text: $te(`common.${opt}`) ? $t(`common.${opt}`) : opt,
-                  ...defaultProps,
-                };
+                    code: opt,
+                    text: $te(`common.${opt}`) ? $t(`common.${opt}`) : opt,
+                    ...defaultProps,
+                  };
             } else {
               return { ...defaultProps, ...presets[opt.code], ...opt };
             }
@@ -229,10 +234,10 @@ setupVbenVxeTable({
               icon: undefined,
               onClick: listen
                 ? () =>
-                  attrs?.onClick?.({
-                    code: opt.code,
-                    row,
-                  })
+                    attrs?.onClick?.({
+                      code: opt.code,
+                      row,
+                    })
                 : undefined,
             },
             {

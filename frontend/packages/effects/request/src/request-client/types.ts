@@ -7,6 +7,10 @@ import type {
 
 type ExtendOptions<T = any> = {
   /**
+   * 失败提示文案。
+   */
+  failMessage?: string;
+  /**
    * 参数序列化方式。预置的有
    * - brackets: ids[]=1&ids[]=2&ids[]=3
    * - comma: ids=1,2,3
@@ -26,6 +30,18 @@ type ExtendOptions<T = any> = {
    * - data: 解构响应的BODY数据，只返回其中的data节点数据（会检查status和code是否为成功状态）。
    */
   responseReturn?: 'body' | 'data' | 'raw';
+  /**
+   * 是否在失败后抑制错误提示。
+   */
+  showFailMessage?: boolean;
+  /**
+   * 是否在成功后弹出成功提示（由应用的响应拦截器消费）。
+   */
+  showSuccessMessage?: boolean;
+  /**
+   * 成功提示文案（优先级高于接口返回的 message）。
+   */
+  successMessage?: string;
 };
 type RequestClientConfig<T = any> = AxiosRequestConfig<T> & ExtendOptions<T>;
 

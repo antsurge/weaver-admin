@@ -1,5 +1,9 @@
-[Login_Username_Empty]
-other = "Login_Username_Empty2"
+# Common error codes
+[BAD_REQUEST]
+other = "Invalid request parameters"
 
-[TEST]
-other = "test"
+[INVALID_ID]
+other = "Invalid parameter"
+
+[NOT_FOUND_RECORD]
+other = "Record not found"

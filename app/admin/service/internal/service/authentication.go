@@ -63,17 +63,16 @@ func (s *AuthenticationService) CurrentUserInfo(ctx context.Context, _ *emptypb.
 
 // CurrentUserMenus 获取当前用户的菜单（根据用户角色返回绑定的菜单树）
 func (s *AuthenticationService) CurrentUserMenus(ctx context.Context, _ *emptypb.Empty) (*authenticationV1.CurrentUserMenusResponse, error) {
-	//menus, err := s.authenticationUc.CurrentUserMenus(ctx)
-	//if err != nil {
-	//	return nil, err
-	//}
+	menus, err := s.authenticationUc.CurrentUserMenus(ctx)
+	if err != nil {
+		return nil, err
+	}
 
 	// 转换为 Proto 消息
-	output := make([]*permissionV1.Menu, 0)
-	//err = copier.Copy(&output, &menus)
-	//if err != nil {
-	//	return nil, err
-	//}
+	output := make([]*permissionV1.Menu, 0, len(menus))
+	if err := copierx.Copy(&output, &menus); err != nil {
+		return nil, err
+	}
 
 	return &authenticationV1.CurrentUserMenusResponse{Items: output}, nil
 }

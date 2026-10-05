@@ -22,6 +22,11 @@ func (Menu) Annotations() []schema.Annotation {
 	}
 }
 
+// Mixin of the Menu.
+func (Menu) Mixin() []ent.Mixin {
+	return []ent.Mixin{TenantMixin{}}
+}
+
 func (Menu) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("id").Unique().Immutable().MaxLen(36),
@@ -55,8 +60,5 @@ func (Menu) Edges() []ent.Edge {
 		edge.From("roles", Role.Type).
 			Ref("menus").
 			Through("role_menus", RoleMenu.Type),
-
-		// Menu ↔ ApiPermissions (按钮类型多对多，不使用 join table)
-		edge.To("api_permissions", ApiPermission.Type),
 	}
 }

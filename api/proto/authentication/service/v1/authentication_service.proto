@@ -61,6 +61,7 @@ message LoginRequest {
     },
     (gnostic.openapi.v3.property) = {description: "验证码ID"}
   ];
+  string tenantCode = 5 [(gnostic.openapi.v3.property) = {description: "租户编码（multi 租户模式下必填；single 模式可省略）"}];
 }
 
 message LoginResponse {
@@ -87,6 +88,9 @@ message CurrentUserInfoResponse {
   string realName = 2;
   repeated permission.service.v1.Menu menuTree = 3; // 菜单树
   repeated string roleCodes = 4; // 角色code
+  string dataScope = 5; // 当前生效的数据权限范围（用户覆盖 > 角色并集；ALL/DEPT_AND_CHILD/DEPT/SELF）
+  string departmentName = 6; // 归属部门名称（个人中心展示）
+  repeated string roleNames = 7; // 角色名称列表（个人中心展示）
 }
 
 // 当前用户菜单响应（返回用户角色绑定的菜单树）

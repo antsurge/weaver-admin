@@ -1,0 +1,122 @@
+syntax = "proto3";
+
+package security.service.v1;
+
+import "buf/validate/validate.proto";
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+// 安全策略（登录策略 + 访问控制，全库单例）
+message SecurityPolicy {
+  // 是否启用登录失败次数限制
+  bool loginFailEnabled = 1 [(gnostic.openapi.v3.property) = {description: "是否启用登录失败次数限制"}];
+  // 窗口内允许的最大失败次数
+  int32 loginFailMax = 2 [(gnostic.openapi.v3.property) = {description: "统计窗口内允许的最大失败次数"}];
+  // 失败次数统计窗口（分钟）
+  int32 loginFailWindowMinutes = 3 [(gnostic.openapi.v3.property) = {description: "失败次数统计窗口（分钟）"}];
+  // 达到上限后的锁定时长（分钟）
+  int32 loginLockMinutes = 4 [(gnostic.openapi.v3.property) = {description: "达到上限后的锁定时长（分钟）"}];
+  // IP 访问控制模式
+  string ipMode = 5 [(gnostic.openapi.v3.property) = {description: "IP 访问控制模式：off=关闭 whitelist=白名单 blacklist=黑名单"}];
+  // IP 列表（支持 CIDR）
+  repeated string ipList = 6 [(gnostic.openapi.v3.property) = {description: "IP 列表（支持 CIDR，如 192.168.1.0/24）"}];
+  // access token 有效期（秒，60-2592000）
+  int64 accessTokenTtlSeconds = 7 [(gnostic.openapi.v3.property) = {description: "access token 有效期（秒），范围 60-2592000"}];
+  // refresh token 有效期（秒，300-31536000）
+  int64 refreshTokenTtlSeconds = 8 [(gnostic.openapi.v3.property) = {description: "refresh token 有效期（秒），范围 300-31536000"}];
+  // 备注
+  string remark = 9 [(gnostic.openapi.v3.property) = {description: "备注"}];
+  // 更新时间
+  google.protobuf.Timestamp updatedAt = 10 [(gnostic.openapi.v3.property) = {description: "更新时间"}];
+}
+
+message GetSecurityPolicyRequest {}
+
+message UpdateSecurityPolicyRequest {
+  option (gnostic.openapi.v3.schema) = {
+    required: ["ipMode"]
+  };
+
+  // 是否启用登录失败次数限制
+  bool loginFailEnabled = 1 [(gnostic.openapi.v3.property) = {description: "是否启用登录失败次数限制"}];
+
+  // 统计窗口内允许的最大失败次数
+  int32 loginFailMax = 2 [
+    (buf.validate.field).cel = {
+      id: "security.loginFailMax.range"
+      message: "security.loginFailMax.range"
+      expression: "this >= 1 && this <= 100"
+    },
+    (gnostic.openapi.v3.property) = {description: "统计窗口内允许的最大失败次数（1-100）"}
+  ];
+
+  // 失败次数统计窗口（分钟）
+  int32 loginFailWindowMinutes = 3 [
+    (buf.validate.field).cel = {
+      id: "security.loginFailWindowMinutes.range"
+      message: "security.loginFailWindowMinutes.range"
+      expression: "this >= 1 && this <= 1440"
+    },
+    (gnostic.openapi.v3.property) = {description: "失败次数统计窗口（分钟，1-1440）"}
+  ];
+
+  // 达到上限后的锁定时长（分钟）
+  int32 loginLockMinutes = 4 [
+    (buf.validate.field).cel = {
+      id: "security.loginLockMinutes.range"
+      message: "security.loginLockMinutes.range"
+      expression: "this >= 1 && this <= 1440"
+    },
+    (gnostic.openapi.v3.property) = {description: "达到上限后的锁定时长（分钟，1-1440）"}
+  ];
+
+  // IP 访问控制模式
+  string ipMode = 5 [
+    (buf.validate.field).string = {
+      in: [
+        "off",
+        "whitelist",
+        "blacklist"
+      ]
+    },
+    (buf.validate.field).cel = {
+      id: "security.ipMode.invalid"
+      message: "security.ipMode.invalid"
+      expression: "this in ['off', 'whitelist', 'blacklist']"
+    },
+    (gnostic.openapi.v3.property) = {description: "IP 访问控制模式（off/whitelist/blacklist）"}
+  ];
+
+  // IP 列表（支持 CIDR）
+  repeated string ipList = 6 [(gnostic.openapi.v3.property) = {description: "IP 列表（支持 CIDR）"}];
+
+  // access token 有效期（秒）
+  int64 accessTokenTtlSeconds = 7 [
+    (buf.validate.field).cel = {
+      id: "security.accessTokenTtlSeconds.range"
+      message: "security.accessTokenTtlSeconds.range"
+      expression: "this >= 60 && this <= 2592000"
+    },
+    (gnostic.openapi.v3.property) = {description: "access token 有效期（秒），范围 60-2592000"}
+  ];
+
+  // refresh token 有效期（秒）
+  int64 refreshTokenTtlSeconds = 8 [
+    (buf.validate.field).cel = {
+      id: "security.refreshTokenTtlSeconds.range"
+      message: "security.refreshTokenTtlSeconds.range"
+      expression: "this >= 300 && this <= 31536000"
+    },
+    (gnostic.openapi.v3.property) = {description: "refresh token 有效期（秒），范围 300-31536000"}
+  ];
+
+  // 备注
+  string remark = 9 [
+    (buf.validate.field).cel = {
+      id: "security.remark.max_len"
+      message: "security.remark.max_len"
+      expression: "this.size() <= 255"
+    },
+    (gnostic.openapi.v3.property) = {description: "备注"}
+  ];
+}

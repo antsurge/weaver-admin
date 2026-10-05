@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package security.service.v1;
+
+import "buf/validate/validate.proto";
+
+// 在线用户（按用户聚合的在线会话信息）
+message OnlineUser {
+  // 用户ID
+  string id = 1;
+  // 用户名
+  string username = 2;
+  // 姓名
+  string real_name = 3;
+  // 最近一次登录 IP
+  string ip = 4;
+  // 浏览器/设备 User-Agent
+  string user_agent = 5;
+  // 最近一次登录时间（Unix 秒）
+  int64 login_at = 6;
+  // 会话过期时间（Unix 秒，取该用户最晚到期的会话）
+  int64 expire_at = 7;
+  // 在线会话数（多设备登录时 > 1）
+  int32 session_count = 8;
+}
+
+message ListOnlineUsersResponse {
+  repeated OnlineUser items = 1;
+  int64 total = 2;
+}
+
+message ForceLogoutRequest {
+  // 要强制下线的用户ID（其全部在线会话将被注销）
+  string id = 1 [(buf.validate.field).string.min_len = 1];
+}

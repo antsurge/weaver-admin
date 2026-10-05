@@ -22,6 +22,20 @@ type AdminRoleCreate struct {
 	hooks    []Hook
 }
 
+// SetTenantID sets the "tenant_id" field.
+func (_c *AdminRoleCreate) SetTenantID(v string) *AdminRoleCreate {
+	_c.mutation.SetTenantID(v)
+	return _c
+}
+
+// SetNillableTenantID sets the "tenant_id" field if the given value is not nil.
+func (_c *AdminRoleCreate) SetNillableTenantID(v *string) *AdminRoleCreate {
+	if v != nil {
+		_c.SetTenantID(*v)
+	}
+	return _c
+}
+
 // SetAdminID sets the "admin_id" field.
 func (_c *AdminRoleCreate) SetAdminID(v string) *AdminRoleCreate {
 	_c.mutation.SetAdminID(v)
@@ -99,6 +113,10 @@ func (_c *AdminRoleCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (_c *AdminRoleCreate) defaults() {
+	if _, ok := _c.mutation.TenantID(); !ok {
+		v := adminrole.DefaultTenantID
+		_c.mutation.SetTenantID(v)
+	}
 	if _, ok := _c.mutation.CreatedAt(); !ok {
 		v := adminrole.DefaultCreatedAt()
 		_c.mutation.SetCreatedAt(v)
@@ -107,6 +125,14 @@ func (_c *AdminRoleCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (_c *AdminRoleCreate) check() error {
+	if _, ok := _c.mutation.TenantID(); !ok {
+		return &ValidationError{Name: "tenant_id", err: errors.New(`ent: missing required field "AdminRole.tenant_id"`)}
+	}
+	if v, ok := _c.mutation.TenantID(); ok {
+		if err := adminrole.TenantIDValidator(v); err != nil {
+			return &ValidationError{Name: "tenant_id", err: fmt.Errorf(`ent: validator failed for field "AdminRole.tenant_id": %w`, err)}
+		}
+	}
 	if _, ok := _c.mutation.AdminID(); !ok {
 		return &ValidationError{Name: "admin_id", err: errors.New(`ent: missing required field "AdminRole.admin_id"`)}
 	}
@@ -171,6 +197,10 @@ func (_c *AdminRoleCreate) createSpec() (*AdminRole, *sqlgraph.CreateSpec) {
 	if id, ok := _c.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = id
+	}
+	if value, ok := _c.mutation.TenantID(); ok {
+		_spec.SetField(adminrole.FieldTenantID, field.TypeString, value)
+		_node.TenantID = value
 	}
 	if value, ok := _c.mutation.CreatedAt(); ok {
 		_spec.SetField(adminrole.FieldCreatedAt, field.TypeTime, value)

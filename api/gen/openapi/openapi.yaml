@@ -37,6 +37,18 @@ paths:
                   in: query
                   schema:
                     type: string
+                - name: realName
+                  in: query
+                  schema:
+                    type: string
+                - name: email
+                  in: query
+                  schema:
+                    type: string
+                - name: departmentId
+                  in: query
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -90,6 +102,30 @@ paths:
                     type: array
                     items:
                         type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/admin/batch/status:
+        put:
+            tags:
+                - Identity
+                - Authentication
+            summary: 后台用户-批量修改状态
+            description: 批量启用或禁用后台用户
+            operationId: Identity_BatchUpdateAdminStatus
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/BatchUpdateAdminStatusRequest'
+                required: true
             responses:
                 "200":
                     description: OK
@@ -159,6 +195,98 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /admin/v1/admin/{id}/password:
+        put:
+            tags:
+                - Identity
+                - Authentication
+            summary: 后台用户-重置密码
+            description: 管理员重置指定用户的密码
+            operationId: Identity_ResetPassword
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ResetPasswordRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/admin/{id}/status:
+        put:
+            tags:
+                - Identity
+                - Authentication
+            summary: 后台用户-修改状态
+            description: 启用或禁用后台用户
+            operationId: Identity_UpdateAdminStatus
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateAdminStatusRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/admin:username-exists:
+        get:
+            tags:
+                - Identity
+                - Authentication
+            summary: 后台用户-校验用户名是否存在
+            description: 校验用户名是否已被占用（编辑时通过 id 排除自身）
+            operationId: Identity_UsernameExists
+            parameters:
+                - name: username
+                  in: query
+                  description: 用户名
+                  schema:
+                    type: string
+                - name: id
+                  in: query
+                  description: 用户ID（编辑时排除自身，可为空）
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UsernameExistsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /admin/v1/api-interface:
         get:
             tags:
@@ -209,6 +337,32 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - System
+                - System
+            summary: 接口-创建
+            description: 手动新增 API 接口
+            operationId: System_CreateApiInterface
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateApiInterfaceRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ApiInterface'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
         delete:
             tags:
                 - System
@@ -233,19 +387,47 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /admin/v1/api-interface/import:
-        post:
+    /admin/v1/api-interface/options:
+        get:
             tags:
                 - System
                 - System
-            summary: 导入接口-上传 openapi.yaml
-            description: 上传 openapi.yaml 文件，解析并导入接口信息到数据库
-            operationId: System_ImportApiInterface
+            summary: 接口筛选选项-服务名/标签
+            description: 返回去重后的服务名与标签列表，供搜索下拉选择
+            operationId: System_ListApiInterfaceOptions
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListApiInterfaceOptionsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/api-interface/{id}:
+        put:
+            tags:
+                - System
+                - System
+            summary: 接口-更新
+            description: 编辑 API 接口信息
+            operationId: System_UpdateApiInterface
+            parameters:
+                - name: id
+                  in: path
+                  description: 接口 ID
+                  required: true
+                  schema:
+                    type: string
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/ImportApiInterfaceRequest'
+                            $ref: '#/components/schemas/UpdateApiInterfaceRequest'
                 required: true
             responses:
                 "200":
@@ -253,7 +435,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/ImportApiInterfaceResponse'
+                                $ref: '#/components/schemas/ApiInterface'
                 default:
                     description: Default error response
                     content:
@@ -281,6 +463,275 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /admin/v1/codegen/db-columns/{tableName}:
+        get:
+            tags:
+                - Lowcode
+                - Lowcode
+            summary: 代码生成-表字段列表
+            description: 读取表字段
+            operationId: Lowcode_ListDbColumns
+            parameters:
+                - name: tableName
+                  in: path
+                  description: 表名
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListDbColumnsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/codegen/db-tables:
+        get:
+            tags:
+                - Lowcode
+                - Lowcode
+            summary: 代码生成-数据库表列表
+            description: 读取数据库表列表（information_schema）
+            operationId: Lowcode_ListDbTables
+            parameters:
+                - name: keyword
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListDbTablesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/codegen/generate:
+        post:
+            tags:
+                - Lowcode
+                - Lowcode
+            summary: 代码生成-生成代码
+            description: 生成代码
+            operationId: Lowcode_GenerateCode
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GenerateCodeRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GenerateCodeResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/config:
+        get:
+            tags:
+                - System
+                - System
+            summary: 参数设置-列表
+            description: 参数设置分页列表
+            operationId: System_ListConfig
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: key
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: string
+                - name: group
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListConfigResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - System
+                - System
+            summary: 参数设置-创建
+            description: 创建系统参数
+            operationId: System_CreateConfig
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateConfigRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Config'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - System
+                - System
+            summary: 参数设置-删除(批量)
+            description: 删除系统参数(支持批量)
+            operationId: System_DeleteConfig
+            parameters:
+                - name: ids
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/config/{id}:
+        put:
+            tags:
+                - System
+                - System
+            summary: 参数设置-修改
+            description: 修改系统参数
+            operationId: System_UpdateConfig
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateConfigRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Config'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/config/{id}/status:
+        put:
+            tags:
+                - System
+                - System
+            summary: 参数设置-更新状态
+            description: 更新参数启用状态
+            operationId: System_UpdateConfigStatus
+            parameters:
+                - name: id
+                  in: path
+                  description: ID
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateConfigStatusRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/config/{key}/value:
+        get:
+            tags:
+                - System
+                - System
+            summary: 参数设置-按键名查询
+            description: 根据参数键名获取参数值（供业务页面消费）
+            operationId: System_GetConfigByKey
+            parameters:
+                - name: key
+                  in: path
+                  description: 参数键名
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Config'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /admin/v1/current-user/menus:
         get:
             tags:
@@ -296,6 +747,196 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/CurrentUserMenusResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/data-permission:
+        get:
+            tags:
+                - PermissionService
+                - Permission
+            summary: 数据权限-列表
+            description: 数据权限规则分页列表
+            operationId: PermissionService_ListDataPermission
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: code
+                  in: query
+                  schema:
+                    type: string
+                - name: scopeType
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListDataPermissionResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - PermissionService
+                - Permission
+            summary: 数据权限-创建
+            description: 创建数据权限规则
+            operationId: PermissionService_CreateDataPermission
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateDataPermissionRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DataPermission'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - PermissionService
+                - Permission
+            summary: 数据权限-删除(批量)
+            description: 删除数据权限规则(支持批量)
+            operationId: PermissionService_DeleteDataPermission
+            parameters:
+                - name: ids
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/data-permission/{id}:
+        put:
+            tags:
+                - PermissionService
+                - Permission
+            summary: 数据权限-修改
+            description: 修改数据权限规则
+            operationId: PermissionService_UpdateDataPermission
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateDataPermissionRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DataPermission'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/data-permission/{id}/status:
+        put:
+            tags:
+                - PermissionService
+                - Permission
+            summary: 数据权限-更新状态
+            description: 更新数据权限规则启用状态
+            operationId: PermissionService_UpdateDataPermissionStatus
+            parameters:
+                - name: id
+                  in: path
+                  description: ID
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateDataPermissionStatusRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/data-permission:code-exists:
+        get:
+            tags:
+                - PermissionService
+                - Permission
+            summary: 数据权限-规则编码是否存在
+            description: 数据权限规则编码是否存在（用于表单失焦校验）
+            operationId: PermissionService_IsDataPermissionCodeExists
+            parameters:
+                - name: code
+                  in: query
+                  schema:
+                    type: string
+                - name: id
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/IsDataPermissionFieldExistsResponse'
                 default:
                     description: Default error response
                     content:
@@ -480,14 +1121,44 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /admin/v1/department:code-exists:
+        get:
+            tags:
+                - Organization
+                - Organization
+            summary: 部门-部门编码是否存在
+            description: 部门编码是否存在
+            operationId: Organization_IsDepartmentCodeExists
+            parameters:
+                - name: code
+                  in: query
+                  schema:
+                    type: string
+                - name: id
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/IsDepartmentFieldExistsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /admin/v1/dict-data:
         get:
             tags:
-                - Dictionary
-                - Dictionary
+                - System
+                - System
             summary: 字典数据-列表
             description: 字典数据列表
-            operationId: Dictionary_ListDictData
+            operationId: System_ListDictData
             parameters:
                 - name: currentPage
                   in: query
@@ -509,6 +1180,13 @@ paths:
                   in: query
                   schema:
                     type: string
+                - name: dictTypeIds
+                  in: query
+                  description: 字典类型ID列表（多选过滤）
+                  schema:
+                    type: array
+                    items:
+                        type: string
             responses:
                 "200":
                     description: OK
@@ -524,11 +1202,11 @@ paths:
                                 $ref: '#/components/schemas/Status'
         post:
             tags:
-                - Dictionary
-                - Dictionary
+                - System
+                - System
             summary: 字典数据-创建
             description: 创建字典数据
-            operationId: Dictionary_CreateDictData
+            operationId: System_CreateDictData
             requestBody:
                 content:
                     application/json:
@@ -550,11 +1228,11 @@ paths:
                                 $ref: '#/components/schemas/Status'
         delete:
             tags:
-                - Dictionary
-                - Dictionary
+                - System
+                - System
             summary: 字典数据-删除(批量)
             description: 删除字典类型(支持批量)
-            operationId: Dictionary_DeleteDictData
+            operationId: System_DeleteDictData
             parameters:
                 - name: ids
                   in: query
@@ -575,11 +1253,11 @@ paths:
     /admin/v1/dict-data/{id}:
         put:
             tags:
-                - Dictionary
-                - Dictionary
+                - System
+                - System
             summary: 字典数据-修改
             description: 字典数据修改
-            operationId: Dictionary_UpdateDictData
+            operationId: System_UpdateDictData
             parameters:
                 - name: id
                   in: path
@@ -608,11 +1286,11 @@ paths:
     /admin/v1/dict-data/{id}/status:
         put:
             tags:
-                - Dictionary
-                - Dictionary
+                - System
+                - System
             summary: 字典数据-更新状态
             description: 更新字典类型状态
-            operationId: Dictionary_UpdateDictDataStatus
+            operationId: System_UpdateDictDataStatus
             parameters:
                 - name: id
                   in: path
@@ -642,11 +1320,11 @@ paths:
     /admin/v1/dict-type:
         get:
             tags:
-                - Dictionary
-                - Dictionary
+                - System
+                - System
             summary: 字典类型-列表
             description: 字典类型列表
-            operationId: Dictionary_ListDictType
+            operationId: System_ListDictType
             parameters:
                 - name: currentPage
                   in: query
@@ -683,11 +1361,11 @@ paths:
                                 $ref: '#/components/schemas/Status'
         post:
             tags:
-                - Dictionary
-                - Dictionary
+                - System
+                - System
             summary: 字典类型-创建
             description: 创建字典类型
-            operationId: Dictionary_CreateDictType
+            operationId: System_CreateDictType
             requestBody:
                 content:
                     application/json:
@@ -709,11 +1387,11 @@ paths:
                                 $ref: '#/components/schemas/Status'
         delete:
             tags:
-                - Dictionary
-                - Dictionary
+                - System
+                - System
             summary: 字典类型-删除(批量)
             description: 删除字典类型(支持批量)
-            operationId: Dictionary_DeleteDictType
+            operationId: System_DeleteDictType
             parameters:
                 - name: ids
                   in: query
@@ -731,14 +1409,42 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /admin/v1/dict-type/{code}/data:
+        get:
+            tags:
+                - System
+                - System
+            summary: 字典类型-按编码查询
+            description: 根据字典编码获取字典类型及其字典数据（供业务页面消费）
+            operationId: System_GetDictTypeByCode
+            parameters:
+                - name: code
+                  in: path
+                  description: 字典唯一编码
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DictType'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /admin/v1/dict-type/{id}:
         put:
             tags:
-                - Dictionary
-                - Dictionary
+                - System
+                - System
             summary: 字典类型-修改
             description: 创建字典修改
-            operationId: Dictionary_UpdateDictType
+            operationId: System_UpdateDictType
             parameters:
                 - name: id
                   in: path
@@ -767,11 +1473,11 @@ paths:
     /admin/v1/dict-type/{id}/status:
         put:
             tags:
-                - Dictionary
-                - Dictionary
+                - System
+                - System
             summary: 字典类型-更新状态
             description: 更新字典类型状态
-            operationId: Dictionary_UpdateDictTypeStatus
+            operationId: System_UpdateDictTypeStatus
             parameters:
                 - name: id
                   in: path
@@ -792,6 +1498,734 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DictType'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/file:
+        delete:
+            tags:
+                - File
+                - File
+            summary: 文件-删除
+            description: 删除对象存储中的文件
+            operationId: File_DeleteFile
+            parameters:
+                - name: objectKey
+                  in: query
+                  description: 对象键
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/form-schemas:
+        get:
+            tags:
+                - Lowcode
+                - Lowcode
+            summary: 表单-列表
+            description: 表单列表（分页）
+            operationId: Lowcode_ListFormSchema
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: code
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListFormSchemaResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Lowcode
+                - Lowcode
+            summary: 表单-创建
+            description: 创建表单
+            operationId: Lowcode_CreateFormSchema
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateFormSchemaRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/FormSchema'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Lowcode
+                - Lowcode
+            summary: 表单-删除(批量)
+            description: 删除表单(支持批量)
+            operationId: Lowcode_DeleteFormSchema
+            parameters:
+                - name: ids
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/form-schemas/{code}/detail:
+        get:
+            tags:
+                - Lowcode
+                - Lowcode
+            summary: 表单-按编码查询
+            description: 按编码查询表单（供运行时渲染引用）
+            operationId: Lowcode_GetFormSchemaByCode
+            parameters:
+                - name: code
+                  in: path
+                  description: 表单编码
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/FormSchema'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/form-schemas/{code}/submissions:
+        get:
+            tags:
+                - Lowcode
+                - Lowcode
+            summary: 表单-提交记录
+            description: 查询表单提交记录（分页）
+            operationId: Lowcode_ListFormSubmission
+            parameters:
+                - name: code
+                  in: path
+                  description: 表单编码
+                  required: true
+                  schema:
+                    type: string
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListFormSubmissionResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/form-schemas/{code}/submit:
+        post:
+            tags:
+                - Lowcode
+                - Lowcode
+            summary: 表单-提交数据
+            description: 提交表单数据（运行时渲染表单的用户提交）
+            operationId: Lowcode_SubmitFormData
+            parameters:
+                - name: code
+                  in: path
+                  description: 表单编码
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SubmitFormDataRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SubmitFormDataResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/form-schemas/{id}:
+        put:
+            tags:
+                - Lowcode
+                - Lowcode
+            summary: 表单-修改
+            description: 修改表单
+            operationId: Lowcode_UpdateFormSchema
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateFormSchemaRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/FormSchema'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/form-schemas/{id}/status:
+        put:
+            tags:
+                - Lowcode
+                - Lowcode
+            summary: 表单-更新状态
+            description: 更新表单状态
+            operationId: Lowcode_UpdateFormSchemaStatus
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateFormSchemaStatusRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/gen-tables:
+        get:
+            tags:
+                - Lowcode
+                - Lowcode
+            summary: 代码生成-表配置列表
+            description: 生成表配置列表（分页）
+            operationId: Lowcode_ListGenTable
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: tableName
+                  in: query
+                  schema:
+                    type: string
+                - name: bizName
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListGenTableResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Lowcode
+                - Lowcode
+            summary: 代码生成-创建配置
+            description: 创建生成表配置
+            operationId: Lowcode_CreateGenTable
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateGenTableRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GenTable'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Lowcode
+                - Lowcode
+            summary: 代码生成-删除配置
+            description: 删除生成表配置(支持批量)
+            operationId: Lowcode_DeleteGenTable
+            parameters:
+                - name: ids
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/gen-tables/{id}:
+        put:
+            tags:
+                - Lowcode
+                - Lowcode
+            summary: 代码生成-修改配置
+            description: 修改生成表配置
+            operationId: Lowcode_UpdateGenTable
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateGenTableRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GenTable'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/job-logs:
+        get:
+            tags:
+                - Ops
+                - Ops
+            summary: 定时任务-日志列表
+            description: 定时任务执行日志分页列表
+            operationId: Ops_ListJobLog
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: jobId
+                  in: query
+                  schema:
+                    type: string
+                - name: jobName
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListJobLogResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Ops
+                - Ops
+            summary: 定时任务-删除日志
+            description: 删除定时任务执行日志(支持批量)
+            operationId: Ops_DeleteJobLog
+            parameters:
+                - name: ids
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/job-logs/clear:
+        delete:
+            tags:
+                - Ops
+                - Ops
+            summary: 定时任务-清空日志
+            description: 清空全部任务执行日志，不可恢复
+            operationId: Ops_ClearJobLog
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/job-logs/{id}:
+        get:
+            tags:
+                - Ops
+                - Ops
+            summary: 定时任务-日志详情
+            description: 根据ID获取任务执行日志详情
+            operationId: Ops_GetJobLog
+            parameters:
+                - name: id
+                  in: path
+                  description: 日志ID
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/JobLog'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/jobs:
+        get:
+            tags:
+                - Ops
+                - Ops
+            summary: 定时任务-列表
+            description: 定时任务分页列表
+            operationId: Ops_ListJob
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: jobGroup
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListJobResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Ops
+                - Ops
+            summary: 定时任务-创建
+            description: 创建定时任务
+            operationId: Ops_CreateJob
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateJobRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Job'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Ops
+                - Ops
+            summary: 定时任务-删除(批量)
+            description: 删除定时任务(支持批量)
+            operationId: Ops_DeleteJob
+            parameters:
+                - name: ids
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/jobs/{id}:
+        get:
+            tags:
+                - Ops
+                - Ops
+            summary: 定时任务-详情
+            description: 根据ID获取任务详情
+            operationId: Ops_GetJob
+            parameters:
+                - name: id
+                  in: path
+                  description: 任务ID
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Job'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - Ops
+                - Ops
+            summary: 定时任务-修改
+            description: 修改定时任务
+            operationId: Ops_UpdateJob
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateJobRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Job'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/jobs/{id}/run:
+        post:
+            tags:
+                - Ops
+                - Ops
+            summary: 定时任务-立即执行
+            description: 立即执行一次任务（异步）
+            operationId: Ops_RunJob
+            parameters:
+                - name: id
+                  in: path
+                  description: 任务ID
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RunJobRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/jobs/{id}/status:
+        put:
+            tags:
+                - Ops
+                - Ops
+            summary: 定时任务-更新状态
+            description: 更新任务启用状态
+            operationId: Ops_UpdateJobStatus
+            parameters:
+                - name: id
+                  in: path
+                  description: ID
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateJobStatusRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
                 default:
                     description: Default error response
                     content:
@@ -819,6 +2253,98 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/LoginResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/login-logs:
+        get:
+            tags:
+                - Security
+                - Security
+            summary: 日志-登录日志列表
+            description: 分页查询登录日志（含失败记录）
+            operationId: Security_ListLoginLog
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: username
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: string
+                - name: ip
+                  in: query
+                  schema:
+                    type: string
+                - name: startTime
+                  in: query
+                  schema:
+                    type: string
+                - name: endTime
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListLoginLogResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Security
+                - Security
+            summary: 日志-删除登录日志
+            description: 删除登录日志（支持批量）
+            operationId: Security_DeleteLoginLog
+            parameters:
+                - name: ids
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/login-logs/clear:
+        delete:
+            tags:
+                - Security
+                - Security
+            summary: 日志-清空登录日志
+            description: 清空全部登录日志，不可恢复
+            operationId: Security_ClearLoginLog
+            responses:
+                "200":
+                    description: OK
+                    content: {}
                 default:
                     description: Default error response
                     content:
@@ -939,6 +2465,32 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/Status'
     /admin/v1/menu/{id}:
+        get:
+            tags:
+                - PermissionService
+                - Permission
+            summary: 权限-通过ID获取
+            description: 通过ID获取权限详情（含接口权限）
+            operationId: PermissionService_GetMenu
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Menu'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
         put:
             tags:
                 - PermissionService
@@ -995,6 +2547,779 @@ paths:
                 "200":
                     description: OK
                     content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/monitor/cache:
+        get:
+            tags:
+                - Ops
+                - Ops
+            summary: 缓存监控
+            description: 获取 Redis 运行状态（内存/连接/命中率等）
+            operationId: Ops_GetCacheInfo
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CacheInfo'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/monitor/cache/keys:
+        get:
+            tags:
+                - Ops
+                - Ops
+            summary: 缓存列表
+            description: 分页查询 Redis 缓存键
+            operationId: Ops_ListCacheKey
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: pattern
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListCacheKeyResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/monitor/database:
+        get:
+            tags:
+                - Ops
+                - Ops
+            summary: 数据库监控
+            description: 获取数据库连接池状态与表统计
+            operationId: Ops_GetDatabaseInfo
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DatabaseInfo'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/monitor/job:
+        get:
+            tags:
+                - Ops
+                - Ops
+            summary: 定时任务监控
+            description: 获取定时任务数量与执行统计
+            operationId: Ops_GetJobMonitor
+            parameters:
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: group
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/JobMonitorInfo'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/monitor/metrics:
+        get:
+            tags:
+                - Ops
+                - Ops
+            summary: 接口监控
+            description: 获取各接口的请求量/失败率/耗时统计（进程内统计，重启清零）
+            operationId: Ops_GetApiMetrics
+            parameters:
+                - name: method
+                  in: query
+                  schema:
+                    type: string
+                - name: path
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetApiMetricsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/monitor/server:
+        get:
+            tags:
+                - Ops
+                - Ops
+            summary: 服务监控
+            description: 获取当前服务运行状态（Go 运行时/内存/GC/运行时长）
+            operationId: Ops_GetServerInfo
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ServerInfo'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/notifications:
+        get:
+            tags:
+                - Message
+                - Message
+            summary: 消息通知-我的消息列表
+            description: 分页查询当前登录用户的消息（收件箱）
+            operationId: Message_ListNotification
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: isRead
+                  in: query
+                  description: 是否已读过滤，不传表示不过滤
+                  schema:
+                    type: boolean
+                - name: type
+                  in: query
+                  description: 类型过滤
+                  schema:
+                    type: string
+                - name: level
+                  in: query
+                  description: 级别过滤
+                  schema:
+                    type: string
+                - name: keyword
+                  in: query
+                  description: 关键字（标题/内容模糊匹配）
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListNotificationResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Message
+                - Message
+            summary: 消息通知-发布
+            description: 发布一条通知，按投放范围扇出到接收人并实时推送
+            operationId: Message_CreateNotification
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateNotificationRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Notification'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Message
+                - Message
+            summary: 消息通知-删除
+            description: 删除当前登录用户的消息（支持批量）
+            operationId: Message_DeleteNotification
+            parameters:
+                - name: ids
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/notifications/manage:
+        get:
+            tags:
+                - Message
+                - Message
+            summary: 消息通知-管理端列表
+            description: 分页查询已发布的通知（管理视角）
+            operationId: Message_ListNotificationManage
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: title
+                  in: query
+                  description: 标题（模糊）
+                  schema:
+                    type: string
+                - name: type
+                  in: query
+                  description: 类型
+                  schema:
+                    type: string
+                - name: level
+                  in: query
+                  description: 级别
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  description: 状态
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListNotificationManageResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/notifications/read-all:
+        put:
+            tags:
+                - Message
+                - Message
+            summary: 消息通知-全部已读
+            description: 将当前登录用户的所有消息标记为已读
+            operationId: Message_ReadAllNotification
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ReadAllNotificationRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/notifications/unread-count:
+        get:
+            tags:
+                - Message
+                - Message
+            summary: 消息通知-未读数量
+            description: 查询当前登录用户的未读消息数量
+            operationId: Message_GetUnreadCount
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetUnreadCountResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/notifications/{id}/read:
+        put:
+            tags:
+                - Message
+                - Message
+            summary: 消息通知-标记已读
+            description: 将指定消息标记为已读
+            operationId: Message_ReadNotification
+            parameters:
+                - name: id
+                  in: path
+                  description: 收件记录ID
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ReadNotificationRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/notifications/{id}/revoke:
+        put:
+            tags:
+                - Message
+                - Message
+            summary: 消息通知-撤回
+            description: 撤回已发布的通知，同时从所有接收人收件箱移除
+            operationId: Message_RevokeNotification
+            parameters:
+                - name: id
+                  in: path
+                  description: 通知ID
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RevokeNotificationRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/online-users:
+        get:
+            tags:
+                - Security
+                - Security
+            summary: 系统监控-在线用户列表
+            description: 查询当前在线用户（有效 access token 会话，按用户聚合）
+            operationId: Security_ListOnlineUsers
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListOnlineUsersResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/online-users/{id}/logout:
+        post:
+            tags:
+                - Security
+                - Security
+            summary: 系统监控-强制下线
+            description: 强制指定用户下线（踢掉其全部在线会话）
+            operationId: Security_ForceLogout
+            parameters:
+                - name: id
+                  in: path
+                  description: 要强制下线的用户ID（其全部在线会话将被注销）
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ForceLogoutRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/operation-logs:
+        get:
+            tags:
+                - Security
+                - Security
+            summary: 日志-操作日志列表
+            description: 分页查询操作日志
+            operationId: Security_ListOperationLog
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: adminId
+                  in: query
+                  schema:
+                    type: string
+                - name: adminName
+                  in: query
+                  schema:
+                    type: string
+                - name: module
+                  in: query
+                  schema:
+                    type: string
+                - name: operation
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: string
+                - name: keyword
+                  in: query
+                  schema:
+                    type: string
+                - name: startTime
+                  in: query
+                  description: 起止时间（RFC3339）
+                  schema:
+                    type: string
+                - name: endTime
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListOperationLogResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Security
+                - Security
+            summary: 日志-删除操作日志
+            description: 删除操作日志（支持批量）
+            operationId: Security_DeleteOperationLog
+            parameters:
+                - name: ids
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/operation-logs/clear:
+        delete:
+            tags:
+                - Security
+                - Security
+            summary: 日志-清空操作日志
+            description: 清空全部操作日志，不可恢复
+            operationId: Security_ClearOperationLog
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/operation-logs/{id}:
+        get:
+            tags:
+                - Security
+                - Security
+            summary: 日志-操作日志详情
+            description: 查询单条操作日志（含请求参数）
+            operationId: Security_GetOperationLog
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/OperationLog'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/orders:
+        get:
+            tags:
+                - OrderService
+                - order
+            summary: 订单-列表
+            description: 订单分页列表
+            operationId: OrderService_ListOrder
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListOrderResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - OrderService
+                - order
+            summary: 订单-创建
+            description: 创建订单
+            operationId: OrderService_CreateOrder
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateOrderRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateOrderResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - OrderService
+                - order
+            summary: 订单-删除(批量)
+            description: 删除订单(支持批量)
+            operationId: OrderService_DeleteOrder
+            parameters:
+                - name: ids
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteOrderResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/orders/{id}:
+        get:
+            tags:
+                - OrderService
+                - order
+            summary: 订单-详情
+            description: 根据ID获取订单详情
+            operationId: OrderService_GetOrder
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetOrderResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - OrderService
+                - order
+            summary: 订单-修改
+            description: 修改订单
+            operationId: OrderService_UpdateOrder
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateOrderRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateOrderResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/orders/{id}/status:
+        put:
+            tags:
+                - OrderService
+                - order
+            summary: 订单-更新状态
+            description: 更新订单状态
+            operationId: OrderService_UpdateOrderStatus
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateOrderStatusRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateOrderStatusResponse'
                 default:
                     description: Default error response
                     content:
@@ -1423,7 +3748,7 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/Status'
     /admin/v1/role/{id}/status:
-        get:
+        put:
             tags:
                 - PermissionService
                 - Permission
@@ -1437,11 +3762,68 @@ paths:
                   required: true
                   schema:
                     type: string
-                - name: status
-                  in: query
-                  description: 职务状态
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateRoleStatusRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/role/{roleId}/data-permissions:
+        get:
+            tags:
+                - PermissionService
+                - Permission
+            summary: 角色-查询数据权限规则
+            description: 查询角色已绑定的数据权限规则列表
+            operationId: PermissionService_ListDataPermissionsByRole
+            parameters:
+                - name: roleId
+                  in: path
+                  required: true
                   schema:
                     type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListDataPermissionsByRoleResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - PermissionService
+                - Permission
+            summary: 角色-绑定数据权限规则
+            description: 为角色绑定数据权限规则（全量替换）
+            operationId: PermissionService_BindDataPermissionsForRole
+            parameters:
+                - name: roleId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/BindDataPermissionsForRoleRequest'
+                required: true
             responses:
                 "200":
                     description: OK
@@ -1502,6 +3884,269 @@ paths:
                 "200":
                     description: OK
                     content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/role:code-exists:
+        get:
+            tags:
+                - PermissionService
+                - Permission
+            summary: 角色-角色编码是否存在
+            description: 角色编码是否存在
+            operationId: PermissionService_IsRoleCodeExists
+            parameters:
+                - name: code
+                  in: query
+                  schema:
+                    type: string
+                - name: id
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/IsRoleFieldExistsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/security/policy:
+        get:
+            tags:
+                - Security
+                - Security
+            summary: 安全策略-获取
+            description: 获取登录策略与访问控制配置
+            operationId: Security_GetSecurityPolicy
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SecurityPolicy'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - Security
+                - Security
+            summary: 安全策略-更新
+            description: 更新登录策略与访问控制配置（保存后即时生效）
+            operationId: Security_UpdateSecurityPolicy
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateSecurityPolicyRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SecurityPolicy'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/tenant:
+        get:
+            tags:
+                - Tenant
+                - Tenant
+            summary: 租户-列表
+            description: 租户列表
+            operationId: Tenant_ListTenant
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: code
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListTenantResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Tenant
+                - Tenant
+            summary: 租户-创建
+            description: 创建租户
+            operationId: Tenant_CreateTenant
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateTenantRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Tenant'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Tenant
+                - Tenant
+            summary: 租户-删除(批量)
+            description: 删除租户(支持批量)
+            operationId: Tenant_DeleteTenant
+            parameters:
+                - name: ids
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/tenant/{id}:
+        get:
+            tags:
+                - Tenant
+                - Tenant
+            summary: 租户-详情
+            description: 租户详情
+            operationId: Tenant_GetTenant
+            parameters:
+                - name: id
+                  in: path
+                  description: ID
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Tenant'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - Tenant
+                - Tenant
+            summary: 租户-修改
+            description: 修改租户
+            operationId: Tenant_UpdateTenant
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateTenantRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Tenant'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /admin/v1/tenant/{id}/status:
+        put:
+            tags:
+                - Tenant
+                - Tenant
+            summary: 租户-更新状态
+            description: 更新租户状态
+            operationId: Tenant_UpdateTenantStatus
+            parameters:
+                - name: id
+                  in: path
+                  description: ID
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateTenantStatusRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Tenant'
                 default:
                     description: Default error response
                     content:
@@ -1572,23 +4217,50 @@ components:
                     description: 手机号
                 avatar:
                     type: string
-                    description: 头像
+                    description: 头像对象键
                 status:
                     type: string
                     description: 状态(enabled/disabled)
-                createTime:
+                createdAt:
                     type: string
                     description: 创建时间
                     format: date-time
-                updateTime:
+                updatedAt:
                     type: string
                     description: 更新时间
                     format: date-time
+                avatarUrl:
+                    type: string
+                    description: 头像访问地址（完整可访问URL）
                 roleIds:
                     type: array
                     items:
                         type: string
                     description: 关联的角色ID列表
+                isSuperAdmin:
+                    type: boolean
+                    description: 是否超级管理员
+                roleNames:
+                    type: array
+                    items:
+                        type: string
+                    description: 关联的角色名称列表
+                departmentId:
+                    type: string
+                    description: 归属部门ID
+                departmentName:
+                    type: string
+                    description: 归属部门名称
+                dataPermissionIds:
+                    type: array
+                    items:
+                        type: string
+                    description: 绑定的数据权限规则ID列表
+                dataPermissionNames:
+                    type: array
+                    items:
+                        type: string
+                    description: 绑定的数据权限规则名称列表
             description: 后台用户信息
         ApiEndpoint:
             type: object
@@ -1651,11 +4323,43 @@ components:
                         $ref: '#/components/schemas/ApiEndpoint'
                     description: 该 service 下的接口列表
             description: 接口元数据（按 service 分组），用于菜单按钮的接口权限选择器
+        ApiMetric:
+            type: object
+            properties:
+                method:
+                    type: string
+                    description: HTTP 方法
+                path:
+                    type: string
+                    description: 路由路径模板
+                total:
+                    type: string
+                    description: 总请求数
+                success:
+                    type: string
+                    description: 成功请求数
+                error:
+                    type: string
+                    description: 失败请求数
+                errorRate:
+                    type: number
+                    description: 失败率（0-100）
+                    format: double
+                avgMs:
+                    type: number
+                    description: 平均耗时（毫秒）
+                    format: double
+                maxMs:
+                    type: number
+                    description: 最大耗时（毫秒）
+                    format: double
+                lastMs:
+                    type: number
+                    description: 最近一次耗时（毫秒）
+                    format: double
         ApiPermission:
             type: object
             properties:
-                id:
-                    type: string
                 service:
                     type: string
                 method:
@@ -1664,7 +4368,40 @@ components:
                     type: string
                 summary:
                     type: string
-            description: 单个接口权限（绑定到按钮菜单）
+                tag:
+                    type: string
+                code:
+                    type: string
+            description: |-
+                单个接口权限（绑定到按钮菜单）
+                 绑定基于 api_interface.code（service|METHOD|path）关联，接口信息实时反查自 api_interface
+        BatchUpdateAdminStatusRequest:
+            required:
+                - ids
+                - status
+            type: object
+            properties:
+                ids:
+                    type: array
+                    items:
+                        type: string
+                    description: 用户ID列表
+                status:
+                    type: string
+                    description: 状态(enabled/disabled)
+            description: 批量更新后台用户状态请求
+        BindDataPermissionsForRoleRequest:
+            type: object
+            properties:
+                roleId:
+                    type: string
+                    description: 角色ID
+                dataPermissionIds:
+                    type: array
+                    items:
+                        type: string
+                    description: 要绑定的数据权限规则ID列表（全量替换）
+            description: 为角色绑定数据权限规则请求（全量替换）
         BindMenusForRoleRequest:
             type: object
             properties:
@@ -1677,6 +4414,121 @@ components:
                         type: string
                     description: 要绑定的菜单ID列表（全量替换）
             description: 为角色绑定菜单请求（全量替换）
+        CacheInfo:
+            type: object
+            properties:
+                version:
+                    type: string
+                    description: Redis 版本
+                mode:
+                    type: string
+                    description: 运行模式（standalone/sentinel/cluster）
+                role:
+                    type: string
+                    description: 角色（master/slave）
+                uptimeSeconds:
+                    type: string
+                    description: 运行时长（秒）
+                connectedClients:
+                    type: integer
+                    description: 当前连接数
+                    format: int32
+                usedMemory:
+                    type: string
+                    description: 已用内存（字节）
+                usedMemoryHuman:
+                    type: string
+                    description: 已用内存（可读）
+                maxMemory:
+                    type: string
+                    description: 最大内存（字节），0 表示不限制
+                totalKeys:
+                    type: string
+                    description: 当前库键总数
+                keyspaceHits:
+                    type: string
+                    description: 命中次数
+                keyspaceMisses:
+                    type: string
+                    description: 未命中次数
+                hitRate:
+                    type: number
+                    description: 命中率（0-100）
+                    format: double
+                totalCommands:
+                    type: string
+                    description: 累计处理命令数
+                expiredKeys:
+                    type: string
+                    description: 累计过期键数
+                evictedKeys:
+                    type: string
+                    description: 累计淘汰键数
+                opsPerSec:
+                    type: string
+                    description: 每秒处理命令数（瞬时）
+        CacheKey:
+            type: object
+            properties:
+                key:
+                    type: string
+                    description: 键名（超长时脱敏）
+                type:
+                    type: string
+                    description: 数据类型
+                ttlSeconds:
+                    type: string
+                    description: 剩余过期时间（秒），-1 表示永不过期
+                size:
+                    type: string
+                    description: 占用内存（字节），-1 表示未知
+                value:
+                    type: string
+                    description: 键值（预览，超长截断）
+                rawKey:
+                    type: string
+                    description: 原始键名（用于复制）
+            description: 缓存键信息
+        Config:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: ID
+                name:
+                    type: string
+                    description: 参数名称
+                key:
+                    type: string
+                    description: 参数键名（唯一）
+                value:
+                    type: string
+                    description: 参数键值
+                configType:
+                    type: string
+                    description: 系统内置（Y=内置，N=外置）
+                status:
+                    type: string
+                    description: 状态：enabled=启用，disabled=禁用
+                remark:
+                    type: string
+                    description: 备注信息
+                group:
+                    type: string
+                    description: 分组名称（可为空，即单一参数）
+                createdAt:
+                    type: string
+                    description: 创建时间
+                    format: date-time
+                updatedAt:
+                    type: string
+                    description: 更新时间
+                    format: date-time
+                deletedAt:
+                    type: string
+                    description: 删除时间（软删除标记）
+                    format: date-time
+            description: 系统参数配置
         CreateAdminRequest:
             required:
                 - username
@@ -1709,7 +4561,92 @@ components:
                     items:
                         type: string
                     description: 关联的角色ID列表
+                departmentId:
+                    type: string
+                    description: 归属部门ID
+                dataPermissionIds:
+                    type: array
+                    items:
+                        type: string
+                    description: 绑定的数据权限规则ID列表
             description: 创建后台用户请求
+        CreateApiInterfaceRequest:
+            type: object
+            properties:
+                service:
+                    type: string
+                    description: 服务全限定名，如 admin.service.v1.PermissionService
+                tag:
+                    type: string
+                    description: OpenAPI 标签，如 Permission
+                method:
+                    type: string
+                    description: 'HTTP method: GET/POST/PUT/DELETE'
+                path:
+                    type: string
+                    description: 接口路径，如 /admin/v1/menu
+                summary:
+                    type: string
+                    description: 接口描述
+            description: 创建接口请求（手动新增）
+        CreateConfigRequest:
+            required:
+                - name
+                - key
+                - value
+                - configType
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: 参数名称
+                key:
+                    type: string
+                    description: 参数键名
+                value:
+                    type: string
+                    description: 参数键值
+                configType:
+                    type: string
+                    description: 系统内置（Y=内置，N=外置）
+                status:
+                    type: string
+                    description: 状态（enabled/disabled）
+                remark:
+                    type: string
+                    description: 备注
+                group:
+                    type: string
+                    description: 分组名称（可为空，即单一参数）
+        CreateDataPermissionRequest:
+            required:
+                - name
+                - code
+                - scopeType
+                - status
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: 规则名称
+                code:
+                    type: string
+                    description: 规则编码（唯一）
+                scopeType:
+                    type: string
+                    description: 数据范围（1=全部数据 2=自定义 3=本部门 4=本部门及以下 5=仅本人）
+                deptIds:
+                    type: string
+                    description: 自定义数据范围的部门ID集合（JSON数组）
+                roleIds:
+                    type: string
+                    description: 自定义数据范围的角色ID集合（JSON数组）
+                status:
+                    type: string
+                    description: 状态（enabled/disabled）
+                remark:
+                    type: string
+                    description: 备注
         CreateDepartmentRequest:
             type: object
             properties:
@@ -1790,6 +4727,103 @@ components:
                 status:
                     type: string
                     description: 状态（enabled/disabled）
+        CreateFormSchemaRequest:
+            required:
+                - name
+                - code
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: 表单名称
+                code:
+                    type: string
+                    description: 表单编码（唯一）
+                description:
+                    type: string
+                    description: 表单描述
+                schemaJson:
+                    type: object
+                    description: 表单 JSON Schema 定义
+                status:
+                    type: string
+                    description: 状态（enabled/disabled）
+                remark:
+                    type: string
+                    description: 备注
+        CreateGenTableRequest:
+            required:
+                - tableName
+                - moduleName
+                - bizName
+            type: object
+            properties:
+                tableName:
+                    type: string
+                    description: 数据库表名
+                tableComment:
+                    type: string
+                    description: 表备注
+                moduleName:
+                    type: string
+                    description: 模块名（如 system / permission）
+                bizName:
+                    type: string
+                    description: 业务名（驼峰，如 Job / JobLog）
+                fieldsJson:
+                    type: object
+                    description: 字段配置
+                genType:
+                    type: string
+                    description: 生成类型：single=单表 CRUD
+                menuEnabled:
+                    type: boolean
+                    description: 是否生成菜单
+                menuModule:
+                    type: string
+                    description: 菜单所属模块（父目录归属）
+                buttons:
+                    type: array
+                    items:
+                        type: string
+                    description: 生成的按钮：list/detail/create/edit/delete/batchDelete/status/import/export
+                status:
+                    type: string
+                    description: 状态（enabled/disabled）
+        CreateJobRequest:
+            required:
+                - name
+                - invokeTarget
+                - cronExpression
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: 任务名称
+                jobGroup:
+                    type: string
+                    description: 任务分组
+                jobType:
+                    type: string
+                    description: 任务类型：http=HTTP调用
+                invokeTarget:
+                    type: string
+                    description: 调用目标（HTTP请求URL）
+                cronExpression:
+                    type: string
+                    description: Cron 表达式（5/6/7段）
+                misfirePolicy:
+                    type: string
+                    description: 错失执行策略：immediately=立即执行，once=执行一次，ignore=放弃执行
+                concurrent:
+                    type: boolean
+                    description: 是否允许并发执行
+                status:
+                    type: string
+                    description: 状态（enabled/disabled）
+                remark:
+                    type: string
+                    description: 备注
         CreateMenuRequest:
             type: object
             properties:
@@ -1845,6 +4879,54 @@ components:
                         $ref: '#/components/schemas/ApiPermission'
                     description: 接口权限列表（仅按钮类型 action 使用）
             description: 创建菜单请求
+        CreateNotificationRequest:
+            required:
+                - title
+                - content
+            type: object
+            properties:
+                title:
+                    type: string
+                    description: 通知标题
+                content:
+                    type: string
+                    description: 通知内容
+                type:
+                    type: string
+                    description: 通知类型（默认 system）
+                level:
+                    type: string
+                    description: 重要级别（默认 info）
+                bizType:
+                    type: string
+                    description: 业务类型
+                bizId:
+                    type: string
+                    description: 业务ID
+                link:
+                    type: string
+                    description: 点击跳转的前端路由
+                targetType:
+                    type: string
+                    description: 投放范围（默认 all）
+                targetIds:
+                    type: array
+                    items:
+                        type: string
+                    description: 投放目标ID集合
+        CreateOrderRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                sn:
+                    type: string
+            description: 创建订单
+        CreateOrderResponse:
+            type: object
+            properties:
+                data:
+                    $ref: '#/components/schemas/Order'
         CreatePositionRequest:
             required:
                 - name
@@ -1890,9 +4972,6 @@ components:
                 status:
                     type: string
                     description: 状态（enabled/disabled）
-                dataScope:
-                    type: string
-                    description: 数据权限范围（如：ALL、DEPT、SELF）
                 isSystem:
                     type: boolean
                     description: 是否系统内置角色
@@ -1901,6 +4980,45 @@ components:
                     items:
                         type: string
                     description: 关联的菜单ID列表
+                dataPermissionIds:
+                    type: array
+                    items:
+                        type: string
+                    description: 关联的数据权限规则ID列表
+        CreateTenantRequest:
+            required:
+                - code
+                - name
+            type: object
+            properties:
+                code:
+                    type: string
+                    description: 租户编码（字母/数字/下划线/中划线）
+                name:
+                    type: string
+                    description: 租户名称
+                status:
+                    type: string
+                    description: 状态（enabled/disabled）
+                expireAt:
+                    type: string
+                    description: 到期时间（为空表示永不过期）
+                    format: date-time
+                maxUsers:
+                    type: string
+                    description: 最大用户数（0=不限）
+                maxRoles:
+                    type: string
+                    description: 最大角色数（0=不限）
+                contactName:
+                    type: string
+                    description: 联系人
+                contactPhone:
+                    type: string
+                    description: 联系电话
+                remark:
+                    type: string
+                    description: 备注
         CurrentUserInfoResponse:
             type: object
             properties:
@@ -1916,6 +5034,14 @@ components:
                     type: array
                     items:
                         type: string
+                dataScope:
+                    type: string
+                departmentName:
+                    type: string
+                roleNames:
+                    type: array
+                    items:
+                        type: string
         CurrentUserMenusResponse:
             type: object
             properties:
@@ -1924,6 +5050,145 @@ components:
                     items:
                         $ref: '#/components/schemas/Menu'
             description: 当前用户菜单响应（返回用户角色绑定的菜单树）
+        DataPermission:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: ID
+                name:
+                    type: string
+                    description: 规则名称
+                code:
+                    type: string
+                    description: 规则唯一编码
+                scopeType:
+                    type: string
+                    description: 数据范围：1=全部数据 2=自定义 3=本部门 4=本部门及以下 5=仅本人
+                deptIds:
+                    type: string
+                    description: 自定义数据范围的部门ID集合（JSON数组）
+                roleIds:
+                    type: string
+                    description: 自定义数据范围的角色ID集合（JSON数组）
+                status:
+                    type: string
+                    description: 状态：enabled=启用，disabled=禁用
+                remark:
+                    type: string
+                    description: 备注信息
+                createdAt:
+                    type: string
+                    description: 创建时间
+                    format: date-time
+                updatedAt:
+                    type: string
+                    description: 更新时间
+                    format: date-time
+                deletedAt:
+                    type: string
+                    description: 删除时间（软删除标记）
+                    format: date-time
+            description: 数据权限规则
+        DatabaseInfo:
+            type: object
+            properties:
+                driver:
+                    type: string
+                    description: 驱动
+                version:
+                    type: string
+                    description: 数据库版本
+                database:
+                    type: string
+                    description: 数据库名
+                tableCount:
+                    type: integer
+                    description: 表数量
+                    format: int32
+                maxOpenConnections:
+                    type: integer
+                    description: 最大连接数
+                    format: int32
+                openConnections:
+                    type: integer
+                    description: 当前打开连接数
+                    format: int32
+                inUse:
+                    type: integer
+                    description: 使用中的连接数
+                    format: int32
+                idle:
+                    type: integer
+                    description: 空闲连接数
+                    format: int32
+                waitCount:
+                    type: string
+                    description: 等待连接的累计次数
+                waitDurationMs:
+                    type: string
+                    description: 等待连接的累计时长（毫秒）
+                maxIdleClosed:
+                    type: string
+                    description: 因空闲过多而关闭的连接数
+                maxLifetimeClosed:
+                    type: string
+                    description: 因超时而关闭的连接数
+                tables:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/DbTableStat'
+                    description: 表统计
+        DbColumn:
+            type: object
+            properties:
+                columnName:
+                    type: string
+                    description: 列名
+                columnComment:
+                    type: string
+                    description: 列注释
+                dataType:
+                    type: string
+                    description: 数据类型（MySQL 原始类型，如 varchar/bigint/int/datetime）
+                isPrimaryKey:
+                    type: boolean
+                    description: 是否主键
+                isNullable:
+                    type: boolean
+                    description: 是否可空
+                autoIncrement:
+                    type: boolean
+                    description: 是否自增
+            description: 表字段元数据
+        DbTable:
+            type: object
+            properties:
+                tableName:
+                    type: string
+                    description: 表名
+                tableComment:
+                    type: string
+                    description: 表备注
+            description: 数据库表元数据（从 information_schema 读取）
+        DbTableStat:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: 表名
+                rows:
+                    type: string
+                    description: 行数（估算）
+                dataSize:
+                    type: string
+                    description: 数据大小（字节）
+                indexSize:
+                    type: string
+                    description: 索引大小（字节）
+        DeleteOrderResponse:
+            type: object
+            properties: {}
         Department:
             type: object
             properties:
@@ -2055,6 +5320,197 @@ components:
                     items:
                         $ref: '#/components/schemas/DictData'
                     description: 字典数据列表
+        ForceLogoutRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 要强制下线的用户ID（其全部在线会话将被注销）
+        FormSchema:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: ID
+                name:
+                    type: string
+                    description: 表单名称
+                code:
+                    type: string
+                    description: 表单编码（唯一，供运行时渲染引用）
+                description:
+                    type: string
+                    description: 表单描述
+                schemaJson:
+                    type: object
+                    description: 表单 JSON Schema 定义
+                status:
+                    type: string
+                    description: 状态：enabled=启用，disabled=禁用
+                remark:
+                    type: string
+                    description: 备注信息
+                createdAt:
+                    type: string
+                    description: 创建时间
+                    format: date-time
+                updatedAt:
+                    type: string
+                    description: 更新时间
+                    format: date-time
+                deletedAt:
+                    type: string
+                    description: 删除时间（软删除标记）
+                    format: date-time
+            description: 表单定义（表单构建器）
+        FormSubmission:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 提交记录ID
+                formCode:
+                    type: string
+                    description: 表单编码
+                formName:
+                    type: string
+                    description: 表单名称
+                submitData:
+                    type: object
+                    description: 提交数据
+                createdAt:
+                    type: string
+                    description: 提交时间
+                    format: date-time
+                updatedAt:
+                    type: string
+                    description: 更新时间
+                    format: date-time
+            description: 表单提交记录（表单构建器运行时的用户提交数据）
+        GenCodeFile:
+            type: object
+            properties:
+                fileName:
+                    type: string
+                    description: 相对路径/文件名
+                content:
+                    type: string
+                    description: 代码内容
+            description: 生成的代码文件（文件名 + 内容）
+        GenTable:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: ID
+                tableName:
+                    type: string
+                    description: 数据库表名
+                tableComment:
+                    type: string
+                    description: 表备注
+                moduleName:
+                    type: string
+                    description: 模块名（如 system / permission）
+                bizName:
+                    type: string
+                    description: 业务名（驼峰，如 Job / JobLog）
+                fieldsJson:
+                    type: object
+                    description: 字段配置
+                genType:
+                    type: string
+                    description: 生成类型：single=单表 CRUD
+                menuEnabled:
+                    type: boolean
+                    description: 是否生成菜单
+                menuModule:
+                    type: string
+                    description: 菜单所属模块（父目录归属）
+                buttons:
+                    type: array
+                    items:
+                        type: string
+                    description: 生成的按钮：list/detail/create/edit/delete/batchDelete/status/import/export
+                status:
+                    type: string
+                    description: 状态：enabled=启用，disabled=禁用
+                createdAt:
+                    type: string
+                    description: 创建时间
+                    format: date-time
+                updatedAt:
+                    type: string
+                    description: 更新时间
+                    format: date-time
+                deletedAt:
+                    type: string
+                    description: 删除时间（软删除标记）
+                    format: date-time
+            description: 生成表配置（代码生成器）
+        GenerateCodeRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 生成表配置 ID（为空则新建配置并落库）
+                tableName:
+                    type: string
+                    description: 数据库表名
+                tableComment:
+                    type: string
+                    description: 表备注
+                moduleName:
+                    type: string
+                    description: 模块名
+                bizName:
+                    type: string
+                    description: 业务名（驼峰）
+                fieldsJson:
+                    type: object
+                    description: 字段配置
+                genType:
+                    type: string
+                    description: 生成类型：single=单表 CRUD，form=仅表单
+                status:
+                    type: string
+                    description: 状态（enabled/disabled）
+                genMenu:
+                    type: boolean
+                    description: 是否生成菜单
+                menuModule:
+                    type: string
+                    description: 菜单所属模块（父目录归属）
+                buttons:
+                    type: array
+                    items:
+                        type: string
+                    description: 生成的按钮：list/detail/create/edit/delete/batchDelete/status/import/export
+        GenerateCodeResponse:
+            type: object
+            properties:
+                files:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GenCodeFile'
+                    description: 生成的代码文件列表
+                id:
+                    type: string
+                    description: 生成表配置 ID（新建配置时返回，供下载/落库菜单使用）
+        GetApiMetricsResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ApiMetric'
+                totalRequests:
+                    type: string
+                totalErrors:
+                    type: string
+                uptimeSeconds:
+                    type: string
+                    description: 统计时长（秒，服务启动至今）
         GetCaptchaResponse:
             type: object
             properties:
@@ -2062,6 +5518,17 @@ components:
                     type: string
                 imageBase64:
                     type: string
+        GetOrderResponse:
+            type: object
+            properties:
+                data:
+                    $ref: '#/components/schemas/Order'
+        GetUnreadCountResponse:
+            type: object
+            properties:
+                count:
+                    type: string
+                    description: 未读数量
         GoogleProtobufAny:
             type: object
             properties:
@@ -2070,32 +5537,181 @@ components:
                     description: The type of the serialized message.
             additionalProperties: true
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
-        ImportApiInterfaceRequest:
+        IsDataPermissionFieldExistsResponse:
             type: object
             properties:
-                file:
-                    type: string
-                    description: openapi.yaml 文件内容
-                    format: bytes
-            description: 导入请求
-        ImportApiInterfaceResponse:
+                exists:
+                    type: boolean
+                    description: 是否存在
+            description: 数据权限规则编码是否存在响应
+        IsDepartmentFieldExistsResponse:
             type: object
             properties:
-                total:
-                    type: string
-                    description: 文件中的接口总数
-                imported:
-                    type: string
-                    description: 成功导入的接口数
-                skipped:
-                    type: string
-                    description: 跳过的重复接口数
-            description: 导入响应
+                exists:
+                    type: boolean
+            description: 部门字段是否存在响应
         IsPositionFieldExistsResponse:
             type: object
             properties:
                 exists:
                     type: boolean
+        IsRoleFieldExistsResponse:
+            type: object
+            properties:
+                exists:
+                    type: boolean
+                    description: 是否存在
+            description: 角色字段是否存在响应
+        Job:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 任务ID
+                name:
+                    type: string
+                    description: 任务名称
+                jobGroup:
+                    type: string
+                    description: 任务分组，如：DEFAULT/系统/监控
+                jobType:
+                    type: string
+                    description: 任务类型：http=HTTP调用
+                invokeTarget:
+                    type: string
+                    description: 调用目标（HTTP请求URL）
+                cronExpression:
+                    type: string
+                    description: Cron 表达式
+                misfirePolicy:
+                    type: string
+                    description: 错失执行策略
+                concurrent:
+                    type: boolean
+                    description: 是否允许并发执行
+                status:
+                    type: string
+                    description: 状态：enabled=启用，disabled=禁用
+                remark:
+                    type: string
+                    description: 备注
+                nextRunTime:
+                    type: string
+                    description: 下次执行时间
+                    format: date-time
+                createdAt:
+                    type: string
+                    description: 创建时间
+                    format: date-time
+                updatedAt:
+                    type: string
+                    description: 更新时间
+                    format: date-time
+                deletedAt:
+                    type: string
+                    description: 删除时间（软删除标记）
+                    format: date-time
+            description: 定时任务
+        JobLog:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 日志ID
+                jobId:
+                    type: string
+                    description: 任务ID
+                jobName:
+                    type: string
+                    description: 任务名称
+                jobGroup:
+                    type: string
+                    description: 任务分组
+                invokeTarget:
+                    type: string
+                    description: 调用目标
+                cronExpression:
+                    type: string
+                    description: Cron 表达式
+                status:
+                    type: string
+                    description: 执行结果：success=成功，fail=失败
+                jobMessage:
+                    type: string
+                    description: 执行信息（成功为响应内容，失败为异常信息）
+                startTime:
+                    type: string
+                    description: 开始时间
+                    format: date-time
+                endTime:
+                    type: string
+                    description: 结束时间
+                    format: date-time
+                duration:
+                    type: string
+                    description: 耗时（毫秒）
+                createdAt:
+                    type: string
+                    description: 创建时间
+                    format: date-time
+            description: 任务日志
+        JobMonitorInfo:
+            type: object
+            properties:
+                totalJobs:
+                    type: string
+                    description: 任务总数
+                enabledJobs:
+                    type: string
+                    description: 启用任务数
+                disabledJobs:
+                    type: string
+                    description: 禁用任务数
+                totalRuns:
+                    type: string
+                    description: 累计执行次数
+                successRuns:
+                    type: string
+                    description: 成功次数
+                failedRuns:
+                    type: string
+                    description: 失败次数
+                successRate:
+                    type: number
+                    description: 成功率（0-100）
+                    format: double
+                runningJobs:
+                    type: string
+                    description: 当前正在执行的任务数
+                recentRuns:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/JobRunLog'
+                    description: 最近执行记录
+        JobRunLog:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 日志ID
+                jobName:
+                    type: string
+                    description: 任务名称
+                jobGroup:
+                    type: string
+                    description: 任务分组
+                status:
+                    type: string
+                    description: 执行结果：success/fail
+                message:
+                    type: string
+                    description: 执行信息
+                startTime:
+                    type: string
+                    description: 开始时间
+                duration:
+                    type: string
+                    description: 耗时（毫秒）
         ListAdminResponse:
             type: object
             properties:
@@ -2108,6 +5724,20 @@ components:
                         $ref: '#/components/schemas/Admin'
                     description: 列表
             description: 后台用户分页结果
+        ListApiInterfaceOptionsResponse:
+            type: object
+            properties:
+                services:
+                    type: array
+                    items:
+                        type: string
+                    description: 服务名列表（去重）
+                tags:
+                    type: array
+                    items:
+                        type: string
+                    description: 标签列表（去重）
+            description: 列表筛选选项响应
         ListApiInterfaceResponse:
             type: object
             properties:
@@ -2126,6 +5756,56 @@ components:
                     items:
                         $ref: '#/components/schemas/ApiMetadata'
             description: 查询接口元数据响应
+        ListCacheKeyResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/CacheKey'
+                total:
+                    type: string
+        ListConfigResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Config'
+                total:
+                    type: string
+        ListDataPermissionResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/DataPermission'
+                total:
+                    type: string
+        ListDataPermissionsByRoleResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/DataPermission'
+                    description: 数据权限规则列表
+            description: 查询角色已绑定的数据权限规则响应
+        ListDbColumnsResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/DbColumn'
+        ListDbTablesResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/DbTable'
         ListDictDataResponse:
             type: object
             properties:
@@ -2144,6 +5824,61 @@ components:
                         $ref: '#/components/schemas/DictType'
                 total:
                     type: string
+        ListFormSchemaResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/FormSchema'
+                total:
+                    type: string
+        ListFormSubmissionResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/FormSubmission'
+                total:
+                    type: string
+            description: 查询表单提交记录响应
+        ListGenTableResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GenTable'
+                total:
+                    type: string
+        ListJobLogResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/JobLog'
+                total:
+                    type: string
+        ListJobResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Job'
+                total:
+                    type: string
+        ListLoginLogResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/LoginLog'
+                total:
+                    type: string
         ListMenusByRoleResponse:
             type: object
             properties:
@@ -2153,6 +5888,51 @@ components:
                         $ref: '#/components/schemas/Menu'
                     description: 菜单树
             description: 查询角色的菜单列表响应（返回树形结构）
+        ListNotificationManageResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Notification'
+                total:
+                    type: string
+        ListNotificationResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/NotificationRecord'
+                total:
+                    type: string
+        ListOnlineUsersResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/OnlineUser'
+                total:
+                    type: string
+        ListOperationLogResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/OperationLog'
+                total:
+                    type: string
+        ListOrderResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Order'
+                total:
+                    type: string
         ListPositionResponse:
             type: object
             properties:
@@ -2175,6 +5955,43 @@ components:
                 total:
                     type: string
                     description: 总数
+        ListTenantResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Tenant'
+                total:
+                    type: string
+        LoginLog:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 日志ID
+                adminId:
+                    type: string
+                    description: 用户ID
+                username:
+                    type: string
+                    description: 登录用户名
+                ip:
+                    type: string
+                    description: 来源IP
+                userAgent:
+                    type: string
+                    description: 客户端UA
+                status:
+                    type: string
+                    description: 结果：success/fail
+                reason:
+                    type: string
+                    description: 失败原因
+                createdAt:
+                    type: string
+                    description: 登录时间（RFC3339）
+            description: LoginLog 登录日志
         LoginRequest:
             type: object
             properties:
@@ -2190,6 +6007,9 @@ components:
                 captchaId:
                     type: string
                     description: 验证码ID
+                tenantCode:
+                    type: string
+                    description: 租户编码（multi 租户模式下必填；single 模式可省略）
         LoginResponse:
             type: object
             properties:
@@ -2268,6 +6088,194 @@ components:
                     items:
                         $ref: '#/components/schemas/Menu'
             description: 树形权限列表响应
+        Notification:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 通知ID
+                title:
+                    type: string
+                    description: 通知标题
+                content:
+                    type: string
+                    description: 通知内容
+                type:
+                    type: string
+                    description: 通知类型
+                level:
+                    type: string
+                    description: 重要级别
+                bizType:
+                    type: string
+                    description: 业务类型
+                bizId:
+                    type: string
+                    description: 业务ID
+                senderId:
+                    type: string
+                    description: 发送人ID
+                senderName:
+                    type: string
+                    description: 发送人名称
+                link:
+                    type: string
+                    description: 点击跳转的前端路由
+                targetType:
+                    type: string
+                    description: 投放范围
+                targetIds:
+                    type: array
+                    items:
+                        type: string
+                    description: 投放目标ID集合
+                status:
+                    type: string
+                    description: 状态
+                publishedAt:
+                    type: string
+                    description: 发布时间
+                expireAt:
+                    type: string
+                    description: 过期时间
+                createdAt:
+                    type: string
+                    description: 创建时间
+                updatedAt:
+                    type: string
+                    description: 更新时间
+            description: Notification 通知正文（一条通知的元数据与投放范围）
+        NotificationRecord:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 收件记录ID
+                notificationId:
+                    type: string
+                    description: 通知ID
+                userId:
+                    type: string
+                    description: 接收人ID
+                isRead:
+                    type: boolean
+                    description: 是否已读
+                readAt:
+                    type: string
+                    description: 已读时间
+                isDeleted:
+                    type: boolean
+                    description: 是否已删除
+                createdAt:
+                    type: string
+                    description: 创建时间
+                updatedAt:
+                    type: string
+                    description: 更新时间
+                notification:
+                    allOf:
+                        - $ref: '#/components/schemas/Notification'
+                    description: 通知正文
+            description: NotificationRecord 用户收件箱条目
+        OnlineUser:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 用户ID
+                username:
+                    type: string
+                    description: 用户名
+                realName:
+                    type: string
+                    description: 姓名
+                ip:
+                    type: string
+                    description: 最近一次登录 IP
+                userAgent:
+                    type: string
+                    description: 浏览器/设备 User-Agent
+                loginAt:
+                    type: string
+                    description: 最近一次登录时间（Unix 秒）
+                expireAt:
+                    type: string
+                    description: 会话过期时间（Unix 秒，取该用户最晚到期的会话）
+                sessionCount:
+                    type: integer
+                    description: 在线会话数（多设备登录时 > 1）
+                    format: int32
+            description: 在线用户（按用户聚合的在线会话信息）
+        OperationLog:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 日志ID
+                adminId:
+                    type: string
+                    description: 操作人ID
+                adminName:
+                    type: string
+                    description: 操作人姓名
+                module:
+                    type: string
+                    description: 所属模块
+                operation:
+                    type: string
+                    description: 操作名
+                method:
+                    type: string
+                    description: HTTP方法
+                path:
+                    type: string
+                    description: 请求路径
+                summary:
+                    type: string
+                    description: 接口摘要
+                ip:
+                    type: string
+                    description: 来源IP
+                userAgent:
+                    type: string
+                    description: 客户端UA
+                params:
+                    type: string
+                    description: 请求参数（已脱敏）
+                status:
+                    type: string
+                    description: 结果：success/fail
+                code:
+                    type: string
+                    description: 错误码
+                message:
+                    type: string
+                    description: 错误信息
+                costMs:
+                    type: string
+                    description: 耗时（毫秒）
+                createdAt:
+                    type: string
+                    description: 操作时间（RFC3339）
+            description: OperationLog 操作日志
+        Order:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+                    description: name
+                sn:
+                    type: string
+                    description: sn
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+            description: 订单
         Position:
             type: object
             properties:
@@ -2298,6 +6306,15 @@ components:
                     description: 更新时间
                     format: date-time
             description: 职务
+        ReadAllNotificationRequest:
+            type: object
+            properties: {}
+        ReadNotificationRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 收件记录ID
         RefreshTokenRequest:
             type: object
             properties:
@@ -2305,6 +6322,25 @@ components:
                     type: string
                 accessToken:
                     type: string
+        ResetPasswordRequest:
+            required:
+                - id
+                - password
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 用户ID
+                password:
+                    type: string
+                    description: 新密码
+            description: 重置密码请求
+        RevokeNotificationRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 通知ID
         Role:
             type: object
             properties:
@@ -2327,12 +6363,12 @@ components:
                 status:
                     type: string
                     description: 状态（enabled/disabled）
-                dataScope:
-                    type: string
-                    description: 数据权限范围（如：ALL、DEPT、SELF）
                 isSystem:
                     type: boolean
                     description: 是否系统内置角色
+                isSuperAdmin:
+                    type: boolean
+                    description: 是否超级管理员角色
                 createdAt:
                     type: string
                     description: 创建时间
@@ -2346,7 +6382,119 @@ components:
                     items:
                         type: string
                     description: 关联的菜单ID列表
+                dataPermissionIds:
+                    type: array
+                    items:
+                        type: string
+                    description: 关联的数据权限规则ID列表
             description: 角色信息
+        RunJobRequest:
+            required:
+                - id
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 任务ID
+            description: 立即执行一次
+        SecurityPolicy:
+            type: object
+            properties:
+                loginFailEnabled:
+                    type: boolean
+                    description: 是否启用登录失败次数限制
+                loginFailMax:
+                    type: integer
+                    description: 统计窗口内允许的最大失败次数
+                    format: int32
+                loginFailWindowMinutes:
+                    type: integer
+                    description: 失败次数统计窗口（分钟）
+                    format: int32
+                loginLockMinutes:
+                    type: integer
+                    description: 达到上限后的锁定时长（分钟）
+                    format: int32
+                ipMode:
+                    type: string
+                    description: IP 访问控制模式：off=关闭 whitelist=白名单 blacklist=黑名单
+                ipList:
+                    type: array
+                    items:
+                        type: string
+                    description: IP 列表（支持 CIDR，如 192.168.1.0/24）
+                accessTokenTtlSeconds:
+                    type: string
+                    description: access token 有效期（秒），范围 60-2592000
+                refreshTokenTtlSeconds:
+                    type: string
+                    description: refresh token 有效期（秒），范围 300-31536000
+                remark:
+                    type: string
+                    description: 备注
+                updatedAt:
+                    type: string
+                    description: 更新时间
+                    format: date-time
+            description: 安全策略（登录策略 + 访问控制，全库单例）
+        ServerInfo:
+            type: object
+            properties:
+                hostname:
+                    type: string
+                    description: 主机名
+                os:
+                    type: string
+                    description: 操作系统
+                arch:
+                    type: string
+                    description: CPU 架构
+                goVersion:
+                    type: string
+                    description: Go 版本
+                numCPU:
+                    type: integer
+                    description: CPU 核数
+                    format: int32
+                numGoroutine:
+                    type: integer
+                    description: 当前协程数
+                    format: int32
+                goMaxProcs:
+                    type: integer
+                    description: GOMAXPROCS
+                    format: int32
+                heapAlloc:
+                    type: string
+                    description: 堆分配内存（字节）
+                heapSys:
+                    type: string
+                    description: 堆占用系统内存（字节）
+                heapInuse:
+                    type: string
+                    description: 堆在用内存（字节）
+                stackInuse:
+                    type: string
+                    description: 栈在用内存（字节）
+                sys:
+                    type: string
+                    description: 进程向系统申请的内存（字节）
+                totalAlloc:
+                    type: string
+                    description: 累计分配内存（字节）
+                numGC:
+                    type: integer
+                    description: GC 次数
+                    format: uint32
+                gcPauseTotalMs:
+                    type: string
+                    description: GC 累计暂停（毫秒）
+                startTime:
+                    type: string
+                    description: 进程启动时间
+                uptimeSeconds:
+                    type: string
+                    description: 运行时长（秒）
         Status:
             type: object
             properties:
@@ -2363,6 +6511,70 @@ components:
                         $ref: '#/components/schemas/GoogleProtobufAny'
                     description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
             description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        SubmitFormDataRequest:
+            type: object
+            properties:
+                code:
+                    type: string
+                    description: 表单编码
+                data:
+                    type: object
+                    description: 提交数据（字段 key -> 值）
+            description: 提交表单数据请求
+        SubmitFormDataResponse:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 提交记录ID
+            description: 提交表单数据响应
+        Tenant:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: ID
+                code:
+                    type: string
+                    description: 租户编码（登录用，创建后不可修改）
+                name:
+                    type: string
+                    description: 租户名称
+                status:
+                    type: string
+                    description: 状态：enabled=启用，disabled=禁用
+                expireAt:
+                    type: string
+                    description: 到期时间（为空表示永不过期）
+                    format: date-time
+                maxUsers:
+                    type: string
+                    description: 最大用户数（0=不限）
+                maxRoles:
+                    type: string
+                    description: 最大角色数（0=不限）
+                contactName:
+                    type: string
+                    description: 联系人
+                contactPhone:
+                    type: string
+                    description: 联系电话
+                remark:
+                    type: string
+                    description: 备注信息
+                createdAt:
+                    type: string
+                    description: 创建时间
+                    format: date-time
+                updatedAt:
+                    type: string
+                    description: 更新时间
+                    format: date-time
+                deletedAt:
+                    type: string
+                    description: 删除时间（软删除标记）
+                    format: date-time
+            description: 租户
         UpdateAdminRequest:
             required:
                 - id
@@ -2397,7 +6609,134 @@ components:
                     items:
                         type: string
                     description: 关联的角色ID列表
+                departmentId:
+                    type: string
+                    description: 归属部门ID
+                dataPermissionIds:
+                    type: array
+                    items:
+                        type: string
+                    description: 绑定的数据权限规则ID列表
             description: 更新后台用户请求
+        UpdateAdminStatusRequest:
+            required:
+                - id
+                - status
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 用户ID
+                status:
+                    type: string
+                    description: 状态(enabled/disabled)
+            description: 更新后台用户状态请求
+        UpdateApiInterfaceRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 接口 ID
+                service:
+                    type: string
+                    description: 服务全限定名，如 admin.service.v1.PermissionService
+                tag:
+                    type: string
+                    description: OpenAPI 标签，如 Permission
+                method:
+                    type: string
+                    description: 'HTTP method: GET/POST/PUT/DELETE'
+                path:
+                    type: string
+                    description: 接口路径，如 /admin/v1/menu
+                summary:
+                    type: string
+                    description: 接口描述
+            description: 更新接口请求（手动编辑）
+        UpdateConfigRequest:
+            required:
+                - name
+                - key
+                - value
+                - configType
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: 参数名称
+                key:
+                    type: string
+                    description: 参数键名
+                value:
+                    type: string
+                    description: 参数键值
+                configType:
+                    type: string
+                    description: 系统内置（Y=内置，N=外置）
+                status:
+                    type: string
+                    description: 状态（enabled/disabled）
+                remark:
+                    type: string
+                    description: 备注
+                group:
+                    type: string
+                    description: 分组名称（可为空，即单一参数）
+                id:
+                    type: string
+        UpdateConfigStatusRequest:
+            required:
+                - status
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: ID
+                status:
+                    type: string
+                    description: 状态（enabled/disabled）
+        UpdateDataPermissionRequest:
+            required:
+                - name
+                - code
+                - scopeType
+                - status
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: 规则名称
+                code:
+                    type: string
+                    description: 规则编码（唯一）
+                scopeType:
+                    type: string
+                    description: 数据范围（1=全部数据 2=自定义 3=本部门 4=本部门及以下 5=仅本人）
+                deptIds:
+                    type: string
+                    description: 自定义数据范围的部门ID集合（JSON数组）
+                roleIds:
+                    type: string
+                    description: 自定义数据范围的角色ID集合（JSON数组）
+                status:
+                    type: string
+                    description: 状态（enabled/disabled）
+                remark:
+                    type: string
+                    description: 备注
+                id:
+                    type: string
+        UpdateDataPermissionStatusRequest:
+            required:
+                - status
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: ID
+                status:
+                    type: string
+                    description: 状态（enabled/disabled）
         UpdateDepartmentRequest:
             type: object
             properties:
@@ -2426,6 +6765,9 @@ components:
                 leaderEmail:
                     type: string
                     description: 负责人邮箱
+                type:
+                    type: string
+                    description: 类型（company=公司 subsidiary=子公司 department=部门 position=岗位）
                 id:
                     type: string
             description: 编辑组织请求
@@ -2515,6 +6857,121 @@ components:
                 status:
                     type: string
                     description: 状态（enabled/disabled）
+        UpdateFormSchemaRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: 表单名称
+                code:
+                    type: string
+                    description: 表单编码（唯一）
+                description:
+                    type: string
+                    description: 表单描述
+                schemaJson:
+                    type: object
+                    description: 表单 JSON Schema 定义
+                status:
+                    type: string
+                    description: 状态（enabled/disabled）
+                remark:
+                    type: string
+                    description: 备注
+                id:
+                    type: string
+        UpdateFormSchemaStatusRequest:
+            type: object
+            properties:
+                status:
+                    type: string
+                    description: 状态（enabled/disabled）
+                id:
+                    type: string
+        UpdateGenTableRequest:
+            type: object
+            properties:
+                tableName:
+                    type: string
+                    description: 数据库表名
+                tableComment:
+                    type: string
+                    description: 表备注
+                moduleName:
+                    type: string
+                    description: 模块名（如 system / permission）
+                bizName:
+                    type: string
+                    description: 业务名（驼峰，如 Job / JobLog）
+                fieldsJson:
+                    type: object
+                    description: 字段配置
+                genType:
+                    type: string
+                    description: 生成类型：single=单表 CRUD
+                menuEnabled:
+                    type: boolean
+                    description: 是否生成菜单
+                menuModule:
+                    type: string
+                    description: 菜单所属模块（父目录归属）
+                buttons:
+                    type: array
+                    items:
+                        type: string
+                    description: 生成的按钮：list/detail/create/edit/delete/batchDelete/status/import/export
+                status:
+                    type: string
+                    description: 状态（enabled/disabled）
+                id:
+                    type: string
+        UpdateJobRequest:
+            required:
+                - name
+                - invokeTarget
+                - cronExpression
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+                    description: 任务名称
+                jobGroup:
+                    type: string
+                    description: 任务分组
+                jobType:
+                    type: string
+                    description: 任务类型：http=HTTP调用
+                invokeTarget:
+                    type: string
+                    description: 调用目标（HTTP请求URL）
+                cronExpression:
+                    type: string
+                    description: Cron 表达式
+                misfirePolicy:
+                    type: string
+                    description: 错失执行策略
+                concurrent:
+                    type: boolean
+                    description: 是否允许并发执行
+                status:
+                    type: string
+                    description: 状态（enabled/disabled）
+                remark:
+                    type: string
+                    description: 备注
+        UpdateJobStatusRequest:
+            required:
+                - status
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 任务ID
+                status:
+                    type: string
+                    description: 状态（enabled/disabled）
         UpdateMenuRequest:
             type: object
             properties:
@@ -2582,6 +7039,33 @@ components:
                 status:
                     type: string
                     description: '状态: enabled / disabled'
+        UpdateOrderRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+                sn:
+                    type: string
+            description: 更新订单
+        UpdateOrderResponse:
+            type: object
+            properties:
+                data:
+                    $ref: '#/components/schemas/Order'
+        UpdateOrderStatusRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                status:
+                    type: string
+                    description: 状态
+            description: 更新订单状态
+        UpdateOrderStatusResponse:
+            type: object
+            properties: {}
         UpdatePositionRequest:
             required:
                 - name
@@ -2644,9 +7128,6 @@ components:
                 status:
                     type: string
                     description: 状态（enabled/disabled）
-                dataScope:
-                    type: string
-                    description: 数据权限范围（如：ALL、DEPT、SELF）
                 isSystem:
                     type: boolean
                     description: 是否系统内置角色
@@ -2655,11 +7136,136 @@ components:
                     items:
                         type: string
                     description: 关联的菜单ID列表
+                dataPermissionIds:
+                    type: array
+                    items:
+                        type: string
+                    description: 关联的数据权限规则ID列表
+        UpdateRoleStatusRequest:
+            required:
+                - status
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: ID
+                status:
+                    type: string
+                    description: 状态（enabled/disabled）
+        UpdateSecurityPolicyRequest:
+            required:
+                - ipMode
+            type: object
+            properties:
+                loginFailEnabled:
+                    type: boolean
+                    description: 是否启用登录失败次数限制
+                loginFailMax:
+                    type: integer
+                    description: 统计窗口内允许的最大失败次数（1-100）
+                    format: int32
+                loginFailWindowMinutes:
+                    type: integer
+                    description: 失败次数统计窗口（分钟，1-1440）
+                    format: int32
+                loginLockMinutes:
+                    type: integer
+                    description: 达到上限后的锁定时长（分钟，1-1440）
+                    format: int32
+                ipMode:
+                    type: string
+                    description: IP 访问控制模式（off/whitelist/blacklist）
+                ipList:
+                    type: array
+                    items:
+                        type: string
+                    description: IP 列表（支持 CIDR）
+                accessTokenTtlSeconds:
+                    type: string
+                    description: access token 有效期（秒），范围 60-2592000
+                refreshTokenTtlSeconds:
+                    type: string
+                    description: refresh token 有效期（秒），范围 300-31536000
+                remark:
+                    type: string
+                    description: 备注
+        UpdateTenantRequest:
+            required:
+                - name
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: 租户名称
+                status:
+                    type: string
+                    description: 状态（enabled/disabled）
+                expireAt:
+                    type: string
+                    description: 到期时间（为空表示永不过期）
+                    format: date-time
+                maxUsers:
+                    type: string
+                    description: 最大用户数（0=不限）
+                maxRoles:
+                    type: string
+                    description: 最大角色数（0=不限）
+                contactName:
+                    type: string
+                    description: 联系人
+                contactPhone:
+                    type: string
+                    description: 联系电话
+                remark:
+                    type: string
+                    description: 备注
+                id:
+                    type: string
+        UpdateTenantStatusRequest:
+            required:
+                - status
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: ID
+                status:
+                    type: string
+                    description: 状态（enabled/disabled）
+        UsernameExistsResponse:
+            type: object
+            properties:
+                exists:
+                    type: boolean
+                    description: 是否已存在
+            description: 校验用户名是否存在响应
 tags:
     - name: AuthenticationService
       description: 用户后台登录认证服务
-    - name: Dictionary
+    - name: File
+      description: |-
+        File 文件管理服务
+
+         说明：文件上传与访问由自定义 handler 处理（multipart 表单解析、私有桶预签名
+         302 重定向），DeleteFile 走 gRPC/HTTP 生成的实现；此处统一声明 RPC 契约，
+         保证 OpenAPI 文档与接口管理数据完整。
     - name: Identity
+    - name: Lowcode
+      description: 低代码服务
+    - name: Message
+      description: |-
+        Message 消息通知服务
+
+         注意：实时推送不走这里，使用自定义 SSE 端点
+         GET /admin/v1/notifications/stream（EventSource 无法携带自定义 Header，
+         鉴权 token 通过 query 参数 ?token= 传递）。
+    - name: Ops
+      description: 运维中心服务
+    - name: OrderService
+      description: 订单服务（HTTP 路由聚合声明，与其他模块 i_*.proto 保持一致）
     - name: Organization
     - name: PermissionService
+    - name: Security
+      description: Security 安全中心服务（安全策略 / 在线用户 / 操作日志 / 登录日志）
     - name: System
+    - name: Tenant

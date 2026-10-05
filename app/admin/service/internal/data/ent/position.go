@@ -18,6 +18,8 @@ type Position struct {
 	// ID of the ent.
 	// ID
 	ID string `json:"id,omitempty"`
+	// 租户ID
+	TenantID string `json:"tenant_id,omitempty"`
 	// 职务名称
 	Name string `json:"name,omitempty"`
 	// 职务编码
@@ -50,7 +52,7 @@ func (*Position) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case position.FieldWeight:
 			values[i] = new(sql.NullInt64)
-		case position.FieldID, position.FieldName, position.FieldCode, position.FieldStatus, position.FieldRemark, position.FieldCreatedBy, position.FieldUpdatedBy, position.FieldDeletedBy:
+		case position.FieldID, position.FieldTenantID, position.FieldName, position.FieldCode, position.FieldStatus, position.FieldRemark, position.FieldCreatedBy, position.FieldUpdatedBy, position.FieldDeletedBy:
 			values[i] = new(sql.NullString)
 		case position.FieldCreatedAt, position.FieldUpdatedAt, position.FieldDeletedAt:
 			values[i] = new(sql.NullTime)
@@ -74,6 +76,12 @@ func (_m *Position) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value.Valid {
 				_m.ID = value.String
+			}
+		case position.FieldTenantID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field tenant_id", values[i])
+			} else if value.Valid {
+				_m.TenantID = value.String
 			}
 		case position.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -179,6 +187,9 @@ func (_m *Position) String() string {
 	var builder strings.Builder
 	builder.WriteString("Position(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
+	builder.WriteString("tenant_id=")
+	builder.WriteString(_m.TenantID)
+	builder.WriteString(", ")
 	builder.WriteString("name=")
 	builder.WriteString(_m.Name)
 	builder.WriteString(", ")

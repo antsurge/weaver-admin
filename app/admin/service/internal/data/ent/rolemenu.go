@@ -20,6 +20,8 @@ type RoleMenu struct {
 	// ID of the ent.
 	// 主键ID
 	ID string `json:"id,omitempty"`
+	// 租户ID
+	TenantID string `json:"tenant_id,omitempty"`
 	// 角色ID
 	RoleID string `json:"role_id,omitempty"`
 	// 菜单ID
@@ -70,7 +72,7 @@ func (*RoleMenu) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case rolemenu.FieldID, rolemenu.FieldRoleID, rolemenu.FieldMenuID:
+		case rolemenu.FieldID, rolemenu.FieldTenantID, rolemenu.FieldRoleID, rolemenu.FieldMenuID:
 			values[i] = new(sql.NullString)
 		case rolemenu.FieldCreatedAt:
 			values[i] = new(sql.NullTime)
@@ -94,6 +96,12 @@ func (_m *RoleMenu) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value.Valid {
 				_m.ID = value.String
+			}
+		case rolemenu.FieldTenantID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field tenant_id", values[i])
+			} else if value.Valid {
+				_m.TenantID = value.String
 			}
 		case rolemenu.FieldRoleID:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -159,6 +167,9 @@ func (_m *RoleMenu) String() string {
 	var builder strings.Builder
 	builder.WriteString("RoleMenu(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
+	builder.WriteString("tenant_id=")
+	builder.WriteString(_m.TenantID)
+	builder.WriteString(", ")
 	builder.WriteString("role_id=")
 	builder.WriteString(_m.RoleID)
 	builder.WriteString(", ")

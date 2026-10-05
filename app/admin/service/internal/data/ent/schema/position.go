@@ -22,6 +22,11 @@ func (Position) Annotations() []schema.Annotation {
 	}
 }
 
+// Mixin of the Position.
+func (Position) Mixin() []ent.Mixin {
+	return []ent.Mixin{TenantMixin{}}
+}
+
 func (Position) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("id").

@@ -7,26 +7,33 @@ import type { SystemApiInterfaceApi } from '#/api/system/api-interface';
 import { nextTick, ref } from 'vue';
 
 // ==================== vben ====================
-import { Page } from '@vben/common-ui';
-import { IconifyIcon } from '@vben/icons';
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { Page, useVbenModal } from '@vben/common-ui';
+import { IconifyIcon, Plus } from '@vben/icons';
 import { $t } from '@vben/locales';
 
 // ==================== third-party ====================
 import { Button, message, Modal, Upload } from 'ant-design-vue';
 
-// ==================== constants ====================
-import { DEFAULT_PAGE_SIZE, PAGE_SIZES } from '#/types/pagination';
-
-// ==================== business ====================
-import { useGridFormOptions, useColumns } from './data';
-
+// ==================== access ====================
+import { SystemAuthCode } from '#/access';
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
 // ==================== api ====================
 import {
   deleteApiInterfaceApi,
   getApiInterfaceListApi,
   importApiInterfaceApi,
 } from '#/api/system/api-interface';
+// ==================== constants ====================
+import { DEFAULT_PAGE_SIZE, PAGE_SIZES } from '#/types/pagination';
+
+// ==================== business ====================
+import { useColumns, useGridFormOptions } from './data';
+import ApiInterfaceForm from './modules/form/index.vue';
+
+const [ApiInterfaceFormModal, apiInterfaceFormApi] = useVbenModal({
+  connectedComponent: ApiInterfaceForm,
+  destroyOnClose: true,
+});
 
 const selectedRows = ref<SystemApiInterfaceApi.ApiInterface[]>([]);
 
@@ -44,7 +51,10 @@ const [Grid, gridApi] = useVbenVxeGrid({
     proxyConfig: {
       autoLoad: true,
       ajax: {
-        query: async ({ page }: { page: { currentPage: number; pageSize: number } }, formValues: Record<string, any>) => {
+        query: async (
+          { page }: { page: { currentPage: number; pageSize: number } },
+          formValues: Record<string, any>,
+        ) => {
           const res = await getApiInterfaceListApi({
             ...page,
             ...formValues,
@@ -101,10 +111,18 @@ function onActionClick({
       onDelete(row);
       break;
     }
+    case 'edit': {
+      apiInterfaceFormApi.setData(row).open();
+      break;
+    }
     default: {
       break;
     }
   }
+}
+
+function onCreate() {
+  apiInterfaceFormApi.setData(undefined).open();
 }
 
 function onRefresh() {
@@ -154,16 +172,22 @@ function onBatchDelete() {
 }
 
 function beforeUpload(file: File) {
-  const isYaml =
-    file.name.endsWith('.yaml') ||
-    file.name.endsWith('.yml');
+  const isYaml = file.name.endsWith('.yaml') || file.name.endsWith('.yml');
 
   if (!isYaml) {
     message.error($t('system.api_interface.uploadOnlyYaml'));
     return Upload.LIST_IGNORE;
   }
 
-  handleImport(file);
+  Modal.confirm({
+    title: $t('system.api_interface.importConfirmTitle'),
+    content: `${file.name}，${$t('system.api_interface.importConfirmContent')}`,
+    okText: $t('ui.actionTitle.confirm'),
+    cancelText: $t('ui.actionTitle.cancel'),
+    onOk() {
+      handleImport(file);
+    },
+  });
   return false; // 阻止默认上传
 }
 
@@ -178,12 +202,12 @@ async function handleImport(file: File) {
     message.success(
       $t('system.api_interface.importSuccess', [
         String(res.imported),
-        String(res.skipped),
+        String(res.updated),
       ]),
     );
     onRefresh();
-  } catch (e: any) {
-    message.error(e?.message || $t('system.api_interface.importFailed'));
+  } catch (error: any) {
+    message.error(error?.message || $t('system.api_interface.importFailed'));
   } finally {
     hide();
   }
@@ -192,19 +216,26 @@ async function handleImport(file: File) {
 
 <template>
   <Page auto-content-height>
+    <ApiInterfaceFormModal @success="onRefresh" />
     <Grid>
       <template #toolbar-tools>
         <div class="flex gap-2">
+          <Button
+            v-access:code="[SystemAuthCode.ApiInterface.Create]"
+            type="primary"
+            @click="onCreate"
+          >
+            <Plus class="size-5" />
+            {{ $t('ui.actionTitle.create') }}
+          </Button>
+
           <Upload
             :before-upload="beforeUpload"
             :show-upload-list="false"
             accept=".yaml,.yml"
           >
             <Button>
-              <IconifyIcon
-                icon="ant-design:upload-outlined"
-                class="size-5"
-              />
+              <IconifyIcon icon="ant-design:upload-outlined" class="size-5" />
               {{ $t('system.api_interface.import') }}
             </Button>
           </Upload>
@@ -212,13 +243,10 @@ async function handleImport(file: File) {
           <Button
             type="primary"
             danger
-            :disabled="!selectedRows.length"
+            :disabled="selectedRows.length === 0"
             @click="onBatchDelete"
           >
-            <IconifyIcon
-              icon="ant-design:delete-outlined"
-              class="size-5"
-            />
+            <IconifyIcon icon="ant-design:delete-outlined" class="size-5" />
             {{ $t('ui.actionTitle.delete') }}
           </Button>
         </div>

@@ -15,44 +15,65 @@ import (
 type PermissionService struct {
 	adminV1.UnimplementedPermissionServiceServer
 
-	menuUc      *biz.MenuUsecase
-	roleUc      *biz.RoleUsecase
-	apiMetadata *openapi_scanner.Service
+	menuUc           *biz.MenuUsecase
+	roleUc           *biz.RoleUsecase
+	apiMetadata      *openapi_scanner.Service
+	dataPermissionUc *biz.DataPermissionUsecase
 }
 
 func NewPermissionService(
 	menuUc *biz.MenuUsecase,
 	roleUc *biz.RoleUsecase,
 	apiMetadata *openapi_scanner.Service,
+	dataPermissionUc *biz.DataPermissionUsecase,
 ) *PermissionService {
 	return &PermissionService{
-		menuUc:      menuUc,
-		roleUc:      roleUc,
-		apiMetadata: apiMetadata,
+		menuUc:           menuUc,
+		roleUc:           roleUc,
+		apiMetadata:      apiMetadata,
+		dataPermissionUc: dataPermissionUc,
 	}
 }
 
 // 列表权限tree
 func (s *PermissionService) MenuTree(ctx context.Context, req *permissionV1.MenuTreeRequest) (*permissionV1.MenuTreeResponse, error) {
 	input := &biz.ListMenuRequest{}
-	var err error
-	err = copier.Copy(&input, &req)
+	err := copierx.Copy(&input, &req)
+	if err != nil {
+		return nil, err
+	}
 
 	tree, err := s.menuUc.MenuTree(ctx, input)
 	if err != nil {
 		return nil, err
 	}
 	output := make([]*permissionV1.Menu, 0)
-	err = copier.Copy(&output, &tree)
+	err = copierx.Copy(&output, &tree)
+	if err != nil {
+		return nil, err
+	}
 
 	return &permissionV1.MenuTreeResponse{Items: output}, nil
+}
+
+// 获取权限详情（含接口权限）
+func (s *PermissionService) GetMenu(ctx context.Context, req *permissionV1.GetMenuRequest) (*permissionV1.Menu, error) {
+	permission, err := s.menuUc.GetMenu(ctx, req.Id)
+	if err != nil {
+		return nil, err
+	}
+	output := &permissionV1.Menu{}
+	err = copierx.Copy(&output, &permission)
+	if err != nil {
+		return nil, err
+	}
+	return output, nil
 }
 
 // 创建权限
 func (s *PermissionService) CreateMenu(ctx context.Context, req *permissionV1.CreateMenuRequest) (*permissionV1.Menu, error) {
 	input := &biz.Menu{}
-	var err error
-	err = copier.Copy(&input, &req)
+	err := copierx.Copy(&input, &req)
 	if err != nil {
 		return nil, err
 	}
@@ -62,7 +83,7 @@ func (s *PermissionService) CreateMenu(ctx context.Context, req *permissionV1.Cr
 	}
 
 	output := &permissionV1.Menu{}
-	err = copier.Copy(&output, &permission)
+	err = copierx.Copy(&output, &permission)
 	if err != nil {
 		return nil, err
 	}
@@ -73,8 +94,7 @@ func (s *PermissionService) CreateMenu(ctx context.Context, req *permissionV1.Cr
 // 更新权限
 func (s *PermissionService) UpdateMenu(ctx context.Context, req *permissionV1.UpdateMenuRequest) (*permissionV1.Menu, error) {
 	input := &biz.Menu{}
-	var err error
-	err = copier.Copy(&input, &req)
+	err := copierx.Copy(&input, &req)
 	if err != nil {
 		return nil, err
 	}
@@ -84,7 +104,7 @@ func (s *PermissionService) UpdateMenu(ctx context.Context, req *permissionV1.Up
 	}
 
 	output := &permissionV1.Menu{}
-	err = copier.Copy(&output, &permission)
+	err = copierx.Copy(&output, &permission)
 	if err != nil {
 		return nil, err
 	}
@@ -193,6 +213,15 @@ func (s *PermissionService) UpdateRoleStatus(ctx context.Context, req *permissio
 	return nil, err
 }
 
+// 角色编码是否存在（用于表单失焦校验）
+func (s *PermissionService) IsRoleCodeExists(ctx context.Context, req *permissionV1.IsRoleCodeExistsRequest) (*permissionV1.IsRoleFieldExistsResponse, error) {
+	exists, err := s.roleUc.IsRoleCodeExists(ctx, req.Code, req.Id)
+	if err != nil {
+		return nil, err
+	}
+	return &permissionV1.IsRoleFieldExistsResponse{Exists: exists}, nil
+}
+
 func (s *PermissionService) DeleteRole(ctx context.Context, req *permissionV1.DeleteRoleRequest) (*emptypb.Empty, error) {
 	err := s.roleUc.DeleteRole(ctx, req.Ids)
 	return nil, err
@@ -223,12 +252,45 @@ func (s *PermissionService) ListMenusByRole(
 	}
 
 	output := make([]*permissionV1.Menu, 0)
-	err = copier.Copy(&output, &menus)
+	err = copierx.Copy(&output, &menus)
 	if err != nil {
 		return nil, err
 	}
 
 	return &permissionV1.ListMenusByRoleResponse{Items: output}, nil
+}
+
+// ====== RBAC 角色数据权限规则绑定方法 ======
+
+// BindDataPermissionsForRole 为角色绑定数据权限规则（全量替换）
+func (s *PermissionService) BindDataPermissionsForRole(
+	ctx context.Context,
+	req *permissionV1.BindDataPermissionsForRoleRequest,
+) (*emptypb.Empty, error) {
+	err := s.roleUc.BindDataPermissionsForRole(ctx, req.RoleId, req.DataPermissionIds)
+	if err != nil {
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
+}
+
+// ListDataPermissionsByRole 查询角色已绑定的数据权限规则列表
+func (s *PermissionService) ListDataPermissionsByRole(
+	ctx context.Context,
+	req *permissionV1.ListDataPermissionsByRoleRequest,
+) (*permissionV1.ListDataPermissionsByRoleResponse, error) {
+	perms, err := s.roleUc.GetDataPermissionsByRole(ctx, req.RoleId)
+	if err != nil {
+		return nil, err
+	}
+
+	output := make([]*permissionV1.DataPermission, 0, len(perms))
+	err = copierx.Copy(&output, &perms)
+	if err != nil {
+		return nil, err
+	}
+
+	return &permissionV1.ListDataPermissionsByRoleResponse{Items: output}, nil
 }
 
 // ListApiMetadata 查询所有接口元数据（来自 openapi.yaml 扫描）
@@ -254,4 +316,96 @@ func (s *PermissionService) ListApiMetadata(
 		})
 	}
 	return &permissionV1.ListApiMetadataResponse{Items: items}, nil
+}
+
+// ====== 数据权限 ======
+
+// ListDataPermission 数据权限规则列表（分页）
+func (s *PermissionService) ListDataPermission(ctx context.Context, req *permissionV1.ListDataPermissionRequest) (*permissionV1.ListDataPermissionResponse, error) {
+	input := biz.ListDataPermissionRequest{}
+	var err error
+	err = copier.Copy(&input, req)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := s.dataPermissionUc.List(ctx, &input)
+	if err != nil {
+		return nil, err
+	}
+
+	output := &permissionV1.ListDataPermissionResponse{}
+	if res != nil {
+		output.Total = int64(res.Total)
+		err = copierx.Copy(&output.Items, &res.Data)
+	}
+
+	return output, err
+}
+
+// CreateDataPermission 创建数据权限规则
+func (s *PermissionService) CreateDataPermission(ctx context.Context, req *permissionV1.CreateDataPermissionRequest) (*permissionV1.DataPermission, error) {
+	input := biz.DataPermission{}
+	var err error
+	err = copier.Copy(&input, req)
+	if err != nil {
+		return nil, err
+	}
+
+	data, err := s.dataPermissionUc.Create(ctx, &input)
+	if err != nil {
+		return nil, err
+	}
+
+	output := &permissionV1.DataPermission{}
+	err = copierx.Copy(output, data)
+	if err != nil {
+		return nil, err
+	}
+
+	return output, nil
+}
+
+// UpdateDataPermission 更新数据权限规则
+func (s *PermissionService) UpdateDataPermission(ctx context.Context, req *permissionV1.UpdateDataPermissionRequest) (*permissionV1.DataPermission, error) {
+	input := biz.DataPermission{}
+	var err error
+	err = copier.Copy(&input, req)
+	if err != nil {
+		return nil, err
+	}
+
+	data, err := s.dataPermissionUc.Update(ctx, &input)
+	if err != nil {
+		return nil, err
+	}
+
+	output := &permissionV1.DataPermission{}
+	err = copierx.Copy(output, data)
+	if err != nil {
+		return nil, err
+	}
+
+	return output, nil
+}
+
+// UpdateDataPermissionStatus 更新数据权限规则状态
+func (s *PermissionService) UpdateDataPermissionStatus(ctx context.Context, req *permissionV1.UpdateDataPermissionStatusRequest) (*emptypb.Empty, error) {
+	err := s.dataPermissionUc.UpdateStatus(ctx, req.Id, req.Status)
+	return nil, err
+}
+
+// DeleteDataPermission 删除数据权限规则（批量）
+func (s *PermissionService) DeleteDataPermission(ctx context.Context, req *permissionV1.DeleteDataPermissionRequest) (*emptypb.Empty, error) {
+	err := s.dataPermissionUc.Delete(ctx, req.Ids)
+	return nil, err
+}
+
+// IsDataPermissionCodeExists 规则编码是否存在（用于表单失焦校验）
+func (s *PermissionService) IsDataPermissionCodeExists(ctx context.Context, req *permissionV1.IsDataPermissionCodeExistsRequest) (*permissionV1.IsDataPermissionFieldExistsResponse, error) {
+	exists, err := s.dataPermissionUc.IsCodeExists(ctx, req.Code, req.Id)
+	if err != nil {
+		return nil, err
+	}
+	return &permissionV1.IsDataPermissionFieldExistsResponse{Exists: exists}, nil
 }

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/go-kratos/kratos/v2/errors"
@@ -136,7 +137,7 @@ func (uc *PositionUsecase) validateUnique(ctx context.Context, position *Positio
 		return err
 	}
 	if nameExists {
-		return errors.New(400, "position name already exists", "")
+		return errors.BadRequest("POSITION_NAME_EXISTS", "岗位名称已存在")
 	}
 
 	codeExists, err := uc.IsPositionCodeExists(ctx, position.Code, position.ID)
@@ -144,7 +145,7 @@ func (uc *PositionUsecase) validateUnique(ctx context.Context, position *Positio
 		return err
 	}
 	if codeExists {
-		return errors.New(400, "position code already exists", "")
+		return errors.BadRequest("POSITION_CODE_EXISTS", "岗位编码已存在")
 	}
 	return nil
 }
@@ -207,13 +208,59 @@ func (uc *PositionUsecase) ExportPosition(ctx context.Context, req *ListPosition
 	return buf.Bytes(), nil
 }
 
+// PositionTemplate 生成"职务导入模板"Excel（含表头，数据区为空），供用户填写后导入
+func (uc *PositionUsecase) PositionTemplate() ([]byte, error) {
+	// 创建 Excel
+	f := excelize.NewFile()
+	sheet := "Sheet1"
+	f.SetSheetName("Sheet1", sheet)
+
+	// 创建样式
+	headerStyle, _ := excel.NewHeaderStyle(f, excel.AlignCenter, true) // 表头居中加粗
+	if err := excel.ApplySheetTemaplte(f, sheet, "职务导入模板", "系统生成", &excel.SheetTemplateOptions{ColCount: 5}); err != nil {
+		return nil, err
+	}
+
+	// 表头（第3行，与导入解析 rows[3:] 保持一致）
+	headers := []string{"职务名称", "职务编码", "职务级别", "状态", "备注"}
+	for index, header := range headers {
+		cell, _ := excelize.CoordinatesToCellName(index+1, 3)
+		f.SetCellValue(sheet, cell, header)
+		f.SetCellStyle(sheet, cell, cell, headerStyle)
+	}
+	_ = excel.AutoAdjustColumnWidth(f, sheet, 1, 0)
+
+	// 写入 buffer
+	var buf bytes.Buffer
+	if err := f.Write(&buf); err != nil {
+		return nil, err
+	}
+
+	return buf.Bytes(), nil
+}
+
 func (uc *PositionUsecase) ImportPosition(ctx context.Context, data [][]string) error {
 	// 处理name和编码
 	var names, codes []string
+	validRows := make([][]string, 0, len(data))
 	for _, v := range data {
-		names = append(names, v[0])
-		codes = append(codes, v[1])
+		// 行数据不足 2 列（名称/编码缺失）或名称为空则跳过，避免越界
+		if len(v) < 2 {
+			continue
+		}
+		name := strings.TrimSpace(v[0])
+		code := strings.TrimSpace(v[1])
+		if name == "" || code == "" {
+			continue
+		}
+		names = append(names, name)
+		codes = append(codes, code)
+		validRows = append(validRows, v)
 	}
+	if len(validRows) == 0 {
+		return errors.BadRequest("EMPTY_DATA", "未找到有效数据，请检查填写内容")
+	}
+	data = validRows
 
 	// 查询编码和名称是否重复
 	codesExistsResult, err := uc.repo.ListPosition(ctx, &ListPositionRequest{
@@ -245,11 +292,20 @@ func (uc *PositionUsecase) ImportPosition(ctx context.Context, data [][]string) 
 
 	insertData := make([]*Position, 0, len(data))
 	for _, item := range data {
-		name := item[0]
-		code := item[1]
-		weight := item[2]
-		status := item[3]
-		remark := item[4]
+		name := strings.TrimSpace(item[0])
+		code := strings.TrimSpace(item[1])
+		weight := ""
+		status := ""
+		remark := ""
+		if len(item) > 2 {
+			weight = strings.TrimSpace(item[2])
+		}
+		if len(item) > 3 {
+			status = strings.TrimSpace(item[3])
+		}
+		if len(item) > 4 {
+			remark = strings.TrimSpace(item[4])
+		}
 		weightInt, err := strconv.Atoi(weight)
 		if err != nil {
 			continue

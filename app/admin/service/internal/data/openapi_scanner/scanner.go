@@ -24,22 +24,24 @@ type Endpoint struct {
 
 // ServiceGroup 按 service 分组的接口集合
 type ServiceGroup struct {
-	Service   string     `json:"service"`   // 服务名，如 "PermissionService"
-	Tag       string     `json:"tag"`       // OpenAPI tag
+	Service   string     `json:"service"` // 服务名，如 "PermissionService"
+	Tag       string     `json:"tag"`     // OpenAPI tag
 	Endpoints []Endpoint `json:"endpoints"`
 }
 
 // Service 全局扫描器（单例）
 type Service struct {
-	mu       sync.RWMutex
-	groups   []ServiceGroup
-	pathByOP map[string]string // operationId -> "service|method|path"
+	mu          sync.RWMutex
+	groups      []ServiceGroup
+	pathByOP    map[string]string // operationId -> "service|method|path"
+	summaryByEP map[string]string // "GET /admin/v1/xxx" -> summary
 }
 
 // New 创建扫描器实例（内部使用）
 func New() *Service {
 	return &Service{
-		pathByOP: make(map[string]string),
+		pathByOP:    make(map[string]string),
+		summaryByEP: make(map[string]string),
 	}
 }
 
@@ -69,13 +71,24 @@ func (s *Service) Scan(openapiPath string) error {
 
 	// 按 service 聚合
 	groups := make(map[string]*ServiceGroup)
+	summaries := make(map[string]string)
 
-	for path, methods := range doc.Paths {
+	for rawPath, methods := range doc.Paths {
+		// 规范化路径：openapi.yaml 中部分路径 key 缺前导斜杠（如 "admin/v1/xxx"），
+		// 而中间件记录的 path 来自 r.URL.Path 必然带 "/"，统一补上保证索引 key 一致。
+		path := rawPath
+		if !strings.HasPrefix(path, "/") {
+			path = "/" + path
+		}
 		// 按 HTTP method 顺序处理
 		for _, method := range httpMethods {
 			op, ok := methods[method]
 			if !ok {
 				continue
+			}
+			// 建索引供操作日志按 "METHOD path" 查中文摘要
+			if op.Summary != "" {
+				summaries[strings.ToUpper(method)+" "+path] = op.Summary
 			}
 			svcName, tag := parseOperation(op.OperationID, op.Tags, method)
 			group, ok := groups[svcName]
@@ -108,8 +121,20 @@ func (s *Service) Scan(openapiPath string) error {
 
 	s.mu.Lock()
 	s.groups = out
+	s.summaryByEP = summaries
 	s.mu.Unlock()
 	return nil
+}
+
+// SummaryByEndpoint 按 "GET /admin/v1/xxx" 返回接口中文摘要。
+// 供操作日志展示人类可读的操作名，未命中返回空字符串。
+func (s *Service) SummaryByEndpoint(method, path string) string {
+	if method == "" || path == "" {
+		return ""
+	}
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	return s.summaryByEP[strings.ToUpper(method)+" "+path]
 }
 
 // Metadata 返回所有接口分组

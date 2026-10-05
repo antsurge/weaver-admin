@@ -1,0 +1,36 @@
+# 租户模块错误码
+[TENANT_CODE_REQUIRED]
+other = "请填写租户编码"
+
+[TENANT_NOT_FOUND]
+other = "租户不存在"
+
+[TENANT_DISABLED]
+other = "租户已停用"
+
+[TENANT_EXPIRED]
+other = "租户已过期"
+
+[TENANT_QUERY_FAILED]
+other = "租户信息查询失败"
+
+[CODE_ALREADY_EXISTS]
+other = "租户编码已存在"
+
+[CANNOT_DELETE_DEFAULT]
+other = "默认租户不允许删除"
+
+[CANNOT_DISABLE_DEFAULT]
+other = "默认租户不允许禁用"
+
+[CREATE_TENANT_FAIL]
+other = "创建租户失败"
+
+[UPDATE_TENANT_FAIL]
+other = "更新租户失败"
+
+[DELETE_TENANT_FAIL]
+other = "删除租户失败"
+
+[QUOTA_EXCEEDED]
+other = "租户资源配额已用完"

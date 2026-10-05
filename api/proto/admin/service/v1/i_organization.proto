@@ -71,6 +71,15 @@ service Organization {
       description: "删除部门(支持批量)"
     };
   }
+  // 部门编码是否存在
+  rpc IsDepartmentCodeExists(organization.service.v1.IsDepartmentCodeExistsRequest) returns (organization.service.v1.IsDepartmentFieldExistsResponse) {
+    option (google.api.http) = {get: "/admin/v1/department:code-exists"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Organization"
+      summary: "部门-部门编码是否存在"
+      description: "部门编码是否存在"
+    };
+  }
 
   // 职务模块
   // 列表

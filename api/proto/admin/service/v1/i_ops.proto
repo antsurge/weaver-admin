@@ -1,0 +1,185 @@
+syntax = "proto3";
+
+package admin.service.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "ops/service/v1/cronjob.proto";
+import "ops/service/v1/monitor.proto";
+
+// 运维中心服务
+service Ops {
+  // ====== 定时任务 ======
+
+  // 任务列表（分页）
+  rpc ListJob(ops.service.v1.ListJobRequest) returns (ops.service.v1.ListJobResponse) {
+    option (google.api.http) = {get: "/admin/v1/jobs"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Ops"
+      summary: "定时任务-列表"
+      description: "定时任务分页列表"
+    };
+  }
+  // 任务详情
+  rpc GetJob(ops.service.v1.GetJobRequest) returns (ops.service.v1.Job) {
+    option (google.api.http) = {get: "/admin/v1/jobs/{id}"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Ops"
+      summary: "定时任务-详情"
+      description: "根据ID获取任务详情"
+    };
+  }
+  rpc CreateJob(ops.service.v1.CreateJobRequest) returns (ops.service.v1.Job) {
+    option (google.api.http) = {
+      post: "/admin/v1/jobs"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Ops"
+      summary: "定时任务-创建"
+      description: "创建定时任务"
+    };
+  }
+  rpc UpdateJob(ops.service.v1.UpdateJobRequest) returns (ops.service.v1.Job) {
+    option (google.api.http) = {
+      put: "/admin/v1/jobs/{id}"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Ops"
+      summary: "定时任务-修改"
+      description: "修改定时任务"
+    };
+  }
+  rpc UpdateJobStatus(ops.service.v1.UpdateJobStatusRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/admin/v1/jobs/{id}/status"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Ops"
+      summary: "定时任务-更新状态"
+      description: "更新任务启用状态"
+    };
+  }
+  rpc DeleteJob(ops.service.v1.DeleteJobRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/admin/v1/jobs"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Ops"
+      summary: "定时任务-删除(批量)"
+      description: "删除定时任务(支持批量)"
+    };
+  }
+  // 立即执行一次
+  rpc RunJob(ops.service.v1.RunJobRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/admin/v1/jobs/{id}/run"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Ops"
+      summary: "定时任务-立即执行"
+      description: "立即执行一次任务（异步）"
+    };
+  }
+
+  // 任务日志列表（分页）
+  rpc ListJobLog(ops.service.v1.ListJobLogRequest) returns (ops.service.v1.ListJobLogResponse) {
+    option (google.api.http) = {get: "/admin/v1/job-logs"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Ops"
+      summary: "定时任务-日志列表"
+      description: "定时任务执行日志分页列表"
+    };
+  }
+  // 任务日志详情
+  rpc GetJobLog(ops.service.v1.GetJobLogRequest) returns (ops.service.v1.JobLog) {
+    option (google.api.http) = {get: "/admin/v1/job-logs/{id}"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Ops"
+      summary: "定时任务-日志详情"
+      description: "根据ID获取任务执行日志详情"
+    };
+  }
+  // 删除任务日志（批量）
+  rpc DeleteJobLog(ops.service.v1.DeleteJobLogRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/admin/v1/job-logs"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Ops"
+      summary: "定时任务-删除日志"
+      description: "删除定时任务执行日志(支持批量)"
+    };
+  }
+  // 清空任务日志
+  rpc ClearJobLog(google.protobuf.Empty) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/admin/v1/job-logs/clear"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Ops"
+      summary: "定时任务-清空日志"
+      description: "清空全部任务执行日志，不可恢复"
+    };
+  }
+
+  // ====== 系统监控 ======
+
+  // 服务监控
+  rpc GetServerInfo(ops.service.v1.GetServerInfoRequest) returns (ops.service.v1.ServerInfo) {
+    option (google.api.http) = {get: "/admin/v1/monitor/server"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Ops"
+      summary: "服务监控"
+      description: "获取当前服务运行状态（Go 运行时/内存/GC/运行时长）"
+    };
+  }
+
+  // 缓存监控
+  rpc GetCacheInfo(ops.service.v1.GetCacheInfoRequest) returns (ops.service.v1.CacheInfo) {
+    option (google.api.http) = {get: "/admin/v1/monitor/cache"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Ops"
+      summary: "缓存监控"
+      description: "获取 Redis 运行状态（内存/连接/命中率等）"
+    };
+  }
+
+  // 缓存键列表
+  rpc ListCacheKey(ops.service.v1.ListCacheKeyRequest) returns (ops.service.v1.ListCacheKeyResponse) {
+    option (google.api.http) = {get: "/admin/v1/monitor/cache/keys"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Ops"
+      summary: "缓存列表"
+      description: "分页查询 Redis 缓存键"
+    };
+  }
+
+  // 数据库监控
+  rpc GetDatabaseInfo(ops.service.v1.GetDatabaseInfoRequest) returns (ops.service.v1.DatabaseInfo) {
+    option (google.api.http) = {get: "/admin/v1/monitor/database"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Ops"
+      summary: "数据库监控"
+      description: "获取数据库连接池状态与表统计"
+    };
+  }
+
+  // 接口监控
+  rpc GetApiMetrics(ops.service.v1.GetApiMetricsRequest) returns (ops.service.v1.GetApiMetricsResponse) {
+    option (google.api.http) = {get: "/admin/v1/monitor/metrics"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Ops"
+      summary: "接口监控"
+      description: "获取各接口的请求量/失败率/耗时统计（进程内统计，重启清零）"
+    };
+  }
+
+  // 定时任务监控
+  rpc GetJobMonitor(ops.service.v1.GetJobMonitorRequest) returns (ops.service.v1.JobMonitorInfo) {
+    option (google.api.http) = {get: "/admin/v1/monitor/job"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Ops"
+      summary: "定时任务监控"
+      description: "获取定时任务数量与执行统计"
+    };
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "title": "Log Center",
+  "operation_log": {
+    "title": "Operation Log",
+    "fields": {
+      "keyword": "Keyword",
+      "summary": "Summary",
+      "adminName": "Operator",
+      "module": "Module",
+      "operation": "Operation",
+      "method": "Method",
+      "path": "Path",
+      "ip": "IP",
+      "status": "Result",
+      "costMs": "Cost",
+      "createdAt": "Time",
+      "timeRange": "Time range",
+      "code": "Error code",
+      "message": "Error message",
+      "userAgent": "User agent",
+      "params": "Request params"
+    },
+    "search_placeholder": {
+      "keyword": "Path / summary / operation",
+      "adminName": "Operator name"
+    },
+    "status_options": {
+      "success": "Success",
+      "fail": "Failed"
+    },
+    "operation": {
+      "detail": "Detail",
+      "delete": "Delete",
+      "batchDelete": "Batch delete",
+      "clear": "Clear"
+    },
+    "confirm": {
+      "deleteTitle": "Confirm Delete",
+      "deleteContent": "Delete {0} selected operation log(s)?",
+      "clearTitle": "Confirm Clear",
+      "clearContent": "All operation logs will be permanently deleted and unrecoverable. Continue?"
+    },
+    "message": {
+      "deleteSuccess": "Deleted",
+      "clearSuccess": "Operation logs cleared",
+      "detailTitle": "Operation Log Detail"
+    }
+  },
+  "login_log": {
+    "title": "Login Log",
+    "fields": {
+      "username": "Username",
+      "ip": "IP",
+      "userAgent": "User agent",
+      "status": "Result",
+      "reason": "Reason",
+      "createdAt": "Login time",
+      "operation": "Actions",
+      "timeRange": "Time range"
+    },
+    "search_placeholder": {
+      "username": "Enter username",
+      "ip": "Enter IP"
+    },
+    "status_options": {
+      "success": "Success",
+      "fail": "Failed"
+    },
+    "operation": {
+      "delete": "Delete",
+      "batchDelete": "Batch delete",
+      "clear": "Clear"
+    },
+    "confirm": {
+      "deleteTitle": "Confirm Delete",
+      "deleteContent": "Delete {0} selected login log(s)?",
+      "clearTitle": "Confirm Clear",
+      "clearContent": "All login logs will be permanently deleted and unrecoverable. Continue?"
+    },
+    "message": {
+      "deleteSuccess": "Deleted",
+      "clearSuccess": "Login logs cleared"
+    }
+  },
+  "job_log": {
+    "title": "Job Logs",
+    "name": "Job Log",
+    "fields": {
+      "jobName": "Job Name",
+      "jobGroup": "Job Group",
+      "invokeTarget": "Invoke Target",
+      "cronExpression": "Cron Expression",
+      "status": "Result",
+      "jobMessage": "Message",
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "duration": "Duration",
+      "createdAt": "Run Time",
+      "operation": "Actions"
+    },
+    "status_options": {
+      "success": "Success",
+      "fail": "Failed"
+    },
+    "search_placeholder": {
+      "jobName": "Enter job name"
+    },
+    "operation": {
+      "detail": "Detail",
+      "delete": "Delete",
+      "batchDelete": "Batch Delete",
+      "clear": "Clear"
+    },
+    "confirm": {
+      "deleteTitle": "Confirm Delete",
+      "deleteContent": "Delete {0} selected job log(s)?",
+      "clearTitle": "Confirm Clear",
+      "clearContent": "All job logs will be permanently deleted and unrecoverable. Continue?"
+    },
+    "message": {
+      "deleteSuccess": "Deleted",
+      "clearSuccess": "Job logs cleared",
+      "detailTitle": "Job Log Detail"
+    }
+  }
+}

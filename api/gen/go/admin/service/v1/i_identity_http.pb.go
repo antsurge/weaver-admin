@@ -21,18 +21,27 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
+const OperationIdentityBatchUpdateAdminStatus = "/admin.service.v1.Identity/BatchUpdateAdminStatus"
 const OperationIdentityCreateAdmin = "/admin.service.v1.Identity/CreateAdmin"
 const OperationIdentityDeleteAdmin = "/admin.service.v1.Identity/DeleteAdmin"
 const OperationIdentityGetAdmin = "/admin.service.v1.Identity/GetAdmin"
 const OperationIdentityListAdmin = "/admin.service.v1.Identity/ListAdmin"
+const OperationIdentityResetPassword = "/admin.service.v1.Identity/ResetPassword"
 const OperationIdentityUpdateAdmin = "/admin.service.v1.Identity/UpdateAdmin"
+const OperationIdentityUpdateAdminStatus = "/admin.service.v1.Identity/UpdateAdminStatus"
+const OperationIdentityUsernameExists = "/admin.service.v1.Identity/UsernameExists"
 
 type IdentityHTTPServer interface {
+	BatchUpdateAdminStatus(context.Context, *v1.BatchUpdateAdminStatusRequest) (*emptypb.Empty, error)
 	CreateAdmin(context.Context, *v1.CreateAdminRequest) (*v1.Admin, error)
 	DeleteAdmin(context.Context, *v1.DeleteAdminRequest) (*emptypb.Empty, error)
 	GetAdmin(context.Context, *v1.GetAdminRequest) (*v1.Admin, error)
 	ListAdmin(context.Context, *v1.ListAdminRequest) (*v1.ListAdminResponse, error)
+	ResetPassword(context.Context, *v1.ResetPasswordRequest) (*emptypb.Empty, error)
 	UpdateAdmin(context.Context, *v1.UpdateAdminRequest) (*v1.Admin, error)
+	UpdateAdminStatus(context.Context, *v1.UpdateAdminStatusRequest) (*emptypb.Empty, error)
+	// UsernameExists 校验用户名是否存在（新建/编辑表单失焦校验）
+	UsernameExists(context.Context, *v1.UsernameExistsRequest) (*v1.UsernameExistsResponse, error)
 }
 
 func RegisterIdentityHTTPServer(s *http.Server, srv IdentityHTTPServer) {
@@ -42,6 +51,10 @@ func RegisterIdentityHTTPServer(s *http.Server, srv IdentityHTTPServer) {
 	r.PUT("/admin/v1/admin/{id}", _Identity_UpdateAdmin0_HTTP_Handler(srv))
 	r.GET("/admin/v1/admin/{id}", _Identity_GetAdmin0_HTTP_Handler(srv))
 	r.DELETE("/admin/v1/admin", _Identity_DeleteAdmin0_HTTP_Handler(srv))
+	r.PUT("/admin/v1/admin/{id}/password", _Identity_ResetPassword0_HTTP_Handler(srv))
+	r.PUT("/admin/v1/admin/{id}/status", _Identity_UpdateAdminStatus0_HTTP_Handler(srv))
+	r.PUT("/admin/v1/admin/batch/status", _Identity_BatchUpdateAdminStatus0_HTTP_Handler(srv))
+	r.GET("/admin/v1/admin:username-exists", _Identity_UsernameExists0_HTTP_Handler(srv))
 }
 
 func _Identity_ListAdmin0_HTTP_Handler(srv IdentityHTTPServer) func(ctx http.Context) error {
@@ -151,12 +164,108 @@ func _Identity_DeleteAdmin0_HTTP_Handler(srv IdentityHTTPServer) func(ctx http.C
 	}
 }
 
+func _Identity_ResetPassword0_HTTP_Handler(srv IdentityHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.ResetPasswordRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationIdentityResetPassword)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ResetPassword(ctx, req.(*v1.ResetPasswordRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Identity_UpdateAdminStatus0_HTTP_Handler(srv IdentityHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.UpdateAdminStatusRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationIdentityUpdateAdminStatus)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateAdminStatus(ctx, req.(*v1.UpdateAdminStatusRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Identity_BatchUpdateAdminStatus0_HTTP_Handler(srv IdentityHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.BatchUpdateAdminStatusRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationIdentityBatchUpdateAdminStatus)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.BatchUpdateAdminStatus(ctx, req.(*v1.BatchUpdateAdminStatusRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Identity_UsernameExists0_HTTP_Handler(srv IdentityHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in v1.UsernameExistsRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationIdentityUsernameExists)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UsernameExists(ctx, req.(*v1.UsernameExistsRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*v1.UsernameExistsResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
 type IdentityHTTPClient interface {
+	BatchUpdateAdminStatus(ctx context.Context, req *v1.BatchUpdateAdminStatusRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	CreateAdmin(ctx context.Context, req *v1.CreateAdminRequest, opts ...http.CallOption) (rsp *v1.Admin, err error)
 	DeleteAdmin(ctx context.Context, req *v1.DeleteAdminRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	GetAdmin(ctx context.Context, req *v1.GetAdminRequest, opts ...http.CallOption) (rsp *v1.Admin, err error)
 	ListAdmin(ctx context.Context, req *v1.ListAdminRequest, opts ...http.CallOption) (rsp *v1.ListAdminResponse, err error)
+	ResetPassword(ctx context.Context, req *v1.ResetPasswordRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UpdateAdmin(ctx context.Context, req *v1.UpdateAdminRequest, opts ...http.CallOption) (rsp *v1.Admin, err error)
+	UpdateAdminStatus(ctx context.Context, req *v1.UpdateAdminStatusRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	// UsernameExists 校验用户名是否存在（新建/编辑表单失焦校验）
+	UsernameExists(ctx context.Context, req *v1.UsernameExistsRequest, opts ...http.CallOption) (rsp *v1.UsernameExistsResponse, err error)
 }
 
 type IdentityHTTPClientImpl struct {
@@ -165,6 +274,19 @@ type IdentityHTTPClientImpl struct {
 
 func NewIdentityHTTPClient(client *http.Client) IdentityHTTPClient {
 	return &IdentityHTTPClientImpl{client}
+}
+
+func (c *IdentityHTTPClientImpl) BatchUpdateAdminStatus(ctx context.Context, in *v1.BatchUpdateAdminStatusRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/admin/v1/admin/batch/status"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationIdentityBatchUpdateAdminStatus))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
 }
 
 func (c *IdentityHTTPClientImpl) CreateAdmin(ctx context.Context, in *v1.CreateAdminRequest, opts ...http.CallOption) (*v1.Admin, error) {
@@ -219,6 +341,19 @@ func (c *IdentityHTTPClientImpl) ListAdmin(ctx context.Context, in *v1.ListAdmin
 	return &out, nil
 }
 
+func (c *IdentityHTTPClientImpl) ResetPassword(ctx context.Context, in *v1.ResetPasswordRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/admin/v1/admin/{id}/password"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationIdentityResetPassword))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 func (c *IdentityHTTPClientImpl) UpdateAdmin(ctx context.Context, in *v1.UpdateAdminRequest, opts ...http.CallOption) (*v1.Admin, error) {
 	var out v1.Admin
 	pattern := "/admin/v1/admin/{id}"
@@ -226,6 +361,33 @@ func (c *IdentityHTTPClientImpl) UpdateAdmin(ctx context.Context, in *v1.UpdateA
 	opts = append(opts, http.Operation(OperationIdentityUpdateAdmin))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *IdentityHTTPClientImpl) UpdateAdminStatus(ctx context.Context, in *v1.UpdateAdminStatusRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/admin/v1/admin/{id}/status"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationIdentityUpdateAdminStatus))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// UsernameExists 校验用户名是否存在（新建/编辑表单失焦校验）
+func (c *IdentityHTTPClientImpl) UsernameExists(ctx context.Context, in *v1.UsernameExistsRequest, opts ...http.CallOption) (*v1.UsernameExistsResponse, error) {
+	var out v1.UsernameExistsResponse
+	pattern := "/admin/v1/admin:username-exists"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationIdentityUsernameExists))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

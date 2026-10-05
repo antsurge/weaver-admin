@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { VbenFormSchema } from '#/adapter/form';
 import type { DictionaryDictDataApi } from '#/api/system/dictionary/dict-data';
+import type { DictionaryDictTypeApi } from '#/api/system/dictionary/dict-type';
 
 import { computed, ref } from 'vue';
 
@@ -9,9 +10,12 @@ import { useVbenModal } from '@vben/common-ui';
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
 
 import { useVbenForm } from '#/adapter/form';
-import { $t } from '#/locales';
+import {
+  createDictDataApi,
+  updateDictDataApi,
+} from '#/api/system/dictionary/dict-data';
 import { getDictTypeListApi } from '#/api/system/dictionary/dict-type';
-import { createDictDataApi, updateDictDataApi} from '#/api/system/dictionary/dict-data';
+import { $t } from '#/locales';
 
 import { dictDataFormRules } from './rules';
 
@@ -31,7 +35,7 @@ const schema: VbenFormSchema[] = [
       api: async () => {
         const res = await getDictTypeListApi();
         const list = res?.items || res;
-        return (list || []).map((item: DictionaryDictDataApi.DictType) => ({
+        return (list || []).map((item: DictionaryDictTypeApi.DictType) => ({
           label: item.name,
           value: item.id,
         }));
@@ -107,9 +111,11 @@ const [Modal, modalApi] = useVbenModal({
   onConfirm: onSubmit,
   onOpenChange(isOpen) {
     if (!isOpen) return;
-    const data = modalApi.getData<DictionaryDictDataApi.DictData & {
-      dictTypeId?: string;
-    }>();
+    const data = modalApi.getData<
+      DictionaryDictDataApi.DictData & {
+        dictTypeId?: string;
+      }
+    >();
 
     if (data) {
       formData.value = data;
@@ -127,17 +133,14 @@ async function onSubmit() {
 
   modalApi.lock();
   try {
-    const data =
-      (await formApi.getValues()) as Omit<
-        DictionaryDictDataApi.DictData,
-        'id' | 'createdAt' | 'updatedAt'
-      >;
+    const data = (await formApi.getValues()) as Omit<
+      DictionaryDictDataApi.DictData,
+      'createdAt' | 'id' | 'updatedAt'
+    >;
 
-    if (formData.value?.id) {
-      await updateDictDataApi(formData.value.id, data);
-    } else {
-      await createDictDataApi(data);
-    }
+    await (formData.value?.id
+      ? updateDictDataApi(formData.value.id, data)
+      : createDictDataApi(data));
 
     modalApi.close();
     emit('success');
@@ -160,4 +163,3 @@ defineExpose({ isHorizontal, getModalTitle });
     <Form :layout="isHorizontal ? 'horizontal' : 'vertical'" class="mx-4" />
   </Modal>
 </template>
-

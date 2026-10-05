@@ -54,4 +54,46 @@ service Identity {
       description: "批量删除后台用户"
     };
   }
+  rpc ResetPassword(identity.service.v1.ResetPasswordRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/admin/v1/admin/{id}/password"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Authentication"
+      summary: "后台用户-重置密码"
+      description: "管理员重置指定用户的密码"
+    };
+  }
+  rpc UpdateAdminStatus(identity.service.v1.UpdateAdminStatusRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/admin/v1/admin/{id}/status"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Authentication"
+      summary: "后台用户-修改状态"
+      description: "启用或禁用后台用户"
+    };
+  }
+  rpc BatchUpdateAdminStatus(identity.service.v1.BatchUpdateAdminStatusRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/admin/v1/admin/batch/status"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Authentication"
+      summary: "后台用户-批量修改状态"
+      description: "批量启用或禁用后台用户"
+    };
+  }
+  // 校验用户名是否存在（新建/编辑表单失焦校验）
+  rpc UsernameExists(identity.service.v1.UsernameExistsRequest) returns (identity.service.v1.UsernameExistsResponse) {
+    option (google.api.http) = {get: "/admin/v1/admin:username-exists"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Authentication"
+      summary: "后台用户-校验用户名是否存在"
+      description: "校验用户名是否已被占用（编辑时通过 id 排除自身）"
+    };
+  }
 }

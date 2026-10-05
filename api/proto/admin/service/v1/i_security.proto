@@ -1,0 +1,129 @@
+syntax = "proto3";
+
+package admin.service.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "security/service/v1/log.proto";
+import "security/service/v1/online.proto";
+import "security/service/v1/security.proto";
+
+// Security 安全中心服务（安全策略 / 在线用户 / 操作日志 / 登录日志）
+service Security {
+  // 获取安全策略
+  rpc GetSecurityPolicy(security.service.v1.GetSecurityPolicyRequest) returns (security.service.v1.SecurityPolicy) {
+    option (google.api.http) = {get: "/admin/v1/security/policy"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Security"
+      summary: "安全策略-获取"
+      description: "获取登录策略与访问控制配置"
+    };
+  }
+
+  // 更新安全策略
+  rpc UpdateSecurityPolicy(security.service.v1.UpdateSecurityPolicyRequest) returns (security.service.v1.SecurityPolicy) {
+    option (google.api.http) = {
+      put: "/admin/v1/security/policy"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Security"
+      summary: "安全策略-更新"
+      description: "更新登录策略与访问控制配置（保存后即时生效）"
+    };
+  }
+
+  // 在线用户列表
+  rpc ListOnlineUsers(google.protobuf.Empty) returns (security.service.v1.ListOnlineUsersResponse) {
+    option (google.api.http) = {get: "/admin/v1/online-users"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Security"
+      summary: "系统监控-在线用户列表"
+      description: "查询当前在线用户（有效 access token 会话，按用户聚合）"
+    };
+  }
+
+  // 强制下线
+  rpc ForceLogout(security.service.v1.ForceLogoutRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/admin/v1/online-users/{id}/logout"
+      body: "*"
+    };
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Security"
+      summary: "系统监控-强制下线"
+      description: "强制指定用户下线（踢掉其全部在线会话）"
+    };
+  }
+
+  // 操作日志列表
+  rpc ListOperationLog(security.service.v1.ListOperationLogRequest) returns (security.service.v1.ListOperationLogResponse) {
+    option (google.api.http) = {get: "/admin/v1/operation-logs"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Security"
+      summary: "日志-操作日志列表"
+      description: "分页查询操作日志"
+    };
+  }
+
+  // 操作日志详情
+  rpc GetOperationLog(security.service.v1.GetOperationLogRequest) returns (security.service.v1.OperationLog) {
+    option (google.api.http) = {get: "/admin/v1/operation-logs/{id}"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Security"
+      summary: "日志-操作日志详情"
+      description: "查询单条操作日志（含请求参数）"
+    };
+  }
+
+  // 删除操作日志
+  rpc DeleteOperationLog(security.service.v1.DeleteOperationLogRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/admin/v1/operation-logs"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Security"
+      summary: "日志-删除操作日志"
+      description: "删除操作日志（支持批量）"
+    };
+  }
+
+  // 清空操作日志（DELETE 与上面的 {id} 路由方法不同，不会冲突）
+  rpc ClearOperationLog(google.protobuf.Empty) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/admin/v1/operation-logs/clear"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Security"
+      summary: "日志-清空操作日志"
+      description: "清空全部操作日志，不可恢复"
+    };
+  }
+
+  // 登录日志列表
+  rpc ListLoginLog(security.service.v1.ListLoginLogRequest) returns (security.service.v1.ListLoginLogResponse) {
+    option (google.api.http) = {get: "/admin/v1/login-logs"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Security"
+      summary: "日志-登录日志列表"
+      description: "分页查询登录日志（含失败记录）"
+    };
+  }
+
+  // 删除登录日志
+  rpc DeleteLoginLog(security.service.v1.DeleteLoginLogRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/admin/v1/login-logs"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Security"
+      summary: "日志-删除登录日志"
+      description: "删除登录日志（支持批量）"
+    };
+  }
+
+  // 清空登录日志
+  rpc ClearLoginLog(google.protobuf.Empty) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/admin/v1/login-logs/clear"};
+    option (gnostic.openapi.v3.operation) = {
+      tags: "Security"
+      summary: "日志-清空登录日志"
+      description: "清空全部登录日志，不可恢复"
+    };
+  }
+}

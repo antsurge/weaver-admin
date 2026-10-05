@@ -334,12 +334,12 @@ func (_q *AdminRoleQuery) WithRole(opts ...func(*RoleQuery)) *AdminRoleQuery {
 // Example:
 //
 //	var v []struct {
-//		AdminID string `json:"admin_id,omitempty"`
+//		TenantID string `json:"tenant_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.AdminRole.Query().
-//		GroupBy(adminrole.FieldAdminID).
+//		GroupBy(adminrole.FieldTenantID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (_q *AdminRoleQuery) GroupBy(field string, fields ...string) *AdminRoleGroupBy {
@@ -357,11 +357,11 @@ func (_q *AdminRoleQuery) GroupBy(field string, fields ...string) *AdminRoleGrou
 // Example:
 //
 //	var v []struct {
-//		AdminID string `json:"admin_id,omitempty"`
+//		TenantID string `json:"tenant_id,omitempty"`
 //	}
 //
 //	client.AdminRole.Query().
-//		Select(adminrole.FieldAdminID).
+//		Select(adminrole.FieldTenantID).
 //		Scan(ctx, &v)
 func (_q *AdminRoleQuery) Select(fields ...string) *AdminRoleSelect {
 	_q.ctx.Fields = append(_q.ctx.Fields, fields...)

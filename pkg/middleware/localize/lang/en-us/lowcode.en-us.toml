@@ -1,0 +1,12 @@
+# Low-code error codes (dynamic form/codegen)
+[FORM_SCHEMA_NOT_FOUND]
+other = "Form not found or disabled"
+
+[FORM_CODE_REQUIRED]
+other = "Form code is required"
+
+[PARSE_FORM_ERROR]
+other = "Failed to parse form configuration"
+
+[PARSE_ERROR]
+other = "Failed to parse data"

@@ -1,7 +1,10 @@
+import type { VbenFormProps } from '#/adapter/form';
 import type { OnActionClickFn, VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { DictionaryDictTypeApi } from '#/api/system/dictionary/dict-type';
-import type { VbenFormProps } from '#/adapter/form';
 
+import { useAccess } from '@vben/access';
+
+import { SystemAuthCode } from '#/access';
 import { $t } from '#/locales';
 
 export function useDictTypeColumns(
@@ -11,12 +14,13 @@ export function useDictTypeColumns(
     row: DictionaryDictTypeApi.DictType,
   ) => PromiseLike<boolean | undefined>,
 ): VxeTableGridOptions<DictionaryDictTypeApi.DictType>['columns'] {
+  const { hasAccessByCodes } = useAccess();
   return [
     {
       type: 'expand',
       width: 60,
       align: 'center',
-      slots: { content: "expand_dictdata" }
+      slots: { content: 'expand_dictdata' },
     },
     {
       field: 'name',
@@ -33,17 +37,22 @@ export function useDictTypeColumns(
       field: 'status',
       align: 'center',
       title: $t('system.dict_type.fields.status'),
-      width: 140,
+      width: 100,
       cellRender: {
         name: 'CellSwitch',
-        attrs: { beforeChange: onStatusChange },
+        attrs: {
+          beforeChange: onStatusChange,
+          // 无编辑权限时禁用状态开关
+          disabled: () => !hasAccessByCodes([SystemAuthCode.DictType.Edit]),
+        },
       },
     },
     {
       field: 'updatedAt',
       align: 'center',
       title: $t('system.dict_type.fields.updatedAt'),
-      width: 200,
+      width: 160,
+      formatter: 'formatDateTime',
     },
     {
       field: 'operation',
@@ -62,9 +71,19 @@ export function useDictTypeColumns(
           {
             code: 'appendDictData',
             text: $t('system.dict_type.operation.appendDictData'),
+            // 无新增字典数据权限时不展示
+            show: hasAccessByCodes([SystemAuthCode.DictType.AddSubordinate]),
           },
-          'edit',
-          'delete',
+          {
+            code: 'edit',
+            // 无编辑权限时不展示
+            show: hasAccessByCodes([SystemAuthCode.DictType.Edit]),
+          },
+          {
+            code: 'delete',
+            // 无删除权限时不展示
+            show: hasAccessByCodes([SystemAuthCode.DictType.Delete]),
+          },
         ],
       },
     },
@@ -79,33 +98,33 @@ export function useFormOptions(): VbenFormProps {
         component: 'Input',
         componentProps: {
           placeholder: $t('ui.formRules.required', [
-            $t('organization.position.fields.name'),
+            $t('system.dict_type.fields.name'),
           ]),
         },
         fieldName: 'name',
-        label: $t('organization.position.fields.name'),
+        label: $t('system.dict_type.fields.name'),
       },
       {
         component: 'Input',
         componentProps: {
           placeholder: $t('ui.formRules.required', [
-            $t('organization.position.fields.code'),
+            $t('system.dict_type.fields.code'),
           ]),
         },
         fieldName: 'code',
-        label: $t('organization.position.fields.code'),
+        label: $t('system.dict_type.fields.code'),
       },
       {
         component: 'Select',
         fieldName: 'status',
-        label: $t('organization.position.fields.status'),
+        label: $t('system.dict_type.fields.status'),
         componentProps: {
           placeholder: $t('ui.formRules.selectRequired', [
-            $t('organization.position.fields.status'),
+            $t('system.dict_type.fields.status'),
           ]),
           options: [
-            { label: '启用', value: 'enabled' },
-            { label: '禁用', value: 'disabled' },
+            { label: $t('common.enabled'), value: 'enabled' },
+            { label: $t('common.disabled'), value: 'disabled' },
           ],
           allowClear: true,
         },
@@ -114,11 +133,11 @@ export function useFormOptions(): VbenFormProps {
     // 控制表单是否显示折叠按钮
     showCollapseButton: true,
     submitButtonOptions: {
-      content: '查询',
+      content: $t('common.actions.search'),
     },
     // 是否在字段值改变时提交表单
     submitOnChange: false,
     // 按下回车时是否提交表单
     submitOnEnter: false,
-  }
+  };
 }

@@ -65,11 +65,53 @@ message ImportApiInterfaceRequest {
   ];
 }
 
+// 创建接口请求（手动新增）
+message CreateApiInterfaceRequest {
+  // 服务名
+  string service = 1 [(gnostic.openapi.v3.property) = {description: "服务全限定名，如 admin.service.v1.PermissionService"}];
+  // 标签
+  string tag = 2 [(gnostic.openapi.v3.property) = {description: "OpenAPI 标签，如 Permission"}];
+  // HTTP 方法
+  string method = 3 [(gnostic.openapi.v3.property) = {description: "HTTP method: GET/POST/PUT/DELETE"}];
+  // 接口路径
+  string path = 4 [(gnostic.openapi.v3.property) = {description: "接口路径，如 /admin/v1/menu"}];
+  // 接口描述
+  string summary = 5 [(gnostic.openapi.v3.property) = {description: "接口描述"}];
+}
+
+// 更新接口请求（手动编辑）
+message UpdateApiInterfaceRequest {
+  // 接口 ID
+  string id = 1 [(gnostic.openapi.v3.property) = {description: "接口 ID"}];
+  // 服务名
+  string service = 2 [(gnostic.openapi.v3.property) = {description: "服务全限定名，如 admin.service.v1.PermissionService"}];
+  // 标签
+  string tag = 3 [(gnostic.openapi.v3.property) = {description: "OpenAPI 标签，如 Permission"}];
+  // HTTP 方法
+  string method = 4 [(gnostic.openapi.v3.property) = {description: "HTTP method: GET/POST/PUT/DELETE"}];
+  // 接口路径
+  string path = 5 [(gnostic.openapi.v3.property) = {description: "接口路径，如 /admin/v1/menu"}];
+  // 接口描述
+  string summary = 6 [(gnostic.openapi.v3.property) = {description: "接口描述"}];
+}
+
 // 导入响应
 message ImportApiInterfaceResponse {
   int64 total = 1 [(gnostic.openapi.v3.property) = {description: "文件中的接口总数"}];
-  int64 imported = 2 [(gnostic.openapi.v3.property) = {description: "成功导入的接口数"}];
-  int64 skipped = 3 [(gnostic.openapi.v3.property) = {description: "跳过的重复接口数"}];
+  int64 imported = 2 [(gnostic.openapi.v3.property) = {description: "成功导入（创建）的接口数"}];
+  int64 updated = 3 [(gnostic.openapi.v3.property) = {description: "已存在并更新的接口数"}];
+  int64 skipped = 4 [(gnostic.openapi.v3.property) = {description: "跳过的重复接口数"}];
+}
+
+// 列表筛选选项请求（服务名/标签下拉数据源）
+message ListApiInterfaceOptionsRequest {}
+
+// 列表筛选选项响应
+message ListApiInterfaceOptionsResponse {
+  // 服务名列表（去重）
+  repeated string services = 1 [(gnostic.openapi.v3.property) = {description: "服务名列表（去重）"}];
+  // 标签列表（去重）
+  repeated string tags = 2 [(gnostic.openapi.v3.property) = {description: "标签列表（去重）"}];
 }
 
 // 删除请求

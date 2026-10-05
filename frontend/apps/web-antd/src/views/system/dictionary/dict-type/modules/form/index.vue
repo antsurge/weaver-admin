@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import type { VbenFormSchema } from '#/adapter/form';
 import type { DictionaryDictTypeApi } from '#/api/system/dictionary/dict-type';
-import {createDictTypeApi, updateDictTypeApi} from "#/api/system/dictionary/dict-type"
-
 
 import { computed, ref } from 'vue';
 
@@ -11,6 +9,10 @@ import { useVbenModal } from '@vben/common-ui';
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
 
 import { useVbenForm, z } from '#/adapter/form';
+import {
+  createDictTypeApi,
+  updateDictTypeApi,
+} from '#/api/system/dictionary/dict-type';
 import { $t } from '#/locales';
 
 const emit = defineEmits<{
@@ -117,13 +119,14 @@ async function onSubmit() {
 
   modalApi.lock();
   try {
-    const data = await formApi.getValues();
+    const data = (await formApi.getValues()) as Omit<
+      DictionaryDictTypeApi.DictType,
+      'createdAt' | 'id' | 'updatedAt'
+    >;
 
-    if (formData.value?.id) {
-      await updateDictTypeApi(formData.value.id, data);
-    } else {
-      await createDictTypeApi(data);
-    }
+    await (formData.value?.id
+      ? updateDictTypeApi(formData.value.id, data)
+      : createDictTypeApi(data));
 
     modalApi.close();
     emit('success');
@@ -144,4 +147,3 @@ const getModalTitle = computed(() =>
     <Form :layout="isHorizontal ? 'horizontal' : 'vertical'" class="mx-4" />
   </Modal>
 </template>
-

@@ -41,6 +41,20 @@
 #     - script: "hello.go"
 #       runner: go run
 
+# =========================================================
+# 本配置由 lefthook 驱动 git hooks：
+#   - commit-msg: 校验提交信息（commitlint 约定式提交规范）
+#   - pre-commit: 前端代码自动格式化 + Go 后端 gofmt/go vet 检查
+#
+# 三种关闭方式（可关）：
+#   1. 持久关闭（推荐，团队共享）：
+#        git config hooks.enabled false    # 关闭全部校验
+#        git config hooks.enabled true     # 重新开启
+#   2. 临时跳过本次提交（git 原生）：
+#        git commit --no-verify
+#   3. 临时跳过 lefthook 全部 hooks：
+#        LEFTHOOK=0 git commit
+# =========================================================
 pre-commit:
   parallel: true
   commands:
@@ -73,4 +87,6 @@ post-merge:
 commit-msg:
   commands:
     commitlint:
-      run: pnpm exec commitlint --edit $1
+      run: |
+        [ "$(git config --get hooks.enabled 2>/dev/null || echo true)" = "false" ] && exit 0
+        pnpm exec commitlint --edit {1}

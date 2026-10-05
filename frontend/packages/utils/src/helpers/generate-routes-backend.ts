@@ -59,7 +59,7 @@ async function generateRoutesByBackend(
   }
 }
 
-function convertRoutes(
+export function convertRoutes(
   routes: RouteRecordStringComponent[],
   layoutMap: ComponentRecordType,
   pageMap: ComponentRecordType,
@@ -70,6 +70,16 @@ function convertRoutes(
 
     if (!name) {
       console.error('route name is required', route);
+    }
+
+    // 已是真实组件（懒加载函数或组件对象）则保留，跳过字符串解析，
+    // 防止业务侧已提前解析时再次进入 normalizeViewPath 而崩溃
+    if (
+      component &&
+      (typeof component === 'function' ||
+        (typeof component === 'object' && !Array.isArray(component)))
+    ) {
+      return route;
     }
 
     // layout转换
@@ -93,7 +103,7 @@ function convertRoutes(
   });
 }
 
-function normalizeViewPath(path: string): string {
+export function normalizeViewPath(path: string): string {
   // 去除相对路径前缀
   const normalizedPath = path.replace(/^(\.\/|\.\.\/)+/, '');
 

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 // ==================== types ====================
 import type { Recordable } from '@vben/types';
+
 import type {
   OnActionClickParams,
   VxeTableGridOptions,
@@ -13,31 +14,34 @@ import { nextTick, ref } from 'vue';
 // ==================== vben ====================
 import { Page, useVbenModal } from '@vben/common-ui';
 import { IconifyIcon, Plus } from '@vben/icons';
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { $t } from '@vben/locales';
 
 // ==================== third-party ====================
 import { Button, message, Modal, Upload } from 'ant-design-vue';
 
-// ==================== constants ====================
-import { DEFAULT_PAGE_SIZE, PAGE_SIZES } from '#/types/pagination';
-
-// ==================== business ====================
-import { useGridFormOptions, useColumns } from './data';
-import { downloadFile, handleBlobResponseError, getFileNameFromDisposition } from "#/utils/download"
-
+import { PermissionAuthCode } from '#/access';
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
 // ==================== api ====================
 import {
   deletePositionApi,
-  getPositionListApi,
-  updatePositionStatusApi,
+  downloadPositionTemplateApi,
   exportPositionApi,
+  getPositionListApi,
   importPositionApi,
+  updatePositionStatusApi,
 } from '#/api/organization/position';
+// ==================== constants ====================
+import { DEFAULT_PAGE_SIZE, PAGE_SIZES } from '#/types/pagination';
+import {
+  downloadFile,
+  getFileNameFromDisposition,
+  handleBlobResponseError,
+} from '#/utils/download';
 
+// ==================== business ====================
+import { useColumns, useGridFormOptions } from './data';
 // ==================== components ====================
 import Form from './modules/form/index.vue';
-
 
 const [FormModel, formModelApi] = useVbenModal({
   connectedComponent: Form,
@@ -65,7 +69,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
             ...page,
             ...formValues,
           });
-          return res
+          return res;
         },
       },
     },
@@ -87,17 +91,16 @@ const [Grid, gridApi] = useVbenVxeGrid({
   gridEvents: {
     checkboxChange() {
       nextTick(() => {
-        onCheckboxChange()
-      })
+        onCheckboxChange();
+      });
     },
     checkboxAll() {
       nextTick(() => {
-        onCheckboxChange()
-      })
-    }
+        onCheckboxChange();
+      });
+    },
   },
 });
-
 
 function onCheckboxChange() {
   const grid = gridApi.grid;
@@ -162,7 +165,7 @@ function onStatusChange(
         try {
           await updatePositionStatusApi(row.id, newStatus);
           resolve(true);
-        } catch (e) {
+        } catch {
           resolve(false);
         }
       },
@@ -178,8 +181,7 @@ function onDelete(row: OrganizationPositionApi.Position) {
     .then(() => {
       onRefresh();
     })
-    .catch(() => {
-    });
+    .catch(() => {});
 }
 
 function onBatchDelete() {
@@ -216,6 +218,20 @@ function onBatchDelete() {
   });
 }
 
+async function onDownloadTemplate() {
+  try {
+    const res = await downloadPositionTemplateApi();
+    const blobData = res.data;
+    const filename = getFileNameFromDisposition(
+      res.headers['content-disposition'],
+    );
+    // 下载
+    downloadFile(blobData, filename);
+  } catch (error: any) {
+    handleBlobResponseError(error);
+  }
+}
+
 async function onExport() {
   try {
     // ⭐ 获取当前查询条件（重点！）
@@ -224,19 +240,20 @@ async function onExport() {
     const params = {
       ...formValues,
       currentPage: 1,
-      pageSize: 0
+      pageSize: 0,
     };
 
     const res = await exportPositionApi(params);
-    const blobData = res.data
-    const filename = getFileNameFromDisposition(res.headers['content-disposition'])
+    const blobData = res.data;
+    const filename = getFileNameFromDisposition(
+      res.headers['content-disposition'],
+    );
     // 下载
     downloadFile(blobData, filename);
-  } catch (e: any) {
-    handleBlobResponseError(e)
+  } catch (error: any) {
+    handleBlobResponseError(error);
   }
 }
-
 
 function beforeUpload(file: File) {
   const isExcel =
@@ -264,13 +281,12 @@ async function handleImport(file: File) {
 
     message.success('导入成功');
     onRefresh();
-  } catch (e: any) {
-    message.error(e?.message || '导入失败');
+  } catch (error: any) {
+    message.error(error?.message || '导入失败');
   } finally {
     hide();
   }
 }
-
 </script>
 
 <template>
@@ -279,24 +295,50 @@ async function handleImport(file: File) {
     <Grid>
       <template #toolbar-tools>
         <div class="flex gap-2">
-          <Button type="primary" @click="onCreate">
+          <Button
+            v-access:code="[PermissionAuthCode.Position.Create]"
+            type="primary"
+            @click="onCreate"
+          >
             <Plus class="size-5" />
             {{ $t('ui.actionTitle.create') }}
           </Button>
 
-          <Upload :before-upload="beforeUpload" :show-upload-list="false" accept=".xlsx,.xls">
+          <Upload
+            v-access:code="[PermissionAuthCode.Position.Import]"
+            :before-upload="beforeUpload"
+            :show-upload-list="false"
+            accept=".xlsx,.xls"
+          >
             <Button>
               <IconifyIcon icon="ant-design:upload-outlined" class="size-5" />
               {{ $t('ui.actionTitle.import') }}
             </Button>
           </Upload>
 
-          <Button @click="onExport">
+          <Button
+            v-access:code="[PermissionAuthCode.Position.DownloadTemplate]"
+            @click="onDownloadTemplate"
+          >
+            <IconifyIcon icon="ant-design:file-excel-outlined" class="size-5" />
+            {{ $t('common.actions.downloadTemplate') }}
+          </Button>
+
+          <Button
+            v-access:code="[PermissionAuthCode.Position.Export]"
+            @click="onExport"
+          >
             <IconifyIcon icon="ant-design:download-outlined" class="size-5" />
             {{ $t('ui.actionTitle.export') }}
           </Button>
 
-          <Button type="primary" danger :disabled="!selectedRows.length" @click="onBatchDelete">
+          <Button
+            v-access:code="[PermissionAuthCode.Position.BatchDelete]"
+            type="primary"
+            danger
+            :disabled="selectedRows.length === 0"
+            @click="onBatchDelete"
+          >
             <IconifyIcon icon="ant-design:delete-outlined" class="size-5" />
             {{ $t('ui.actionTitle.delete') }}
           </Button>

@@ -15,6 +15,8 @@ const (
 	Label = "role"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldTenantID holds the string denoting the tenant_id field in the database.
+	FieldTenantID = "tenant_id"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
 	// FieldCode holds the string denoting the code field in the database.
@@ -27,8 +29,6 @@ const (
 	FieldRemark = "remark"
 	// FieldIsSystem holds the string denoting the is_system field in the database.
 	FieldIsSystem = "is_system"
-	// FieldDataScope holds the string denoting the data_scope field in the database.
-	FieldDataScope = "data_scope"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
@@ -37,10 +37,14 @@ const (
 	FieldDeletedAt = "deleted_at"
 	// EdgeMenus holds the string denoting the menus edge name in mutations.
 	EdgeMenus = "menus"
+	// EdgeDataPermissions holds the string denoting the data_permissions edge name in mutations.
+	EdgeDataPermissions = "data_permissions"
 	// EdgeAdmins holds the string denoting the admins edge name in mutations.
 	EdgeAdmins = "admins"
 	// EdgeRoleMenus holds the string denoting the role_menus edge name in mutations.
 	EdgeRoleMenus = "role_menus"
+	// EdgeRoleDataPermissions holds the string denoting the role_data_permissions edge name in mutations.
+	EdgeRoleDataPermissions = "role_data_permissions"
 	// EdgeAdminRoles holds the string denoting the admin_roles edge name in mutations.
 	EdgeAdminRoles = "admin_roles"
 	// Table holds the table name of the role in the database.
@@ -50,6 +54,11 @@ const (
 	// MenusInverseTable is the table name for the Menu entity.
 	// It exists in this package in order to avoid circular dependency with the "menu" package.
 	MenusInverseTable = "menu"
+	// DataPermissionsTable is the table that holds the data_permissions relation/edge. The primary key declared below.
+	DataPermissionsTable = "role_data_permission"
+	// DataPermissionsInverseTable is the table name for the DataPermission entity.
+	// It exists in this package in order to avoid circular dependency with the "datapermission" package.
+	DataPermissionsInverseTable = "data_permission"
 	// AdminsTable is the table that holds the admins relation/edge. The primary key declared below.
 	AdminsTable = "admin_role"
 	// AdminsInverseTable is the table name for the Admin entity.
@@ -62,6 +71,13 @@ const (
 	RoleMenusInverseTable = "role_menu"
 	// RoleMenusColumn is the table column denoting the role_menus relation/edge.
 	RoleMenusColumn = "role_id"
+	// RoleDataPermissionsTable is the table that holds the role_data_permissions relation/edge.
+	RoleDataPermissionsTable = "role_data_permission"
+	// RoleDataPermissionsInverseTable is the table name for the RoleDataPermission entity.
+	// It exists in this package in order to avoid circular dependency with the "roledatapermission" package.
+	RoleDataPermissionsInverseTable = "role_data_permission"
+	// RoleDataPermissionsColumn is the table column denoting the role_data_permissions relation/edge.
+	RoleDataPermissionsColumn = "role_id"
 	// AdminRolesTable is the table that holds the admin_roles relation/edge.
 	AdminRolesTable = "admin_role"
 	// AdminRolesInverseTable is the table name for the AdminRole entity.
@@ -74,13 +90,13 @@ const (
 // Columns holds all SQL columns for role fields.
 var Columns = []string{
 	FieldID,
+	FieldTenantID,
 	FieldName,
 	FieldCode,
 	FieldWeight,
 	FieldStatus,
 	FieldRemark,
 	FieldIsSystem,
-	FieldDataScope,
 	FieldCreatedAt,
 	FieldUpdatedAt,
 	FieldDeletedAt,
@@ -90,6 +106,9 @@ var (
 	// MenusPrimaryKey and MenusColumn2 are the table columns denoting the
 	// primary key for the menus relation (M2M).
 	MenusPrimaryKey = []string{"role_id", "menu_id"}
+	// DataPermissionsPrimaryKey and DataPermissionsColumn2 are the table columns denoting the
+	// primary key for the data_permissions relation (M2M).
+	DataPermissionsPrimaryKey = []string{"role_id", "data_permission_id"}
 	// AdminsPrimaryKey and AdminsColumn2 are the table columns denoting the
 	// primary key for the admins relation (M2M).
 	AdminsPrimaryKey = []string{"admin_id", "role_id"}
@@ -106,12 +125,14 @@ func ValidColumn(column string) bool {
 }
 
 var (
+	// DefaultTenantID holds the default value on creation for the "tenant_id" field.
+	DefaultTenantID string
+	// TenantIDValidator is a validator for the "tenant_id" field. It is called by the builders before save.
+	TenantIDValidator func(string) error
 	// DefaultWeight holds the default value on creation for the "weight" field.
 	DefaultWeight int
 	// DefaultIsSystem holds the default value on creation for the "is_system" field.
 	DefaultIsSystem bool
-	// DefaultDataScope holds the default value on creation for the "data_scope" field.
-	DefaultDataScope string
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() time.Time
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
@@ -156,6 +177,11 @@ func ByID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldID, opts...).ToFunc()
 }
 
+// ByTenantID orders the results by the tenant_id field.
+func ByTenantID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTenantID, opts...).ToFunc()
+}
+
 // ByName orders the results by the name field.
 func ByName(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldName, opts...).ToFunc()
@@ -184,11 +210,6 @@ func ByRemark(opts ...sql.OrderTermOption) OrderOption {
 // ByIsSystem orders the results by the is_system field.
 func ByIsSystem(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldIsSystem, opts...).ToFunc()
-}
-
-// ByDataScope orders the results by the data_scope field.
-func ByDataScope(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldDataScope, opts...).ToFunc()
 }
 
 // ByCreatedAt orders the results by the created_at field.
@@ -220,6 +241,20 @@ func ByMenus(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	}
 }
 
+// ByDataPermissionsCount orders the results by data_permissions count.
+func ByDataPermissionsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newDataPermissionsStep(), opts...)
+	}
+}
+
+// ByDataPermissions orders the results by data_permissions terms.
+func ByDataPermissions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newDataPermissionsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
 // ByAdminsCount orders the results by admins count.
 func ByAdminsCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
@@ -248,6 +283,20 @@ func ByRoleMenus(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	}
 }
 
+// ByRoleDataPermissionsCount orders the results by role_data_permissions count.
+func ByRoleDataPermissionsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newRoleDataPermissionsStep(), opts...)
+	}
+}
+
+// ByRoleDataPermissions orders the results by role_data_permissions terms.
+func ByRoleDataPermissions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newRoleDataPermissionsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
 // ByAdminRolesCount orders the results by admin_roles count.
 func ByAdminRolesCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
@@ -268,6 +317,13 @@ func newMenusStep() *sqlgraph.Step {
 		sqlgraph.Edge(sqlgraph.M2M, false, MenusTable, MenusPrimaryKey...),
 	)
 }
+func newDataPermissionsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(DataPermissionsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, false, DataPermissionsTable, DataPermissionsPrimaryKey...),
+	)
+}
 func newAdminsStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
@@ -280,6 +336,13 @@ func newRoleMenusStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(RoleMenusInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.O2M, true, RoleMenusTable, RoleMenusColumn),
+	)
+}
+func newRoleDataPermissionsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(RoleDataPermissionsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, true, RoleDataPermissionsTable, RoleDataPermissionsColumn),
 	)
 }
 func newAdminRolesStep() *sqlgraph.Step {

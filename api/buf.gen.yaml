@@ -3,7 +3,7 @@ managed:
   enabled: true
   override:
     - file_option: go_package_prefix
-      value: hyper-admin/api/gen/go
+      value: github.com/antsurge/weaver-admin/api/gen/go
     - file_option: go_package
       path: admin/service/v1
       value: github.com/antsurge/weaver-admin/api/gen/go/admin/services/v1;adminpb
@@ -17,17 +17,29 @@ managed:
       path: organization/service/v1
       value: github.com/antsurge/weaver-admin/api/gen/go/organization/service/v1;organizationpb
     - file_option: go_package
-      path: dictionary/service/v1
-      value: github.com/antsurge/weaver-admin/api/gen/go/dictionary/service/v1;dictionarypb
-    - file_option: go_package
       path: identity/service/v1
       value: github.com/antsurge/weaver-admin/api/gen/go/identity/service/v1;identityypb
+    - file_option: go_package
+      path: tenant/service/v1
+      value: github.com/antsurge/weaver-admin/api/gen/go/tenant/service/v1;tenantpb
     - file_option: go_package
       path: system/service/v1
       value: github.com/antsurge/weaver-admin/api/gen/go/system/service/v1;systempb
     - file_option: go_package
+      path: message/service/v1
+      value: github.com/antsurge/weaver-admin/api/gen/go/message/service/v1;messagepb
+    - file_option: go_package
+      path: ops/service/v1
+      value: github.com/antsurge/weaver-admin/api/gen/go/ops/service/v1;opspb
+    - file_option: go_package
+      path: security/service/v1
+      value: github.com/antsurge/weaver-admin/api/gen/go/security/service/v1;securitypb
+    - file_option: go_package
       path: common/v1
       value: github.com/antsurge/weaver-admin/api/gen/go/common/v1;commonpb
+    - file_option: go_package
+      path: lowcode/service/v1
+      value: github.com/antsurge/weaver-admin/api/gen/go/lowcode/service/v1;lowcodepb
   disable:
     - module: 'buf.build/bufbuild/protovalidate'
     - module: 'buf.build/googleapis/googleapis'

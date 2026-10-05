@@ -65,6 +65,11 @@ func IDContainsFold(id string) predicate.Role {
 	return predicate.Role(sql.FieldContainsFold(FieldID, id))
 }
 
+// TenantID applies equality check predicate on the "tenant_id" field. It's identical to TenantIDEQ.
+func TenantID(v string) predicate.Role {
+	return predicate.Role(sql.FieldEQ(FieldTenantID, v))
+}
+
 // Name applies equality check predicate on the "name" field. It's identical to NameEQ.
 func Name(v string) predicate.Role {
 	return predicate.Role(sql.FieldEQ(FieldName, v))
@@ -90,11 +95,6 @@ func IsSystem(v bool) predicate.Role {
 	return predicate.Role(sql.FieldEQ(FieldIsSystem, v))
 }
 
-// DataScope applies equality check predicate on the "data_scope" field. It's identical to DataScopeEQ.
-func DataScope(v string) predicate.Role {
-	return predicate.Role(sql.FieldEQ(FieldDataScope, v))
-}
-
 // CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
 func CreatedAt(v time.Time) predicate.Role {
 	return predicate.Role(sql.FieldEQ(FieldCreatedAt, v))
@@ -108,6 +108,71 @@ func UpdatedAt(v time.Time) predicate.Role {
 // DeletedAt applies equality check predicate on the "deleted_at" field. It's identical to DeletedAtEQ.
 func DeletedAt(v time.Time) predicate.Role {
 	return predicate.Role(sql.FieldEQ(FieldDeletedAt, v))
+}
+
+// TenantIDEQ applies the EQ predicate on the "tenant_id" field.
+func TenantIDEQ(v string) predicate.Role {
+	return predicate.Role(sql.FieldEQ(FieldTenantID, v))
+}
+
+// TenantIDNEQ applies the NEQ predicate on the "tenant_id" field.
+func TenantIDNEQ(v string) predicate.Role {
+	return predicate.Role(sql.FieldNEQ(FieldTenantID, v))
+}
+
+// TenantIDIn applies the In predicate on the "tenant_id" field.
+func TenantIDIn(vs ...string) predicate.Role {
+	return predicate.Role(sql.FieldIn(FieldTenantID, vs...))
+}
+
+// TenantIDNotIn applies the NotIn predicate on the "tenant_id" field.
+func TenantIDNotIn(vs ...string) predicate.Role {
+	return predicate.Role(sql.FieldNotIn(FieldTenantID, vs...))
+}
+
+// TenantIDGT applies the GT predicate on the "tenant_id" field.
+func TenantIDGT(v string) predicate.Role {
+	return predicate.Role(sql.FieldGT(FieldTenantID, v))
+}
+
+// TenantIDGTE applies the GTE predicate on the "tenant_id" field.
+func TenantIDGTE(v string) predicate.Role {
+	return predicate.Role(sql.FieldGTE(FieldTenantID, v))
+}
+
+// TenantIDLT applies the LT predicate on the "tenant_id" field.
+func TenantIDLT(v string) predicate.Role {
+	return predicate.Role(sql.FieldLT(FieldTenantID, v))
+}
+
+// TenantIDLTE applies the LTE predicate on the "tenant_id" field.
+func TenantIDLTE(v string) predicate.Role {
+	return predicate.Role(sql.FieldLTE(FieldTenantID, v))
+}
+
+// TenantIDContains applies the Contains predicate on the "tenant_id" field.
+func TenantIDContains(v string) predicate.Role {
+	return predicate.Role(sql.FieldContains(FieldTenantID, v))
+}
+
+// TenantIDHasPrefix applies the HasPrefix predicate on the "tenant_id" field.
+func TenantIDHasPrefix(v string) predicate.Role {
+	return predicate.Role(sql.FieldHasPrefix(FieldTenantID, v))
+}
+
+// TenantIDHasSuffix applies the HasSuffix predicate on the "tenant_id" field.
+func TenantIDHasSuffix(v string) predicate.Role {
+	return predicate.Role(sql.FieldHasSuffix(FieldTenantID, v))
+}
+
+// TenantIDEqualFold applies the EqualFold predicate on the "tenant_id" field.
+func TenantIDEqualFold(v string) predicate.Role {
+	return predicate.Role(sql.FieldEqualFold(FieldTenantID, v))
+}
+
+// TenantIDContainsFold applies the ContainsFold predicate on the "tenant_id" field.
+func TenantIDContainsFold(v string) predicate.Role {
+	return predicate.Role(sql.FieldContainsFold(FieldTenantID, v))
 }
 
 // NameEQ applies the EQ predicate on the "name" field.
@@ -385,71 +450,6 @@ func IsSystemNEQ(v bool) predicate.Role {
 	return predicate.Role(sql.FieldNEQ(FieldIsSystem, v))
 }
 
-// DataScopeEQ applies the EQ predicate on the "data_scope" field.
-func DataScopeEQ(v string) predicate.Role {
-	return predicate.Role(sql.FieldEQ(FieldDataScope, v))
-}
-
-// DataScopeNEQ applies the NEQ predicate on the "data_scope" field.
-func DataScopeNEQ(v string) predicate.Role {
-	return predicate.Role(sql.FieldNEQ(FieldDataScope, v))
-}
-
-// DataScopeIn applies the In predicate on the "data_scope" field.
-func DataScopeIn(vs ...string) predicate.Role {
-	return predicate.Role(sql.FieldIn(FieldDataScope, vs...))
-}
-
-// DataScopeNotIn applies the NotIn predicate on the "data_scope" field.
-func DataScopeNotIn(vs ...string) predicate.Role {
-	return predicate.Role(sql.FieldNotIn(FieldDataScope, vs...))
-}
-
-// DataScopeGT applies the GT predicate on the "data_scope" field.
-func DataScopeGT(v string) predicate.Role {
-	return predicate.Role(sql.FieldGT(FieldDataScope, v))
-}
-
-// DataScopeGTE applies the GTE predicate on the "data_scope" field.
-func DataScopeGTE(v string) predicate.Role {
-	return predicate.Role(sql.FieldGTE(FieldDataScope, v))
-}
-
-// DataScopeLT applies the LT predicate on the "data_scope" field.
-func DataScopeLT(v string) predicate.Role {
-	return predicate.Role(sql.FieldLT(FieldDataScope, v))
-}
-
-// DataScopeLTE applies the LTE predicate on the "data_scope" field.
-func DataScopeLTE(v string) predicate.Role {
-	return predicate.Role(sql.FieldLTE(FieldDataScope, v))
-}
-
-// DataScopeContains applies the Contains predicate on the "data_scope" field.
-func DataScopeContains(v string) predicate.Role {
-	return predicate.Role(sql.FieldContains(FieldDataScope, v))
-}
-
-// DataScopeHasPrefix applies the HasPrefix predicate on the "data_scope" field.
-func DataScopeHasPrefix(v string) predicate.Role {
-	return predicate.Role(sql.FieldHasPrefix(FieldDataScope, v))
-}
-
-// DataScopeHasSuffix applies the HasSuffix predicate on the "data_scope" field.
-func DataScopeHasSuffix(v string) predicate.Role {
-	return predicate.Role(sql.FieldHasSuffix(FieldDataScope, v))
-}
-
-// DataScopeEqualFold applies the EqualFold predicate on the "data_scope" field.
-func DataScopeEqualFold(v string) predicate.Role {
-	return predicate.Role(sql.FieldEqualFold(FieldDataScope, v))
-}
-
-// DataScopeContainsFold applies the ContainsFold predicate on the "data_scope" field.
-func DataScopeContainsFold(v string) predicate.Role {
-	return predicate.Role(sql.FieldContainsFold(FieldDataScope, v))
-}
-
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v time.Time) predicate.Role {
 	return predicate.Role(sql.FieldEQ(FieldCreatedAt, v))
@@ -603,6 +603,29 @@ func HasMenusWith(preds ...predicate.Menu) predicate.Role {
 	})
 }
 
+// HasDataPermissions applies the HasEdge predicate on the "data_permissions" edge.
+func HasDataPermissions() predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, DataPermissionsTable, DataPermissionsPrimaryKey...),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasDataPermissionsWith applies the HasEdge predicate on the "data_permissions" edge with a given conditions (other predicates).
+func HasDataPermissionsWith(preds ...predicate.DataPermission) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		step := newDataPermissionsStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // HasAdmins applies the HasEdge predicate on the "admins" edge.
 func HasAdmins() predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
@@ -641,6 +664,29 @@ func HasRoleMenus() predicate.Role {
 func HasRoleMenusWith(preds ...predicate.RoleMenu) predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
 		step := newRoleMenusStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasRoleDataPermissions applies the HasEdge predicate on the "role_data_permissions" edge.
+func HasRoleDataPermissions() predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, RoleDataPermissionsTable, RoleDataPermissionsColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasRoleDataPermissionsWith applies the HasEdge predicate on the "role_data_permissions" edge with a given conditions (other predicates).
+func HasRoleDataPermissionsWith(preds ...predicate.RoleDataPermission) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		step := newRoleDataPermissionsStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

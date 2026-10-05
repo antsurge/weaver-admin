@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package tenant.service.v1;
+
+import "errors/errors.proto";
+
+// 租户模块错误码
+// 说明：错误码值与 biz 层 errors.BadRequest("XXX", ...) 中的 reason 字符串一一对应，
+// 便于前端按 reason 做统一提示与国际化。
+enum TenantErrorReason {
+  option (errors.default_code) = 500;
+
+  // 400
+  INVALID_STATUS = 0 [(errors.code) = 400]; // 状态值非法（仅支持 enabled/disabled）
+  CODE_ALREADY_EXISTS = 1 [(errors.code) = 400]; // 租户编码已存在
+  CANNOT_DELETE_DEFAULT = 2 [(errors.code) = 400]; // 默认租户不允许删除
+  CANNOT_DISABLE_DEFAULT = 3 [(errors.code) = 400]; // 默认租户不允许禁用
+
+  // 404
+  TENANT_NOT_FOUND = 9 [(errors.code) = 404]; // 租户不存在
+
+  // 500
+  CREATE_TENANT_FAIL = 100 [(errors.code) = 500]; // 创建租户失败
+  UPDATE_TENANT_FAIL = 101 [(errors.code) = 500]; // 更新租户失败
+  DELETE_TENANT_FAIL = 102 [(errors.code) = 500]; // 删除租户失败
+}

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/antsurge/weaver-admin/pkg/utils/uuid"
+	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
 )
 
@@ -38,6 +39,7 @@ type DepartmentRepo interface {
 	DeleteDepartment(ctx context.Context, ids []string) error
 	UpdateDepartmentStatus(ctx context.Context, id, status string) error
 	GetDepartment(ctx context.Context, id string) (*Department, error)
+	IsDepartmentCodeExists(ctx context.Context, code, id string) (bool, error)
 }
 
 type DepartmentUsecase struct {
@@ -71,6 +73,10 @@ func (uc *DepartmentUsecase) GetDepartment(ctx context.Context, id string) (*Dep
 func (uc *DepartmentUsecase) CreateDepartment(ctx context.Context, req *Department) (*Department, error) {
 	department := req
 
+	if err := uc.validateUnique(ctx, department); err != nil {
+		return nil, err
+	}
+
 	now := time.Now()
 	department.ID = uuid.GenerateXID()
 	department.CreatedAt = now
@@ -84,11 +90,32 @@ func (uc *DepartmentUsecase) CreateDepartment(ctx context.Context, req *Departme
 func (uc *DepartmentUsecase) UpdateDepartment(ctx context.Context, req *Department) (*Department, error) {
 	department := req
 
+	if err := uc.validateUnique(ctx, department); err != nil {
+		return nil, err
+	}
+
 	now := time.Now()
 	department.UpdatedAt = now
 
 	err := uc.repo.UpdateDepartment(ctx, department)
 	return department, err
+}
+
+// IsDepartmentCodeExists 部门编码是否存在
+func (uc *DepartmentUsecase) IsDepartmentCodeExists(ctx context.Context, code, id string) (bool, error) {
+	return uc.repo.IsDepartmentCodeExists(ctx, code, id)
+}
+
+// validateUnique 校验部门编码唯一性
+func (uc *DepartmentUsecase) validateUnique(ctx context.Context, department *Department) error {
+	codeExists, err := uc.IsDepartmentCodeExists(ctx, department.Code, department.ID)
+	if err != nil {
+		return err
+	}
+	if codeExists {
+		return errors.BadRequest("DEPARTMENT_CODE_EXISTS", "部门编码已存在")
+	}
+	return nil
 }
 
 // 删除
@@ -99,4 +126,36 @@ func (uc *DepartmentUsecase) DeleteDepartment(ctx context.Context, ids []string)
 // 更新状态
 func (uc *DepartmentUsecase) UpdateDepartmentStatus(ctx context.Context, id, status string) error {
 	return uc.repo.UpdateDepartmentStatus(ctx, id, status)
+}
+
+// buildDepartmentTree 将部门列表构建为树形结构。
+func buildDepartmentTree(perms []*Department) []*Department {
+	nodeMap := make(map[string]*Department)
+
+	// 先创建所有节点
+	for _, p := range perms {
+		nodeMap[p.ID] = p
+	}
+
+	var roots []*Department
+
+	// 构建树
+	for _, p := range perms {
+		node := nodeMap[p.ID]
+
+		if p.ParentID == "" {
+			roots = append(roots, node)
+			continue
+		}
+
+		parent, ok := nodeMap[p.ParentID]
+		if ok {
+			parent.Children = append(parent.Children, node)
+		} else {
+			// 找不到父节点当作根节点
+			roots = append(roots, node)
+		}
+	}
+
+	return roots
 }

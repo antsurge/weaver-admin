@@ -10,21 +10,19 @@ import { $t } from '@vben/locales';
 
 import { Button, message, Modal } from 'ant-design-vue';
 
+import { SystemAuthCode } from '#/access';
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { DEFAULT_PAGE_SIZE, PAGE_SIZES } from "#/types/pagination";
-
-
 import {
   deleteDictTypeApi,
   getDictTypeListApi,
   updateDictTypeStatusApi,
 } from '#/api/system/dictionary/dict-type';
-
-import { useDictTypeColumns,useFormOptions } from './data';
-
-import DictDataTable from "#/views/system/dictionary/dict-data/index.vue"
+import { DEFAULT_PAGE_SIZE, PAGE_SIZES } from '#/types/pagination';
+import DictDataTable from '#/views/system/dictionary/dict-data/index.vue';
+import DictDataForm from '#/views/system/dictionary/dict-data/modules/form/index.vue';
 import DictTypeForm from '#/views/system/dictionary/dict-type/modules/form/index.vue';
-import DictDataForm from "#/views/system/dictionary/dict-data/modules/form/index.vue"
+
+import { useDictTypeColumns, useFormOptions } from './data';
 
 const [DictTypeFormModal, dictTypeFormApi] = useVbenModal({
   connectedComponent: DictTypeForm,
@@ -39,7 +37,7 @@ const [DictDataFormModal, dictDataFormApi] = useVbenModal({
 const selectedTypes = ref<DictionaryDictTypeApi.DictType[]>([]);
 
 const [Grid, gridApi] = useVbenVxeGrid({
-  formOptions:useFormOptions(),
+  formOptions: useFormOptions(),
   gridOptions: {
     columns: useDictTypeColumns(onTypeActionClick, onTypeStatusChange),
     height: 'auto',
@@ -61,7 +59,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
             ...page,
             ...formValues,
           });
-          return res
+          return res;
         },
       },
     },
@@ -80,8 +78,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
   gridEvents: {
     checkboxChange() {
       nextTick(() => {
-        const records =
-          (gridApi.grid as any)?.getCheckboxRecords?.() ?? [];
+        const records = (gridApi.grid as any)?.getCheckboxRecords?.() ?? [];
         selectedTypes.value = records;
       });
     },
@@ -97,9 +94,7 @@ function onCreateType() {
 }
 
 function onCreateData(dictTypeID?: string) {
-  dictDataFormApi
-    .setData(dictTypeID ? { dictTypeID } : {})
-    .open();
+  dictDataFormApi.setData(dictTypeID ? { dictTypeID } : {}).open();
 }
 
 function onTypeActionClick({
@@ -110,15 +105,18 @@ function onTypeActionClick({
   row: DictionaryDictTypeApi.DictType;
 }) {
   switch (code) {
-    case 'appendDictData':
+    case 'appendDictData': {
       onCreateData(row.id);
       break;
-    case 'edit':
-      dictTypeFormApi.setData(row).open();
-      break;
-    case 'delete':
+    }
+    case 'delete': {
       onDeleteTypes([row]);
       break;
+    }
+    case 'edit': {
+      dictTypeFormApi.setData(row).open();
+      break;
+    }
   }
 }
 
@@ -127,8 +125,8 @@ function onTypeStatusChange(
   row: DictionaryDictTypeApi.DictType,
 ): Promise<boolean | undefined> {
   const statusText: Record<string, string> = {
-    enabled: '启用',
-    disabled: '禁用',
+    enabled: $t('common.enabled'),
+    disabled: $t('common.disabled'),
   };
 
   return new Promise<boolean | undefined>((resolve) => {
@@ -152,7 +150,7 @@ function onTypeStatusChange(
 
 async function onDeleteTypes(rows?: DictionaryDictTypeApi.DictType[]) {
   const list = rows?.length ? rows : selectedTypes.value;
-  if (!list.length) return;
+  if (list.length === 0) return;
 
   const ids = list.map((item) => item.id);
   const names = list.map((item) => item.name).join('、');
@@ -172,7 +170,11 @@ async function onDeleteTypes(rows?: DictionaryDictTypeApi.DictType[]) {
     <Grid>
       <template #toolbar-tools>
         <div class="flex gap-2">
-          <Button type="primary" @click="onCreateType">
+          <Button
+            v-access:code="[SystemAuthCode.DictType.Create]"
+            type="primary"
+            @click="onCreateType"
+          >
             <Plus class="size-5" />
             {{ $t('ui.actionTitle.create') }}
           </Button>
@@ -180,7 +182,7 @@ async function onDeleteTypes(rows?: DictionaryDictTypeApi.DictType[]) {
       </template>
 
       <template #expand_dictdata="{ row }">
-        <DictDataTable :data="row.dictData || []"/>
+        <DictDataTable :data="row.dictData || []" />
       </template>
     </Grid>
   </Page>

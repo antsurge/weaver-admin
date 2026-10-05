@@ -334,12 +334,12 @@ func (_q *RoleMenuQuery) WithMenu(opts ...func(*MenuQuery)) *RoleMenuQuery {
 // Example:
 //
 //	var v []struct {
-//		RoleID string `json:"role_id,omitempty"`
+//		TenantID string `json:"tenant_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.RoleMenu.Query().
-//		GroupBy(rolemenu.FieldRoleID).
+//		GroupBy(rolemenu.FieldTenantID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (_q *RoleMenuQuery) GroupBy(field string, fields ...string) *RoleMenuGroupBy {
@@ -357,11 +357,11 @@ func (_q *RoleMenuQuery) GroupBy(field string, fields ...string) *RoleMenuGroupB
 // Example:
 //
 //	var v []struct {
-//		RoleID string `json:"role_id,omitempty"`
+//		TenantID string `json:"tenant_id,omitempty"`
 //	}
 //
 //	client.RoleMenu.Query().
-//		Select(rolemenu.FieldRoleID).
+//		Select(rolemenu.FieldTenantID).
 //		Scan(ctx, &v)
 func (_q *RoleMenuQuery) Select(fields ...string) *RoleMenuSelect {
 	_q.ctx.Fields = append(_q.ctx.Fields, fields...)

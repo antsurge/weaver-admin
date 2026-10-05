@@ -1,6 +1,4 @@
-import type { Recordable } from '@vben/types';
-import type { AllResult } from '#/types/pagination'
-
+import type { AllResult } from '#/types/pagination';
 
 import { requestClient } from '#/api/request';
 
@@ -14,27 +12,31 @@ export namespace PermissionMenuApi {
     'warning',
   ] as const;
   /** 徽标类型集合 */
-  export const BadgeTypes = ['dot', 'normal'] as const;
+  export const BadgeTypes = ['dot', 'text'] as const;
   /** 权限类型集合 */
   export const PermissionTypes = [
     'catalog',
     'menu',
-    'embedded',
+    'action',
+    'iframe',
     'link',
-    'button',
   ] as const;
-  /** 单条接口权限（按钮绑定） */
+  /** 单条接口权限（按钮绑定）
+   * 绑定基于 api_interface.code（service|METHOD|path）关联，接口信息实时反查自 api_interface
+   */
   export interface ApiPermission {
-    /** 后端主键（回显用，新建时可为空） */
-    id?: string;
     /** 服务全限定名 */
     service: string;
+    /** OpenAPI 标签（前端分组回显用） */
+    tag?: string;
     /** HTTP method，如 GET/POST */
     method: string;
     /** 接口路径 */
     path: string;
     /** 接口描述 */
     summary?: string;
+    /** 业务唯一键 service|METHOD|path（对应 api_interface.code） */
+    code?: string;
   }
   /** 单条接口端点 */
   export interface ApiEndpoint {
@@ -53,79 +55,53 @@ export namespace PermissionMenuApi {
     tag: string;
     endpoints: ApiEndpoint[];
   }
-  /** 系统权限 */
+  /** 系统权限（字段与后端 Menu message 一致，均为扁平结构） */
   export interface PermissionMenu {
     [key: string]: any;
     /** 按钮绑定的接口权限列表（仅 action 类型） */
     apiPermissions?: ApiPermission[];
-    /** 后端权限标识 */
+    /** 权限标识 */
     authCode: string;
+    /** 徽标内容 */
+    badge?: string;
+    /** 徽标类型 */
+    badgeType?: (typeof BadgeTypes)[number];
+    /** 徽标样式 */
+    badgeVariants?: (typeof BadgeVariants)[number];
     /** 子级 */
     children?: PermissionMenu[];
-    /** 组件 */
+    /** 页面组件 */
     component?: string;
+    /** 描述 */
+    description?: string;
     /** 权限ID */
     id: string;
-    /** 权限元数据 */
-    meta?: {
-      /** 激活时显示的图标 */
-      activeIcon?: string;
-      /** 作为路由时，需要激活的权限的Path */
-      activePath?: string;
-      /** 固定在标签栏 */
-      affixTab?: boolean;
-      /** 在标签栏固定的顺序 */
-      affixTabOrder?: number;
-      /** 徽标内容(当徽标类型为normal时有效) */
-      badge?: string;
-      /** 徽标类型 */
-      badgeType?: (typeof BadgeTypes)[number];
-      /** 徽标颜色 */
-      badgeVariants?: (typeof BadgeVariants)[number];
-      /** 在权限中隐藏下级 */
-      hideChildrenInMenu?: boolean;
-      /** 在面包屑中隐藏 */
-      hideInBreadcrumb?: boolean;
-      /** 在权限中隐藏 */
-      hideInMenu?: boolean;
-      /** 在标签栏中隐藏 */
-      hideInTab?: boolean;
-      /** 权限图标 */
-      icon?: string;
-      /** 内嵌Iframe的URL */
-      iframeSrc?: string;
-      /** 是否缓存页面 */
-      keepAlive?: boolean;
-      /** 外链页面的URL */
-      link?: string;
-      /** 同一个路由最大打开的标签数 */
-      maxNumOfOpenTab?: number;
-      /** 无需基础布局 */
-      noBasicLayout?: boolean;
-      /** 是否在新窗口打开 */
-      openInNewWindow?: boolean;
-      /** 权限排序 */
-      order?: number;
-      /** 额外的路由参数 */
-      query?: Recordable<any>;
-      /** 权限标题 */
-      title?: string;
-    };
+    /** 图标 */
+    icon?: string;
+    /** 链接地址（iframe/外链） */
+    linkUrl?: string;
     /** 权限名称 */
     name: string;
     /** 路由路径 */
     path: string;
     /** 父级ID */
-    pid: string;
-    /** 重定向 */
-    redirect?: string;
+    parentID: string;
+    /** 备注 */
+    remark?: string;
+    /** 状态 */
+    status?: string;
+    /** 标题（国际化 key） */
+    title?: string;
     /** 权限类型 */
-    type: (typeof MenuTypes)[number];
+    type: (typeof PermissionTypes)[number];
+    /** 权重 */
+    weight?: number;
   }
 
   export interface MenuTreeParams {
-    name?: string
-    cod?: string
+    name?: string;
+    status?: string;
+    type?: string;
   }
 }
 
@@ -136,8 +112,8 @@ async function getMenuTreeApi(params: PermissionMenuApi.MenuTreeParams = {}) {
   return requestClient.get<AllResult<PermissionMenuApi.PermissionMenu>>(
     '/admin/v1/menu/tree',
     {
-      params: params
-    }
+      params,
+    },
   );
 }
 
@@ -149,6 +125,17 @@ async function createMenuApi(
   data: Omit<PermissionMenuApi.PermissionMenu, 'children' | 'id'>,
 ) {
   return requestClient.post('/admin/v1/menu', data);
+}
+
+/**
+ * 获取权限详情（含接口权限）
+ *
+ * @param id 权限 ID
+ */
+async function getMenuDetailApi(id: string) {
+  return requestClient.get<PermissionMenuApi.PermissionMenu>(
+    `/admin/v1/menu/${id}`,
+  );
 }
 
 /**
@@ -168,47 +155,23 @@ async function updateMenuApi(
  * 更新权限状态
  *
  * @param id 权限 ID
- * @param data 权限数据
+ * @param status 权限状态
  */
-async function updateMenuStatusApi(
-  id: string,
-  status: string,
-) {
+async function updateMenuStatusApi(id: string, status: string) {
   return requestClient.put(`/admin/v1/menu/${id}/status`, {
-    status
+    status,
   });
 }
 
 /**
  * 删除权限
- * @param id 权限 ID
+ * @param ids 权限 ID 列表
  */
 async function deleteMenuApi(ids: string[]) {
   return requestClient.delete(`/admin/v1/menu`, {
     params: {
-      ids: ids
-    }
-  });
-}
-
-
-// 检测code是否存在
-async function isMenuCodeExists(
-  name: string,
-  id?: PermissionMenuApi.PermissionMenu['id'],
-) {
-  return requestClient.get<boolean>('/system/menu/name-exists', {
-    params: { id, name },
-  });
-}
-
-// 检测path是否存在
-async function isMenuPathExists(
-  path: string,
-  id?: PermissionMenuApi.PermissionMenu['id'],
-) {
-  return requestClient.get<boolean>('/system/menu/path-exists', {
-    params: { id, path },
+      ids,
+    },
   });
 }
 
@@ -227,9 +190,8 @@ async function listApiMetadataApi(): Promise<PermissionMenuApi.ApiMetadata[]> {
 export {
   createMenuApi,
   deleteMenuApi,
+  getMenuDetailApi,
   getMenuTreeApi,
-  isMenuCodeExists,
-  isMenuPathExists,
   listApiMetadataApi,
   updateMenuApi,
   updateMenuStatusApi,

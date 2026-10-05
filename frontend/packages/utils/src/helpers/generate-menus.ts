@@ -27,12 +27,7 @@ function generateMenus(
     // 获取最终的路由路径
     const path = finalRoutesMap[route.name as string] ?? route.path ?? '';
 
-    const {
-      meta = {} as RouteMeta,
-      name: routeName,
-      redirect,
-      children = [],
-    } = route;
+    const { meta = {} as RouteMeta, redirect, children = [] } = route;
     const {
       activeIcon,
       badge,
@@ -46,7 +41,7 @@ function generateMenus(
     } = meta;
 
     // 确保菜单名称不为空
-    const name = (title ? title : '') as string;
+    const name = (title || '') as string;
 
     // 处理子菜单
     const resultChildren = hideChildrenInMenu
@@ -81,7 +76,7 @@ function generateMenus(
   });
 
   // 对菜单进行排序，避免order=0时被替换成999的问题
-  menus = sortTree(menus, (a, b) => (b?.order ?? 999)-(a?.order ?? 999));
+  menus = sortTree(menus, (a, b) => (b?.order ?? 999) - (a?.order ?? 999));
 
   // 过滤掉隐藏的菜单项
   return filterTree(menus, (menu) => !!menu.show);

@@ -1,0 +1,12 @@
+# Middleware error codes
+[PERMISSION_DENIED]
+other = "No permission to access this API"
+
+[IP_FORBIDDEN]
+other = "Access from this IP is not allowed"
+
+[TENANT_FORBIDDEN]
+other = "Tenant unavailable, please contact the platform administrator"
+
+[DEMO_READONLY]
+other = "Data modification is disabled in demo mode"

@@ -20,6 +20,19 @@ const fallbackNotFoundRoute: RouteRecordRaw = {
   path: '/:path(.*)*',
 };
 
+/** 全局403页面（无权限公共页，不参与菜单，也不需要接口权限） */
+const forbiddenRoute: RouteRecordRaw = {
+  component: () => import('#/views/_core/fallback/forbidden.vue'),
+  meta: {
+    hideInBreadcrumb: true,
+    hideInMenu: true,
+    hideInTab: true,
+    title: '403',
+  },
+  name: 'Forbidden',
+  path: '/403',
+};
+
 /** 基本路由，这些路由是必须存在的 */
 const coreRoutes: RouteRecordRaw[] = [
   /**
@@ -94,4 +107,4 @@ const coreRoutes: RouteRecordRaw[] = [
   },
 ];
 
-export { coreRoutes, fallbackNotFoundRoute };
+export { coreRoutes, fallbackNotFoundRoute, forbiddenRoute };

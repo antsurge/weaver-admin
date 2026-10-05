@@ -13,9 +13,11 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/admin"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/adminrole"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/datapermission"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/menu"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/predicate"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/role"
+	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/roledatapermission"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/rolemenu"
 )
 
@@ -129,20 +131,6 @@ func (_u *RoleUpdate) SetNillableIsSystem(v *bool) *RoleUpdate {
 	return _u
 }
 
-// SetDataScope sets the "data_scope" field.
-func (_u *RoleUpdate) SetDataScope(v string) *RoleUpdate {
-	_u.mutation.SetDataScope(v)
-	return _u
-}
-
-// SetNillableDataScope sets the "data_scope" field if the given value is not nil.
-func (_u *RoleUpdate) SetNillableDataScope(v *string) *RoleUpdate {
-	if v != nil {
-		_u.SetDataScope(*v)
-	}
-	return _u
-}
-
 // SetCreatedAt sets the "created_at" field.
 func (_u *RoleUpdate) SetCreatedAt(v time.Time) *RoleUpdate {
 	_u.mutation.SetCreatedAt(v)
@@ -198,6 +186,21 @@ func (_u *RoleUpdate) AddMenus(v ...*Menu) *RoleUpdate {
 	return _u.AddMenuIDs(ids...)
 }
 
+// AddDataPermissionIDs adds the "data_permissions" edge to the DataPermission entity by IDs.
+func (_u *RoleUpdate) AddDataPermissionIDs(ids ...string) *RoleUpdate {
+	_u.mutation.AddDataPermissionIDs(ids...)
+	return _u
+}
+
+// AddDataPermissions adds the "data_permissions" edges to the DataPermission entity.
+func (_u *RoleUpdate) AddDataPermissions(v ...*DataPermission) *RoleUpdate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddDataPermissionIDs(ids...)
+}
+
 // AddAdminIDs adds the "admins" edge to the Admin entity by IDs.
 func (_u *RoleUpdate) AddAdminIDs(ids ...string) *RoleUpdate {
 	_u.mutation.AddAdminIDs(ids...)
@@ -226,6 +229,21 @@ func (_u *RoleUpdate) AddRoleMenus(v ...*RoleMenu) *RoleUpdate {
 		ids[i] = v[i].ID
 	}
 	return _u.AddRoleMenuIDs(ids...)
+}
+
+// AddRoleDataPermissionIDs adds the "role_data_permissions" edge to the RoleDataPermission entity by IDs.
+func (_u *RoleUpdate) AddRoleDataPermissionIDs(ids ...string) *RoleUpdate {
+	_u.mutation.AddRoleDataPermissionIDs(ids...)
+	return _u
+}
+
+// AddRoleDataPermissions adds the "role_data_permissions" edges to the RoleDataPermission entity.
+func (_u *RoleUpdate) AddRoleDataPermissions(v ...*RoleDataPermission) *RoleUpdate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddRoleDataPermissionIDs(ids...)
 }
 
 // AddAdminRoleIDs adds the "admin_roles" edge to the AdminRole entity by IDs.
@@ -269,6 +287,27 @@ func (_u *RoleUpdate) RemoveMenus(v ...*Menu) *RoleUpdate {
 	return _u.RemoveMenuIDs(ids...)
 }
 
+// ClearDataPermissions clears all "data_permissions" edges to the DataPermission entity.
+func (_u *RoleUpdate) ClearDataPermissions() *RoleUpdate {
+	_u.mutation.ClearDataPermissions()
+	return _u
+}
+
+// RemoveDataPermissionIDs removes the "data_permissions" edge to DataPermission entities by IDs.
+func (_u *RoleUpdate) RemoveDataPermissionIDs(ids ...string) *RoleUpdate {
+	_u.mutation.RemoveDataPermissionIDs(ids...)
+	return _u
+}
+
+// RemoveDataPermissions removes "data_permissions" edges to DataPermission entities.
+func (_u *RoleUpdate) RemoveDataPermissions(v ...*DataPermission) *RoleUpdate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveDataPermissionIDs(ids...)
+}
+
 // ClearAdmins clears all "admins" edges to the Admin entity.
 func (_u *RoleUpdate) ClearAdmins() *RoleUpdate {
 	_u.mutation.ClearAdmins()
@@ -309,6 +348,27 @@ func (_u *RoleUpdate) RemoveRoleMenus(v ...*RoleMenu) *RoleUpdate {
 		ids[i] = v[i].ID
 	}
 	return _u.RemoveRoleMenuIDs(ids...)
+}
+
+// ClearRoleDataPermissions clears all "role_data_permissions" edges to the RoleDataPermission entity.
+func (_u *RoleUpdate) ClearRoleDataPermissions() *RoleUpdate {
+	_u.mutation.ClearRoleDataPermissions()
+	return _u
+}
+
+// RemoveRoleDataPermissionIDs removes the "role_data_permissions" edge to RoleDataPermission entities by IDs.
+func (_u *RoleUpdate) RemoveRoleDataPermissionIDs(ids ...string) *RoleUpdate {
+	_u.mutation.RemoveRoleDataPermissionIDs(ids...)
+	return _u
+}
+
+// RemoveRoleDataPermissions removes "role_data_permissions" edges to RoleDataPermission entities.
+func (_u *RoleUpdate) RemoveRoleDataPermissions(v ...*RoleDataPermission) *RoleUpdate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveRoleDataPermissionIDs(ids...)
 }
 
 // ClearAdminRoles clears all "admin_roles" edges to the AdminRole entity.
@@ -414,9 +474,6 @@ func (_u *RoleUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.IsSystem(); ok {
 		_spec.SetField(role.FieldIsSystem, field.TypeBool, value)
 	}
-	if value, ok := _u.mutation.DataScope(); ok {
-		_spec.SetField(role.FieldDataScope, field.TypeString, value)
-	}
 	if value, ok := _u.mutation.CreatedAt(); ok {
 		_spec.SetField(role.FieldCreatedAt, field.TypeTime, value)
 	}
@@ -481,6 +538,63 @@ func (_u *RoleUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		createE := &RoleMenuCreate{config: _u.config, mutation: newRoleMenuMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.DataPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   role.DataPermissionsTable,
+			Columns: role.DataPermissionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(datapermission.FieldID, field.TypeString),
+			},
+		}
+		createE := &RoleDataPermissionCreate{config: _u.config, mutation: newRoleDataPermissionMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedDataPermissionsIDs(); len(nodes) > 0 && !_u.mutation.DataPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   role.DataPermissionsTable,
+			Columns: role.DataPermissionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(datapermission.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &RoleDataPermissionCreate{config: _u.config, mutation: newRoleDataPermissionMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.DataPermissionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   role.DataPermissionsTable,
+			Columns: role.DataPermissionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(datapermission.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &RoleDataPermissionCreate{config: _u.config, mutation: newRoleDataPermissionMutation(_u.config, OpCreate)}
 		createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
@@ -581,6 +695,51 @@ func (_u *RoleUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(rolemenu.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.RoleDataPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.RoleDataPermissionsTable,
+			Columns: []string{role.RoleDataPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(roledatapermission.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedRoleDataPermissionsIDs(); len(nodes) > 0 && !_u.mutation.RoleDataPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.RoleDataPermissionsTable,
+			Columns: []string{role.RoleDataPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(roledatapermission.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RoleDataPermissionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.RoleDataPermissionsTable,
+			Columns: []string{role.RoleDataPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(roledatapermission.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -750,20 +909,6 @@ func (_u *RoleUpdateOne) SetNillableIsSystem(v *bool) *RoleUpdateOne {
 	return _u
 }
 
-// SetDataScope sets the "data_scope" field.
-func (_u *RoleUpdateOne) SetDataScope(v string) *RoleUpdateOne {
-	_u.mutation.SetDataScope(v)
-	return _u
-}
-
-// SetNillableDataScope sets the "data_scope" field if the given value is not nil.
-func (_u *RoleUpdateOne) SetNillableDataScope(v *string) *RoleUpdateOne {
-	if v != nil {
-		_u.SetDataScope(*v)
-	}
-	return _u
-}
-
 // SetCreatedAt sets the "created_at" field.
 func (_u *RoleUpdateOne) SetCreatedAt(v time.Time) *RoleUpdateOne {
 	_u.mutation.SetCreatedAt(v)
@@ -819,6 +964,21 @@ func (_u *RoleUpdateOne) AddMenus(v ...*Menu) *RoleUpdateOne {
 	return _u.AddMenuIDs(ids...)
 }
 
+// AddDataPermissionIDs adds the "data_permissions" edge to the DataPermission entity by IDs.
+func (_u *RoleUpdateOne) AddDataPermissionIDs(ids ...string) *RoleUpdateOne {
+	_u.mutation.AddDataPermissionIDs(ids...)
+	return _u
+}
+
+// AddDataPermissions adds the "data_permissions" edges to the DataPermission entity.
+func (_u *RoleUpdateOne) AddDataPermissions(v ...*DataPermission) *RoleUpdateOne {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddDataPermissionIDs(ids...)
+}
+
 // AddAdminIDs adds the "admins" edge to the Admin entity by IDs.
 func (_u *RoleUpdateOne) AddAdminIDs(ids ...string) *RoleUpdateOne {
 	_u.mutation.AddAdminIDs(ids...)
@@ -847,6 +1007,21 @@ func (_u *RoleUpdateOne) AddRoleMenus(v ...*RoleMenu) *RoleUpdateOne {
 		ids[i] = v[i].ID
 	}
 	return _u.AddRoleMenuIDs(ids...)
+}
+
+// AddRoleDataPermissionIDs adds the "role_data_permissions" edge to the RoleDataPermission entity by IDs.
+func (_u *RoleUpdateOne) AddRoleDataPermissionIDs(ids ...string) *RoleUpdateOne {
+	_u.mutation.AddRoleDataPermissionIDs(ids...)
+	return _u
+}
+
+// AddRoleDataPermissions adds the "role_data_permissions" edges to the RoleDataPermission entity.
+func (_u *RoleUpdateOne) AddRoleDataPermissions(v ...*RoleDataPermission) *RoleUpdateOne {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddRoleDataPermissionIDs(ids...)
 }
 
 // AddAdminRoleIDs adds the "admin_roles" edge to the AdminRole entity by IDs.
@@ -890,6 +1065,27 @@ func (_u *RoleUpdateOne) RemoveMenus(v ...*Menu) *RoleUpdateOne {
 	return _u.RemoveMenuIDs(ids...)
 }
 
+// ClearDataPermissions clears all "data_permissions" edges to the DataPermission entity.
+func (_u *RoleUpdateOne) ClearDataPermissions() *RoleUpdateOne {
+	_u.mutation.ClearDataPermissions()
+	return _u
+}
+
+// RemoveDataPermissionIDs removes the "data_permissions" edge to DataPermission entities by IDs.
+func (_u *RoleUpdateOne) RemoveDataPermissionIDs(ids ...string) *RoleUpdateOne {
+	_u.mutation.RemoveDataPermissionIDs(ids...)
+	return _u
+}
+
+// RemoveDataPermissions removes "data_permissions" edges to DataPermission entities.
+func (_u *RoleUpdateOne) RemoveDataPermissions(v ...*DataPermission) *RoleUpdateOne {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveDataPermissionIDs(ids...)
+}
+
 // ClearAdmins clears all "admins" edges to the Admin entity.
 func (_u *RoleUpdateOne) ClearAdmins() *RoleUpdateOne {
 	_u.mutation.ClearAdmins()
@@ -930,6 +1126,27 @@ func (_u *RoleUpdateOne) RemoveRoleMenus(v ...*RoleMenu) *RoleUpdateOne {
 		ids[i] = v[i].ID
 	}
 	return _u.RemoveRoleMenuIDs(ids...)
+}
+
+// ClearRoleDataPermissions clears all "role_data_permissions" edges to the RoleDataPermission entity.
+func (_u *RoleUpdateOne) ClearRoleDataPermissions() *RoleUpdateOne {
+	_u.mutation.ClearRoleDataPermissions()
+	return _u
+}
+
+// RemoveRoleDataPermissionIDs removes the "role_data_permissions" edge to RoleDataPermission entities by IDs.
+func (_u *RoleUpdateOne) RemoveRoleDataPermissionIDs(ids ...string) *RoleUpdateOne {
+	_u.mutation.RemoveRoleDataPermissionIDs(ids...)
+	return _u
+}
+
+// RemoveRoleDataPermissions removes "role_data_permissions" edges to RoleDataPermission entities.
+func (_u *RoleUpdateOne) RemoveRoleDataPermissions(v ...*RoleDataPermission) *RoleUpdateOne {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveRoleDataPermissionIDs(ids...)
 }
 
 // ClearAdminRoles clears all "admin_roles" edges to the AdminRole entity.
@@ -1065,9 +1282,6 @@ func (_u *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) {
 	if value, ok := _u.mutation.IsSystem(); ok {
 		_spec.SetField(role.FieldIsSystem, field.TypeBool, value)
 	}
-	if value, ok := _u.mutation.DataScope(); ok {
-		_spec.SetField(role.FieldDataScope, field.TypeString, value)
-	}
 	if value, ok := _u.mutation.CreatedAt(); ok {
 		_spec.SetField(role.FieldCreatedAt, field.TypeTime, value)
 	}
@@ -1132,6 +1346,63 @@ func (_u *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		createE := &RoleMenuCreate{config: _u.config, mutation: newRoleMenuMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.DataPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   role.DataPermissionsTable,
+			Columns: role.DataPermissionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(datapermission.FieldID, field.TypeString),
+			},
+		}
+		createE := &RoleDataPermissionCreate{config: _u.config, mutation: newRoleDataPermissionMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedDataPermissionsIDs(); len(nodes) > 0 && !_u.mutation.DataPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   role.DataPermissionsTable,
+			Columns: role.DataPermissionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(datapermission.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &RoleDataPermissionCreate{config: _u.config, mutation: newRoleDataPermissionMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.DataPermissionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   role.DataPermissionsTable,
+			Columns: role.DataPermissionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(datapermission.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &RoleDataPermissionCreate{config: _u.config, mutation: newRoleDataPermissionMutation(_u.config, OpCreate)}
 		createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
@@ -1232,6 +1503,51 @@ func (_u *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(rolemenu.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.RoleDataPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.RoleDataPermissionsTable,
+			Columns: []string{role.RoleDataPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(roledatapermission.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedRoleDataPermissionsIDs(); len(nodes) > 0 && !_u.mutation.RoleDataPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.RoleDataPermissionsTable,
+			Columns: []string{role.RoleDataPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(roledatapermission.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RoleDataPermissionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.RoleDataPermissionsTable,
+			Columns: []string{role.RoleDataPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(roledatapermission.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

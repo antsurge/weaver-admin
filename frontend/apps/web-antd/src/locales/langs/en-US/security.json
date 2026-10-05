@@ -1,0 +1,62 @@
+{
+  "title": "Security Center",
+  "online": {
+    "title": "Online Users",
+    "fields": {
+      "username": "Username",
+      "realName": "Name",
+      "ip": "Login IP",
+      "userAgent": "Browser / Device",
+      "sessionCount": "Sessions",
+      "loginAt": "Login Time",
+      "expireAt": "Expire Time",
+      "operation": "Actions"
+    },
+    "operation": {
+      "logout": "Force Logout"
+    },
+    "search_placeholder": {
+      "username": "Enter username",
+      "realName": "Enter name",
+      "ip": "Enter login IP"
+    },
+    "confirm": {
+      "logoutTitle": "Confirm Force Logout",
+      "logoutContent": "Force logout user \"{0}\"? All sessions will be invalidated and they must log in again."
+    },
+    "message": {
+      "logoutSuccess": "Force logout succeeded"
+    }
+  },
+  "security_policy": {
+    "title": "Security Policy",
+    "name": "Security Policy",
+    "fields": {
+      "loginFailEnabled": "Enable Login Fail Limit",
+      "loginFailMax": "Max Failures",
+      "loginFailWindowMinutes": "Window (minutes)",
+      "loginLockMinutes": "Lock Duration (minutes)",
+      "ipMode": "IP Access Mode",
+      "ipList": "IP List",
+      "accessTokenTtlSeconds": "Access Token TTL (seconds)",
+      "refreshTokenTtlSeconds": "Refresh Token TTL (seconds)",
+      "remark": "Remark"
+    },
+    "ip_mode_options": {
+      "off": "Disabled",
+      "whitelist": "Whitelist",
+      "blacklist": "Blacklist"
+    },
+    "placeholder": {
+      "ipList": "One IP or CIDR per line, e.g. 127.0.0.1 or 192.168.1.0/24"
+    },
+    "tips": {
+      "lock": "When enabled, the account will be locked for the specified duration after reaching the failure limit within the window.",
+      "ip": "Whitelist: only listed IPs are allowed; Blacklist: listed IPs are blocked. Takes effect immediately.",
+      "token": "Access token: 60-2592000s; refresh token: 300-31536000s. Falls back to defaults (2h / 7d) when unset (0)."
+    },
+    "message": {
+      "loadFailed": "Failed to load security policy"
+    }
+  }
+}

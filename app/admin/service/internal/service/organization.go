@@ -207,3 +207,12 @@ func (s *OrganizationService) IsPositionCodeExists(ctx context.Context, req *org
 	}
 	return &organizationV1.IsPositionFieldExistsResponse{Exists: exists}, nil
 }
+
+// 部门编码是否存在
+func (s *OrganizationService) IsDepartmentCodeExists(ctx context.Context, req *organizationV1.IsDepartmentCodeExistsRequest) (*organizationV1.IsDepartmentFieldExistsResponse, error) {
+	exists, err := s.departmentUc.IsDepartmentCodeExists(ctx, req.Code, req.Id)
+	if err != nil {
+		return nil, err
+	}
+	return &organizationV1.IsDepartmentFieldExistsResponse{Exists: exists}, nil
+}

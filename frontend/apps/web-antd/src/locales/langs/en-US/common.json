@@ -1,0 +1,30 @@
+{
+  "enabled": "Enabled",
+  "disabled": "Disabled",
+  "fields": {
+    "seq": "No.",
+    "operation": "Operation",
+    "createdAt": "Created At",
+    "updatedAt": "Updated At"
+  },
+  "confirm": "Confirm",
+  "close": "Close",
+  "actions": {
+    "list": "List",
+    "create": "Create",
+    "batchDelete": "Batch Delete",
+    "info": "Detail",
+    "edit": "Edit",
+    "delete": "Delete",
+    "search": "Search",
+    "reset": "Reset",
+    "save": "Save",
+    "design": "Design",
+    "editField": "Field Config",
+    "generate": "Generate Code",
+    "preview": "Preview",
+    "import": "Import",
+    "export": "Export",
+    "downloadTemplate": "Download Template"
+  }
+}

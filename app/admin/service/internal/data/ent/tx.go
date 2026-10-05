@@ -14,28 +14,60 @@ type Tx struct {
 	config
 	// Admin is the client for interacting with the Admin builders.
 	Admin *AdminClient
+	// AdminDataPermission is the client for interacting with the AdminDataPermission builders.
+	AdminDataPermission *AdminDataPermissionClient
 	// AdminRole is the client for interacting with the AdminRole builders.
 	AdminRole *AdminRoleClient
 	// ApiInterface is the client for interacting with the ApiInterface builders.
 	ApiInterface *ApiInterfaceClient
-	// ApiPermission is the client for interacting with the ApiPermission builders.
-	ApiPermission *ApiPermissionClient
+	// DataPermission is the client for interacting with the DataPermission builders.
+	DataPermission *DataPermissionClient
 	// Department is the client for interacting with the Department builders.
 	Department *DepartmentClient
 	// DictData is the client for interacting with the DictData builders.
 	DictData *DictDataClient
 	// DictType is the client for interacting with the DictType builders.
 	DictType *DictTypeClient
+	// FormSchema is the client for interacting with the FormSchema builders.
+	FormSchema *FormSchemaClient
+	// FormSubmission is the client for interacting with the FormSubmission builders.
+	FormSubmission *FormSubmissionClient
+	// GenTable is the client for interacting with the GenTable builders.
+	GenTable *GenTableClient
+	// LoginLog is the client for interacting with the LoginLog builders.
+	LoginLog *LoginLogClient
 	// Menu is the client for interacting with the Menu builders.
 	Menu *MenuClient
+	// MenuApiPermission is the client for interacting with the MenuApiPermission builders.
+	MenuApiPermission *MenuApiPermissionClient
+	// Notification is the client for interacting with the Notification builders.
+	Notification *NotificationClient
+	// NotificationRecord is the client for interacting with the NotificationRecord builders.
+	NotificationRecord *NotificationRecordClient
+	// OperationLog is the client for interacting with the OperationLog builders.
+	OperationLog *OperationLogClient
+	// Order is the client for interacting with the Order builders.
+	Order *OrderClient
 	// Position is the client for interacting with the Position builders.
 	Position *PositionClient
 	// Role is the client for interacting with the Role builders.
 	Role *RoleClient
+	// RoleDataPermission is the client for interacting with the RoleDataPermission builders.
+	RoleDataPermission *RoleDataPermissionClient
 	// RoleMenu is the client for interacting with the RoleMenu builders.
 	RoleMenu *RoleMenuClient
 	// RolePermission is the client for interacting with the RolePermission builders.
 	RolePermission *RolePermissionClient
+	// SecurityPolicy is the client for interacting with the SecurityPolicy builders.
+	SecurityPolicy *SecurityPolicyClient
+	// SysConfig is the client for interacting with the SysConfig builders.
+	SysConfig *SysConfigClient
+	// SysJob is the client for interacting with the SysJob builders.
+	SysJob *SysJobClient
+	// SysJobLog is the client for interacting with the SysJobLog builders.
+	SysJobLog *SysJobLogClient
+	// Tenant is the client for interacting with the Tenant builders.
+	Tenant *TenantClient
 
 	// lazily loaded.
 	client     *Client
@@ -168,17 +200,33 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.Admin = NewAdminClient(tx.config)
+	tx.AdminDataPermission = NewAdminDataPermissionClient(tx.config)
 	tx.AdminRole = NewAdminRoleClient(tx.config)
 	tx.ApiInterface = NewApiInterfaceClient(tx.config)
-	tx.ApiPermission = NewApiPermissionClient(tx.config)
+	tx.DataPermission = NewDataPermissionClient(tx.config)
 	tx.Department = NewDepartmentClient(tx.config)
 	tx.DictData = NewDictDataClient(tx.config)
 	tx.DictType = NewDictTypeClient(tx.config)
+	tx.FormSchema = NewFormSchemaClient(tx.config)
+	tx.FormSubmission = NewFormSubmissionClient(tx.config)
+	tx.GenTable = NewGenTableClient(tx.config)
+	tx.LoginLog = NewLoginLogClient(tx.config)
 	tx.Menu = NewMenuClient(tx.config)
+	tx.MenuApiPermission = NewMenuApiPermissionClient(tx.config)
+	tx.Notification = NewNotificationClient(tx.config)
+	tx.NotificationRecord = NewNotificationRecordClient(tx.config)
+	tx.OperationLog = NewOperationLogClient(tx.config)
+	tx.Order = NewOrderClient(tx.config)
 	tx.Position = NewPositionClient(tx.config)
 	tx.Role = NewRoleClient(tx.config)
+	tx.RoleDataPermission = NewRoleDataPermissionClient(tx.config)
 	tx.RoleMenu = NewRoleMenuClient(tx.config)
 	tx.RolePermission = NewRolePermissionClient(tx.config)
+	tx.SecurityPolicy = NewSecurityPolicyClient(tx.config)
+	tx.SysConfig = NewSysConfigClient(tx.config)
+	tx.SysJob = NewSysJobClient(tx.config)
+	tx.SysJobLog = NewSysJobLogClient(tx.config)
+	tx.Tenant = NewTenantClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

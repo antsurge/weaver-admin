@@ -21,11 +21,15 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Identity_ListAdmin_FullMethodName   = "/admin.service.v1.Identity/ListAdmin"
-	Identity_CreateAdmin_FullMethodName = "/admin.service.v1.Identity/CreateAdmin"
-	Identity_UpdateAdmin_FullMethodName = "/admin.service.v1.Identity/UpdateAdmin"
-	Identity_GetAdmin_FullMethodName    = "/admin.service.v1.Identity/GetAdmin"
-	Identity_DeleteAdmin_FullMethodName = "/admin.service.v1.Identity/DeleteAdmin"
+	Identity_ListAdmin_FullMethodName              = "/admin.service.v1.Identity/ListAdmin"
+	Identity_CreateAdmin_FullMethodName            = "/admin.service.v1.Identity/CreateAdmin"
+	Identity_UpdateAdmin_FullMethodName            = "/admin.service.v1.Identity/UpdateAdmin"
+	Identity_GetAdmin_FullMethodName               = "/admin.service.v1.Identity/GetAdmin"
+	Identity_DeleteAdmin_FullMethodName            = "/admin.service.v1.Identity/DeleteAdmin"
+	Identity_ResetPassword_FullMethodName          = "/admin.service.v1.Identity/ResetPassword"
+	Identity_UpdateAdminStatus_FullMethodName      = "/admin.service.v1.Identity/UpdateAdminStatus"
+	Identity_BatchUpdateAdminStatus_FullMethodName = "/admin.service.v1.Identity/BatchUpdateAdminStatus"
+	Identity_UsernameExists_FullMethodName         = "/admin.service.v1.Identity/UsernameExists"
 )
 
 // IdentityClient is the client API for Identity service.
@@ -37,6 +41,11 @@ type IdentityClient interface {
 	UpdateAdmin(ctx context.Context, in *v1.UpdateAdminRequest, opts ...grpc.CallOption) (*v1.Admin, error)
 	GetAdmin(ctx context.Context, in *v1.GetAdminRequest, opts ...grpc.CallOption) (*v1.Admin, error)
 	DeleteAdmin(ctx context.Context, in *v1.DeleteAdminRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ResetPassword(ctx context.Context, in *v1.ResetPasswordRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UpdateAdminStatus(ctx context.Context, in *v1.UpdateAdminStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	BatchUpdateAdminStatus(ctx context.Context, in *v1.BatchUpdateAdminStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 校验用户名是否存在（新建/编辑表单失焦校验）
+	UsernameExists(ctx context.Context, in *v1.UsernameExistsRequest, opts ...grpc.CallOption) (*v1.UsernameExistsResponse, error)
 }
 
 type identityClient struct {
@@ -97,6 +106,46 @@ func (c *identityClient) DeleteAdmin(ctx context.Context, in *v1.DeleteAdminRequ
 	return out, nil
 }
 
+func (c *identityClient) ResetPassword(ctx context.Context, in *v1.ResetPasswordRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Identity_ResetPassword_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *identityClient) UpdateAdminStatus(ctx context.Context, in *v1.UpdateAdminStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Identity_UpdateAdminStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *identityClient) BatchUpdateAdminStatus(ctx context.Context, in *v1.BatchUpdateAdminStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Identity_BatchUpdateAdminStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *identityClient) UsernameExists(ctx context.Context, in *v1.UsernameExistsRequest, opts ...grpc.CallOption) (*v1.UsernameExistsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(v1.UsernameExistsResponse)
+	err := c.cc.Invoke(ctx, Identity_UsernameExists_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // IdentityServer is the server API for Identity service.
 // All implementations must embed UnimplementedIdentityServer
 // for forward compatibility.
@@ -106,6 +155,11 @@ type IdentityServer interface {
 	UpdateAdmin(context.Context, *v1.UpdateAdminRequest) (*v1.Admin, error)
 	GetAdmin(context.Context, *v1.GetAdminRequest) (*v1.Admin, error)
 	DeleteAdmin(context.Context, *v1.DeleteAdminRequest) (*emptypb.Empty, error)
+	ResetPassword(context.Context, *v1.ResetPasswordRequest) (*emptypb.Empty, error)
+	UpdateAdminStatus(context.Context, *v1.UpdateAdminStatusRequest) (*emptypb.Empty, error)
+	BatchUpdateAdminStatus(context.Context, *v1.BatchUpdateAdminStatusRequest) (*emptypb.Empty, error)
+	// 校验用户名是否存在（新建/编辑表单失焦校验）
+	UsernameExists(context.Context, *v1.UsernameExistsRequest) (*v1.UsernameExistsResponse, error)
 	mustEmbedUnimplementedIdentityServer()
 }
 
@@ -130,6 +184,18 @@ func (UnimplementedIdentityServer) GetAdmin(context.Context, *v1.GetAdminRequest
 }
 func (UnimplementedIdentityServer) DeleteAdmin(context.Context, *v1.DeleteAdminRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteAdmin not implemented")
+}
+func (UnimplementedIdentityServer) ResetPassword(context.Context, *v1.ResetPasswordRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResetPassword not implemented")
+}
+func (UnimplementedIdentityServer) UpdateAdminStatus(context.Context, *v1.UpdateAdminStatusRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateAdminStatus not implemented")
+}
+func (UnimplementedIdentityServer) BatchUpdateAdminStatus(context.Context, *v1.BatchUpdateAdminStatusRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BatchUpdateAdminStatus not implemented")
+}
+func (UnimplementedIdentityServer) UsernameExists(context.Context, *v1.UsernameExistsRequest) (*v1.UsernameExistsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UsernameExists not implemented")
 }
 func (UnimplementedIdentityServer) mustEmbedUnimplementedIdentityServer() {}
 func (UnimplementedIdentityServer) testEmbeddedByValue()                  {}
@@ -242,6 +308,78 @@ func _Identity_DeleteAdmin_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Identity_ResetPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.ResetPasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(IdentityServer).ResetPassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Identity_ResetPassword_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IdentityServer).ResetPassword(ctx, req.(*v1.ResetPasswordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Identity_UpdateAdminStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.UpdateAdminStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(IdentityServer).UpdateAdminStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Identity_UpdateAdminStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IdentityServer).UpdateAdminStatus(ctx, req.(*v1.UpdateAdminStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Identity_BatchUpdateAdminStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.BatchUpdateAdminStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(IdentityServer).BatchUpdateAdminStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Identity_BatchUpdateAdminStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IdentityServer).BatchUpdateAdminStatus(ctx, req.(*v1.BatchUpdateAdminStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Identity_UsernameExists_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.UsernameExistsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(IdentityServer).UsernameExists(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Identity_UsernameExists_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IdentityServer).UsernameExists(ctx, req.(*v1.UsernameExistsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Identity_ServiceDesc is the grpc.ServiceDesc for Identity service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -268,6 +406,22 @@ var Identity_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteAdmin",
 			Handler:    _Identity_DeleteAdmin_Handler,
+		},
+		{
+			MethodName: "ResetPassword",
+			Handler:    _Identity_ResetPassword_Handler,
+		},
+		{
+			MethodName: "UpdateAdminStatus",
+			Handler:    _Identity_UpdateAdminStatus_Handler,
+		},
+		{
+			MethodName: "BatchUpdateAdminStatus",
+			Handler:    _Identity_BatchUpdateAdminStatus_Handler,
+		},
+		{
+			MethodName: "UsernameExists",
+			Handler:    _Identity_UsernameExists_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -1,0 +1,12 @@
+llm:
+  provider: proxy-deepseek
+  endpoint: https://work.xclawxx.top/v1
+  protocol: openai
+  apiKey: sk-eee
+  model: deepseek-v4-flash-free
+language: Chinese
+exclude:
+  - node_modules
+  - dist
+  - vendor
+  - .git

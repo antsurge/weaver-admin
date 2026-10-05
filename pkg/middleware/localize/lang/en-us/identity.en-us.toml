@@ -1,0 +1,36 @@
+# Identity (Admin) error codes
+[INVALID_STATUS]
+other = "Invalid status, only enabled/disabled supported"
+
+[USERNAME_ALREADY_EXISTS]
+other = "Username already exists"
+
+[PHONE_ALREADY_EXISTS]
+other = "Phone number already exists"
+
+[EMAIL_ALREADY_EXISTS]
+other = "Email already exists"
+
+[PASSWORD_TOO_SHORT]
+other = "Password must be at least 6 characters"
+
+[CANNOT_DELETE_SELF]
+other = "Cannot delete the current logged-in account"
+
+[CANNOT_DELETE_SUPERADMIN]
+other = "The super admin account cannot be deleted"
+
+[CANNOT_DISABLE_SUPERADMIN]
+other = "The super admin account cannot be disabled"
+
+[ADMIN_NOT_FOUND]
+other = "User not found"
+
+[CREATE_ADMIN_FAIL]
+other = "Failed to create user"
+
+[UPDATE_ADMIN_FAIL]
+other = "Failed to update user"
+
+[DELETE_ADMIN_FAIL]
+other = "Failed to delete user"

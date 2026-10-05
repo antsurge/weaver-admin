@@ -19,10 +19,10 @@ import { useAccessStore } from '@vben/stores';
 import { message } from 'ant-design-vue';
 
 import { useAuthStore } from '#/store';
-import { refreshTokenApi } from './core';
+
+import { refreshTokenApi, setRefreshToken } from './core';
 
 const { apiURL } = useAppConfig(import.meta.env, import.meta.env.PROD);
-
 
 /**
  * token格式
@@ -50,6 +50,7 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
     const authStore = useAuthStore();
 
     accessStore.setAccessToken(null);
+    setRefreshToken(null);
 
     if (
       preferences.app.loginExpiredMode === 'modal' &&
@@ -63,17 +64,20 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
 
   /**
    * 刷新token
+   * 后端返回完整 LoginResponse，需同时更新 accessToken 与 refreshToken
    */
   async function doRefreshToken() {
     const accessStore = useAccessStore();
 
+    // baseRequestClient 为 raw 响应，resp.data 即响应体（LoginResponse）
     const resp = await refreshTokenApi();
 
-    const newToken = resp.data;
+    const newAuth = resp.data;
 
-    accessStore.setAccessToken(newToken);
+    accessStore.setAccessToken(newAuth?.accessToken);
+    setRefreshToken(newAuth?.refreshToken);
 
-    return newToken;
+    return newAuth?.accessToken;
   }
 
   /**
@@ -107,11 +111,11 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
   );
 
   /**
-  * 成功提示拦截器（🔥新增）
-  */
+   * 成功提示拦截器（🔥新增）
+   */
   client.addResponseInterceptor({
     fulfilled: (response) => {
-      const config = response.config
+      const config = response.config;
       const resData = response.data ?? {};
 
       const shouldShowSuccess =
@@ -138,7 +142,6 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
       const config = error?.config;
 
       if (config?.showFailMessage === false) return;
-
 
       const responseData = error?.response?.data ?? {};
       const errorMessage =

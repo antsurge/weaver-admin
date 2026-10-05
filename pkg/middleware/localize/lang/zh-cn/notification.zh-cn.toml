@@ -1,0 +1,12 @@
+# 消息通知模块错误码
+[NOTIFICATION_NOT_FOUND]
+other = "通知不存在"
+
+[NOTIFICATION_NO_TARGET]
+other = "未匹配到接收用户"
+
+[NOTIFICATION_BAD_REQUEST]
+other = "通知参数不合法"
+
+[NOTIFICATION_UNAUTHORIZED]
+other = "未登录，无法执行该操作"

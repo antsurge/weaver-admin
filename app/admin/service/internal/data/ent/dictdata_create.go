@@ -20,6 +20,20 @@ type DictDataCreate struct {
 	hooks    []Hook
 }
 
+// SetTenantID sets the "tenant_id" field.
+func (_c *DictDataCreate) SetTenantID(v string) *DictDataCreate {
+	_c.mutation.SetTenantID(v)
+	return _c
+}
+
+// SetNillableTenantID sets the "tenant_id" field if the given value is not nil.
+func (_c *DictDataCreate) SetNillableTenantID(v *string) *DictDataCreate {
+	if v != nil {
+		_c.SetTenantID(*v)
+	}
+	return _c
+}
+
 // SetDictTypeID sets the "dict_type_id" field.
 func (_c *DictDataCreate) SetDictTypeID(v string) *DictDataCreate {
 	_c.mutation.SetDictTypeID(v)
@@ -169,6 +183,10 @@ func (_c *DictDataCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (_c *DictDataCreate) defaults() {
+	if _, ok := _c.mutation.TenantID(); !ok {
+		v := dictdata.DefaultTenantID
+		_c.mutation.SetTenantID(v)
+	}
 	if _, ok := _c.mutation.Weight(); !ok {
 		v := dictdata.DefaultWeight
 		_c.mutation.SetWeight(v)
@@ -189,6 +207,14 @@ func (_c *DictDataCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (_c *DictDataCreate) check() error {
+	if _, ok := _c.mutation.TenantID(); !ok {
+		return &ValidationError{Name: "tenant_id", err: errors.New(`ent: missing required field "DictData.tenant_id"`)}
+	}
+	if v, ok := _c.mutation.TenantID(); ok {
+		if err := dictdata.TenantIDValidator(v); err != nil {
+			return &ValidationError{Name: "tenant_id", err: fmt.Errorf(`ent: validator failed for field "DictData.tenant_id": %w`, err)}
+		}
+	}
 	if _, ok := _c.mutation.DictTypeID(); !ok {
 		return &ValidationError{Name: "dict_type_id", err: errors.New(`ent: missing required field "DictData.dict_type_id"`)}
 	}
@@ -274,6 +300,10 @@ func (_c *DictDataCreate) createSpec() (*DictData, *sqlgraph.CreateSpec) {
 	if id, ok := _c.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = id
+	}
+	if value, ok := _c.mutation.TenantID(); ok {
+		_spec.SetField(dictdata.FieldTenantID, field.TypeString, value)
+		_node.TenantID = value
 	}
 	if value, ok := _c.mutation.DictTypeID(); ok {
 		_spec.SetField(dictdata.FieldDictTypeID, field.TypeString, value)

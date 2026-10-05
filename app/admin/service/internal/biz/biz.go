@@ -17,5 +17,37 @@ var ProviderSet = wire.NewSet(
 	NewDictTypeUsecase,
 	NewDictDataUsecase,
 
+	NewTenantUsecase,
+
 	NewApiInterfaceUsecase,
+
+	NewAuthzUseCase,
+
+	NewFileUsecase,
+
+	NewNotificationHub,
+	NewNotificationUsecase,
+
+	NewLogUsecase,
+	NewOperationLogRecorder,
+
+	NewOnlineUsecase,
+
+	NewConfigUsecase,
+
+	NewSecurityUsecase,
+
+	NewDataPermissionUsecase,
+
+	NewJobScheduler,
+	NewHTTPExecutor,
+	wire.Bind(new(JobExecutor), new(*HTTPExecutor)),
+	NewCronjobUsecase,
+
+	NewApiMetricsCollector,
+	NewMonitorUsecase,
+
+	NewFormSchemaUsecase,
+	NewFormSubmissionUsecase,
+	NewCodegenUsecase,
 )

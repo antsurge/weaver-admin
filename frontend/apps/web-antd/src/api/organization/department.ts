@@ -1,5 +1,6 @@
+import type { AllResult } from '#/types/pagination';
+
 import { requestClient } from '#/api/request';
-import type { AllResult } from '#/types/pagination'
 
 export namespace OrganizationDepartmentApi {
   /** 部门 */
@@ -12,10 +13,12 @@ export namespace OrganizationDepartmentApi {
     name: string;
     /** 编码 */
     code?: string;
+    /** 类型：company=公司 subsidiary=子公司 department=部门 position=岗位 */
+    type: 'company' | 'department' | 'position' | 'subsidiary';
     /** 权重 */
     weight: number;
     /** 状态：enabled=启用 disabled=禁用 */
-    status: 'enabled' | 'disabled';
+    status: 'disabled' | 'enabled';
     /** 负责人姓名 */
     leaderName?: string;
     /** 联系电话 */
@@ -33,26 +36,32 @@ export namespace OrganizationDepartmentApi {
   export interface DepartmentTreeParams {
     name?: string;
     code?: string;
-    status?: 'enabled' | 'disabled';
+    status?: 'disabled' | 'enabled';
+  }
+
+  export interface isExists {
+    exists: boolean;
   }
 }
 
 /**
  * 获取部门树
  */
-async function getDepartmentTreeApi(params?: OrganizationDepartmentApi.DepartmentTreeParams) {
+async function getDepartmentTreeApi(
+  params?: OrganizationDepartmentApi.DepartmentTreeParams,
+) {
   return requestClient.get<AllResult<OrganizationDepartmentApi.Department>>(
     '/admin/v1/department/tree',
     {
-      params: params
-    }
+      params,
+    },
   );
 }
 
 /**
  * 获取部门
  */
-async function getDepartmentApi(id:string) {
+async function getDepartmentApi(id: string) {
   return requestClient.get<OrganizationDepartmentApi.Department>(
     `/admin/v1/department/${id}`,
   );
@@ -63,7 +72,7 @@ async function getDepartmentApi(id:string) {
  * @param data 部门数据
  */
 async function createDepartmentApi(
-  data: Omit<OrganizationDepartmentApi.Department, 'id' | 'children'>,
+  data: Omit<OrganizationDepartmentApi.Department, 'children' | 'id'>,
 ) {
   return requestClient.post('/admin/v1/department', data, {
     showSuccessMessage: true,
@@ -78,7 +87,7 @@ async function createDepartmentApi(
  */
 async function updateDepartmentApi(
   id: string,
-  data: Omit<OrganizationDepartmentApi.Department, 'id' | 'children'>,
+  data: Omit<OrganizationDepartmentApi.Department, 'children' | 'id'>,
 ) {
   return requestClient.put(`/admin/v1/department/${id}`, data, {
     showSuccessMessage: true,
@@ -112,12 +121,24 @@ async function deleteDepartmentApi(ids: string[]) {
   });
 }
 
+/**
+ * 部门编码是否存在
+ */
+async function isDepartmentCodeExistsApi(code: string, id?: string) {
+  return requestClient.get<OrganizationDepartmentApi.isExists>(
+    '/admin/v1/department:code-exists',
+    {
+      params: { id, code },
+    },
+  );
+}
+
 export {
-  getDepartmentTreeApi,
-  getDepartmentApi,
   createDepartmentApi,
+  deleteDepartmentApi,
+  getDepartmentApi,
+  getDepartmentTreeApi,
+  isDepartmentCodeExistsApi,
   updateDepartmentApi,
   updateDepartmentStatusApi,
-  deleteDepartmentApi,
 };
-

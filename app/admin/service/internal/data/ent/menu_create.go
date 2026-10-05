@@ -10,7 +10,6 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/apipermission"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/menu"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/role"
 	"github.com/antsurge/weaver-admin/app/admin/service/internal/data/ent/rolemenu"
@@ -21,6 +20,20 @@ type MenuCreate struct {
 	config
 	mutation *MenuMutation
 	hooks    []Hook
+}
+
+// SetTenantID sets the "tenant_id" field.
+func (_c *MenuCreate) SetTenantID(v string) *MenuCreate {
+	_c.mutation.SetTenantID(v)
+	return _c
+}
+
+// SetNillableTenantID sets the "tenant_id" field if the given value is not nil.
+func (_c *MenuCreate) SetNillableTenantID(v *string) *MenuCreate {
+	if v != nil {
+		_c.SetTenantID(*v)
+	}
+	return _c
 }
 
 // SetParentID sets the "parent_id" field.
@@ -302,21 +315,6 @@ func (_c *MenuCreate) AddRoles(v ...*Role) *MenuCreate {
 	return _c.AddRoleIDs(ids...)
 }
 
-// AddAPIPermissionIDs adds the "api_permissions" edge to the ApiPermission entity by IDs.
-func (_c *MenuCreate) AddAPIPermissionIDs(ids ...string) *MenuCreate {
-	_c.mutation.AddAPIPermissionIDs(ids...)
-	return _c
-}
-
-// AddAPIPermissions adds the "api_permissions" edges to the ApiPermission entity.
-func (_c *MenuCreate) AddAPIPermissions(v ...*ApiPermission) *MenuCreate {
-	ids := make([]string, len(v))
-	for i := range v {
-		ids[i] = v[i].ID
-	}
-	return _c.AddAPIPermissionIDs(ids...)
-}
-
 // AddRoleMenuIDs adds the "role_menus" edge to the RoleMenu entity by IDs.
 func (_c *MenuCreate) AddRoleMenuIDs(ids ...string) *MenuCreate {
 	_c.mutation.AddRoleMenuIDs(ids...)
@@ -367,6 +365,10 @@ func (_c *MenuCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (_c *MenuCreate) defaults() {
+	if _, ok := _c.mutation.TenantID(); !ok {
+		v := menu.DefaultTenantID
+		_c.mutation.SetTenantID(v)
+	}
 	if _, ok := _c.mutation.ParentID(); !ok {
 		v := menu.DefaultParentID
 		_c.mutation.SetParentID(v)
@@ -439,6 +441,14 @@ func (_c *MenuCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (_c *MenuCreate) check() error {
+	if _, ok := _c.mutation.TenantID(); !ok {
+		return &ValidationError{Name: "tenant_id", err: errors.New(`ent: missing required field "Menu.tenant_id"`)}
+	}
+	if v, ok := _c.mutation.TenantID(); ok {
+		if err := menu.TenantIDValidator(v); err != nil {
+			return &ValidationError{Name: "tenant_id", err: fmt.Errorf(`ent: validator failed for field "Menu.tenant_id": %w`, err)}
+		}
+	}
 	if _, ok := _c.mutation.ParentID(); !ok {
 		return &ValidationError{Name: "parent_id", err: errors.New(`ent: missing required field "Menu.parent_id"`)}
 	}
@@ -608,6 +618,10 @@ func (_c *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 		_node.ID = id
 		_spec.ID.Value = id
 	}
+	if value, ok := _c.mutation.TenantID(); ok {
+		_spec.SetField(menu.FieldTenantID, field.TypeString, value)
+		_node.TenantID = value
+	}
 	if value, ok := _c.mutation.ParentID(); ok {
 		_spec.SetField(menu.FieldParentID, field.TypeString, value)
 		_node.ParentID = value
@@ -702,22 +716,6 @@ func (_c *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 		createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
-		_spec.Edges = append(_spec.Edges, edge)
-	}
-	if nodes := _c.mutation.APIPermissionsIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   menu.APIPermissionsTable,
-			Columns: menu.APIPermissionsPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(apipermission.FieldID, field.TypeString),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := _c.mutation.RoleMenusIDs(); len(nodes) > 0 {
