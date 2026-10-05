@@ -294,7 +294,7 @@ func (uc *CodegenUsecase) generatedFilePaths(t *GenTable) []string {
 	// 菜单：打开菜单生成时存在 SQL/JSON 文档
 	if t.MenuEnabled {
 		files = append(files,
-			"docs/menu_"+snake+".sql",
+			"docs/sql/menu_"+snake+".sql",
 			"docs/menu_"+snake+".json",
 		)
 	}
@@ -1340,7 +1340,7 @@ func (g *CodeGenerator) RenderMenu(model map[string]any) []*GenCodeFile {
 	name := strings.ToLower(model["SnakeName"].(string))
 	return []*GenCodeFile{
 		{
-			FileName: "docs/menu_" + name + ".sql",
+			FileName: "docs/sql/menu_" + name + ".sql",
 			Content:  g.render("menuSQL", model),
 		},
 		{

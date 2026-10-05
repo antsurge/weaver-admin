@@ -2,7 +2,7 @@
 
 > 本文档与 `docs/feature-summary.md`（按功能域划分）互补，改为**站在"菜单管理"页的视角**，以数据库 `menu` 表中的菜单树为骨架，逐节点挂载对应的前端页面、后端接口与核心功能。
 >
-> **菜单来源口径**：`app/admin/service/internal/data/data.go` 的幂等种子（系统管理/租户管理/低代码）、`docs/update-menu-components.sql`（component 路径映射）、`docs/backend-menu-reference.md`（录入参考）、`frontend/apps/web-antd/src/router/modules/*`（前端路由）及 `src/locales/langs/zh-CN/*.json`。菜单树为**动态下发**：登录后由 `GET /admin/v1/current-user/menus` 返回，前端 `accessMode='backend'` 渲染。
+> **菜单来源口径**：`app/admin/service/internal/data/data.go` 的幂等种子（系统管理/租户管理/低代码）、`docs/sql/update-menu-components.sql`（component 路径映射）、`docs/backend-menu-reference.md`（录入参考）、`frontend/apps/web-antd/src/router/modules/*`（前端路由）及 `src/locales/langs/zh-CN/*.json`。菜单树为**动态下发**：登录后由 `GET /admin/v1/current-user/menus` 返回，前端 `accessMode='backend'` 渲染。
 
 ---
 
@@ -51,7 +51,7 @@
 └── 职务管理 (Position)
 ```
 
-> **迁移状态**：安全中心已完成代码迁移（seed + SQL + 前端路由 + i18n），见下方「安全中心」章节与 `docs/update-menu-security.sql`；消息中心/运维中心/租户/低代码等目录拆分待后续迭代。
+> **迁移状态**：安全中心已完成代码迁移（seed + SQL + 前端路由 + i18n），见下方「安全中心」章节与 `docs/sql/update-menu-security.sql`；消息中心/运维中心/租户/低代码等目录拆分待后续迭代。
 
 ---
 
@@ -122,7 +122,7 @@
 ## 四、安全中心（Security）—— 本轮已迁移
 
 > 顶级目录，`code=Security`，`path=/security`，`type=catalog`，`weight=6`。
-> **迁移来源**：原挂在系统管理下的在线用户/安全策略 2 个子菜单，已由 `data.go ensureSecurityMenu()`（新环境自动 seed）+ `docs/update-menu-security.sql`（存量库重挂）迁移至本目录。操作日志/登录日志已进一步拆分至"日志中心"（见下节）。
+> **迁移来源**：原挂在系统管理下的在线用户/安全策略 2 个子菜单，已由 `data.go ensureSecurityMenu()`（新环境自动 seed）+ `docs/sql/update-menu-security.sql`（存量库重挂）迁移至本目录。操作日志/登录日志已进一步拆分至"日志中心"（见下节）。
 
 | 子菜单 | code | path | component | 说明 |
 |---|---|---|---|---|
@@ -140,14 +140,14 @@
   - IP 白名单 / 黑名单（支持 CIDR）
   - Token 有效期策略
 
-> **迁移清单**：`app/admin/service/internal/data/data.go`（seed 常量 + `ensureSecurityMenu`）、`docs/update-menu-security.sql`、`frontend/.../router/modules/security.ts`（新）、`system.ts`（移除安全类路由）、`locales/page.json`（zh-CN/en-US 新增 `page.security.*`）。
+> **迁移清单**：`app/admin/service/internal/data/data.go`（seed 常量 + `ensureSecurityMenu`）、`docs/sql/update-menu-security.sql`、`frontend/.../router/modules/security.ts`（新）、`system.ts`（移除安全类路由）、`locales/page.json`（zh-CN/en-US 新增 `page.security.*`）。
 
 ---
 
 ## 四·五、日志中心（Logs）—— 本轮新增
 
 > 顶级目录，`code=Log`，`path=/logs`，`type=catalog`，`weight=7`。
-> **迁移来源**：原挂在安全中心下的操作日志/登录日志 2 个子菜单，已由 `data.go ensureLogMenu()`（新环境自动 seed）+ `docs/update-menu-logs.sql`（存量库重挂）迁移至本目录。
+> **迁移来源**：原挂在安全中心下的操作日志/登录日志 2 个子菜单，已由 `data.go ensureLogMenu()`（新环境自动 seed）+ `docs/sql/update-menu-logs.sql`（存量库重挂）迁移至本目录。
 
 | 子菜单 | code | path | component | 说明 |
 |---|---|---|---|---|
@@ -163,7 +163,7 @@
 - **前端**：`views/log/login-log/index.vue`
 - **功能**：登录成功/失败记录 + 失败原因
 
-> **迁移清单**：`app/admin/service/internal/data/data.go`（seed 常量 + `ensureLogMenu`）、`docs/update-menu-logs.sql`（新）、`docs/update-menu-components.sql`（component `security/log/*` → `log/*`）、`frontend/.../router/modules/logs.ts`（新）、`security.ts`（移除日志路由）、`locales/page.json`（zh-CN/en-US 新增 `page.log.title`）、`views/security/log/` → `views/log/`。
+> **迁移清单**：`app/admin/service/internal/data/data.go`（seed 常量 + `ensureLogMenu`）、`docs/sql/update-menu-logs.sql`（新）、`docs/sql/update-menu-components.sql`（component `security/log/*` → `log/*`）、`frontend/.../router/modules/logs.ts`（新）、`security.ts`（移除日志路由）、`locales/page.json`（zh-CN/en-US 新增 `page.log.title`）、`views/security/log/` → `views/log/`。
 
 ---
 
